@@ -136,5 +136,22 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:resource_name) { :declaration }
 
     it_behaves_like "an API create endpoint"
+
+    context "when optional application_id param is included" do
+      let(:attributes) do
+        {
+          participant_id:,
+          declaration_type:,
+          declaration_date:,
+          course_identifier:,
+          has_passed:,
+          delivery_partner_id:,
+          secondary_delivery_partner_id:,
+          application_id: application.ecf_id,
+        }
+      end
+
+      it_behaves_like "an API create endpoint"
+    end
   end
 end

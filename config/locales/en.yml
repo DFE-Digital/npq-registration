@@ -601,6 +601,8 @@ en:
               missing_contract_for_cohort_and_course: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
             application:
               application_schedule_missing: The application is missing a schedule.
+            application_id:
+              application_not_found: "An accepted application cannot be found for the given '#/application_id'."
             delivery_partner_id:
               not_found: The property '#/delivery_partner_id' does not exist
             secondary_delivery_partner_id:

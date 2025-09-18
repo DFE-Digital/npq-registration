@@ -2683,6 +2683,12 @@ components:
           required: false
           nullable: false
           example: f0de7abf-399b-4e68-83de-2c33b503810c
+        application_id:
+          description: ID of application for declaration
+          type: string
+          required: false
+          nullable: true
+          example: 254af44c-b483-49b0-b628-0d3515e6eb29
       required:
       - participant_id
       - declaration_type
@@ -2755,6 +2761,12 @@ components:
           required: false
           nullable: false
           example: f0de7abf-399b-4e68-83de-2c33b503810c
+        application_id:
+          description: ID of application for declaration
+          type: string
+          required: false
+          nullable: true
+          example: fa99ba84-fbad-4e26-b9b0-d60945b6b6eb
       required:
       - participant_id
       - declaration_type
@@ -2837,6 +2849,12 @@ components:
           required: false
           nullable: false
           example: f0de7abf-399b-4e68-83de-2c33b503810c
+        application_id:
+          description: ID of application for declaration
+          type: string
+          required: false
+          nullable: true
+          example: e0f75093-d9b9-4984-b4af-d3f4ac05c515
       example:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: completed
