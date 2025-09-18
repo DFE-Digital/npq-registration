@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   deploy:
@@ -33,12 +34,14 @@ jobs:
           bundle exec rails "registration_wizard:visualise[png]"
 
       - name: Checkout wiki code
+        if: github.ref == 'refs/heads/main'
         uses: actions/checkout@v4
         with:
           repository: ${{github.repository}}.wiki
           path: markdown
 
       - name: Push updated visualisation to repo Wiki
+        if: github.ref == 'refs/heads/main'
         run: |
           cp tmp/visualisations/registration_wizard_visualisation.png markdown/visualisations/registration_wizard_visualisation.png
           cd markdown
