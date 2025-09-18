@@ -289,7 +289,7 @@ private
   end
 
   def extract_steps_from_source(method_source)
-    steps = method_source.scan(/[^:]:\w+/).map(&:strip).map { |s| s.delete_prefix(":") }
+    steps = method_source.scan(/^\s*:\w+/).map(&:strip).map { |s| s.delete_prefix(":") }
 
     helper_step_methods = method_source.scan(/(#{flow_helper_methods.join("|")})/).flatten
 

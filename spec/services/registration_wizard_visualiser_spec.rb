@@ -8,7 +8,7 @@ RSpec.describe RegistrationWizardVisualiser do
   end
 
   let :png_file do
-    Rails.root.join("tmp/visualisations_test/registration_wizard_visualisation.dot")
+    Rails.root.join("tmp/visualisations_test/registration_wizard_visualisation.png")
   end
 
   it "generates an dot graph of the wizard" do
@@ -17,6 +17,7 @@ RSpec.describe RegistrationWizardVisualiser do
   end
 
   it "generates a png graph of the wizard" do
+    expect(system("dot -V")).to be true
     expect { described_class.call }
       .to change(png_file, :exist?).from(false).to(true)
   end
