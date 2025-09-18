@@ -38,6 +38,13 @@ PARTICIPANT_DECLARATION_RETAINED_REQUEST = {
       enum: Course::IDENTIFIERS,
       example: Course::IDENTIFIERS.first,
     },
+    application_id: {
+      description: "ID of application for declaration",
+      type: :string,
+      required: false,
+      nullable: true,
+      example: "f0de7abf-399b-4e68-83de-2c33b503810c",
+    }
   },
   required: %i[
     participant_id

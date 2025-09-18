@@ -13,6 +13,7 @@ module Declarations
     attribute :has_passed
     attribute :delivery_partner_id
     attribute :secondary_delivery_partner_id
+    attribute :application_id
 
     validates :lead_provider, presence: true
     validates :participant_id, presence: true, participant_id_change: true
@@ -33,6 +34,7 @@ module Declarations
     validate :delivery_partner_exists, if: :delivery_partner_id
     validate :secondary_delivery_partner_exists, if: :secondary_delivery_partner_id
     validate :declaration_valid
+    validate :application_exists
 
     attr_reader :raw_declaration_date, :declaration
 
@@ -61,12 +63,16 @@ module Declarations
     end
 
     def application
-      @application ||= participant
+      scope = participant
         &.applications
         &.accepted
         &.includes(:course)
         &.order(created_at: :desc, id: :desc)
-        &.find_by(lead_provider:, course: Course.find_by(identifier: course_identifier)&.rebranded_alternative_courses)
+      @application ||= if application_id.present?
+        scope&.find_by(ecf_id: application_id, lead_provider:, course: Course.find_by(identifier: course_identifier)&.rebranded_alternative_courses)
+      else
+        scope&.find_by(lead_provider:, course: Course.find_by(identifier: course_identifier)&.rebranded_alternative_courses)
+      end
     end
 
     def participant
@@ -222,6 +228,14 @@ module Declarations
       return if DeliveryPartner.exists?(ecf_id: secondary_delivery_partner_id)
 
       errors.add(:secondary_delivery_partner_id, :not_found)
+    end
+
+    def application_exists
+      return if application_id.nil?
+
+      if application.nil?
+        errors.add(:application_id, :application_not_found)
+      end
     end
   end
 end
