@@ -115,8 +115,11 @@ private
 
     Rails.logger.debug("Generating #{output_graph_filename}")
     generate_graph_command = "dot -Tpng #{output_digraph_filename} -o #{output_graph_filename}"
+
     Rails.logger.debug(generate_graph_command)
     system(generate_graph_command)
+
+    raise "Graph generation failed" unless $CHILD_STATUS.exitstatus.zero?
   end
 
   def save_file(name, content)
