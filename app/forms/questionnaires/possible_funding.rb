@@ -7,7 +7,7 @@ module Questionnaires
     end
 
     def previous_step
-      if course.npqlpm?
+      if course.try(:npqlpm?)
         if maths_understanding?
           :maths_eligibility_teaching_for_mastery
         else
