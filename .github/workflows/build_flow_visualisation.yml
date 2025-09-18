@@ -29,7 +29,7 @@ jobs:
 
       - name: Build visualisation
         run: |
-          dot -v
+          dot -V
           bundle exec rails "registration_wizard:visualise[png]"
 
       - name: Checkout wiki code
