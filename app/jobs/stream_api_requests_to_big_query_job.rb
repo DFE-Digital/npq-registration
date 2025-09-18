@@ -3,6 +3,8 @@ require "google/cloud/bigquery"
 class StreamAPIRequestsToBigQueryJob < ApplicationJob
   include ActionController::HttpAuthentication::Token
 
+  self.log_arguments = false
+
   queue_as :low_priority
 
   def perform(request_data, response_data, status_code, created_at)
