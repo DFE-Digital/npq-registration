@@ -91,6 +91,9 @@ jobs:
         ci_node_index: [0, 1, 2, 3, 4, 5]
 
     steps:
+      - name: Install Graphviz
+        run: sudo apt install graphviz
+
       - name: Checkout code
         uses: actions/checkout@v4
 
