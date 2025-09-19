@@ -135,6 +135,9 @@ en:
       statement:
         output_fee: Payment run
     errors:
+      messages:
+        restrict_dependent_destroy:
+          has_many: "Cannot delete because associated %{record} exist"
       models:
         adjustment:
           attributes:
