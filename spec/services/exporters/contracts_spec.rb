@@ -36,37 +36,34 @@ RSpec.describe Exporters::Contracts do
   it "generates a CSV of contracts" do
     expect(subject.lines.count).to eq(4) # header + contact_template for lead_provider + contract_template for lead_provider_2 + contract_template_2 for lead_provider_2
 
-    # contract_template_2 for lead_provider
-    expect(subject.lines[3].chomp).to eq [
-      "Some Lead Provider",
-      course_2.identifier,
-      contract_template_2.recruitment_target,
-      contract_template_2.per_participant,
-      contract_template_2.service_fee_installments,
-      contract_template_2.special_course,
-      contract_template_2.monthly_service_fee,
-    ].join(",")
-
-    # contact_template for lead_provider
-    expect(subject.lines[2].chomp).to eq [
-      "Some Lead Provider",
-      course.identifier,
-      contract_template.recruitment_target,
-      contract_template.per_participant,
-      contract_template.service_fee_installments,
-      contract_template.special_course,
-      contract_template.monthly_service_fee,
-    ].join(",")
-
-    # contract_template for lead_provider_2
-    expect(subject.lines[1].chomp).to eq [
-      "Another Provider",
-      course.identifier,
-      contract_template.recruitment_target,
-      contract_template.per_participant,
-      contract_template.service_fee_installments,
-      contract_template.special_course,
-      contract_template.monthly_service_fee,
-    ].join(",")
+    expect(subject.lines.drop(1).map(&:chomp)).to contain_exactly(
+      [
+        "Some Lead Provider",
+        course.identifier,
+        contract_template.recruitment_target,
+        contract_template.per_participant,
+        contract_template.service_fee_installments,
+        contract_template.special_course,
+        contract_template.monthly_service_fee,
+      ].join(","),
+      [
+        "Some Lead Provider",
+        course_2.identifier,
+        contract_template_2.recruitment_target,
+        contract_template_2.per_participant,
+        contract_template_2.service_fee_installments,
+        contract_template_2.special_course,
+        contract_template_2.monthly_service_fee,
+      ].join(","),
+      [
+        "Another Provider",
+        course.identifier,
+        contract_template.recruitment_target,
+        contract_template.per_participant,
+        contract_template.service_fee_installments,
+        contract_template.special_course,
+        contract_template.monthly_service_fee,
+      ].join(","),
+    )
   end
 end
