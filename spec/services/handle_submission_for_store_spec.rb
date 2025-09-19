@@ -14,7 +14,7 @@ RSpec.describe HandleSubmissionForStore do
 
   let(:store) do
     {
-      "current_user" => user,
+      "current_user_id" => user.id,
       "course_identifier" => course.identifier,
       "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
       "lead_provider_id" => lead_provider.id,
@@ -35,10 +35,25 @@ RSpec.describe HandleSubmissionForStore do
       record.as_json(except: %i[id created_at updated_at significantly_updated_at updated_from_tra_at DEPRECATED_school_urn email_updates_status email_updates_unsubscribe_key])
     end
 
-    context "when store includes information from the school path" do
+    context "when the store includes a user object (legacy behaviour)" do
       let(:store) do
         {
           "current_user" => user,
+          "course_identifier" => course.identifier,
+          "lead_provider_id" => lead_provider.id,
+        }
+      end
+
+      it "creates an application for the user" do
+        subject.call
+        expect(user.applications.reload.count).to eq 1
+      end
+    end
+
+    context "when store includes information from the school path" do
+      let(:store) do
+        {
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "School-#{school.urn}",
           "lead_provider_id" => lead_provider.id,
@@ -141,7 +156,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => false,
           "works_in_school" => true,
           "work_setting" => "a_school",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => "yes",
@@ -156,7 +171,7 @@ RSpec.describe HandleSubmissionForStore do
       let(:courses) { [Course.ehco] }
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -261,7 +276,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
@@ -326,7 +341,7 @@ RSpec.describe HandleSubmissionForStore do
       context "happy path" do
         let(:store) do
           {
-            "current_user" => user,
+            "current_user_id" => user.id,
             "course_identifier" => ehco_course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
@@ -346,7 +361,7 @@ RSpec.describe HandleSubmissionForStore do
       context "a headteacher for over five years" do
         let(:store) do
           {
-            "current_user" => user,
+            "current_user_id" => user.id,
             "course_identifier" => Course.ehco.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
@@ -369,7 +384,7 @@ RSpec.describe HandleSubmissionForStore do
     context "when teacher catchment is not in the UK catchment area" do
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -430,7 +445,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
@@ -444,7 +459,7 @@ RSpec.describe HandleSubmissionForStore do
     context "when teacher catchment is empty" do
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -505,7 +520,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
@@ -523,7 +538,7 @@ RSpec.describe HandleSubmissionForStore do
 
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -590,7 +605,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,

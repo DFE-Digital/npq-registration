@@ -17,7 +17,7 @@ RSpec.describe Questionnaires::EhcoNewHeadteacher, type: :model do
       current_step: :senco_in_role,
       store:,
       request: nil,
-      current_user: build(:user),
+      current_user: create(:user),
     )
   end
 

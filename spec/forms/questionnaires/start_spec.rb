@@ -15,13 +15,13 @@ RSpec.describe Questionnaires::Start do
 
     context "when logged in" do
       context "with TRN" do
-        let(:current_user) { build_stubbed :user }
+        let(:current_user) { create :user }
 
         it { is_expected.to eq :course_start_date }
       end
 
       context "without TRN" do
-        let(:current_user) { build_stubbed :user, trn: nil }
+        let(:current_user) { create :user, trn: nil }
 
         it { is_expected.to eq :teacher_reference_number }
       end
