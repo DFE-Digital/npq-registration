@@ -51,6 +51,13 @@ PARTICIPANT_DECLARATION_COMPLETED_REQUEST = {
       nullable: false,
       example: true,
     },
+    application_id: {
+      description: "ID of application for declaration",
+      type: :string,
+      required: false,
+      nullable: true,
+      example: "f0de7abf-399b-4e68-83de-2c33b503810c",
+    }
   },
   example: {
     participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
