@@ -9,7 +9,7 @@ RSpec.describe Applications::Reject, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:application).with_message("The entered '#/application' is missing from your request. Check details and try again.") }
-    it { is_expected.to validate_presence_of(:reason_for_rejection).with_message("The entered '#/reason_for_rejection' is missing from your request. Check details and try again.") }
+    it { is_expected.to validate_presence_of(:reason_for_rejection).with_message("The reason_for_rejection cannot be blank.") }
 
     context "when the application is already rejected" do
       let(:application) { create(:application, :rejected) }

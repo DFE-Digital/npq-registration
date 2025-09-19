@@ -634,7 +634,7 @@ en:
             application:
               <<: *application
             reason_for_rejection:
-              <<: *application
+              blank: The reason_for_rejection cannot be blank.
         applications/change_funded_place:
           attributes:
             application:
