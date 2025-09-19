@@ -16,6 +16,7 @@ class Schedule < ApplicationRecord
   belongs_to :course_group
   belongs_to :cohort
   has_many :courses, through: :course_group
+  has_many :applications, dependent: :restrict_with_error
 
   normalizes :allowed_declaration_types, with: ->(value) { value.reject(&:blank?) }
 
