@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_094834) do
   create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
-  create_enum "reasons_for_rejection", ["registration_expired", "rejected_by_provider", "application_accepted_by_other_provider"]
+  create_enum "reasons_for_rejection", ["registration_expired", "rejected_by_provider", "other_application_in_this_cohort_accepted"]
   create_enum "review_statuses", ["needs_review", "awaiting_information", "reregister", "decision_made"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]

@@ -145,7 +145,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
         other_application.reload
         expect(other_application.lead_provider_approval_status).to eql("rejected")
-        expect(other_application.reason_for_rejection).to eql(Application.reason_for_rejections[:application_accepted_by_other_provider])
+        expect(other_application.reason_for_rejection).to eql(Application.reason_for_rejections[:other_application_in_this_cohort_accepted])
       end
     end
 

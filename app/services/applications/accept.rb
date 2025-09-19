@@ -73,7 +73,7 @@ module Applications
 
       other_applications_in_same_cohort.update!(
         lead_provider_approval_status: "rejected",
-        reason_for_rejection: Application.reason_for_rejections[:application_accepted_by_other_provider],
+        reason_for_rejection: Application.reason_for_rejections[:other_application_in_this_cohort_accepted],
       )
     end
 
