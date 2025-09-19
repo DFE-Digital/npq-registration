@@ -22,6 +22,7 @@ module API
       field(:school_urn) { |a| a.school&.urn }
       field(:ukprn, name: :school_ukprn)
       field(:lead_provider_approval_status, name: :status)
+      field(:reason_for_rejection, if: proc { Feature.lp_self_serve? })
       field(:works_in_school)
       field(:cohort) { |a| a.cohort&.start_year&.to_s }
       field(:eligible_for_dfe_funding?, name: :eligible_for_funding)

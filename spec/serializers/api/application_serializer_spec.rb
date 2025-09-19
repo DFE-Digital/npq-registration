@@ -296,4 +296,28 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       end
     end
   end
+
+  describe "reason_for_rejection serialization" do
+    subject(:attributes) { JSON.parse(described_class.render(application))["attributes"] }
+
+    let(:reason_for_rejection) { Application.reason_for_rejections[:registration_expired] }
+    let(:application) { build(:application, :rejected, reason_for_rejection:) }
+    let(:feature) { Feature::LP_SELF_SERVE }
+
+    context "when the lp_self_serve feature flag is disabled" do
+      before { Flipper.disable(feature) }
+
+      it "does not include the `reason_for_rejection` field" do
+        expect(attributes).not_to have_key("reason_for_rejection")
+      end
+    end
+
+    context "when the lp_self_serve feature flag is enabled" do
+      before { Flipper.enable(feature) }
+
+      it "serializes the `reason_for_rejection`" do
+        expect(attributes["reason_for_rejection"]).to eq(reason_for_rejection)
+      end
+    end
+  end
 end

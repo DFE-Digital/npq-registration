@@ -53,7 +53,7 @@ RSpec.describe "Application endpoints", type: :request do
     let(:resource_id) { resource.ecf_id }
     let(:service) { Applications::Reject }
     let(:action) { :reject }
-    let(:service_args) { { application: resource } }
+    let(:service_args) { { application: resource, reason_for_rejection: Application.reason_for_rejections[:rejected_by_provider] } }
 
     def path(id = nil)
       reject_api_v3_application_path(ecf_id: id)

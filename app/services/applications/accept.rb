@@ -71,7 +71,10 @@ module Applications
     def reject_other_applications_in_same_cohort!
       return if other_applications_in_same_cohort.blank?
 
-      other_applications_in_same_cohort.update!(lead_provider_approval_status: "rejected")
+      other_applications_in_same_cohort.update!(
+        lead_provider_approval_status: "rejected",
+        reason_for_rejection: Application.reason_for_rejections[:other_application_in_this_cohort_accepted],
+      )
     end
 
     def other_accepted_applications_with_same_course_and_cohort

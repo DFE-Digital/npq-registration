@@ -27,7 +27,10 @@ module API
       end
 
       def reject
-        service = Applications::Reject.new(application:)
+        service = Applications::Reject.new(
+          application:,
+          reason_for_rejection: Application.reason_for_rejections[:rejected_by_provider],
+        )
 
         if service.reject
           render json: to_json(service.application)
