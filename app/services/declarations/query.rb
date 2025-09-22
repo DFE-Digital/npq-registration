@@ -31,11 +31,11 @@ module Declarations
     def where_lead_provider_is(lead_provider)
       return if ignore?(filter: lead_provider)
 
-      ds = Declaration.joins(:application)
+      declaration_scope = Declaration.joins(:application)
 
       scope.merge!(
-        ds.where(lead_provider:)
-          .or(ds.where(application: { lead_provider: })),
+        declaration_scope.where(lead_provider:)
+          .or(declaration_scope.where(application: { lead_provider: })),
       )
     end
 
