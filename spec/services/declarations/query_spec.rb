@@ -36,12 +36,22 @@ RSpec.describe Declarations::Query do
 
     describe "filtering" do
       describe "lead provider" do
-        it "filters by lead provider" do
-          declaration = create(:declaration)
-          create(:declaration, lead_provider: create(:lead_provider))
+        let(:current_lead_provider) { create(:lead_provider) }
+        let(:previous_lead_provider) { create(:lead_provider) }
+        let(:other_lead_provider) { create(:lead_provider) }
 
-          query = described_class.new(lead_provider: declaration.lead_provider)
-          expect(query.declarations).to contain_exactly(declaration)
+        let(:application) { create(:application, lead_provider: current_lead_provider) }
+
+        it "filters by lead provider" do
+          declaration_before_transfer = create(:declaration, lead_provider: previous_lead_provider, application:)
+          declaration_after_transfer  = create(:declaration, lead_provider: current_lead_provider, application:)
+          create(:declaration, lead_provider: other_lead_provider)
+
+          query = described_class.new(lead_provider: current_lead_provider)
+          expect(query.declarations).to contain_exactly(declaration_before_transfer, declaration_after_transfer)
+
+          query = described_class.new(lead_provider: previous_lead_provider)
+          expect(query.declarations).to contain_exactly(declaration_before_transfer)
         end
 
         it "doesn't filter by lead provider when none supplied" do

@@ -31,7 +31,12 @@ module Declarations
     def where_lead_provider_is(lead_provider)
       return if ignore?(filter: lead_provider)
 
-      scope.merge!(Declaration.where(lead_provider:))
+      ds = Declaration.joins(:application)
+
+      scope.merge!(
+        ds.where(lead_provider:)
+          .or(ds.where(application: { lead_provider: })),
+      )
     end
 
     def where_updated_since(updated_since)
