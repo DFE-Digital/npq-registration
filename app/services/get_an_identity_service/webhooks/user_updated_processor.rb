@@ -79,7 +79,15 @@ module GetAnIdentityService
           updated_from_tra_at: decorated_message.sent_at,
         })
         user.set_trn_from_provider_data(trn:, trn_lookup_status:)
-        user.save # rubocop:disable Rails/SaveBang - return value is used by caller
+
+        if user.changed? && user.changes.excluding("updated_from_tra_at").any?
+          PaperTrail.request(whodunnit: "UserUpdatedProcessor") do
+            user.save
+          end
+        else
+          webhook_message.status_comment = "Skipped - no data changes"
+          true
+        end
       end
     end
   end
