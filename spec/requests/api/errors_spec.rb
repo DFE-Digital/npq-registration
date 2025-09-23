@@ -19,6 +19,24 @@ RSpec.describe "Error responses", type: :request do
         expect(response.content_type).to match(/text\/plain.*/)
       end
     end
+
+    context "when the request is for API guidance docs" do
+      it "returns an HTML response" do
+        api_get "/api/guidance/thisdoesnotexist"
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include "The page you were looking for doesn’t exist."
+        expect(response.content_type).to match(/text\/html.*/)
+      end
+    end
+
+    context "when the request is for API swagger docs" do
+      it "returns an HTML response" do
+        api_get "/api/docs/thisdoesnotexist"
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include "The page you were looking for doesn’t exist."
+        expect(response.content_type).to match(/text\/html.*/)
+      end
+    end
   end
 
   describe "internal server error" do
