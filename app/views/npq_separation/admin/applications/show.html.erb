@@ -20,6 +20,10 @@
       row.with_value(text: @application.ecf_id)
     end
     sl.with_row do |row|
+      row.with_key(text: "User ID")
+      row.with_value(text: @application.user.ecf_id)
+    end
+    sl.with_row do |row|
       row.with_key(text: "Course")
       row.with_value(text: @application.course.name)
     end
