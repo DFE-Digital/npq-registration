@@ -31,12 +31,14 @@ module Declarations
     def where_lead_provider_is(lead_provider)
       return if ignore?(filter: lead_provider)
 
-      declaration_scope = Declaration.joins(:application)
+      relation = Declaration.joins(:application)
+      lead_provider_scope = relation.where(lead_provider:)
 
-      scope.merge!(
-        declaration_scope.where(lead_provider:)
-          .or(declaration_scope.where(application: { lead_provider: })),
-      )
+      if Feature.lp_transferred_declarations_visibility?
+        lead_provider_scope = lead_provider_scope.or(relation.where(application: { lead_provider: }))
+      end
+
+      scope.merge!(lead_provider_scope)
     end
 
     def where_updated_since(updated_since)
