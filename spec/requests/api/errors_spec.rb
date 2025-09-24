@@ -12,7 +12,7 @@ RSpec.describe "Error responses", type: :request do
     end
 
     context "when the request is for a CSV" do
-      it "returns an plain text response" do
+      it "returns a plain text response" do
         api_get "/api/v2/thisdoesnotexist.csv"
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
@@ -52,7 +52,7 @@ RSpec.describe "Error responses", type: :request do
     end
 
     context "when the request is for a CSV", skip: Rails.configuration.x.disable_legacy_api do
-      it "returns an plain text response" do
+      it "returns a plain text response" do
         api_get "/api/v2/npq-applications.csv"
         expect(response).to have_http_status(:internal_server_error)
         expect(response.body).to be_empty
@@ -74,7 +74,7 @@ RSpec.describe "Error responses", type: :request do
     end
 
     context "when the request is for a CSV", skip: Rails.configuration.x.disable_legacy_api do
-      it "returns an plain text response" do
+      it "returns a plain text response" do
         api_get "/api/v2/npq-applications.csv"
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to be_empty

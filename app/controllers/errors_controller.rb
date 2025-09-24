@@ -30,6 +30,6 @@ class ErrorsController < PublicPagesController
 private
 
   def set_format
-    request.format = :json if request.original_fullpath =~ /^\/api\/v\d+/ && request.format.html?
+    request.format = :json if request.original_fullpath =~ %r{^/api/(?!docs|guidance)} && request.format.html?
   end
 end
