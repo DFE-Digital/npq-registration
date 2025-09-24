@@ -4,15 +4,17 @@ module Applications
     include ActiveModel::Attributes
 
     attribute :application
+    attribute :reason_for_rejection
 
     validates :application, presence: true
+    validates :reason_for_rejection, presence: true
     validate :not_already_rejected
     validate :no_billable_or_changeable_declarations
 
     def reject
       return false unless valid?
 
-      application.update!(lead_provider_approval_status: "rejected")
+      application.update!(lead_provider_approval_status: "rejected", reason_for_rejection:)
       application.reload
 
       true
