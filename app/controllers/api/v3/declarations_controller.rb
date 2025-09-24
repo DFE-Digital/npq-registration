@@ -5,6 +5,8 @@ module API
       include FilterByDate
       include FilterByParticipantIds
 
+      before_action :ensure_declaration_belongs_to_lead_provider, only: %i[void change_delivery_partner]
+
       def index
         conditions = { updated_since:, participant_ids:, cohort_start_years: }
         declarations = declarations_query(conditions:).declarations
@@ -103,6 +105,17 @@ module API
 
       def secondary_delivery_partner_id
         change_delivery_partner_params["secondary_delivery_partner_id"]
+      end
+
+      def ensure_declaration_belongs_to_lead_provider
+        return if declaration.lead_provider == current_lead_provider
+
+        errors = [{
+          title: "Cannot modify declaration",
+          detail: "The declaration cannot be modified because it was created by another lead provider",
+        }]
+
+        render json: { errors: }, status: :forbidden
       end
     end
   end
