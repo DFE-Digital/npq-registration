@@ -82,6 +82,40 @@ RSpec.describe Users::MergeAndArchive do
           end
         end
       end
+
+      context "when the user to merge is already archived" do
+        let(:user_to_merge) { create(:user, :with_get_an_identity_id, :archived) }
+
+        it "moves all applications from the user to merge to the user to keep" do
+          subject
+          expect(user_to_keep.applications.to_a).to contain_exactly(user_to_keep_rejected_application,
+                                                                    user_to_keep_pending_application,
+                                                                    user_to_keep_accepted_application,
+                                                                    user_to_merge_rejected_application,
+                                                                    user_to_merge_pending_application,
+                                                                    user_to_merge_accepted_application)
+        end
+
+        it "archives the user to merge" do
+          subject
+          expect(user_to_merge.reload).to be_archived
+        end
+
+        it "keeps the user to keep" do
+          subject
+          expect(user_to_keep).not_to be_archived
+        end
+
+        it "creates a participant id change" do
+          subject
+          expect(user_to_keep.participant_id_changes.first).to have_attributes(from_participant_id: user_to_merge.ecf_id, to_participant_id: user_to_keep.ecf_id)
+        end
+
+        it "moves existing participant id changes" do
+          subject
+          expect(existing_participant_id_change.reload.user).to eq user_to_keep
+        end
+      end
     end
 
     context "when dry run true" do
