@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe EligibilityLists::Update, type: :model do
+  subject(:service) { described_class.new(eligibility_list_type:, file:) }
+
+  let(:eligibility_list_type) { EligibilityList.eligibility_list_types[:pp50_school] }
+  let(:file) { tempfile_with_bom("URN,other\n#{urn},whatever\n") }
+  let(:urn) { "100001" }
+
+  before do
+    create(:eligibility_list, identifier: "200000", eligibility_list_type:, identifier_type: "urn")
+    create(:eligibility_list, identifier: "300000", eligibility_list_type:, identifier_type: "urn")
+  end
+
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:file).with_message("Please choose a file") }
+
+    context "when the file has invalid headers" do
+      let(:file) { tempfile_with_bom("Invalid Header\n#{urn}\n") }
+
+      it "is not valid" do
+        expect(subject).to have_error(:file, :invalid_headers)
+      end
+    end
+  end
+
+  describe "#call" do
+    subject { service.call }
+
+    it "deletes existing records for that eligibility list type" do
+      expect { subject }.to change { EligibilityList.where(eligibility_list_type:).count }.from(2).to(1)
+    end
+
+    it "creates new records from the uploaded file" do
+      expect { subject }.to change {
+        EligibilityList.where(eligibility_list_type:, identifier: urn, identifier_type: "urn").count
+      }.from(0).to(1)
+    end
+  end
+end
