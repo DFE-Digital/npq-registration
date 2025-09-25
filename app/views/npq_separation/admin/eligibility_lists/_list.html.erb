@@ -5,9 +5,8 @@
       row.with_value(text: eligibility_last_updated_at.to_formatted_s(:govuk_short))
     end
     sl.with_row do |row|
-      not_used = eligibility_list_type.any? ? " (not used yet)" : ""
       row.with_key(text: "Number of entries")
-      row.with_value(text: "#{eligibility_list_type.count}#{not_used}")
+      row.with_value(text: eligibility_list_type.count)
     end
     sl.with_row do |row|
       row.with_key(text: "Number of legacy entries")
