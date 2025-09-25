@@ -206,7 +206,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     visit(npq_separation_admin_applications_path)
 
     application = Application.order(created_at: :asc, id: :asc).first
-    started_declaration = create(:declaration, :from_ecf, application:)
+    started_declaration = create(:declaration, :from_ecf, :with_secondary_delivery_partner, application:)
     completed_declaration = create(:declaration, :completed, application:)
     payable_statement = create(:statement, :payable)
     payable_declaration = create(:declaration, :payable, application:, statement: payable_statement)
@@ -229,6 +229,8 @@ RSpec.feature "Listing and viewing applications", type: :feature do
         expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", started_declaration.cohort.start_year)
         expect(summary_list).to have_summary_item("Provider", started_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("Delivery partner", started_declaration.delivery_partner.name)
+        expect(summary_list).to have_summary_item("Secondary delivery partner", started_declaration.secondary_delivery_partner.name)
         expect(summary_list).to have_summary_item("Created at", started_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", started_declaration.updated_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Statements", "")
@@ -243,6 +245,8 @@ RSpec.feature "Listing and viewing applications", type: :feature do
         expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", completed_declaration.cohort.start_year)
         expect(summary_list).to have_summary_item("Provider", completed_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("Delivery partner", completed_declaration.delivery_partner.name)
+        expect(summary_list).to have_summary_item("Secondary delivery partner", "")
         expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Statements", "")

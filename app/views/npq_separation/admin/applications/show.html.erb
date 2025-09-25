@@ -169,6 +169,16 @@
         end
 
         sl.with_row do |row|
+          row.with_key(text: "Delivery partner")
+          row.with_value(text: declaration.delivery_partner.name)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Secondary delivery partner")
+          row.with_value(text: declaration.secondary_delivery_partner.try(:name))
+        end
+
+        sl.with_row do |row|
           row.with_key(text: "Created at")
           row.with_value(text: declaration.created_at.to_fs(:govuk_short))
         end
