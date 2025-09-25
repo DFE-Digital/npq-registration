@@ -19,6 +19,10 @@ class FundingEligibilityData
     rise_urns.include?(urn.to_i)
   end
 
+  def rise_urns
+    @rise_urns ||= load_rise_urns
+  end
+
 private
 
   def default_data_file_path
@@ -27,10 +31,6 @@ private
     else
       Rails.root.join("config/data/autumn_2025")
     end
-  end
-
-  def rise_urns
-    @rise_urns ||= load_rise_urns
   end
 
   def load_rise_urns

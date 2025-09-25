@@ -262,3 +262,10 @@ shared:
     - email_updates_unsubscribe_key
     - archived_at
     - significantly_updated_at
+  :eligibility_lists:
+    - id
+    - eligibility_list_type
+    - identifier
+    - identifier_type
+    - created_at
+    - updated_at
