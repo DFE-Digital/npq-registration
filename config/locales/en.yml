@@ -350,6 +350,11 @@ en:
             lead_provider_id:
               blank: "Choose a provider"
               unchanged: "You cannot change to the same course provider"
+        eligibility_lists/update:
+          attributes:
+            file:
+              blank: Please choose a file
+              invalid_headers: Uploaded file has incorrect header
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:

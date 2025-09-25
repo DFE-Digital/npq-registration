@@ -42,4 +42,52 @@ RSpec.describe PrivateChildcareProvider, type: :model do
       end
     end
   end
+
+  describe "#eyl_disadvantaged?" do
+    subject { provider.eyl_disadvantaged? }
+
+    let(:provider) { build(:private_childcare_provider, provider_urn:) }
+
+    context "when the provider is in the EY_OFSTED_URN_HASH" do
+      let(:provider_urn) { "150014" } # URN taken from data file
+
+      it { is_expected.to be true }
+    end
+
+    context "when the URN is not in the EY_OFSTED_URN_HASH" do
+      let(:provider_urn) { "100001" }
+
+      it { is_expected.to be false }
+
+      context "when the URN is in the disadvantaged_early_years_school eligibility list" do
+        before { create(:eligibility_list, :disadvantaged_early_years_school, identifier: provider_urn) }
+
+        it { is_expected.to be true }
+      end
+    end
+  end
+
+  describe "#on_childminders_list?" do
+    subject { provider.on_childminders_list? }
+
+    let(:provider) { build(:private_childcare_provider, provider_urn:) }
+
+    context "when the provider is in the CHILDMINDERS_OFSTED_URN_HASH" do
+      let(:provider_urn) { "CA000006" } # URN taken from data file
+
+      it { is_expected.to be true }
+    end
+
+    context "when the URN is not in the CHILDMINDERS_OFSTED_URN_HASH" do
+      let(:provider_urn) { "100001" }
+
+      it { is_expected.to be false }
+
+      context "when the URN is in the disadvantaged_early_years_school eligibility list" do
+        before { create(:eligibility_list, :childminder, identifier: provider_urn) }
+
+        it { is_expected.to be true }
+      end
+    end
+  end
 end
