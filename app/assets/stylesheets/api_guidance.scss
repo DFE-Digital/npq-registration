@@ -72,17 +72,62 @@
     background-color: govuk-colour("light-grey");
     white-space : pre-wrap;
     font-size: 0.8em;
-  
+
     .govuk-panel--confirmation & {
       background-color: transparent;
     }
-  
+
     a {
       text-decoration: none;
     }
-  
+
     a:hover {
       text-decoration: underline;
     }
-  }  
+  }
+}
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  max-width: 600px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.card-text h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.card-text p {
+  margin: 5px 0 0;
+  font-size: 1em;
+}
+.card-text ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding-left: 0;
+}
+
+.card-text ul li {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px; /* Adds space between cards */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
