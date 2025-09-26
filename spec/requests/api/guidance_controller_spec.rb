@@ -21,15 +21,15 @@ RSpec.describe API::GuidanceController do
     end
 
     context "with unknown page" do
-      let(:get_page) { get api_guidance_page_path(page: "unknown") }
+      before { get api_guidance_page_path(page: "unknown") }
 
-      it { expect { get_page }.to raise_exception ActionView::MissingTemplate }
+      it { is_expected.to have_http_status :missing }
     end
 
     context "with non-guidance page" do
-      let(:get_page) { get api_guidance_page_path(page: "../../errors/not_found") }
+      before { get api_guidance_page_path(page: "../../errors/not_found") }
 
-      it { expect { get_page }.to raise_exception ActionView::MissingTemplate }
+      it { is_expected.to have_http_status :missing }
     end
   end
 end

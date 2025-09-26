@@ -11,6 +11,8 @@ module API
       @page = Guidance::GuidancePage.new(params[:page])
 
       render template: @page.template
+    rescue ActionView::MissingTemplate
+      raise ActionController::RoutingError, "Not Found"
     end
   end
 end
