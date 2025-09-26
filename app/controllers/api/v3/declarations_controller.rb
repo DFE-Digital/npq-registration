@@ -68,7 +68,8 @@ module API
                   :course_identifier,
                   :has_passed,
                   :delivery_partner_id,
-                  :secondary_delivery_partner_id)
+                  :secondary_delivery_partner_id,
+                  :application_id)
           .merge(
             lead_provider: current_lead_provider,
           )

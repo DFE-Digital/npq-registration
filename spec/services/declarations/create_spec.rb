@@ -431,6 +431,45 @@ RSpec.describe Declarations::Create, type: :model do
 
         expect(declaration.application).to eq(newer_application)
       end
+
+      context "when application id is provided" do
+        let(:application_id) { application.ecf_id }
+
+        let(:params_with_application_id) do
+          params.merge(application_id:)
+        end
+
+        subject { described_class.new(**params_with_application_id).create_declaration }
+
+        it "creates a declaration for the specified application" do
+          expect { subject }.to change(Declaration, :count).by(1)
+
+          expect(declaration.application).to eq(application)
+        end
+
+        context "when application_id is incorrect" do
+          subject { described_class.new(**params_with_application_id) }
+
+          context "when id does not exist" do
+            let(:application_id) { SecureRandom.uuid }
+
+            it { expect(subject).to have_error(:application_id, :application_not_found, "An accepted application cannot be found for the given '#/application_id'.") }
+          end
+
+          context "when id does not belongs to participant" do
+            let(:other_application) { create(:application, :accepted, cohort:, course:, lead_provider:, schedule:) }
+            let(:application_id) { other_application.ecf_id }
+
+            it { expect(subject).to have_error(:application_id, :application_not_found, "An accepted application cannot be found for the given '#/application_id'.") }
+          end
+
+          context "when application_id is for non-declarable application" do
+            let(:application) { create(:application, :pending, cohort:, course:, lead_provider:, schedule:) }
+
+            it { expect(subject).to have_error(:application_id, :application_not_found, "An accepted application cannot be found for the given '#/application_id'.") }
+          end
+        end
+      end
     end
 
     context "when there is already an older application with declarations" do
