@@ -1,91 +1,295 @@
-# Participant training journey diagrams
+# Participant NPQ journey 
 
-These diagrams give an overview of the processes that take place during the different phases of an NPQ participant's training journey. We'll iterate these based on feedback from providers and DfE support staff.   
+These diagrams provide an overview of the key processes that take place during each phase of an NPQ participant’s journey.
+
+<!-- Added: CSS to align content consistently inside each .card -->
+<style>
+.card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+
+.card img.participant,
+.card img.provider,
+.card img.dfe,
+.card img.api {
+  width: 80px;
+  height: auto;
+  flex: 0 0 80px;
+  display: block;
+}
+
+.card-text {
+  flex: 1 1 auto;
+  min-width: 0; /* ensure long text wraps inside the card */
+}
+
+.card-text h2 {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+}
+
+.govuk-body,
+.govuk-list {
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.govuk-list.govuk-list--bullet {
+  margin-left: 1.25rem;
+}
+
+/* centre the arrow image on the page */
+.arrow-container {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+.arrow-container img.arrow {
+  display: inline-block;
+  max-width: 160px;
+  height: auto;
+}
+</style>
+
+<br>
+
+## Registering and applying for an NPQ
+
+<div class="card">
+     <img src="/api/participant.png" alt="dfe" class="participant">
+     <div class="card-text">
+     <h2 class="govuk-heading-m">Participant</h2>
+
+    <p class="govuk-body">
+      1. Reads the guidance on gov.uk to find out:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>which NPQ courses are available</li>
+      <li>which providers offer them</li>
+      <li>who is eligible for scholarship funding</li>
+    </ul>
+
+    <p class="govuk-body">
+      2. Creates a DfE Identity account.
+    </p>
+
+    <p class="govuk-body">
+      3. Requests a teacher reference number (TRN) if they do not have it or have never had one.
+    </p>
+
+    <p class="govuk-body">
+      4. Registers for an NPQ by providing their information including:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>workplace details</li>
+      <li>course and provider choice</li>
+    </ul>
+  </div>
+</div>
+
+
+ <div class="card">
+      <img src="/api/dfe.png" alt="dfe" class="dfe">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">DfE</h2>
+        <p class="govuk-body"> 5. Reviews the information supplied by the participant and tells them whether they qualify for scholarship funding. <br><br> 6. Informs the chosen provider that the participant has registered for an NPQ.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/provider.png" alt="dfe" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider</h2>
+        <p class="govuk-body">7. Receives notification of registration and requests that the participant completes an application for their course.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/participant.png" alt="dfe" class="participant">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Participant</h2>
+        <p class="govuk-body">8. Completes and submits the application to their course provider.<br><br> 9. If they are suitable for the course, they’ll be accepted by the provider.</p>
+      </div>
+</div>
+
+
+<br>
 
 ## Course preparation 
 
-<div class="mermaid">
-    sequenceDiagram
-    participant teacher as Participant
-    participant provider as Provider
-
-    Note over teacher: Find out course info 
-    provider->>+teacher: Send start date, in-person session timings etc.
-    provider->>+teacher: Send participant training platform login details
-    Note over teacher: Access training platforms
-
+ <div class="card">
+      <img src="/api/participant.png" alt="participant" class="participant">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Participant</h2>
+        <p class="govuk-body">1. Finds course information and learns about the course details, structure, and expectations.</p>
+      </div>
 </div>
 
-## Course introduction
-
-<div class="mermaid">
-    sequenceDiagram
-    participant teacher as Participant
-    participant provider as Provider
-
-    Note over teacher: Attend intro session
-    teacher->>+provider: This is often referred to as a ‘conference’ 
-    Note over provider: Run intro session
-
+ <div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider</h2>
+        <p class="govuk-body">2. Sends course logistics, including start date, in-person session timings, and other key details. <br><br>3. Sends login details for the training platform.</p>
+      </div>
 </div>
 
-## Start of course
-
-<div class="mermaid">
-    sequenceDiagram
-    participant teacher as Participant
-    participant provider as Provider
-    participant endpoint as API endpoint
-    participant dfe as DfE
-
-    Note over teacher: Start course
-    Note over provider: Submit 'Start' declaration
-    provider->>+endpoint: 
-    Note over endpoint: Declare a participant has reached a milestone
-    endpoint->>+dfe: 
-    Note over dfe: Calculate payment due for ‘Start’ declarations 
-
+<div class="card">
+      <img src="/api/participant.png" alt="participant" class="participant">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Participant</h2>
+        <p class="govuk-body">4. Accesses the training platform with the login details and begins engaging with course materials.</p>
+      </div>
 </div>
 
-## Updating participant info in the API during the course 
+<br><br>
 
-<div class="mermaid">
-    sequenceDiagram
-    participant teacher as Participant
-    participant provider as Provider
-    participant endpoint as API endpoint
-    participant dfe as DfE
-  
-    Note over provider: Run course
-    provider->>+teacher:  
-    Note over teacher: Attend training sessions
-    teacher->>+provider:  
-    Note over provider: Document attendance 
-    Note over provider: Gather assurance evidence
-    provider->>+endpoint: Submit declarations at each milestone
-    Note over endpoint: Declare a participant has reached a milestone
-    endpoint->>+dfe:  
-    Note over dfe: Check declarations
-    Note over dfe: Update financial statements
-    dfe->>+endpoint: 
-    Note over endpoint: Retrieve financial statements
-    endpoint->>provider:  
-    Note over provider: Check financial statements
-       
+## Course introduction 
+
+ <div class="card">
+      <img src="/api/participant.png" alt="participant" class="participant">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Participant</h2>
+        <p class="govuk-body">1. Attends the introduction session to get an overview of the course (often referred to as a ‘conference’).</p>
+      </div>
 </div>
 
-## Payments process 
+ <div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider</h2>
+        <p class="govuk-body">2. Delivers the introduction session, covering key course information and expectations.</p>
+      </div>
+</div>
 
-<div class="mermaid">
-    sequenceDiagram
-    participant provider as Provider
-    participant dfe as DfE
-    
-    provider->>+dfe: Send invoices to DfE
-    Note over dfe: Check invoices
-    dfe->>+provider: Send participant output fee at each milestone
-    Note over provider: Receive output fees  
-    dfe->>+provider: Send service fee monthly for target number of participants
-    Note over provider: Receive service fees
-    
+<br><br>
+
+## Start of course 
+
+ <div class="card">
+      <img src="/api/participant.png" alt="participant" class="participant">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Participant</h2>
+        <p class="govuk-body">1. Starts the course and begins engaging with course content.</p>
+      </div>
+</div>
+
+<div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider</h2>
+        <p class="govuk-body">2. Submits ‘Start’ declaration and confirms that the participant has started the course.</p>
+      </div>
+</div>
+
+<div class="card">
+      <img src="/api/api.png" alt="api" class="api">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">API endpoint</h2>
+        <p class="govuk-body">3. Records that the participant has reached the start milestone and logs each milestone.</p>
+      </div>
+</div>
+
+<div class="card">
+      <img src="/api/dfe.png" alt="api" class="dfe">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">DfE</h2>
+        <p class="govuk-body">4. Calculates payments and processes funding based on the ‘Start’ declaration.
+</p>
+      </div>
+</div>
+<br>
+
+      
+## Updating participant info during the course
+
+ <div class="card">
+      <img src="/api/participant.png" alt="participant" class="participant">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Participant</h2>
+        <p class="govuk-body">1. Attends training sessions and takes part in scheduled course activities.</p>
+      </div>
+</div>
+
+<div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider</h2>
+        <p class="govuk-body">2. Runs the course and delivers training sessions.<br><br> 3. Documents attendance, tracking who attended and when. <br><br> 4. Gathers assurance evidence such as proof of participation and progress.<br><br> 5. Submits milestone declarations to the API to confirm participant progress at key points.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/api.png" alt="api" class="api">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">API endpoint</h2>
+        <p class="govuk-body">6. Sends milestone data to DfE to notify them of participant progress.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/dfe.png" alt="dfe" class="dfe">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">DfE</h2>
+        <p class="govuk-body">7. Checks declarations and updates financial statements.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/api.png" alt="api" class="api">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">API endpoint</h2>
+        <p class="govuk-body">8. Retrieves financial statements.<br><br> 9. Shares financial statements with provider to ensure transparency and accuracy.</p>
+      </div>
+</div>
+
+<br><br>
+
+## Payments process
+
+This flow outlines how payments are managed between the provider and the Department for Education (DfE):
+
+ <div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider </h2>
+        <p class="govuk-body">1. Sends invoices to DfE for participant-related and service-related payments.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/dfe.png" alt="dfe" class="dfe">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">DfE </h2>
+        <p class="govuk-body">2. Checks the submitted invoices for accuracy and eligibility.<br><br> 3. Sends output fees at each milestone.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider </h2>
+        <p class="govuk-body">4. Receives output fees.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/dfe.png" alt="dfe" class="dfe">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">DfE </h2>
+        <p class="govuk-body">5. Sends a monthly service fee based on the target number of participants.</p>
+      </div>
+</div>
+
+ <div class="card">
+      <img src="/api/provider.png" alt="provider" class="provider">
+      <div class="card-text">
+        <h2 class="govuk-heading-m">Provider </h2>
+        <p class="govuk-body">6. Receives service fees.</p>
+      </div>
 </div>
