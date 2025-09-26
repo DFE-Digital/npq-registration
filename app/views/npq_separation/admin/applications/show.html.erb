@@ -170,7 +170,7 @@
 
         sl.with_row do |row|
           row.with_key(text: "Delivery partner")
-          row.with_value(text: declaration.delivery_partner.name)
+          row.with_value(text: declaration.delivery_partner.try(:name))
         end
 
         sl.with_row do |row|

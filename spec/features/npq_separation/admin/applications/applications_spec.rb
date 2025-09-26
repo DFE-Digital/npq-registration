@@ -205,9 +205,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing application details with declarations" do
     visit(npq_separation_admin_applications_path)
 
+    cohort_without_delivery_partners = create(:cohort, start_year: Declaration::DELIVER_PARTNER_REQUIRED_FROM - 1)
     application = Application.order(created_at: :asc, id: :asc).first
     started_declaration = create(:declaration, :from_ecf, :with_secondary_delivery_partner, application:)
-    completed_declaration = create(:declaration, :completed, application:)
+    completed_declaration = create(:declaration, :completed, application:, delivery_partner: nil, cohort: cohort_without_delivery_partners)
     payable_statement = create(:statement, :payable)
     payable_declaration = create(:declaration, :payable, application:, statement: payable_statement)
     paid_statement = create(:statement, :paid, declaration: payable_declaration)
@@ -245,7 +246,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
         expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", completed_declaration.cohort.start_year)
         expect(summary_list).to have_summary_item("Provider", completed_declaration.lead_provider.name)
-        expect(summary_list).to have_summary_item("Delivery partner", completed_declaration.delivery_partner.name)
+        expect(summary_list).to have_summary_item("Delivery partner", "")
         expect(summary_list).to have_summary_item("Secondary delivery partner", "")
         expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
