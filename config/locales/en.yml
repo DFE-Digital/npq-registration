@@ -354,6 +354,7 @@ en:
           attributes:
             file:
               blank: Please choose a file
+              empty: Uploaded file is empty
               invalid_headers: Uploaded file has incorrect header
         questionnaires/teacher_reference_number:
           attributes:

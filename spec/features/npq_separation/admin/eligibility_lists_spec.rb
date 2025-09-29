@@ -6,8 +6,7 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
   let(:super_admin) { create(:super_admin) }
   let(:urn) { "100001" }
   let(:ukprn) { "10000001" }
-  let(:csv_file) { tempfile_with_bom("URN\n#{urn}\n") }
-  let(:fe_csv_file) { tempfile_with_bom("UKPRN\n#{ukprn}\n") }
+  let(:fe_csv_file) { tempfile_with_bom("FE UKPRN\n#{ukprn}\n") }
   let(:already_eligible_school_pp50) { create(:school, urn: "100006") } # value from legacy list (PP50_SCHOOLS_URN_HASH)
   let(:already_eligible_fe_pp50) { create(:school, ukprn: "10000599") } # value from legacy list (PP50_FE_UKPRN_HASH)
   let(:already_eligible_childminder) { create(:private_childcare_provider, provider_urn: "CA000006") } # value from legacy list (CHILDMINDERS_OFSTED_URN_HASH)
@@ -15,6 +14,10 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
   let(:already_eligible_ey_school) { create(:school, urn: "150014") } # value from legacy list (EY_OFSTED_URN_HASH)
   let(:already_eligible_la_nursery) { create(:school, urn: "126565", ukprn:) } # value from legacy list (LA_DISADVANTAGED_NURSERIES)
   let(:already_eligible_rise_school) { create(:school, urn: "112543") } # value from legacy file rise.csv
+
+  def csv_file(header)
+    tempfile_with_bom("#{header}\n#{urn}\n")
+  end
 
   before do
     create(:school, urn:)
@@ -32,7 +35,7 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
     expect(already_eligible_school_pp50.pp50?(Questionnaires::WorkSetting::A_SCHOOL)).to be true
 
     within "div#pp50-schools" do
-      attach_file "eligibility_lists_update[file]", csv_file.path
+      attach_file "eligibility_lists_update[file]", csv_file("PP50 School URN").path
       click_button "Update eligibility list"
     end
 
@@ -64,7 +67,7 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
 
     click_link "Childminders"
     within "div#childminders" do
-      attach_file "eligibility_lists_update[file]", csv_file.path
+      attach_file "eligibility_lists_update[file]", csv_file("Childminder URN").path
       click_button "Update eligibility list"
     end
 
@@ -82,7 +85,7 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
 
     click_link "Disadvantaged EY"
     within "div#disadvantaged-ey" do
-      attach_file "eligibility_lists_update[file]", csv_file.path
+      attach_file "eligibility_lists_update[file]", csv_file("Disadvantaged EY School URN").path
       click_button "Update eligibility list"
     end
 
@@ -100,7 +103,7 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
 
     click_link "LA Nurseries"
     within "div#la-nurseries" do
-      attach_file "eligibility_lists_update[file]", csv_file.path
+      attach_file "eligibility_lists_update[file]", csv_file("LA Nursery URN").path
       click_button "Update eligibility list"
     end
 
@@ -115,12 +118,20 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
 
     click_link "RISE"
     within "div#rise" do
-      attach_file "eligibility_lists_update[file]", csv_file.path
+      attach_file "eligibility_lists_update[file]", csv_file("RISE School URN").path
       click_button "Update eligibility list"
     end
 
     expect(page).to have_content "Eligibility list updated"
     expect(School.find_by(urn:).rise?).to be true
     expect(already_eligible_rise_school.rise?).to be false
+  end
+
+  scenario "No file chosen" do
+    within "div#pp50-schools" do
+      click_button "Update eligibility list"
+    end
+
+    expect(page).to have_content "Please choose a file"
   end
 end

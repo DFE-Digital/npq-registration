@@ -9,8 +9,9 @@
       row.with_value(text: eligibility_list_type.count)
     end
     sl.with_row do |row|
+      not_used = eligibility_list_type.any? ? " (not used)" : ""
       row.with_key(text: "Number of legacy entries")
-      row.with_value(text: legacy_count)
+      row.with_value(text: "#{legacy_count}#{not_used}")
     end
   end
 %>
@@ -24,8 +25,8 @@
     %>
     <%= govuk_details(summary_text: "Example CSV", classes: 'govuk-!-margin-top-3') do %>
       <pre class="govuk-!-padding-5 govuk-!-font-size-16 csv-example">
-<%= identifier_name %>
-<%= if identifier_name == "UKPRN"
+<%= eligibility_list_type::IDENTIFIER_HEADER %>
+<%= if eligibility_list_type::IDENTIFIER_TYPE == :ukprn
       "10000599\n10004502"
     else
       "100000\n100006"
