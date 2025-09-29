@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe EligibilityLists::Update, type: :model do
   subject(:service) { described_class.new(eligibility_list_type:, file:) }
 
-  let(:eligibility_list_type) { EligibilityList::Pp50School }
-  let(:file) { tempfile_with_bom("URN,other\n#{urn},whatever\n") }
+  let(:eligibility_list_type) { "EligibilityList::Pp50School" }
+  let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_HEADER},other\n#{urn},whatever\n") }
   let(:urn) { "100001" }
 
   before do
@@ -22,6 +22,14 @@ RSpec.describe EligibilityLists::Update, type: :model do
 
       it "is not valid" do
         expect(subject).to have_error(:file, :invalid_headers)
+      end
+    end
+
+    context "when the file has no data rows" do
+      let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_HEADER}\n") }
+
+      it "is not valid" do
+        expect(subject).to have_error(:file, :empty)
       end
     end
   end

@@ -6,8 +6,12 @@ class NpqSeparation::Admin::EligibilityListsController < NpqSeparation::AdminCon
   def create
     entries_loaded = @service.call
 
-    flash[:success] = "Eligibility list updated - #{entries_loaded} entries loaded" unless @service.errors.any?
-    redirect_to npq_separation_admin_eligibility_lists_path
+    if @service.errors.any?
+      render :show
+    else
+      flash[:success] = "Eligibility list updated - #{entries_loaded} entries loaded"
+      redirect_to npq_separation_admin_eligibility_lists_path
+    end
   end
 
 private
