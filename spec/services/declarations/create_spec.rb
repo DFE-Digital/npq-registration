@@ -276,9 +276,31 @@ RSpec.describe Declarations::Create, type: :model do
       end
 
       context "when there is an existing billable declaration" do
-        before { create(:declaration, :paid, application:, declaration_date:) }
+        context "when the application is not specified" do
+          before { create(:declaration, :paid, application:, declaration_date:) }
 
-        it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
+          it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
+        end
+
+        context "when the application is specified" do
+          let(:newer_application) { create(:application, :accepted, cohort:, course:, lead_provider:, user: application.user) }
+          let(:application_id) { application.ecf_id }
+          let(:params_with_application_id) do
+            params.merge(application_id:)
+          end
+
+          before do
+            travel_to(1.day.ago) do
+              application
+            end
+            newer_application
+            create(:declaration, :paid, application: newer_application, declaration_date:)
+          end
+
+          subject { described_class.new(**params_with_application_id) }
+
+          it { is_expected.not_to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
+        end
       end
     end
 

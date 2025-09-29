@@ -113,12 +113,12 @@ module Declarations
     end
 
     def existing_declaration
-      @existing_declaration ||= participant
+      @existing_declaration ||= application
         .declarations
         .joins(application: :course)
         .submitted_state
         .or(
-          participant
+          application
             .declarations
             .joins(application: :course)
             .billable,
