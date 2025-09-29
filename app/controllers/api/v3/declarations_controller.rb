@@ -5,7 +5,7 @@ module API
       include FilterByDate
       include FilterByParticipantIds
 
-      before_action :ensure_declaration_belongs_to_lead_provider, only: %i[void change_delivery_partner]
+      before_action :ensure_declaration_belongs_to_lead_provider, except: %i[index show create]
 
       def index
         conditions = { updated_since:, participant_ids:, cohort_start_years: }
