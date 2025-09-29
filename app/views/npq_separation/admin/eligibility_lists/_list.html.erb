@@ -6,7 +6,7 @@
     end
     sl.with_row do |row|
       row.with_key(text: "Number of entries")
-      row.with_value(text: EligibilityList.where(eligibility_list_type:).count)
+      row.with_value(text: eligibility_list_type.count)
     end
     sl.with_row do |row|
       row.with_key(text: "Number of legacy entries")

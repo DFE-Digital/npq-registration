@@ -104,23 +104,35 @@ class School < ApplicationRecord
     ELIGIBLE_ESTABLISHMENT_TYPE_CODES.keys.include?(establishment_type_code)
   end
 
+  def eligibility_check(type, hash, identifier = urn)
+    if type.any?
+      type.eligible?(identifier)
+    else
+      !!hash[identifier.to_s]
+    end
+  end
+
   def pp50?(work_setting)
     if work_setting == Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING
-      EligibilityList.pp50_further_education?(ukprn) || !!PP50_FE_UKPRN_HASH[ukprn.to_s]
+      eligibility_check(EligibilityList::Pp50FurtherEducation, PP50_FE_UKPRN_HASH, ukprn)
     else
-      EligibilityList.pp50_school?(urn) || !!PP50_SCHOOLS_URN_HASH[urn.to_s]
+      eligibility_check(EligibilityList::Pp50School, PP50_SCHOOLS_URN_HASH)
     end
   end
 
   def eyl_disadvantaged?
-    EligibilityList.disadvantaged_early_years_school?(urn) || !!EY_OFSTED_URN_HASH[urn.to_s]
+    eligibility_check(EligibilityList::DisadvantagedEarlyYearsSchool, EY_OFSTED_URN_HASH)
   end
 
   def la_disadvantaged_nursery?
-    EligibilityList.local_authority_nursery?(urn) || !!LA_DISADVANTAGED_NURSERIES[urn.to_s]
+    eligibility_check(EligibilityList::LocalAuthorityNursery, LA_DISADVANTAGED_NURSERIES)
   end
 
   def rise?
-    EligibilityList.rise_school?(urn) || FundingEligibilityData.rise_school?(urn.to_s)
+    if EligibilityList::RiseSchool.any?
+      EligibilityList::RiseSchool.eligible?(urn)
+    else
+      FundingEligibilityData.rise_school?(urn.to_s)
+    end
   end
 end

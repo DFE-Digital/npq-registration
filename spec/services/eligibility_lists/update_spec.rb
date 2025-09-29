@@ -5,13 +5,13 @@ require "rails_helper"
 RSpec.describe EligibilityLists::Update, type: :model do
   subject(:service) { described_class.new(eligibility_list_type:, file:) }
 
-  let(:eligibility_list_type) { EligibilityList.eligibility_list_types[:pp50_school] }
+  let(:eligibility_list_type) { EligibilityList::Pp50School }
   let(:file) { tempfile_with_bom("URN,other\n#{urn},whatever\n") }
   let(:urn) { "100001" }
 
   before do
-    create(:eligibility_list, identifier: "200000", eligibility_list_type:, identifier_type: "urn")
-    create(:eligibility_list, identifier: "300000", eligibility_list_type:, identifier_type: "urn")
+    create(:eligibility_list, :pp50_school, identifier: "200000")
+    create(:eligibility_list, :pp50_school, identifier: "300000")
   end
 
   describe "validations" do
@@ -30,12 +30,12 @@ RSpec.describe EligibilityLists::Update, type: :model do
     subject { service.call }
 
     it "deletes existing records for that eligibility list type" do
-      expect { subject }.to change { EligibilityList.where(eligibility_list_type:).count }.from(2).to(1)
+      expect { subject }.to change(EligibilityList::Pp50School, :count).from(2).to(1)
     end
 
     it "creates new records from the uploaded file" do
       expect { subject }.to change {
-        EligibilityList.where(eligibility_list_type:, identifier: urn, identifier_type: "urn").count
+        EligibilityList::Pp50School.where(identifier: urn, identifier_type: EligibilityList::Pp50School::IDENTIFIER_TYPE).count
       }.from(0).to(1)
     end
   end
