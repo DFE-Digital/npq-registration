@@ -6,7 +6,6 @@
 
   tabs.with_tab(label: "PP50 Schools") do %>
   <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::Pp50School,
-                                        identifier_name: "URN",
                                         fragment: "pp50-schools",
                                         legacy_count: @pp50_schools_legacy_count,
                                         eligibility_last_updated_at: @pp50_schools_last_updated_at } %>
@@ -14,7 +13,6 @@
 
   <%= tabs.with_tab(label: "PP50 FE") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::Pp50FurtherEducation,
-                                          identifier_name: "UKPRN",
                                           fragment: "pp50-fe",
                                           legacy_count: @pp50_fe_legacy_count,
                                           eligibility_last_updated_at: @pp50_fe_last_updated_at } %>
@@ -22,7 +20,6 @@
 
   <%= tabs.with_tab(label: "Childminders") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::Childminder,
-                                          identifier_name: "URN",
                                           fragment: "childminders",
                                           legacy_count: @childminders_legacy_count,
                                           eligibility_last_updated_at: @childminders_last_updated_at } %>
@@ -30,7 +27,6 @@
 
   <%= tabs.with_tab(label: "Disadvantaged EY") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::DisadvantagedEarlyYearsSchool,
-                                          identifier_name: "URN",
                                           fragment: "disadvantaged-ey",
                                           legacy_count: @ey_schools_legacy_count,
                                           eligibility_last_updated_at: @ey_schools_last_updated_at } %>
@@ -38,7 +34,6 @@
 
   <%= tabs.with_tab(label: "LA Nurseries") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::LocalAuthorityNursery,
-                                          identifier_name: "URN",
                                           fragment: "la-nurseries",
                                           legacy_count: @la_nurseries_legacy_count,
                                           eligibility_last_updated_at: @la_nurseries_last_updated_at } %>
@@ -46,7 +41,6 @@
 
   <%= tabs.with_tab(label: "RISE") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::RiseSchool,
-                                          identifier_name: "URN",
                                           fragment: "rise",
                                           legacy_count: @rise_schools_legacy_count,
                                           eligibility_last_updated_at: @rise_schools_last_updated_at } %>
