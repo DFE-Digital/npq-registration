@@ -64,6 +64,14 @@ RSpec.describe PrivateChildcareProvider, type: :model do
 
         it { is_expected.to be true }
       end
+
+      context "when the URN is in the EY_OFSTED_URN_HASH but not in the disadvantaged_early_years_school eligibility list" do
+        let(:provider_urn) { "150014" } # URN taken from data file
+
+        before { create(:eligibility_list, :disadvantaged_early_years_school, identifier: "123") }
+
+        it { is_expected.to be false }
+      end
     end
   end
 
@@ -87,6 +95,14 @@ RSpec.describe PrivateChildcareProvider, type: :model do
         before { create(:eligibility_list, :childminder, identifier: provider_urn) }
 
         it { is_expected.to be true }
+      end
+
+      context "when the URN is in the CHILDMINDERS_OFSTED_URN_HASH but not in the disadvantaged_early_years_school eligibility list" do
+        before { create(:eligibility_list, :childminder, identifier: "123") }
+
+        let(:provider_urn) { "CA000006" } # URN taken from data file
+
+        it { is_expected.to be false }
       end
     end
   end
