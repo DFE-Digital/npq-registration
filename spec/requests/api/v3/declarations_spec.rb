@@ -20,7 +20,7 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:resource) { create(:declaration, application:, lead_provider: create(:lead_provider)) }
 
     before do
-      Flipper.enable(Feature::LP_TRANSFERRED_DECLARATIONS_VISIBILITY)
+      allow(Feature).to receive(:lp_transferred_declarations_visibility?).and_return(true)
       allow(service).to receive(:new).and_return(instance_double(service))
     end
 

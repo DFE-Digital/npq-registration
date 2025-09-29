@@ -49,35 +49,36 @@ RSpec.describe Declarations::Query do
           create(:declaration, lead_provider: other_lead_provider)
         end
 
-        context "when the feature flag is enabled" do
-          before do
-            Flipper.enable(Feature::LP_TRANSFERRED_DECLARATIONS_VISIBILITY)
-          end
+        it "only shows declarations made by the provider" do
+          query = described_class.new(lead_provider: current_lead_provider)
+          expect(query.declarations).to contain_exactly(declaration_after_transfer)
 
-          it "lets the current provider see all declarations" do
-            query = described_class.new(lead_provider: current_lead_provider)
-            expect(query.declarations).to contain_exactly(declaration_before_transfer, declaration_after_transfer)
-          end
-
-          it "lets the previous provider see their own declarations only" do
-            query = described_class.new(lead_provider: previous_lead_provider)
-            expect(query.declarations).to contain_exactly(declaration_before_transfer)
-          end
+          query = described_class.new(lead_provider: previous_lead_provider)
+          expect(query.declarations).to contain_exactly(declaration_before_transfer)
         end
 
-        context "when the feature flag is disabled" do
-          before do
-            Flipper.disable(Feature::LP_TRANSFERRED_DECLARATIONS_VISIBILITY)
+        context "when include_transferred_applications is true" do
+          subject do
+            described_class.new(
+              lead_provider:,
+              include_transferred_applications: true,
+            ).declarations
           end
 
-          it "lets the current provider see their own declarations only" do
-            query = described_class.new(lead_provider: current_lead_provider)
-            expect(query.declarations).to contain_exactly(declaration_after_transfer)
+          context "and the lead provider is the current provider" do
+            let(:lead_provider) { current_lead_provider }
+
+            it "shows all declarations" do
+              expect(subject).to contain_exactly(declaration_before_transfer, declaration_after_transfer)
+            end
           end
 
-          it "lets the previous provider see their own declarations only" do
-            query = described_class.new(lead_provider: previous_lead_provider)
-            expect(query.declarations).to contain_exactly(declaration_before_transfer)
+          context "and the lead provider is a previous provider" do
+            let(:lead_provider) { previous_lead_provider }
+
+            it "only shows declarations made by the provider" do
+              expect(subject).to contain_exactly(declaration_before_transfer)
+            end
           end
         end
 
