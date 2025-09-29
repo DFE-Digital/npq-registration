@@ -7,7 +7,7 @@ class NpqSeparation::Admin::EligibilityListsController < NpqSeparation::AdminCon
     entries_loaded = @service.call
 
     flash[:success] = "Eligibility list updated - #{entries_loaded} entries loaded" unless @service.errors.any?
-    render :show
+    redirect_to npq_separation_admin_eligibility_lists_path
   end
 
 private
@@ -18,20 +18,16 @@ private
 
   def set_variables
     @pp50_schools_legacy_count = PP50_SCHOOLS_URN_HASH.count
-    @pp50_schools_last_updated_at = last_updated_at(:pp50_school) || Date.new(2025, 8, 18)
+    @pp50_schools_last_updated_at = EligibilityList::Pp50School.last_updated_at || Date.new(2025, 8, 18)
     @pp50_fe_legacy_count = PP50_FE_UKPRN_HASH.count
-    @pp50_fe_last_updated_at = last_updated_at(:pp50_further_education) || Date.new(2025, 8, 18)
+    @pp50_fe_last_updated_at = EligibilityList::Pp50FurtherEducation.last_updated_at || Date.new(2025, 8, 18)
     @childminders_legacy_count = CHILDMINDERS_OFSTED_URN_HASH.count
-    @childminders_last_updated_at = last_updated_at(:childminder) || Date.new(2025, 8, 29)
+    @childminders_last_updated_at = EligibilityList::Childminder.last_updated_at || Date.new(2025, 8, 29)
     @ey_schools_legacy_count = EY_OFSTED_URN_HASH.count
-    @ey_schools_last_updated_at = last_updated_at(:disadvantaged_early_years_school) || Date.new(2025, 8, 18)
+    @ey_schools_last_updated_at = EligibilityList::DisadvantagedEarlyYearsSchool.last_updated_at || Date.new(2025, 8, 18)
     @la_nurseries_legacy_count = LA_DISADVANTAGED_NURSERIES.count
-    @la_nurseries_last_updated_at = last_updated_at(:local_authority_nursery) || Date.new(2025, 8, 18)
+    @la_nurseries_last_updated_at = EligibilityList::LocalAuthorityNursery.last_updated_at || Date.new(2025, 8, 18)
     @rise_schools_legacy_count = FundingEligibilityData.new.rise_urns.count
-    @rise_schools_last_updated_at = last_updated_at(:rise_schools) || Date.new(2025, 9, 29)
-  end
-
-  def last_updated_at(eligibility_list_type)
-    EligibilityList.where(eligibility_list_type: EligibilityList.eligibility_list_types[eligibility_list_type]).last&.created_at
+    @rise_schools_last_updated_at = EligibilityList::RiseSchool.last_updated_at || Date.new(2025, 9, 29)
   end
 end

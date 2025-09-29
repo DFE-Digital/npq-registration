@@ -25,7 +25,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_143706) do
   create_enum "declaration_state_reasons", ["duplicate"]
   create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
-  create_enum "eligibility_list_types", ["pp50_school", "pp50_further_education", "childminder", "disadvantaged_early_years_school", "local_authority_nursery", "rise_school"]
   create_enum "employment_types", ["hospital_school", "lead_mentor_for_accredited_itt_provider", "local_authority_supply_teacher", "local_authority_virtual_school", "young_offender_institution", "other"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
@@ -314,13 +313,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_143706) do
   end
 
   create_table "eligibility_lists", force: :cascade do |t|
-    t.enum "eligibility_list_type", null: false, enum_type: "eligibility_list_types"
+    t.string "type", null: false
     t.string "identifier", null: false
     t.string "identifier_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["eligibility_list_type"], name: "index_eligibility_lists_on_eligibility_list_type"
     t.index ["identifier"], name: "index_eligibility_lists_on_identifier"
+    t.index ["type", "identifier", "identifier_type"], name: "idx_on_type_identifier_identifier_type_d59db53dda", unique: true
+    t.index ["type"], name: "index_eligibility_lists_on_type"
   end
 
   create_table "financial_change_logs", force: :cascade do |t|
