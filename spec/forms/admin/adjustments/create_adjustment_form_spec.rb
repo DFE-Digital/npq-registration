@@ -8,7 +8,7 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
   let(:created_adjustment_ids) { nil }
   let(:statement) { create(:statement) }
   let(:description) { "Adjustment description" }
-  let(:amount) { 100 }
+  let(:amount) { 100.12 }
 
   describe "#save_adjustment" do
     subject(:save_adjustment) { form.save_adjustment }
@@ -16,6 +16,11 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
     shared_examples "saving an adjustment" do
       it "saves the adjustment" do
         expect { save_adjustment }.to change(statement.adjustments, :count).by(1)
+      end
+
+      it "saves the amount correctly" do
+        save_adjustment
+        expect(Adjustment.last.amount).to eq amount
       end
 
       it "adds the adjustment ID to the created_adjustment_ids" do
