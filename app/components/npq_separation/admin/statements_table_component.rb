@@ -46,7 +46,7 @@ module NpqSeparation
       end
 
       def view_link(statement)
-        govuk_link_to(
+        helpers.govuk_link_to(
           "View",
           npq_separation_admin_finance_statement_path(statement),
           no_visited_state: true,
@@ -57,13 +57,13 @@ module NpqSeparation
       def lead_provider_link(lead_provider)
         return unless show_lead_provider
 
-        govuk_link_to(lead_provider.name, npq_separation_admin_lead_provider_path(lead_provider), **metadata_link_arguments)
+        helpers.govuk_link_to(lead_provider.name, npq_separation_admin_lead_provider_path(lead_provider), **metadata_link_arguments)
       end
 
       def cohort_link(statement)
         text = helpers.format_cohort(statement.cohort)
 
-        govuk_link_to(text, "#", **metadata_link_arguments)
+        helpers.govuk_link_to(text, "#", **metadata_link_arguments)
       end
 
       def statement_tag(statement)
