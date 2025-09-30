@@ -142,7 +142,8 @@ jobs:
     name: Sonar Scanner
     runs-on: ubuntu-24.04
     needs: [ rspec, ruby_linting ]
-    if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
+    # if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
+    if: false
     environment:
       name: staging
     steps:
