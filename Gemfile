@@ -53,7 +53,7 @@ gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "strong_migrations"
 
-gem "net-imap", "~> 0.5.9", require: false
+gem "net-imap", "~> 0.5.10", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.1", require: false
 
