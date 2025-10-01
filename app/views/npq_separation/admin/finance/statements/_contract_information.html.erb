@@ -1,0 +1,27 @@
+<%=
+  govuk_table do |table|
+    table.with_head do |head|
+      head.with_row do |row|
+        row.with_cell(text: "Course")
+        row.with_cell(text: "Recruitment target")
+        row.with_cell(text: "Payment per participant")
+        row.with_cell(text: "Action")
+      end
+    end
+
+    table.with_body do |body|
+      @contracts.each do |contract|
+        body.with_row do |row|
+          row.with_cell(text: contract.course.name)
+          row.with_cell(text: contract.contract_template.recruitment_target)
+          row.with_cell(text: number_to_currency(contract.contract_template.per_participant))
+          row.with_cell do
+            if current_admin.super_admin? && !(@statement.past? || @statement.paid?)
+             govuk_link_to("Change", npq_separation_admin_finance_change_per_participant_path(contract))
+            end
+          end
+        end
+      end
+    end
+  end
+%>
