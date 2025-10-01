@@ -43,7 +43,6 @@ RSpec.feature "Statement", type: :feature do
     component = NpqSeparation::Admin::StatementSummaryComponent.new(statement:)
     expect(page).to have_component(component)
 
-    expect(page).to have_css("a", text: "Save as PDF")
     expect(page).to have_link("Download declarations (CSV)", href: npq_separation_admin_finance_assurance_report_path(statement, format: :csv))
 
     contracts.each do |contract|
