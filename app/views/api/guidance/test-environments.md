@@ -4,13 +4,7 @@ The test environments are used to test API integrations without affecting real d
 
 ## Test environment links
 
-We have test environments for each version of the API:
-
-* API v1:
-[https://npq-registration-sandbox-web.teacherservices.cloud/api/v1](https://npq-registration-sandbox-web.teacherservices.cloud/api/v1)
-
-* API v2:
-[https://npq-registration-sandbox-web.teacherservices.cloud/api/v2](https://npq-registration-sandbox-web.teacherservices.cloud/api/v2)
+We have a test environments for the API:
 
 * API v3:
 [https://npq-registration-sandbox-web.teacherservices.cloud/api/v3](https://npq-registration-sandbox-web.teacherservices.cloud/api/v3)
