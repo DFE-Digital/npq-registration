@@ -8,6 +8,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
   let(:user_date_of_birth) { "1980-12-13" }
   let(:user_date_of_birth_parsed) { Date.new(1980, 12, 13) }
   let(:user_trn) { "1234567" }
+  let(:user_trn_lookup_status) { "Found" }
 
   let(:provider) { "tra_openid_connect" }
 
@@ -22,7 +23,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
         "trn" => user_trn,
         "name" => user_full_name,
         "preferred_name" => user_preferred_name,
-        "trn_lookup_status" => "Found",
+        "trn_lookup_status" => user_trn_lookup_status,
       },
       "credentials" => {
         "token" => SecureRandom.uuid,
@@ -40,7 +41,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
           "trn" => user_trn,
           "given_name" => user_first_name,
           "family_name" => user_last_name,
-          "trn_lookup_status" => "Found",
+          "trn_lookup_status" => user_trn_lookup_status,
         },
       },
     }
@@ -48,6 +49,20 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
 
   let(:stubbed_callback_response_as_json) do
     stubbed_callback_response.as_json
+  end
+
+  let(:user_attributes_from_stubbed_callback_response) do
+    {
+      "date_of_birth" => user_date_of_birth,
+      "email" => user_email,
+      "full_name" => user_full_name,
+      "preferred_name" => user_preferred_name,
+      "provider" => "tra_openid_connect",
+      "raw_tra_provider_data" => stubbed_callback_response_as_json,
+      "trn" => user_trn,
+      "trn_lookup_status" => user_trn_lookup_status,
+      "uid" => user_uid,
+    }
   end
 
   before do
