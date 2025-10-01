@@ -12,7 +12,6 @@ SecureHeaders::Configuration.default do |config|
 
   google_analytics = %w[*.google-analytics.com *.analytics.google.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
   tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
-  flippercloud = %w[www.flippercloud.io]
   identity_domain = [ENV["TRA_OIDC_DOMAIN"]]
   sentry = %w[*.sentry-cdn.com *.ingest.us.sentry.io]
 
@@ -46,18 +45,12 @@ SecureHeaders::Configuration.default do |config|
     'sha256-6m+Pxpjk+jyp7HZXpcce2aAhz5qolnf72N5ndxd4BSQ='
   ]
 
-  # These are for the inline CSS in the flipper admin UI
-  flipper_ui_hashes = %w[
-    'sha256-NNzAJMHPK9KuPslppuoTz2azqZcpUO0IJZosehbmhHA='
-    'sha256-zuOhDbTpAZjaeemuptCNLaf/7IaV06c8De4EMGOhtzM='
-  ]
-
   # This is for the inline style browsers apply to robots.txt file
   robots_txt_inline_style_hash = %w[
     'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ='
   ]
 
-  all_hashes = flipper_ui_hashes + robots_txt_inline_style_hash + mermaid_hashes
+  all_hashes = robots_txt_inline_style_hash + mermaid_hashes
 
   config.csp = SecureHeaders::OPT_OUT
 
@@ -67,7 +60,7 @@ SecureHeaders::Configuration.default do |config|
     default_src: %w['none'],
     base_uri: %w['self'],
     child_src: %w['self'],
-    connect_src: %w['self'] + google_analytics + flippercloud + sentry,
+    connect_src: %w['self'] + google_analytics + sentry,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
     form_action: %w['self'] + identity_domain, # needed because the POST to /users/auth/tra_openid_connect' redirects to the identity domain
     frame_ancestors: %w['self'],
