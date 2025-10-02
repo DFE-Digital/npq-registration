@@ -5,7 +5,7 @@
         row.with_cell(text: "Course")
         row.with_cell(text: "Recruitment target")
         row.with_cell(text: "Payment per participant")
-        row.with_cell(text: "Action")
+        row.with_cell(text: "Action", html_attributes: { class: "noprint" })
       end
     end
 
@@ -15,7 +15,7 @@
           row.with_cell(text: contract.course.name)
           row.with_cell(text: contract.contract_template.recruitment_target)
           row.with_cell(text: number_to_currency(contract.contract_template.per_participant))
-          row.with_cell do
+          row.with_cell(html_attributes: { class: "noprint" }) do
             if current_admin.super_admin? && !(@statement.past? || @statement.paid?)
              govuk_link_to("Change", npq_separation_admin_finance_change_per_participant_path(contract))
             end
