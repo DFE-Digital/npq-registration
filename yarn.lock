@@ -2870,10 +2870,10 @@ svg-pan-zoom@^3.6.2:
   resolved "https://registry.yarnpkg.com/svg-pan-zoom/-/svg-pan-zoom-3.6.2.tgz#be136506211b242627a234a9656f8128fcbbabed"
   integrity sha512-JwnvRWfVKw/Xzfe6jriFyfey/lWJLq4bUh2jwoR5ChWQuQoOH8FEh1l/bEp46iHHKHEJWIyFJETbazraxNWECg==
 
-swagger-ui-dist@^5.29.1:
-  version "5.29.1"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-5.29.1.tgz#82de546ac3a88fa33cb2864e046827b9bda336a1"
-  integrity sha512-qyjpz0qgcomRr41a5Aye42o69TKwCeHM9F8htLGVeUMKekNS6qAqz9oS7CtSvgGJSppSNAYAIh7vrfrSdHj9zw==
+swagger-ui-dist@^5.29.2:
+  version "5.29.2"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-5.29.2.tgz#552fa4c873dff5fe718f6530a4cdd54a3c15d0a8"
+  integrity sha512-MbnWUJT5Qm3eFOZUKNEXwY987n99U121dN0VGezL/yuxYr13ytu1yMWX1Cg2iqJyWwZfWtWyr0pC2Sp+KYYzTw==
   dependencies:
     "@scarf/scarf" "=1.4.0"
 
