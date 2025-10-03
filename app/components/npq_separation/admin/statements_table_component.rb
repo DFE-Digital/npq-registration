@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class StatementsTableComponent < ViewComponent::Base
+    class StatementsTableComponent < BaseComponent
       STATE_COLOURS = {
         open: "govuk-tag--grey",
         payable: "govuk-tag--red",
