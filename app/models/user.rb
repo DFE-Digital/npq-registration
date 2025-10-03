@@ -60,12 +60,6 @@ class User < ApplicationRecord
     Users::FindOrCreateFromProviderData.new(provider_data: provider_data, feature_flag_id: feature_flag_id).call
   end
 
-  def get_an_identity_user
-    return if get_an_identity_id.blank?
-
-    External::GetAnIdentity::User.find(get_an_identity_id)
-  end
-
   def get_an_identity_provider?
     provider == "tra_openid_connect"
   end
