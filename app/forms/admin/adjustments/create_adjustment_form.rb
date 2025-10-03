@@ -7,7 +7,7 @@ module Admin::Adjustments
     attribute :created_adjustment_ids
     attribute :statement
     attribute :description
-    attribute :amount, :integer
+    attribute :amount, :decimal
     attribute :adjustment
 
     validate :adjustment_valid

@@ -6,9 +6,9 @@ RSpec.describe Admin::Adjustments::UpdateAdjustmentForm, type: :model do
   let(:form) { described_class.new(statement:, description:, amount:, adjustment:) }
 
   let(:statement) { create(:statement) }
-  let(:adjustment) { create(:adjustment, statement:, description: "old description", amount: 200) }
+  let(:adjustment) { create(:adjustment, statement:, description: "old description", amount: 200.23) }
   let(:description) { "new description" }
-  let(:amount) { 400 }
+  let(:amount) { 400.45 }
 
   describe "#id" do
     it "returns the adjustment ID" do
@@ -25,7 +25,7 @@ RSpec.describe Admin::Adjustments::UpdateAdjustmentForm, type: :model do
       end
 
       it "updates the adjustment amount" do
-        expect { save_adjustment }.to change { adjustment.reload.amount }.from(200).to(400)
+        expect { save_adjustment }.to change { adjustment.reload.amount }.from(200.23).to(400.45)
       end
 
       it { is_expected.to be true }
