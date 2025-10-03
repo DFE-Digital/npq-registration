@@ -101,7 +101,7 @@ RSpec.describe Course do
 
       it "logs an error" do
         expect(Rails.logger).to receive(:warn)
-        expect(Sentry).to receive(:capture_exception)
+        expect(Sentry).to receive(:capture_message)
 
         course.short_code
       end
