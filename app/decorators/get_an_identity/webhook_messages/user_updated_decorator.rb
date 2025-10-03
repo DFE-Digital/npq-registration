@@ -19,8 +19,14 @@ module GetAnIdentity
         message_json.fetch("emailAddress")
       end
 
-      def full_name
+      def preferred_name
         message_json.fetch("preferredName")
+      end
+
+      def full_name
+        message_json.values_at("firstName", "middleName", "lastName")
+                    .select(&:present?)
+                    .join(" ")
       end
 
       def date_of_birth

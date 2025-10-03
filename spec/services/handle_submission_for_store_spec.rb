@@ -25,6 +25,30 @@ RSpec.describe HandleSubmissionForStore do
     }
   end
 
+  let(:expected_user_attributes) do
+    {
+      "email" => user.email,
+      "ecf_id" => user.ecf_id,
+      "trn" => "0012345",
+      "full_name" => user.full_name,
+      "provider" => nil,
+      "raw_tra_provider_data" => nil,
+      "date_of_birth" => 30.years.ago.to_date.to_s,
+      "uid" => nil,
+      "active_alert" => false,
+      "archived_email" => nil,
+      "archived_at" => nil,
+      "get_an_identity_id_synced_to_ecf" => false,
+      "national_insurance_number" => nil,
+      "notify_user_for_future_reg" => false,
+      "preferred_name" => user.preferred_name,
+      "trn_auto_verified" => false,
+      "trn_lookup_status" => nil,
+      "trn_verified" => false,
+      "feature_flag_id" => user.feature_flag_id,
+    }
+  end
+
   before do
     travel_to(Date.new(cohort.start_year, 9, 26))
     allow_any_instance_of(School).to receive(:pp50?).and_return(false)
@@ -68,51 +92,13 @@ RSpec.describe HandleSubmissionForStore do
       end
 
       it "stores data from store" do
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "uid" => nil,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_lookup_status" => nil,
-          "trn_verified" => false,
-          "feature_flag_id" => user.feature_flag_id,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
 
         subject.call
 
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_verified" => false,
-          "trn_lookup_status" => nil,
-          "feature_flag_id" => user.feature_flag_id,
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 1
         last_application = user.applications.last
         expect(stable_as_json(last_application)).to match({
@@ -189,51 +175,13 @@ RSpec.describe HandleSubmissionForStore do
       end
 
       it "stores data from store" do
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_lookup_status" => nil,
-          "trn_verified" => false,
-          "feature_flag_id" => user.feature_flag_id,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
 
         subject.call
 
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_verified" => false,
-          "trn_lookup_status" => nil,
-          "feature_flag_id" => user.feature_flag_id,
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 1
         last_application = user.applications.last
         expect(stable_as_json(last_application)).to match({

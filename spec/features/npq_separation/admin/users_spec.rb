@@ -8,7 +8,7 @@ RSpec.feature "User administration", type: :feature do
 
   before do
     create_list(:user, users_per_page, :with_get_an_identity_id)
-    user.update!(national_insurance_number: "QQ123456C")
+    user.update!(national_insurance_number: "QQ123456C", preferred_name: "Jonny D")
     sign_in_as(create(:admin))
   end
 
@@ -55,6 +55,7 @@ RSpec.feature "User administration", type: :feature do
 
       within(".govuk-summary-card", text: "Overview") do |summary_card|
         expect(summary_card).to have_summary_item("User ID", user.ecf_id)
+        expect(summary_card).to have_summary_item("Preferred Name", user.preferred_name)
         expect(summary_card).to have_summary_item("Email", user.email)
         expect(summary_card).to have_summary_item("Date of birth", user.date_of_birth.to_fs(:govuk_short))
         expect(summary_card).to have_summary_item("National Insurance number", user.national_insurance_number)

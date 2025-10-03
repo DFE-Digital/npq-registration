@@ -8,7 +8,7 @@ RSpec.describe Users::FindOrCreateFromProviderData do
   let(:provider_data_email) { "user@example.com" }
   let(:provider_data_trn) { "1234567" }
   let(:provider_data_name) { "John Doe" }
-  let(:provider_data_preferred_name) { "John Doe" }
+  let(:provider_data_preferred_name) { "Jonny D" }
   let(:provider_data_date_of_birth) { "1980-12-13" }
   let(:provider_data_first_name) { "John" }
   let(:provider_data_last_name) { "Doe" }
@@ -63,16 +63,12 @@ RSpec.describe Users::FindOrCreateFromProviderData do
       expect(subject.raw_tra_provider_data).to eq JSON.parse(provider_data.to_json)
     end
 
-    context "when there is a preferred name" do
-      it "sets full_name to the preferred name" do
-        expect(subject.full_name).to eq provider_data_preferred_name
-      end
+    it "sets preferred_name to the preferred name" do
+      expect(subject.preferred_name).to eq provider_data_preferred_name
     end
 
-    context "when there is no preferred name" do
-      it "sets full_name to the name" do
-        expect(subject.full_name).to eq provider_data_name
-      end
+    it "sets full_name to the name" do
+      expect(subject.full_name).to eq provider_data_name
     end
 
     context "when there is a date of birth" do

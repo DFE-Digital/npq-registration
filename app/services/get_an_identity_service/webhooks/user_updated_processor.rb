@@ -74,6 +74,7 @@ module GetAnIdentityService
       def update_user
         user.assign_attributes({
           full_name: decorated_message.full_name,
+          preferred_name: decorated_message.preferred_name,
           date_of_birth: decorated_message.date_of_birth,
           email: decorated_message.email,
           updated_from_tra_at: decorated_message.sent_at,

@@ -51,7 +51,8 @@ module Users
       extra_info = provider_data.extra&.raw_info
 
       user.raw_tra_provider_data = provider_data
-      user.full_name = extra_info&.preferred_name.presence || provider_data.info.name
+      user.preferred_name = extra_info&.preferred_name.presence
+      user.full_name = provider_data.info.name
 
       if extra_info&.birthdate.present?
         user.date_of_birth = Date.parse(extra_info.birthdate, "%Y-%m-%d")
