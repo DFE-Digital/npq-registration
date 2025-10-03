@@ -44,6 +44,21 @@ RSpec.describe "Qualifications endpoint", type: :request do
           expect(response.content_type).to eql("application/json")
         end
       end
+
+      context "when there is an internal server error and the request was for HTML" do
+        include_context "when errors are rendered"
+
+        before do
+          allow(Qualifications::Query).to receive(:new).and_raise(StandardError)
+        end
+
+        it "returns a JSON error response" do
+          api_get("#{path}.html", token: "trs_token")
+          expect(response).to have_http_status(:internal_server_error)
+          expect(response.body).to eq %({"error":"Internal server error"})
+          expect(response.content_type).to eql("application/json")
+        end
+      end
     end
 
     context "when the TRN does not exist" do
