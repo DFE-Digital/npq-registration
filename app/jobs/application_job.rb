@@ -4,4 +4,10 @@ class ApplicationJob < ActiveJob::Base
 
     raise exception
   end
+
+  around_perform do |job, actual_job_code|
+    PaperTrail.request(whodunnit: job.class.to_s) do
+      actual_job_code.call
+    end
+  end
 end
