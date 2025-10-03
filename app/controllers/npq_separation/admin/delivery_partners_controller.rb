@@ -83,8 +83,11 @@ private
   def set_similarly_named_delivery_partners
     return [] if params.dig(:delivery_partner, :name).blank?
 
-    @similarly_named_delivery_partners = DeliveryPartner.name_similar_to(params.dig(:delivery_partner, :name))
+    @similarly_named_delivery_partners = DeliveryPartner.name_or_ecf_id_similar_to(
+      params.dig(:delivery_partner, :name)
+    )
   end
+
 
   def set_continue_form
     @continue_form = Admin::DeliveryPartners::ContinueForm.new(continue_params)
