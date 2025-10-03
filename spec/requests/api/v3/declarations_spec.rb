@@ -15,6 +15,26 @@ RSpec.describe "Declaration endpoints", type: :request do
     create(:declaration, **attrs)
   end
 
+  RSpec.shared_examples "changing a declaration by another lead provider" do
+    let(:application) { create(:application, lead_provider: current_lead_provider) }
+    let(:resource) { create(:declaration, application:, lead_provider: create(:lead_provider)) }
+
+    before do
+      allow(Feature).to receive(:lp_transferred_declarations_visibility?).and_return(true)
+      allow(service).to receive(:new).and_return(instance_double(service))
+    end
+
+    it "does not call the service" do
+      expect(service).not_to receive(:new)
+      api_put(path(resource_id))
+    end
+
+    it "returns 403 - forbidden" do
+      api_put(path(resource_id))
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "GET /api/v3/participant-declarations" do
     let(:path) { api_v3_declarations_path }
     let(:resource_id_key) { :ecf_id }
@@ -49,6 +69,7 @@ RSpec.describe "Declaration endpoints", type: :request do
     end
 
     it_behaves_like "an API update endpoint"
+    it_behaves_like "changing a declaration by another lead provider"
   end
 
   describe "PUT /api/v3/participant-declarations/:ecf_id/change-delivery-partner" do
@@ -80,6 +101,7 @@ RSpec.describe "Declaration endpoints", type: :request do
     end
 
     it_behaves_like "an API update endpoint"
+    it_behaves_like "changing a declaration by another lead provider"
 
     context "when a parameter is missing" do
       let(:attributes) do
