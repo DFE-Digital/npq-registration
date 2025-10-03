@@ -1,17 +1,10 @@
 class AdminService::DeliveryPartnersSearch
-  attr_reader :q
-
   def initialize(q:)
-    @q = q
+    @q = q.to_s.strip
   end
 
   def call
-    default_scope.contains(q)
-  end
-
-private
-
-  def default_scope
-    DeliveryPartner.order(name: :asc)
+    return DeliveryPartner.all if @q.blank?
+    DeliveryPartner.name_or_ecf_id_similar_to(@q)
   end
 end
