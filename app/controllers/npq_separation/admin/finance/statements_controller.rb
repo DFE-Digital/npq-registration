@@ -1,4 +1,6 @@
 class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::AdminController
+  before_action :set_statements_and_contracts, only: %i[show print_provider print_dfe_user]
+
   def index
     scope = Statement.includes(:lead_provider, :cohort)
                      .where(statement_params)
@@ -15,6 +17,20 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
   end
 
   def show
+    show_authorising_statement_message(@statement)
+  end
+
+  def print_provider
+    # empty method to appease rubocop
+  end
+
+  def print_dfe_user
+    # empty method to appease rubocop
+  end
+
+private
+
+  def set_statements_and_contracts
     scope = Statement.includes(contracts: [
       :contract_template,
       { course: :course_group },
@@ -22,14 +38,10 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
 
     @statement = scope.find(params[:id])
     @calculator = Statements::SummaryCalculator.new(statement: @statement)
-    show_authorising_statement_message(@statement)
-
     contracts = @statement.contracts.joins(:contract_template, :course).order(identifier: :asc)
     @contracts = contracts.where(contract_template: { special_course: false })
     @special_contracts = contracts.where(contract_template: { special_course: true })
   end
-
-private
 
   def statement_params
     params.permit(:lead_provider_id, :cohort_id, :payment_status, :statement, :output_fee)
