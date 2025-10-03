@@ -3,13 +3,20 @@ require "rails_helper"
 RSpec.describe "Qualifications endpoint", type: :request do
   describe "GET /api/teacher-record-service/v1/qualifications/:trn" do
     let(:path) { "/api/teacher-record-service/v1/qualifications/#{trn}" }
+    let(:user) { create(:user) }
+    let(:trn) { user.trn }
 
-    before { create(:api_token, :teacher_record_service) }
+    before do
+      create(:api_token, :teacher_record_service)
+
+      # different TRN, should never be returned
+      create(:participant_outcome, :passed, user: build(:user))
+      create(:legacy_passed_participant_outcome)
+    end
 
     context "when the TRN exists" do
-      let!(:participant_outcome) { create(:participant_outcome, :passed) }
+      let!(:participant_outcome) { create(:participant_outcome, :passed, user:) }
       let!(:legacy_passed_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 1.year.ago) }
-      let(:trn) { User.last.trn }
 
       context "when using a valid API token" do
         it "returns the qualifications" do
@@ -18,6 +25,7 @@ RSpec.describe "Qualifications endpoint", type: :request do
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
           expect(parsed_response["data"]["trn"]).to eq(trn)
+          expect(parsed_response["data"]["qualifications"].count).to eq(2)
           expect(parsed_response["data"]["qualifications"][0]["award_date"]).to eq(participant_outcome.completion_date.to_fs(:db))
           expect(parsed_response["data"]["qualifications"][0]["npq_type"]).to eq(participant_outcome.course.short_code)
           expect(parsed_response["data"]["qualifications"][1]["award_date"]).to eq(legacy_passed_participant_outcome.completion_date.to_fs(:db))
@@ -53,6 +61,7 @@ RSpec.describe "Qualifications endpoint", type: :request do
         api_get(path, token: "trs_token")
 
         expect(response.status).to eq 200
+        expect(parsed_response["data"]["trn"]).to eq(trn)
         expect(parsed_response["data"]["qualifications"]).to be_empty
         expect(response.content_type).to eql("application/json")
       end

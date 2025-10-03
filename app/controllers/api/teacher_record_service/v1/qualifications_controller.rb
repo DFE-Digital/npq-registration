@@ -3,9 +3,12 @@ module API
     module V1
       class QualificationsController < BaseController
         def show
-          participant_outcomes = participant_outcome_query
-
-          render json: to_json(participant_outcomes)
+          render json: {
+            data: {
+              trn:,
+              qualifications:,
+            },
+          }.to_json
         end
 
       private
@@ -14,12 +17,8 @@ module API
           params[:trn]
         end
 
-        def participant_outcome_query
+        def qualifications
           Qualifications::Query.new.qualifications(trn:)
-        end
-
-        def to_json(participant_outcomes)
-          QualificationsSerializer.render(trn, root: "data", participant_outcomes:)
         end
 
         def api_token_scope
