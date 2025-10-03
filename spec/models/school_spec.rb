@@ -159,6 +159,30 @@ RSpec.describe School do
         it "is not a pp50_institution" do
           expect(institution.pp50?(work_setting)).to be false
         end
+
+        context "when the school is not in the pp50_further_education eligibility list" do
+          it "is not a pp50_institution" do
+            expect(institution.pp50?(work_setting)).to be false
+          end
+        end
+
+        context "when the school is in the pp50_further_education eligibility list" do
+          before { create(:eligibility_list, :pp50_further_education, identifier: ukprn) }
+
+          it "is a pp50_institution" do
+            expect(institution.pp50?(work_setting)).to be true
+          end
+        end
+
+        context "when the school is in the PP50_FE_UKPRN_HASH but not in the pp50_further_education eligibility list" do
+          let(:ukprn) { "10000599" } # UKPRN taken from data file
+
+          before { create(:eligibility_list, :pp50_further_education, identifier: "123") }
+
+          it "is not a pp50_institution" do
+            expect(institution.pp50?(work_setting)).to be false
+          end
+        end
       end
     end
 
@@ -181,6 +205,30 @@ RSpec.describe School do
         it "is not a pp50_institution" do
           expect(institution.pp50?(work_setting)).to be false
         end
+
+        context "when the school is not in the pp50_school eligibility list" do
+          it "is not a pp50_institution" do
+            expect(institution.pp50?(work_setting)).to be false
+          end
+        end
+
+        context "when the school is in the pp50_school eligibility list" do
+          before { create(:eligibility_list, :pp50_school, identifier: urn) }
+
+          it "is a pp50_institution" do
+            expect(institution.pp50?(work_setting)).to be true
+          end
+        end
+
+        context "when the school is in the PP50_SCHOOLS_URN_HASH but not in the pp50_school eligibility list" do
+          let(:urn) { "100006" } # URN taken from data file
+
+          before { create(:eligibility_list, :pp50_school, identifier: "123") }
+
+          it "is not a pp50_institution" do
+            expect(institution.pp50?(work_setting)).to be false
+          end
+        end
       end
     end
   end
@@ -200,6 +248,84 @@ RSpec.describe School do
       let(:code) { "-1" }
 
       it { is_expected.to be false }
+    end
+  end
+
+  describe "#eyl_disadvantaged?" do
+    subject { school.eyl_disadvantaged? }
+
+    let(:school) { create(:school, urn:) }
+
+    context "when the URN is not in the EY_OFSTED_URN_HASH" do
+      let(:urn) { "100001" }
+
+      it { is_expected.to be false }
+
+      context "when the URN is in the disadvantaged_early_years_school eligibility list" do
+        before { create(:eligibility_list, :disadvantaged_early_years_school, identifier: urn) }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the URN is in the EY_OFSTED_URN_HASH but not in the disadvantaged_early_years_school eligibility list" do
+        let(:urn) { "150014" } # URN taken from data file
+
+        before { create(:eligibility_list, :disadvantaged_early_years_school, identifier: "123") }
+
+        it { is_expected.to be false }
+      end
+    end
+  end
+
+  describe "#la_disadvantaged_nursery?" do
+    subject { school.la_disadvantaged_nursery? }
+
+    let(:school) { create(:school, urn:) }
+
+    context "when the URN is not in the LA_DISADVANTAGED_NURSERIES hash" do
+      let(:urn) { "100001" }
+
+      it { is_expected.to be false }
+
+      context "when the URN is in the local_authority_nursery eligibility list" do
+        before { create(:eligibility_list, :local_authority_nursery, identifier: urn) }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the URN is in the LA_DISADVANTAGED_NURSERIES hash but not in the local_authority_nursery eligibility list" do
+        let(:urn) { "126565" } # URN taken from data file
+
+        before { create(:eligibility_list, :local_authority_nursery, identifier: "123") }
+
+        it { is_expected.to be false }
+      end
+    end
+  end
+
+  describe "#rise?" do
+    subject { school.rise? }
+
+    let(:school) { create(:school, urn:) }
+
+    context "when the URN is not in the RISE_SCHOOLS hash" do
+      let(:urn) { "100001" }
+
+      it { is_expected.to be false }
+
+      context "when the URN is in the rise_school eligibility list" do
+        before { create(:eligibility_list, :rise_school, identifier: urn) }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the URN is in the rise.csv but not in the rise_school eligibility list" do
+        let(:urn) { "112543" } # URN taken from data file
+
+        before { create(:eligibility_list, :rise_school, identifier: "123") }
+
+        it { is_expected.to be false }
+      end
     end
   end
 

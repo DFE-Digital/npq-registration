@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_16_094834) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_25_143706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_094834) do
     t.jsonb "raw_application_data", default: {}
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
+    t.enum "employment_type", enum_type: "employment_types"
     t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
@@ -159,7 +160,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_094834) do
     t.date "senco_start_date"
     t.string "on_submission_trn"
     t.enum "review_status", enum_type: "review_statuses"
-    t.enum "employment_type", enum_type: "employment_types"
     t.enum "reason_for_rejection", enum_type: "reasons_for_rejection"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
@@ -310,6 +310,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_094834) do
     t.index ["delivery_partner_id", "lead_provider_id", "cohort_id"], name: "idx_on_delivery_partner_id_lead_provider_id_cohort__10d5da32cd", unique: true
     t.index ["delivery_partner_id"], name: "index_delivery_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_delivery_partnerships_on_lead_provider_id"
+  end
+
+  create_table "eligibility_lists", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "identifier", null: false
+    t.string "identifier_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_eligibility_lists_on_identifier"
+    t.index ["type", "identifier", "identifier_type"], name: "idx_on_type_identifier_identifier_type_d59db53dda", unique: true
+    t.index ["type"], name: "index_eligibility_lists_on_type"
   end
 
   create_table "financial_change_logs", force: :cascade do |t|
