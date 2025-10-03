@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_29_131352) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_02_113306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -247,6 +247,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_131352) do
     t.boolean "display", default: true
     t.string "identifier"
     t.bigint "course_group_id"
+    t.string "short_code"
     t.index ["course_group_id"], name: "index_courses_on_course_group_id"
     t.index ["ecf_id"], name: "index_courses_on_ecf_id", unique: true
     t.index ["identifier"], name: "index_courses_on_identifier", unique: true
@@ -600,6 +601,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_131352) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["significantly_updated_at"], name: "index_users_on_significantly_updated_at"
+    t.index ["trn"], name: "index_users_on_trn"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
