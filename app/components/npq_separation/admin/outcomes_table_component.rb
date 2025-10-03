@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class OutcomesTableComponent < ViewComponent::Base
+    class OutcomesTableComponent < BaseComponent
       attr_reader :outcomes
 
       def initialize(outcomes)

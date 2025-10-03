@@ -5,7 +5,7 @@
       <p class="govuk-!-static-margin-0">
         <strong>
           <%=
-            govuk_link_to "Save as PDF",
+            helpers.govuk_link_to "Save as PDF",
               "javascript:void(0)",
               onclick: "window.formattedPrint(this)",
               data: { filename: "#{statement.lead_provider.name} #{statement_name(statement)} NPQ Statement (#{statement.cohort.start_year} Cohort)" }
@@ -14,64 +14,74 @@
       </p>
       <p class="govuk-!-static-margin-0">
         <strong>
-          <%= govuk_link_to "Download declarations (CSV)", npq_separation_admin_finance_assurance_report_path(statement, format: :csv) %>
+          <%= helpers.govuk_link_to "Download declarations (CSV)", npq_separation_admin_finance_assurance_report_path(statement, format: :csv) %>
         </strong>
       </p>
     </div>
   </div>
   <div class="govuk-summary-card__content">
     <div id="payment-deadline-warning">
-      <%= govuk_warning_text(text: "The output payment deadline is #{statement.deadline_date.to_fs(:govuk)}") %>
+      <%= helpers.govuk_warning_text(text: "The output payment deadline is #{statement.deadline_date.to_fs(:govuk)}") %>
     </div>
 
     <%=
-      govuk_summary_list do |summary_list|
+      helpers.govuk_summary_list do |summary_list|
         summary_list.with_row do |row|
           row.with_key { "Starts" }
           row.with_value { calculator.total_starts.to_s }
         end
+
         summary_list.with_row do |row|
           row.with_key { "Retained" }
           row.with_value { calculator.total_retained.to_s }
         end
+
         summary_list.with_row do |row|
           row.with_key { "Completed" }
           row.with_value { calculator.total_completed.to_s }
         end
+
         summary_list.with_row do |row|
           row.with_key { "Voids" }
           row.with_value { calculator.total_voided.to_s }
           row.with_action(text: "View Voids", href: npq_separation_admin_finance_voided_index_path(statement)) if link_to_voids
         end
+
         summary_list.with_row do |row|
           row.with_key { "Output payment" }
           row.with_value { number_to_currency(calculator.total_output_payment) }
         end
+
         summary_list.with_row do |row|
           row.with_key { "Output payment deadline" }
           row.with_value { statement.deadline_date.to_fs(:govuk) }
           row.with_action(text: "Change", href: npq_separation_admin_finance_statements_change_deadline_date_path(statement))
         end
+
         if calculator.show_targeted_delivery_funding?
           summary_list.with_row do |row|
             row.with_key { "Targeted delivery funding" }
             row.with_value { number_to_currency(calculator.total_targeted_delivery_funding) }
           end
         end
+
         summary_list.with_row do |row|
           row.with_key { "Clawbacks" }
           row.with_value { -number_to_currency(calculator.total_clawbacks) }
         end
+
         summary_list.with_row do |row|
           row.with_key { "Adjustments" }
           row.with_value { number_to_currency(calculator.total_adjustments) }
         end
+
         unless calculator.total_service_fees.zero?
           summary_list.with_row do |row|
             row.with_key { "Service fee" }
             row.with_value { number_to_currency(calculator.total_service_fees) }
           end
         end
+
         summary_list.with_row do |row|
           row.with_key { "Total net VAT" }
           row.with_value { tag.strong number_to_currency(calculator.total_payment) }

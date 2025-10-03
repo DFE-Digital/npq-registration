@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :component do
-  subject { render_inline component }
+  subject(:rendered) { render_inline component }
 
   let(:component) { described_class.new(contract:) }
   let(:calculator) { ::Statements::CourseCalculator.new(contract:) }
@@ -22,16 +22,20 @@ RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :comp
   it { is_expected.to have_css "h2", text: contract.course.name }
 
   describe "counts" do
-    it { is_expected.to have_text(/Started\s+2/) }
-    it { is_expected.to have_text(/Retained 1\s+3/) }
-    it { is_expected.to have_text(/Retained 2\s+0/) }
-    it { is_expected.to have_text(/Completed\s+1/) }
-    it { is_expected.to have_text(/#{t(".total_declarations")}\s+#{calculator.billable_declarations_count}/) }
-    it { is_expected.to have_text(/#{t(".total_not_eligible_for_funding")}\s+#{calculator.not_eligible_declarations_count}/) }
+    subject { rendered && page.find(".govuk-summary-list") }
+
+    it { is_expected.to have_summary_item("Started", 2) }
+    it { is_expected.to have_summary_item("Retained 1", 3) }
+    it { is_expected.to have_summary_item("Retained 2", 0) }
+    it { is_expected.to have_summary_item("Completed", 1) }
+    it { is_expected.to have_summary_item(t(".total_declarations"), calculator.billable_declarations_count) }
+    it { is_expected.to have_summary_item(t(".total_not_eligible_for_funding"), calculator.not_eligible_declarations_count) }
   end
 
   describe "total" do
-    it { is_expected.to have_text(/#{t(".course_total")}\s+£#{calculator.course_total}/) }
+    subject { rendered && page.find(".govuk-summary-list") }
+
+    it { is_expected.to have_summary_item(t(".course_total"), "£#{calculator.course_total}") }
   end
 
   describe "itemisation" do

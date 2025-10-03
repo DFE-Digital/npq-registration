@@ -1,4 +1,4 @@
-class StatusBox < ViewComponent::Base
+class StatusBox < BaseComponent
   attr_reader :url, :number, :label, :percentage, :small
 
   def initialize(number:, label:, percentage: nil, url: nil, small: false)
