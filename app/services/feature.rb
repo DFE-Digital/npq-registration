@@ -17,6 +17,7 @@ class Feature
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
     LP_SELF_SERVE,
+    LP_TRANSFERRED_DECLARATIONS_VISIBILITY,
   ].freeze
 
   class << self
