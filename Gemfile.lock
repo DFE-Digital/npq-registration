@@ -119,7 +119,7 @@ GEM
     bigdecimal (3.2.3)
     bindata (2.5.1)
     bindex (0.8.1)
-    blueprinter (1.1.2)
+    blueprinter (1.2.1)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
     brakeman (7.1.0)
