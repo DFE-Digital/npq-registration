@@ -1,63 +1,6 @@
-# Participant NPQ journey 
+# Participant NPQ journey
 
 These diagrams provide an overview of the key processes that take place during each phase of an NPQ participant’s journey.
-
-<!-- Added: CSS to align content consistently inside each .card -->
-<style>
-.card {
-  border: 1px solid #ddd;
-  padding: 16px;
-  border-radius: 6px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
-  background: #fff;
-}
-
-.card img.participant,
-.card img.provider,
-.card img.dfe,
-.card img.api {
-  width: 80px;
-  height: auto;
-  flex: 0 0 80px;
-  display: block;
-}
-
-.card-text {
-  flex: 1 1 auto;
-  min-width: 0; /* ensure long text wraps inside the card */
-}
-
-.card-text h2 {
-  margin: 0 0 12px 0;
-  font-size: 1.25rem;
-}
-
-.govuk-body,
-.govuk-list {
-  margin: 0 0 12px 0;
-  line-height: 1.5;
-}
-
-.govuk-list.govuk-list--bullet {
-  margin-left: 1.25rem;
-}
-
-/* centre the arrow image on the page */
-.arrow-container {
-  text-align: center;
-  margin: 1.5rem 0;
-}
-.arrow-container img.arrow {
-  display: inline-block;
-  max-width: 160px;
-  height: auto;
-}
-</style>
-
-<br>
 
 ## Registering and applying for an NPQ
 
@@ -90,9 +33,9 @@ These diagrams provide an overview of the key processes that take place during e
       <li>workplace details</li>
       <li>course and provider choice</li>
     </ul>
+
   </div>
 </div>
-
 
  <div class="card">
       <img src="/api/dfe.png" alt="dfe" class="dfe">
@@ -118,10 +61,9 @@ These diagrams provide an overview of the key processes that take place during e
       </div>
 </div>
 
-
 <br>
 
-## Course preparation 
+## Course preparation
 
  <div class="card">
       <img src="/api/participant.png" alt="participant" class="participant">
@@ -149,7 +91,7 @@ These diagrams provide an overview of the key processes that take place during e
 
 <br><br>
 
-## Course introduction 
+## Course introduction
 
  <div class="card">
       <img src="/api/participant.png" alt="participant" class="participant">
@@ -169,7 +111,7 @@ These diagrams provide an overview of the key processes that take place during e
 
 <br><br>
 
-## Start of course 
+## Start of course
 
  <div class="card">
       <img src="/api/participant.png" alt="participant" class="participant">
@@ -205,7 +147,6 @@ These diagrams provide an overview of the key processes that take place during e
 </div>
 <br>
 
-      
 ## Updating participant info during the course
 
  <div class="card">
