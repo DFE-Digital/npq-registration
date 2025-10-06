@@ -9,7 +9,7 @@ RSpec.describe AdminService::DeliveryPartnersSearch do
 
   describe "#call" do
     context "when partial name match with different capitalisation" do
-      let(:q) { "DEL" }
+      let(:q) { delivery_partner.name.first(3).upcase }
 
       it "returns the match" do
         expect(subject.call).to include(delivery_partner)
@@ -29,6 +29,46 @@ RSpec.describe AdminService::DeliveryPartnersSearch do
 
       it "returns results ordered by name" do
         expect(subject.call).to eq([a_delivery_partner, delivery_partner, z_delivery_partner])
+      end
+    end
+
+    context "with a matching ECF ID" do
+      let(:q) { delivery_partner.ecf_id }
+
+      it "returns the match" do
+        expect(subject.call).to include(delivery_partner)
+      end
+    end
+
+    context "with a random ECF ID" do
+      let(:q) { SecureRandom.uuid }
+
+      it "does not return a match" do
+        expect(subject.call).to be_empty
+      end
+    end
+
+    context "with an ECF ID without hyphens" do
+      let(:q) { delivery_partner.ecf_id.gsub(/-/, '') }
+
+      it "returns the match" do
+        expect(subject.call).to include(delivery_partner)
+      end
+    end
+
+    context "with an uppercase ECF ID" do
+      let(:q) { delivery_partner.ecf_id.upcase }
+
+      it "returns the match" do
+        expect(subject.call).to include(delivery_partner)
+      end
+    end
+
+    context "with an uppercase ECF ID without hyphens" do
+      let(:q) { delivery_partner.ecf_id.upcase.gsub(/-/, '') }
+
+      it "returns the match" do
+        expect(subject.call).to include(delivery_partner)
       end
     end
   end
