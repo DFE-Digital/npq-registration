@@ -6,6 +6,7 @@ RSpec.describe ApplicationJob, type: :job do
       def self.name
         "SimpleJob"
       end
+
       def perform
         user = User.first
         user.email = "#{Time.zone.now.to_i}@example.com"
