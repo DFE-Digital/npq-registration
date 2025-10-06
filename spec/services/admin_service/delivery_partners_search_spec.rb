@@ -49,7 +49,7 @@ RSpec.describe AdminService::DeliveryPartnersSearch do
     end
 
     context "with an ECF ID without hyphens" do
-      let(:q) { delivery_partner.ecf_id.gsub(/-/, '') }
+      let(:q) { delivery_partner.ecf_id.delete("-") }
 
       it "returns the match" do
         expect(subject.call).to include(delivery_partner)
@@ -65,7 +65,7 @@ RSpec.describe AdminService::DeliveryPartnersSearch do
     end
 
     context "with an uppercase ECF ID without hyphens" do
-      let(:q) { delivery_partner.ecf_id.upcase.gsub(/-/, '') }
+      let(:q) { delivery_partner.ecf_id.upcase.delete("-") }
 
       it "returns the match" do
         expect(subject.call).to include(delivery_partner)
