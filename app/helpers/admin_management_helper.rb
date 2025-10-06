@@ -1,9 +1,9 @@
 module AdminManagementHelper
   def admin_type_cell_contents(admin)
     if admin.super_admin?
-      govuk_tag(text: t(".admin_type.super_admin"), colour: "blue")
+      govuk_tag(text: t("npq_separation.admin.admins.index.admin_type.super_admin"), colour: "blue")
     else
-      govuk_tag(text: t(".admin_type.admin"), colour: "green")
+      govuk_tag(text: t("npq_separation.admin.admins.index.admin_type.admin"), colour: "green")
     end
   end
 
@@ -12,12 +12,12 @@ module AdminManagementHelper
   end
 
   def remove_as_admin_cell_contents(user)
-    govuk_button_link_to(t(".buttons.delete"), npq_separation_admin_admin_path(user), method: :delete, warning: true)
+    govuk_button_link_to(t("npq_separation.admin.admins.index.buttons.delete"), npq_separation_admin_admin_path(user), method: :delete, warning: true)
   end
 
   def elevate_to_super_admin_cell_contents(user)
     return "" if user.super_admin?
 
-    govuk_link_to(t(".buttons.elevate"), npq_separation_admin_super_admin_path(user), method: :patch)
+    govuk_link_to(t("npq_separation.admin.admins.index.buttons.elevate"), npq_separation_admin_super_admin_path(user), method: :patch)
   end
 end

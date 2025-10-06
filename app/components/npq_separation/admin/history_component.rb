@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class HistoryComponent < ViewComponent::Base
+    class HistoryComponent < BaseComponent
       attr_reader :record, :changes
 
       def initialize(record:, &)
