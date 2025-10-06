@@ -6,7 +6,7 @@ class AdminService::DeliveryPartnersSearch
   end
 
   def call
-    default_scope.contains(q).or(DeliveryPartner.where(ecf_id: q))
+    default_scope.contains(q).or(default_scope.where(ecf_id: q))
   end
 
 private
