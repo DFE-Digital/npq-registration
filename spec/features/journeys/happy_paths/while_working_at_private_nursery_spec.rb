@@ -1,11 +1,10 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
