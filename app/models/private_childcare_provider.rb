@@ -74,11 +74,11 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def eyl_disadvantaged?
-    !!EY_OFSTED_URN_HASH[provider_urn.to_s]
+    EligibilityList::DisadvantagedEarlyYearsSchool.eligible?(provider_urn)
   end
 
   def on_childminders_list?
-    !!CHILDMINDERS_OFSTED_URN_HASH[provider_urn.to_s]
+    EligibilityList::Childminder.eligible?(provider_urn)
   end
 
   def registration_details
