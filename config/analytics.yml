@@ -249,6 +249,8 @@ shared:
     - ecf_id
     - trn_verified
     - trn
+    - email
+    - full_name
     - active_alert
     - trn_auto_verified
     - feature_flag_id
