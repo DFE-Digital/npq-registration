@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Adjustments", type: :feature do
+RSpec.feature "Adjustments", :no_js, type: :feature do
   include Helpers::AdminLogin
 
   let(:statement) { create(:statement) }
@@ -44,11 +44,11 @@ RSpec.feature "Adjustments", type: :feature do
 
       # check adjustment creation
       fill_in "adjustment[description]", with: "First adjustment"
-      fill_in "Amount", with: "100"
+      fill_in "Amount", with: "100.12"
       click_on "Continue"
       expect(page).to have_css("h1", text: "You’ve made an adjustment")
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).to have_text("Do you need to add another adjustment?")
 
       # check "add another" radio button validation
@@ -60,13 +60,13 @@ RSpec.feature "Adjustments", type: :feature do
 
       # check creating a second adjustment
       fill_in "adjustment[description]", with: "Second adjustment"
-      fill_in "Amount", with: "200"
+      fill_in "Amount", with: "200.23"
       click_on "Continue"
       expect(page).to have_css("h1", text: "You’ve made an adjustment")
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).to have_text("Second adjustment")
-      expect(page).to have_text("£200")
+      expect(page).to have_text("£200.23")
       expect(page).to have_text("Do you need to add another adjustment?")
 
       choose "No", visible: :all
@@ -75,25 +75,25 @@ RSpec.feature "Adjustments", type: :feature do
       # check adjustments appear on statement page
       expect(page).to have_current_path(npq_separation_admin_finance_statement_path(statement))
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).to have_text("Second adjustment")
-      expect(page).to have_text("£200")
+      expect(page).to have_text("£200.23")
       within(:xpath, "//h2[text()='Additional adjustments']/following-sibling::table") do |table|
         expect(table).to have_text("Total")
-        expect(table).to have_text("£300")
+        expect(table).to have_text("£300.35")
       end
 
       # add further adjustment
       click_on "Make adjustment"
       fill_in "adjustment[description]", with: "Third adjustment"
-      fill_in "Amount", with: "400"
+      fill_in "Amount", with: "400.45"
       click_on "Continue"
       expect(page).not_to have_text("First adjustment")
-      expect(page).not_to have_text("£100")
+      expect(page).not_to have_text("£100.12")
       expect(page).not_to have_text("Second adjustment")
-      expect(page).not_to have_text("£200")
+      expect(page).not_to have_text("£200.23")
       expect(page).to have_text("Third adjustment")
-      expect(page).to have_text("£400")
+      expect(page).to have_text("£400.45")
 
       # check editing adjustment from adjustments list page
       click_on "Edit"
@@ -103,14 +103,14 @@ RSpec.feature "Adjustments", type: :feature do
       # edit for real
       click_on "Edit"
       fill_in "adjustment[description]", with: "Third adjustment edited"
-      fill_in "Amount", with: "300"
+      fill_in "Amount", with: "300.34"
       click_on "Continue"
       expect(page).not_to have_text("First adjustment")
-      expect(page).not_to have_text("£100")
+      expect(page).not_to have_text("£100.12")
       expect(page).not_to have_text("Second adjustment")
-      expect(page).not_to have_text("£200")
+      expect(page).not_to have_text("£200.23")
       expect(page).to have_text("Third adjustment edited")
-      expect(page).to have_text("£300")
+      expect(page).to have_text("£300.34")
 
       # check deleting adjustment
       click_on "Remove"
@@ -118,11 +118,11 @@ RSpec.feature "Adjustments", type: :feature do
       # check cancel link
       click_on "Cancel"
       expect(page).not_to have_text("First adjustment")
-      expect(page).not_to have_text("£100")
+      expect(page).not_to have_text("£100.12")
       expect(page).not_to have_text("Second adjustment")
-      expect(page).not_to have_text("£200")
+      expect(page).not_to have_text("£200.23")
       expect(page).to have_text("Third adjustment edited")
-      expect(page).to have_text("£300")
+      expect(page).to have_text("£300.34")
       expect(page).to have_current_path(npq_separation_admin_finance_statement_adjustments_path(statement, show_all_adjustments: false))
       # delete for real
       click_on "Remove"
@@ -133,18 +133,18 @@ RSpec.feature "Adjustments", type: :feature do
       choose "No", visible: :all
       click_on "Continue"
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).to have_text("Second adjustment")
-      expect(page).to have_text("£200")
+      expect(page).to have_text("£200.23")
       expect(page).not_to have_text("Third adjustment edited")
 
       # edit adjustment from statement page
       click_on "Change or remove"
       expect(page).not_to have_text("You’ve made an adjustment")
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).to have_text("Second adjustment")
-      expect(page).to have_text("£200")
+      expect(page).to have_text("£200.23")
 
       within ".govuk-table__row:nth-of-type(2)" do
         click_on "Edit"
@@ -157,16 +157,16 @@ RSpec.feature "Adjustments", type: :feature do
         click_on "Edit"
       end
       fill_in "adjustment[description]", with: "Second adjustment edited"
-      fill_in "Amount", with: "500"
+      fill_in "Amount", with: "500.56"
       click_on "Continue"
       expect(page).to have_text("Second adjustment edited")
-      expect(page).to have_text("£500")
+      expect(page).to have_text("£500.56")
       expect(page).to have_text("Do you need to add another adjustment?")
 
       choose "No", visible: :all
       click_on "Continue"
       expect(page).to have_text("Second adjustment edited")
-      expect(page).to have_text("£500")
+      expect(page).to have_text("£500.56")
 
       # delete adjustment from statement page
       click_on "Change or remove"
@@ -177,22 +177,22 @@ RSpec.feature "Adjustments", type: :feature do
       click_on "Cancel"
       expect(page).to have_current_path(npq_separation_admin_finance_statement_adjustments_path(statement, show_all_adjustments: true))
       expect(page).to have_text("Second adjustment edited")
-      expect(page).to have_text("£500")
+      expect(page).to have_text("£500.56")
       # delete for real
       within ".govuk-table__row:nth-of-type(2)" do
         click_on "Remove"
       end
       click_on "Remove"
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).not_to have_text("Second adjustment edited")
-      expect(page).not_to have_text("£500")
+      expect(page).not_to have_text("£500.56")
 
       choose "No", visible: :all
       click_on "Continue"
 
       expect(page).not_to have_text("Second adjustment edited")
-      expect(page).not_to have_text("£500")
+      expect(page).not_to have_text("£500.56")
 
       # check adding another adjustment when going via the 'Change or remove' link
       click_on "Change or remove"
@@ -205,12 +205,12 @@ RSpec.feature "Adjustments", type: :feature do
       choose "Yes", visible: :all
       click_on "Continue"
       fill_in "adjustment[description]", with: "Fourth adjustment"
-      fill_in "Amount", with: "600"
+      fill_in "Amount", with: "600.67"
       click_on "Continue"
       expect(page).to have_text("First adjustment")
-      expect(page).to have_text("£100")
+      expect(page).to have_text("£100.12")
       expect(page).to have_text("Fourth adjustment")
-      expect(page).to have_text("£600")
+      expect(page).to have_text("£600.67")
     end
 
     scenario "statement is marked as payable" do
@@ -238,7 +238,7 @@ RSpec.feature "Adjustments", type: :feature do
     end
 
     scenario "statement moved to paid whilst editing adjustment" do
-      adjustment = create(:adjustment, statement:, description: "adjustment description", amount: 100)
+      adjustment = create(:adjustment, statement:, description: "adjustment description", amount: 100.12)
 
       visit(edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment))
 
@@ -252,7 +252,7 @@ RSpec.feature "Adjustments", type: :feature do
     end
 
     scenario "statement moved to paid whilst deleting adjustment" do
-      adjustment = create(:adjustment, statement:, description: "adjustment description", amount: 100)
+      adjustment = create(:adjustment, statement:, description: "adjustment description", amount: 100.12)
 
       visit(delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment))
 

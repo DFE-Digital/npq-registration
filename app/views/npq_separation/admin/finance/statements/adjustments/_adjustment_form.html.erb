@@ -9,9 +9,8 @@
 
   <%= f.govuk_text_field :amount,
     width: 5,
-    label: { hint: "Do not include decimal points, commas or pound signs, for example enter 19000 for £19,000." },
-    prefix_text: "£",
-    suffix_text: ".00" %>
+    label: { hint: "Do not include commas or pound signs, for example enter 19000 for £19,000." },
+    prefix_text: "£" %>
 
   <%= f.hidden_field :show_all_adjustments, value: @show_all_adjustments %>
 
