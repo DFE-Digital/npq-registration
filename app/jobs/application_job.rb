@@ -6,7 +6,7 @@ class ApplicationJob < ActiveJob::Base
   end
 
   around_perform do |job, actual_job_code|
-    PaperTrail.request(whodunnit: "Background Job #{job.class.name}") do
+    PaperTrail.request(whodunnit: "Background job: #{job.class.name}") do
       actual_job_code.call
     end
   end

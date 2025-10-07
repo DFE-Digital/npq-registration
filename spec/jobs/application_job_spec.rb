@@ -22,7 +22,7 @@ RSpec.describe ApplicationJob, type: :job do
     end
 
     it "sets whodunnit to the job class name" do
-      expect(PaperTrail::Version.last.whodunnit).to eq("SimpleJob")
+      expect(PaperTrail::Version.last.whodunnit).to eq("Background job: SimpleJob")
     end
   end
 end
