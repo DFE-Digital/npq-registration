@@ -2,6 +2,30 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## Application and Declaration API improvements now available in sandbox
+### 26 September 2025
+
+<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
+
+The 'self serve' API improvements have been released to sandbox
+
+#### API additions
+
+Applications
+
+* addition of `reason_for_rejection` field
+* addition of `works_as_senco` and `senco_start_date` fields
+
+Declarations
+
+* addition of `application_id` field
+
+#### API changes
+
+* Allowing rejection of an already accepted Application
+* Include declarations from any lead provider for applications transferred between lead providers
+
+
 ## V1 and V2 APIs are removed from production
 ### 8 August 2025
 
