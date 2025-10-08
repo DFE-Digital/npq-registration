@@ -92,4 +92,23 @@ RSpec.feature "Statement", type: :feature do
 
     expect(page).to be_accessible
   end
+
+  scenario "print views" do
+    visit npq_separation_admin_finance_statement_path(statement)
+
+    within(".govuk-inset-text.noprint") do
+      print_providers_window = window_opened_by do
+        click_link "Providers"
+      end
+      within_window print_providers_window do
+        expect(page).to have_current_path(print_provider_npq_separation_admin_finance_statement_path(statement))
+      end
+      print_dfe_users_window = window_opened_by do
+        click_link "DfE users"
+      end
+      within_window print_dfe_users_window do
+        expect(page).to have_current_path(print_dfe_user_npq_separation_admin_finance_statement_path(statement))
+      end
+    end
+  end
 end
