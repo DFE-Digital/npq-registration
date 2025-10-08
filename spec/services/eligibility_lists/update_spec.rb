@@ -21,7 +21,7 @@ RSpec.describe EligibilityLists::Update, type: :model do
       let(:file) { tempfile_with_bom("Invalid Header\n#{urn}\n") }
 
       it "is not valid" do
-        expect(subject).to have_error(:file, :invalid_headers)
+        expect(subject).to have_error(:file, :invalid_headers, "Uploaded file has incorrect header")
       end
     end
 
@@ -29,7 +29,23 @@ RSpec.describe EligibilityLists::Update, type: :model do
       let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_HEADER}\n") }
 
       it "is not valid" do
-        expect(subject).to have_error(:file, :empty)
+        expect(subject).to have_error(:file, :empty, "Uploaded file is empty")
+      end
+    end
+
+    context "when the file is empty" do
+      let(:file) { tempfile_with_bom("") }
+
+      it "is not valid" do
+        expect(subject).to have_error(:file, :invalid_headers, "Uploaded file has incorrect header")
+      end
+    end
+
+    context "when the file is not a CSV" do
+      let(:file) { tempfile_with_bom('"URN,') }
+
+      it "is not valid" do
+        expect(subject).to have_error(:file, :invalid, "Uploaded file is not a valid CSV")
       end
     end
   end

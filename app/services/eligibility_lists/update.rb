@@ -8,7 +8,7 @@ module EligibilityLists
     attribute :file
 
     validates :file, presence: true
-    validate :headers_valid
+    validate :csv_valid
     validate :file_not_empty, if: -> { file.present? }
 
     def call
@@ -30,11 +30,13 @@ module EligibilityLists
       @csv_table ||= CSV.table(file, header_converters: [])
     end
 
-    def headers_valid
+    def csv_valid
       return if errors.any?
 
       actual_headers = csv_table.headers
       errors.add(:file, :invalid_headers) unless actual_headers.include?(eligibility_list_type.constantize::IDENTIFIER_HEADER)
+    rescue CSV::MalformedCSVError
+      errors.add(:file, :invalid)
     end
 
     def file_not_empty

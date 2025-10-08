@@ -356,6 +356,7 @@ en:
               blank: Please choose a file
               empty: Uploaded file is empty
               invalid_headers: Uploaded file has incorrect header
+              invalid: Uploaded file is not a valid CSV
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:
