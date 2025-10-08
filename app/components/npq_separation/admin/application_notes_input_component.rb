@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class ApplicationNotesInputComponent < ViewComponent::Base
+    class ApplicationNotesInputComponent < BaseComponent
       attr_reader :form
 
       def initialize(form:)

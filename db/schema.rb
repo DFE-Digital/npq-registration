@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_02_113306) do
   create_table "adjustments", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.string "description", null: false
-    t.integer "amount", default: 0, null: false
+    t.decimal "amount", precision: 18, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["statement_id"], name: "index_adjustments_on_statement_id"
@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_02_113306) do
     t.jsonb "raw_application_data", default: {}
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
+    t.enum "employment_type", enum_type: "employment_types"
     t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
@@ -159,7 +160,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_02_113306) do
     t.date "senco_start_date"
     t.string "on_submission_trn"
     t.enum "review_status", enum_type: "review_statuses"
-    t.enum "employment_type", enum_type: "employment_types"
     t.enum "reason_for_rejection", enum_type: "reasons_for_rejection"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"

@@ -1,4 +1,4 @@
-class NpqPanel < ViewComponent::Base
+class NpqPanel < BaseComponent
   attr_reader :title, :body
 
   def initialize(title:, body: nil)

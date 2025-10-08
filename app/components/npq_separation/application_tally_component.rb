@@ -1,5 +1,5 @@
 module NpqSeparation
-  class ApplicationTallyComponent < ViewComponent::Base
+  class ApplicationTallyComponent < BaseComponent
     attr_reader :applications, :dimension, :dimension_header
 
     def initialize(applications, dimension, dimension_header: nil)

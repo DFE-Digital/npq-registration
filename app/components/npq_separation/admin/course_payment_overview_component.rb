@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class CoursePaymentOverviewComponent < ViewComponent::Base
+    class CoursePaymentOverviewComponent < BaseComponent
       attr_reader :contract
 
       delegate_missing_to :calculator

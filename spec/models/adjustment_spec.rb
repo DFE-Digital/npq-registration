@@ -20,6 +20,12 @@ RSpec.describe Adjustment, type: :model do
       it { is_expected.to validate_numericality_of(:amount).is_other_than(0) }
     end
 
+    context "when the amount has decimal places" do
+      subject { build(:adjustment, amount: 100.50) }
+
+      it { is_expected.to be_valid }
+    end
+
     context "when there are non-numeric characters in the amount" do
       subject { build(:adjustment, amount: "100abc") }
 

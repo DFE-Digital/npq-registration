@@ -3,8 +3,6 @@ module QuestionTypes
     include ActiveModel::Attributes
     include ActiveModel::AttributeAssignment
 
-    self.default_form_builder = GOVUKDesignSystemFormBuilder::FormBuilder
-
     renders_one :after_question
 
     attribute :name
@@ -17,7 +15,7 @@ module QuestionTypes
     attribute :additional_info
 
     def initialize(**attrs)
-      super
+      super()
       assign_attributes(**attrs)
     end
 

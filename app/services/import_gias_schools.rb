@@ -104,7 +104,7 @@ private
 
         File.open tempfile.path, "w" do |io|
           response.read_body do |chunk|
-            converted_chunk = Iconv.conv("utf-8", "ISO8859-1", chunk)
+            converted_chunk = chunk.encode(Encoding::UTF_8, Encoding::ISO8859_1)
             io.write converted_chunk
           end
         end

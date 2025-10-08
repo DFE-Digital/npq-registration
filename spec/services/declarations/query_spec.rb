@@ -36,12 +36,50 @@ RSpec.describe Declarations::Query do
 
     describe "filtering" do
       describe "lead provider" do
-        it "filters by lead provider" do
-          declaration = create(:declaration)
-          create(:declaration, lead_provider: create(:lead_provider))
+        let(:current_lead_provider) { create(:lead_provider) }
+        let(:previous_lead_provider) { create(:lead_provider) }
+        let(:other_lead_provider) { create(:lead_provider) }
 
-          query = described_class.new(lead_provider: declaration.lead_provider)
-          expect(query.declarations).to contain_exactly(declaration)
+        let(:application) { create(:application, lead_provider: current_lead_provider) }
+
+        let!(:declaration_before_transfer) { create(:declaration, lead_provider: previous_lead_provider, application:) }
+        let!(:declaration_after_transfer)  { create(:declaration, lead_provider: current_lead_provider, application:) }
+
+        before do
+          create(:declaration, lead_provider: other_lead_provider)
+        end
+
+        it "only shows declarations made by the provider" do
+          query = described_class.new(lead_provider: current_lead_provider)
+          expect(query.declarations).to contain_exactly(declaration_after_transfer)
+
+          query = described_class.new(lead_provider: previous_lead_provider)
+          expect(query.declarations).to contain_exactly(declaration_before_transfer)
+        end
+
+        context "when include_transferred_applications is true" do
+          subject do
+            described_class.new(
+              lead_provider:,
+              include_transferred_applications: true,
+            ).declarations
+          end
+
+          context "and the lead provider is the current provider" do
+            let(:lead_provider) { current_lead_provider }
+
+            it "shows all declarations" do
+              expect(subject).to contain_exactly(declaration_before_transfer, declaration_after_transfer)
+            end
+          end
+
+          context "and the lead provider is a previous provider" do
+            let(:lead_provider) { previous_lead_provider }
+
+            it "only shows declarations made by the provider" do
+              expect(subject).to contain_exactly(declaration_before_transfer)
+            end
+          end
         end
 
         it "doesn't filter by lead provider when none supplied" do

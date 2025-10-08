@@ -2,7 +2,7 @@
   <p class="govuk-body">There are no adjustments.</p>
 <% else %>
   <%=
-    govuk_table do |table|
+    helpers.govuk_table do |table|
       table.with_head do |head|
         head.with_row do |row|
           row.with_cell(text: t(".description"))
@@ -18,9 +18,9 @@
             row.with_cell(text: number_to_currency(adjustment.amount, negative_format: "\u2011%u%n"), numeric: true)
             row.with_cell do
               if show_actions
-                govuk_link_to(t(".edit"), edit_npq_separation_admin_finance_statement_adjustment_path(adjustment.statement, adjustment, show_all_adjustments:)) +
+                helpers.govuk_link_to(t(".edit"), edit_npq_separation_admin_finance_statement_adjustment_path(adjustment.statement, adjustment, show_all_adjustments:)) +
                   tag.br +
-                  govuk_link_to(t(".remove"), delete_npq_separation_admin_finance_statement_adjustment_path(adjustment.statement, adjustment, show_all_adjustments:))
+                  helpers.govuk_link_to(t(".remove"), delete_npq_separation_admin_finance_statement_adjustment_path(adjustment.statement, adjustment, show_all_adjustments:))
               end
             end
           end
