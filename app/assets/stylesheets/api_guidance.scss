@@ -131,12 +131,13 @@
   align-items: flex-start;
   gap: 16px;
 }
+
 <!-- Added: CSS to align content consistently inside each .card -->
 <style>
 .card {
   border: 1px solid #ddd;
   padding: 16px;
-  border-radius: 6px;
+  border-radius: 0px;
   display: flex;
   align-items: flex-start;
   gap: 16px;
