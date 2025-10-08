@@ -1,3 +1,5 @@
+@import "govuk-frontend/dist/govuk/base";
+
 @media print {
   .print-notice {
     display: none;
@@ -61,11 +63,11 @@ details.contract-information {
 }
 
 .print-notice {
-  border: 1px solid #b1b4b6;
-  padding: 20px;
-  margin-bottom: 20px;
+  @include govuk-responsive-padding(4);
+  margin-bottom: govuk-spacing(4);
+  border: 1px solid $govuk-border-colour;
   background-color: lightyellow;
-  height: 40px;
+  height: 2.4em;
 }
 
 .align-baseline {
