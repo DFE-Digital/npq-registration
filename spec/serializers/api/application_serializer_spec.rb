@@ -269,7 +269,7 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
         end
 
         it "serializes the `senco_start_date`" do
-          expect(attributes["senco_start_date"]).to eq(application.senco_start_date.to_json)
+          expect(attributes["senco_start_date"]).to eq(application.senco_start_date.as_json)
         end
 
         context "when application is non senco application" do
