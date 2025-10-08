@@ -46,7 +46,7 @@ module API
 
         field(:schedule_identifier) { |a| a.schedule&.identifier }
         field(:senco_in_role, name: :works_as_senco, if: lp_self_serve_feature_flag_checker)
-        field(:senco_start_date, if: lp_self_serve_feature_flag_checker) { |application| application.senco_start_date&.to_json }
+        field(:senco_start_date, if: lp_self_serve_feature_flag_checker) { |application| application.senco_start_date&.as_json }
       end
     end
 
