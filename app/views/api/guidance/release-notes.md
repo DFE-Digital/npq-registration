@@ -9,21 +9,20 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 The 'self serve' API improvements have been released to sandbox
 
-#### API additions
+### API additions
 
-Applications
+We've added:
 
-* addition of `reason_for_rejection` field
-* addition of `works_as_senco` and `senco_start_date` fields
+* a `reason_for_rejection` field to Applications
+* `works_as_senco` and `senco_start_date` fields to Applications
+* an `application_id` field to Declarations
 
-Declarations
+### Changes to API behaviour
 
-* addition of `application_id` field
+We can now:
 
-#### API changes
-
-* Allowing rejection of an already accepted Application
-* Include declarations from any lead provider for applications transferred between lead providers
+* allow rejection of an already accepted application
+* include declarations from any lead provider for applications transferred between lead providers
 
 
 ## V1 and V2 APIs are removed from production
