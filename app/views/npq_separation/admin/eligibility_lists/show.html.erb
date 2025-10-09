@@ -28,6 +28,7 @@
   <%= tabs.with_tab(label: "Disadvantaged EY") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::DisadvantagedEarlyYearsSchool,
                                           fragment: "disadvantaged-ey",
+                                          csv_note: "Ofsted URN is optional - if it doesn't exist, the Disadvantaged EY School URN will be used.",
                                           legacy_count: @ey_schools_legacy_count,
                                           eligibility_last_updated_at: @ey_schools_last_updated_at } %>
   <% end %>

@@ -26,8 +26,8 @@
     <%= govuk_details(summary_text: "Example CSV", classes: 'govuk-!-margin-top-3') do %>
       <pre class="govuk-!-padding-5 govuk-!-font-size-16 csv-example">
 <%= eligibility_list_type::IDENTIFIER_CSV_HEADERS.join(",") %>
-<%= eligibility_list_type::IDENTIFIER_CSV_EXAMPLE %>
-      </pre>
+<%= eligibility_list_type::IDENTIFIER_CSV_EXAMPLE %></pre>
+      <p class="govuk-body"><%= local_assigns.fetch :csv_note, nil %></p>
     <% end %>
   </div>
   <%= f.hidden_field :eligibility_list_type, value: eligibility_list_type %>

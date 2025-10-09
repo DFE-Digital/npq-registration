@@ -85,7 +85,7 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
 
     click_link "Disadvantaged EY"
     within "div#disadvantaged-ey" do
-      attach_file "eligibility_lists_update[file]", csv_file("Disadvantaged EY School URN").path
+      attach_file "eligibility_lists_update[file]", csv_file("Disadvantaged EY School URN,Ofsted URN").path
       click_button "Update eligibility list"
     end
 
