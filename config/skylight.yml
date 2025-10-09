@@ -1,7 +1,8 @@
 ---
-# The authentication token for the application.
 authentication: 0CmSyJVfcKitt5KSuaJJnAbjGVAze2xvWtYbdKb1CQU
-log_file: tmp/skylight.log
+deploy:
+  git_sha: <%= ENV["COMMIT_SHA"] %>
 ignored_endpoints:
   - MonitoringController#healthcheck
   - MonitoringController#up
+log_file: tmp/skylight.log
