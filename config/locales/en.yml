@@ -813,6 +813,8 @@ en:
             <p class="govuk-body">When this feature is turned off, submitting a declaration does not require a delivery partner, but will still accept a declaration with a delivery partner.</p>
           include_delivery_partners_in_declarations_api_html: |
             <p class="govuk-body">When this feature is turned on, course providers can use the API to see which delivery partners are associated with declarations.</p>
+          maintenance_banner_html: |
+            <p class="govuk-body">When this feature is turned on, a banner will be displayed at the top of every page to inform users that the service is down for maintenance.</p>
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment
