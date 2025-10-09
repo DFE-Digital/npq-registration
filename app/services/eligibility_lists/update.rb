@@ -15,9 +15,9 @@ module EligibilityLists
       return unless valid?
 
       ActiveRecord::Base.transaction do
-        eligibility_list_type.constantize.delete_all
+        eligibility_list_type_class.delete_all
         csv_table.each do |row|
-          eligibility_list_type.constantize.create!(identifier: row[eligibility_list_type.constantize::IDENTIFIER_HEADER])
+          eligibility_list_type_class.create!(identifier: identifier(row))
         end
       end
 
@@ -26,15 +26,19 @@ module EligibilityLists
 
   private
 
+    def eligibility_list_type_class
+      @eligibility_list_type_class ||= eligibility_list_type.constantize
+    end
+
     def csv_table
-      @csv_table ||= CSV.table(file, header_converters: [])
+      @csv_table ||= CSV.table(file, header_converters: ->(header) { header&.strip })
     end
 
     def csv_valid
       return if errors.any?
 
-      actual_headers = csv_table.headers
-      errors.add(:file, :invalid_headers) unless actual_headers.include?(eligibility_list_type.constantize::IDENTIFIER_HEADER)
+      all_headers_present = (eligibility_list_type_class::IDENTIFIER_CSV_HEADERS - csv_table.headers).empty?
+      errors.add(:file, :invalid_headers) unless all_headers_present
     rescue CSV::MalformedCSVError
       errors.add(:file, :invalid)
     end
@@ -43,6 +47,14 @@ module EligibilityLists
       return if errors.any?
 
       errors.add(:file, :empty) if csv_table.count.zero?
+    end
+
+    def identifier(row)
+      if eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.count > 1
+        row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.last].presence || row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.first]
+      else
+        row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.first]
+      end
     end
   end
 end

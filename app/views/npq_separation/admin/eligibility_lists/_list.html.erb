@@ -25,12 +25,9 @@
     %>
     <%= govuk_details(summary_text: "Example CSV", classes: 'govuk-!-margin-top-3') do %>
       <pre class="govuk-!-padding-5 govuk-!-font-size-16 csv-example">
-<%= eligibility_list_type::IDENTIFIER_HEADER %>
-<%= if eligibility_list_type::IDENTIFIER_TYPE == :ukprn
-      "10000599\n10004502"
-    else
-      "100000\n100006"
-    end %></pre>
+<%= eligibility_list_type::IDENTIFIER_CSV_HEADERS.join(",") %>
+<%= eligibility_list_type::IDENTIFIER_CSV_EXAMPLE %>
+      </pre>
     <% end %>
   </div>
   <%= f.hidden_field :eligibility_list_type, value: eligibility_list_type %>

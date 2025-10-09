@@ -6,7 +6,7 @@ RSpec.describe EligibilityLists::Update, type: :model do
   subject(:service) { described_class.new(eligibility_list_type:, file:) }
 
   let(:eligibility_list_type) { "EligibilityList::Pp50School" }
-  let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_HEADER},other\n#{urn},whatever\n") }
+  let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_CSV_HEADERS.first},other\n #{urn} ,whatever\n") }
   let(:urn) { "100001" }
 
   before do
@@ -26,7 +26,7 @@ RSpec.describe EligibilityLists::Update, type: :model do
     end
 
     context "when the file has no data rows" do
-      let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_HEADER}\n") }
+      let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_CSV_HEADERS.first}\n") }
 
       it "is not valid" do
         expect(subject).to have_error(:file, :empty, "Uploaded file is empty")
@@ -61,6 +61,19 @@ RSpec.describe EligibilityLists::Update, type: :model do
       expect { subject }.to change {
         EligibilityList::Pp50School.where(identifier: urn, identifier_type: EligibilityList::Pp50School::IDENTIFIER_TYPE).count
       }.from(0).to(1)
+    end
+
+    context "when the eligibility list type has multiple identifier columns (DisadvantagedEarlyYearsSchool)" do
+      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      let(:file) { tempfile_with_bom("#{EligibilityList::DisadvantagedEarlyYearsSchool::IDENTIFIER_CSV_HEADERS.join(',')},other\n#{urn} , ,whatever\n100001 ,#{ofsted_urn} ,whatever") }
+      let(:urn) { "100001" }
+      let(:ofsted_urn) { "200002" }
+
+      it "creates new records using the ofsted URN if it is available" do
+        subject
+        expect(EligibilityList::DisadvantagedEarlyYearsSchool.where(identifier: ofsted_urn, identifier_type: :urn).count).to eq 1
+        expect(EligibilityList::DisadvantagedEarlyYearsSchool.where(identifier: urn, identifier_type: :urn).count).to eq 1
+      end
     end
   end
 end
