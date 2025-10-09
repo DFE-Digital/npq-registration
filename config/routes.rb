@@ -230,6 +230,7 @@ Rails.application.routes.draw do
           end
         end
         member do
+          resources :declarations, controller: "applications/declarations", as: "application_declarations", only: %i[index]
           namespace :applications, path: nil do
             resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
             resource :change_training_status, only: %i[new create]

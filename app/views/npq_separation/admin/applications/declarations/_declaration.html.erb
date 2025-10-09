@@ -1,0 +1,68 @@
+<%- title = "#{declaration.declaration_type.humanize} (#{declaration.state.humanize})"%>
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title"><%= title %></h2>
+  </div>
+
+  <div class="govuk-summary-card__content">
+    <%= govuk_summary_list do |sl|
+      sl.with_row do |row|
+        row.with_key(text: "Declaration ID" )
+        row.with_value { declaration.ecf_id || "-" }
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Declaration date")
+        row.with_value(text: declaration.declaration_date.to_fs(:govuk_short))
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Declaration cohort")
+        row.with_value(text: declaration.cohort.start_year)
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Provider")
+        row.with_value(text: declaration.lead_provider.name)
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Delivery partner")
+        row.with_value { declaration.delivery_partner&.name || tag.em("-") }
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Secondary delivery partner")
+        row.with_value { declaration.secondary_delivery_partner&.name || tag.em("-") }
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Created at")
+        row.with_value(text: declaration.created_at.to_fs(:govuk_short))
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Updated at")
+        row.with_value(text: declaration.updated_at.to_fs(:govuk_short))
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Statements")
+        row.with_value do
+          safe_join(declaration.statements.map do |statement|
+            tag.div govuk_link_to(statement_name(statement), npq_separation_admin_finance_statement_path(statement))
+          end)
+        end
+      end
+    end %>
+
+    <%- if declaration.participant_outcomes.any? %>
+      <hr class="govuk-section-break govuk-section-break--m">
+      <%= render(NpqSeparation::Admin::OutcomesTableComponent.new(declaration.participant_outcomes)) %>
+    <% end %>
+
+    <hr class="govuk-section-break govuk-section-break--m">
+    <h2 class="govuk-heading-m">State history</h2>
+    <%= render(TimelineComponent.new(items: declaration.state_history)) %>
+  </div>
+</div>

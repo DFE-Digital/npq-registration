@@ -9,6 +9,11 @@
           prefix: %r{/npq-separation/admin/applications/\d+$},
         ),
         NpqSeparation::NavigationStructure::Node.new(
+          name: "Declaration details",
+          href: npq_separation_admin_application_declarations_path(@application),
+          prefix: %r{/npq-separation/admin/applications/\d+/declarations$},
+        ),
+        NpqSeparation::NavigationStructure::Node.new(
           name: "Application history",
           href: npq_separation_admin_applications_history_path(@application),
           prefix: %r{/npq-separation/admin/applications/\d+/history$},

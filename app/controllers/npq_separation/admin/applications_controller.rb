@@ -10,9 +10,6 @@ class NpqSeparation::Admin::ApplicationsController < NpqSeparation::AdminControl
 
   def show
     @application = Application.find(params[:id])
-    @declarations = @application.declarations
-                                .includes(:lead_provider, :cohort, :participant_outcomes, :statements, :delivery_partner, :secondary_delivery_partner)
-                                .order(created_at: :asc, id: :asc)
   end
 
 private
