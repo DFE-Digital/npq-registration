@@ -63,6 +63,28 @@ RSpec.describe EligibilityLists::Update, type: :model do
       }.from(0).to(1)
     end
 
+    context "when there are characters with ISO-8859-1 encoding" do
+      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      let(:file) { File.open(Rails.root.join("spec/fixtures/files/disadvantaged_ey_eligibility_list_iso_8859_1_encoding.csv")) }
+      let(:urn) { "107747" } # value from the fixture file
+
+      it "creates new records correctly" do
+        subject
+        expect(service).to be_valid
+        expect(EligibilityList::DisadvantagedEarlyYearsSchool.where(identifier: urn, identifier_type: :urn).count).to eq 1
+      end
+    end
+
+    context "when there are rows in the CSV with the same identifier" do
+      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      let(:file) { tempfile_with_bom("#{EligibilityList::DisadvantagedEarlyYearsSchool::IDENTIFIER_CSV_HEADERS.join(',')}\n#{urn} , \n900001 ,#{urn} ") }
+
+      it "ignores duplicates" do
+        subject
+        expect(EligibilityList::DisadvantagedEarlyYearsSchool.where(identifier: urn, identifier_type: :urn).count).to eq 1
+      end
+    end
+
     context "when the eligibility list type has multiple identifier columns (DisadvantagedEarlyYearsSchool)" do
       let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
       let(:file) { tempfile_with_bom("#{EligibilityList::DisadvantagedEarlyYearsSchool::IDENTIFIER_CSV_HEADERS.join(',')},other\n#{urn} , ,whatever\n100001 ,#{ofsted_urn} ,whatever") }

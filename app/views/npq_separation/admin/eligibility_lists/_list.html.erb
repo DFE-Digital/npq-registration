@@ -17,6 +17,7 @@
 %>
 
 <%= form_for @service, url: npq_separation_admin_eligibility_lists_path(anchor: fragment) do |f| %>
+  <%= f.govuk_error_summary %>
   <div class="govuk-form-group">
     <%= f.govuk_file_field :file,
       label: { text: "Upload new eligibility list", tag: "h2", size: "m" },
