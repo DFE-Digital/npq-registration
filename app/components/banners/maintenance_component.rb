@@ -2,12 +2,10 @@
 
 module Banners
   class MaintenanceComponent < BaseComponent
-    HOUR_FORMAT = "%-l%P"
-    DAY_FORMAT = "%-d %B"
-    MAINTENANCE_WINDOW = Time.zone.local(2024, 11, 27, 19)..Time.zone.local(2024, 11, 27, 22)
+    MAINTENANCE_TEXT = "The service provider which hosts DfE Services is having outages and issues. This might mean that you have problems using the API or accessing the service. If you are having issues accessing the service, please try again later."
 
     def render?
-      Feature.maintenance_banner_enabled? && maintenance_window_ends_in_future?
+      Feature.maintenance_banner_enabled?
     end
 
   private
@@ -17,52 +15,15 @@ module Banners
     end
 
     def text
-      maintenance_window_spans_days = maintenance_window_start_at.to_date != maintenance_window_end_at.to_date
-      maintenance_window_spans_days ? multi_day_window_text : single_day_window_text
-    end
-
-    def single_day_window_text
-      "This service will be unavailable from #{from_hour} to #{to_hour} on #{from_day}."
-    end
-
-    def multi_day_window_text
-      "This service will be unavailable from #{from_hour} on #{from_day} to #{to_hour} on #{to_day}."
+      MAINTENANCE_TEXT
     end
 
     def link_text
       "Dismiss"
     end
 
-    def from_hour
-      maintenance_window_start_at.strftime(HOUR_FORMAT)
-    end
-
-    def to_hour
-      maintenance_window_end_at.strftime(HOUR_FORMAT)
-    end
-
-    def from_day
-      maintenance_window_start_at.strftime(DAY_FORMAT)
-    end
-
-    def to_day
-      maintenance_window_end_at.strftime(DAY_FORMAT)
-    end
-
     def link_href
       maintenance_banner_dismiss_path
-    end
-
-    def maintenance_window_ends_in_future?
-      maintenance_window_end_at >= Time.zone.now
-    end
-
-    def maintenance_window_start_at
-      MAINTENANCE_WINDOW.first
-    end
-
-    def maintenance_window_end_at
-      MAINTENANCE_WINDOW.last
     end
   end
 end
