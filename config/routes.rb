@@ -239,6 +239,7 @@ Rails.application.routes.draw do
             resource :notes, only: %i[edit update]
             resource :change_cohort, controller: "change_cohort", only: %i[show create]
             resource :history, controller: "history", only: %i[show]
+            resource :outcome, controller: "outcome", only: %i[show]
           end
         end
       end
