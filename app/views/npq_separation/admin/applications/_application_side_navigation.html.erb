@@ -13,6 +13,11 @@
           href: npq_separation_admin_applications_history_path(@application),
           prefix: %r{/npq-separation/admin/applications/\d+/history$},
         ),
+        NpqSeparation::NavigationStructure::Node.new(
+          name: "Course outcome",
+          href: npq_separation_admin_applications_outcome_path(@application),
+          prefix: %r{/npq-separation/admin/applications/\d+/outcome$},
+          ),
       ],
     )
   %>

@@ -197,11 +197,6 @@
           end
         end
       end)
-
-      if declaration.participant_outcomes.any?
-        concat tag.hr(class: "govuk-section-break govuk-section-break--m")
-        concat render(NpqSeparation::Admin::OutcomesTableComponent.new(declaration.participant_outcomes))
-      end
     end %>
   <% end %>
 </div>
