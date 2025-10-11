@@ -4,13 +4,11 @@ module NpqSeparation
       attr_reader :outcomes
 
       def initialize(outcomes)
-        @outcomes = outcomes.sort_by(&:created_at).reverse
+        @outcomes = outcomes.sort_by(&:completion_date).reverse
       end
 
       def call
-        render GovukComponent::TableComponent.new(head:, rows:) do |table|
-          table.with_caption(size: "s", text: caption_text, classes: "govuk-heading-s")
-        end
+        render GovukComponent::TableComponent.new(head:, rows:)
       end
 
     private
