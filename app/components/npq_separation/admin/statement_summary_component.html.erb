@@ -2,17 +2,7 @@
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">Statement summary</h2>
     <div class="govuk-grid-column-one-half govuk-!-text-align-right">
-      <p class="govuk-!-static-margin-0">
-        <strong>
-          <%=
-            helpers.govuk_link_to "Save as PDF",
-              "javascript:void(0)",
-              onclick: "window.formattedPrint(this)",
-              data: { filename: "#{statement.lead_provider.name} #{statement_name(statement)} NPQ Statement (#{statement.cohort.start_year} Cohort)" }
-          %>
-        </strong>
-      </p>
-      <p class="govuk-!-static-margin-0">
+      <p class="govuk-!-static-margin-1">
         <strong>
           <%= helpers.govuk_link_to "Download declarations (CSV)", npq_separation_admin_finance_assurance_report_path(statement, format: :csv) %>
         </strong>
