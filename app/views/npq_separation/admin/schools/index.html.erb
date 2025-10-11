@@ -8,6 +8,10 @@
   <li>address</li>
 </ul>
 
+<% if current_admin.super_admin? %>
+  <p class="govuk-body">You can also <%= govuk_link_to "update the PP50 eligibility lists", npq_separation_admin_eligibility_lists_path %>.</p>
+<% end %>
+
 <div class="admin-search-box">
   <%= form_with method: :get do |f| %>
     <%= f.govuk_text_field(

@@ -140,7 +140,12 @@
 }
 
 .statement-example {
-  border: 1px solid #b1b4b6;
+  border: 1px solid $govuk-border-colour;
+  overflow: auto;
+}
+
+.csv-example {
+  border: 1px solid $govuk-border-colour;
   overflow: auto;
 }
 

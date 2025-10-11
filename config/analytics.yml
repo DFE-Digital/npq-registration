@@ -264,3 +264,10 @@ shared:
     - email_updates_unsubscribe_key
     - archived_at
     - significantly_updated_at
+  :eligibility_list_entries:
+    - id
+    - type
+    - identifier
+    - identifier_type
+    - created_at
+    - updated_at
