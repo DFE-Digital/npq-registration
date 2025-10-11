@@ -176,6 +176,7 @@ shared:
     - display
     - identifier
     - course_group_id
+    - short_code
   :cohorts:
     - id
     - start_year
