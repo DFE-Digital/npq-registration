@@ -26,6 +26,7 @@ module "application_configuration" {
     BIGQUERY_DATASET    = var.dataset_name
     BIGQUERY_PROJECT_ID = "ecf-bq"
     BIGQUERY_TABLE_NAME = "events"
+    SKYLIGHT_ENV     = local.environment
 
     AZURE_STORAGE_ACCOUNT_NAME = azurerm_storage_account.uploads.name
     AZURE_STORAGE_CONTAINER    = azurerm_storage_container.uploads.name
