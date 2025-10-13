@@ -125,8 +125,8 @@ class Course < ApplicationRecord
   end
 
   def short_code
-    super.tap do
-      if it.nil?
+    super.tap do |sc|
+      if sc.nil?
         message = "A NPQ Qualification types mapping is missing: #{identifier}"
         Rails.logger.warn(message)
         Sentry.capture_message(message)
