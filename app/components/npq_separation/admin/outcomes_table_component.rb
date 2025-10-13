@@ -16,7 +16,8 @@ module NpqSeparation
       def head
         [
           "Outcome",
-          "Completion date",
+          "Course started",
+          "Course completed",
           "Submitted by provider",
         ]
       end
@@ -25,10 +26,15 @@ module NpqSeparation
         outcomes.map do |outcome|
           [
             outcome.state.humanize,
+            course_started_date(outcome.declaration)&.to_date.to_fs(:govuk_short),
             outcome.completion_date.to_fs(:govuk_short),
             outcome.created_at.to_date.to_fs(:govuk_short),
           ]
         end
+      end
+
+      def course_started_date(declaration)
+        declaration.application.declarations.find_by(declaration_type: "started").declaration_date
       end
 
       def caption_text
