@@ -37,14 +37,12 @@ lead_providers.each do |lead_provider|
 
             Declarations::StatementAttacher.new(declaration:).attach
 
-            if declaration_type == "completed"
+            if declaration_type == "completed" && (application.id % 5).zero?
               ParticipantOutcomes::Create::STATES.reverse.each do |state|
                 FactoryBot.create(:participant_outcome,
                                   declaration:,
                                   state:,
                                   completion_date: declaration.declaration_date.to_s)
-
-                break if Faker::Boolean.boolean(true_ratio: 0.3)
               end
             end
           end
