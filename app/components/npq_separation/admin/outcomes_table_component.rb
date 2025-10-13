@@ -25,11 +25,22 @@ module NpqSeparation
       def rows
         outcomes.map do |outcome|
           [
-            outcome.state.humanize,
+            outcome_status_tag(outcome.state),
             course_started_date(outcome.declaration)&.to_date.to_fs(:govuk_short),
             outcome.completion_date.to_fs(:govuk_short),
             outcome.created_at.to_date.to_fs(:govuk_short),
           ]
+        end
+      end
+
+      def outcome_status_tag(state)
+        case state
+        when "passed"
+          helpers.govuk_tag(text: "Passed", colour: "green")
+        when "failed"
+          helpers.govuk_tag(text: "Failed", colour: "red")
+        else
+          helpers.govuk_tag(text: state.humanize, colour: "grey")
         end
       end
 

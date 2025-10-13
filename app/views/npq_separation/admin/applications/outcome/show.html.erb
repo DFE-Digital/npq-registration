@@ -12,4 +12,6 @@
 
 <% if @outcomes.any? %>
   <%= render NpqSeparation::Admin::OutcomesTableComponent.new(@outcomes) %>
+<% else %>
+  <p>There are no outcomes for this application yet.</p>
 <% end %>
