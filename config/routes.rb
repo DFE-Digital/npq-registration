@@ -337,9 +337,5 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
-  constraints(->(request) { Admin.find_by(id: request.session[:admin_id])&.super_admin? }) do
-    mount DelayedJobWeb, at: "/delayed_job"
-  end
-
   get "/development_login", to: "registration_wizard#development_login"
 end
