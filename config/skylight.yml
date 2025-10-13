@@ -1,5 +1,4 @@
 ---
-authentication: 0CmSyJVfcKitt5KSuaJJnAbjGVAze2xvWtYbdKb1CQU
 deploy:
   git_sha: <%= ENV["COMMIT_SHA"] %>
 ignored_endpoints:
