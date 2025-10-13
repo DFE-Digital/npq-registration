@@ -26,12 +26,14 @@ lead_providers.each do |lead_provider|
           next if date.future?
 
           helpers.travel_to date do
-            declaration = FactoryBot.create(
-              :declaration,
-              :submitted_or_eligible,
-              application:,
-              declaration_type:,
-            )
+            with_versioning do
+              declaration = FactoryBot.create(
+                :declaration,
+                :submitted_or_eligible,
+                application:,
+                declaration_type:,
+              )
+            end
 
             Declarations::StatementAttacher.new(declaration:).attach
 
