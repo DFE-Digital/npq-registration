@@ -5,7 +5,7 @@ module NpqSeparation
         before_action :set_application
 
         def show
-          @outcomes = @application.declarations.flat_map(&:participant_outcomes)
+          @outcomes = ParticipantOutcome.where(declaration: @application.declarations)
         end
 
       private

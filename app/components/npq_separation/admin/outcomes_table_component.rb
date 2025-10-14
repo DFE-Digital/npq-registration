@@ -16,7 +16,10 @@ module NpqSeparation
       def head
         [
           "Outcome",
-          "Course started",
+          helpers.safe_join([
+                              "Course started".html_safe,
+                              helpers.tag.div("The declaration date on the started declaration", class: "govuk-hint govuk-!-margin-top-1")
+                            ]),
           "Course completed",
           "Submitted by provider",
         ]
