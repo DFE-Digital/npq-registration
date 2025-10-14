@@ -11,7 +11,7 @@ module NpqSeparation
       private
 
         def set_application
-          @application = Application.includes(:declarations).find(params[:id])
+          @application = Application.includes(declarations: :participant_outcomes).find(params[:id])
         end
       end
     end

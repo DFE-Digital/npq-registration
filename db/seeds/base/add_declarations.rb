@@ -43,12 +43,12 @@ lead_providers.each do |lead_provider|
                                   declaration:,
                                   state:,
                                   completion_date: declaration.declaration_date.to_s)
-                if state == "passed"
-                  user = application.user
-                  old_full_name = user.full_name
-                  user.full_name = "Kate #{old_full_name}"
-                  user.save
-                end
+                next unless state == "passed"
+
+                user = application.user
+                old_full_name = user.full_name
+                user.full_name = "Kate #{old_full_name}"
+                user.save!
               end
             end
           end
