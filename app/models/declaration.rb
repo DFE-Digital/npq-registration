@@ -206,14 +206,11 @@ class Declaration < ApplicationRecord
   def state_history
     changes = versions.where_attribute_changes(:state).order(created_at: :asc, id: :asc)
 
-    if changes.none?
-      [{ title: state.humanize, at: created_at }]
-    else
-      result = []
-      result << { title: changes.first.object_changes.dig("state", 0).humanize, at: created_at } unless changes.first.created_at == created_at
-      result += changes.map { |v| { title: v.object_changes.dig("state", 1).humanize, at: v.created_at } }
-      result
-    end
+    return [[state, created_at]] if changes.none?
+
+    result = changes.map { |v| [v.object_changes.dig("state", 1), v.created_at] }
+    result.prepend([changes.first.object_changes.dig("state", 0), created_at]) unless changes.first.created_at == created_at
+    result
   end
 
 private

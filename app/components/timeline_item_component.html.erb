@@ -1,0 +1,8 @@
+<div class="moj-timeline__item">
+  <div class="moj-timeline__header">
+    <h2 class="moj-timeline__title"><%= title %></h2>
+  </div>
+  <p class="moj-timeline__date">
+    <time datetime="<%= date.rfc3339 %>"><%= date.to_fs(:govuk_short) %></time>
+  </p>
+</div>

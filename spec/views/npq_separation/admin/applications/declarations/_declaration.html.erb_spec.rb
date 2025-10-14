@@ -4,7 +4,6 @@ RSpec.describe "npq_separation/admin/applications/declarations/_declaration.html
   subject { Capybara.string(render(locals: { declaration: })) }
 
   let(:declaration) { build_stubbed(:declaration, delivery_partner: nil) }
-  let(:state_history_timeline_component) { TimelineComponent.new(items: declaration.state_history) }
 
   it { is_expected.to have_summary_item("Declaration ID", declaration.ecf_id) }
   it { is_expected.to have_summary_item("Declaration date", declaration.declaration_date.to_fs(:govuk_short)) }
@@ -15,7 +14,6 @@ RSpec.describe "npq_separation/admin/applications/declarations/_declaration.html
   it { is_expected.to have_summary_item("Created at", declaration.created_at.to_fs(:govuk_short)) }
   it { is_expected.to have_summary_item("Updated at", declaration.updated_at.to_fs(:govuk_short)) }
   it { is_expected.to have_summary_item("Statements", "") }
-  it { is_expected.to have_component(state_history_timeline_component) }
 
   context "with delivery partners" do
     let(:declaration) { build_stubbed(:declaration, delivery_partner: build_stubbed(:delivery_partner), secondary_delivery_partner: build_stubbed(:delivery_partner)) }
@@ -27,6 +25,7 @@ RSpec.describe "npq_separation/admin/applications/declarations/_declaration.html
   describe "state history timeline entries", :versioning do
     let(:declaration) { create(:declaration, :eligible) }
 
+    it { is_expected.to have_css(".moj-timeline") }
     it { is_expected.to have_css(".moj-timeline__item", text: /Eligible\s+#{declaration.created_at.to_fs(:govuk_short)}/) }
   end
 end

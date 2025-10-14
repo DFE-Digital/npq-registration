@@ -914,7 +914,7 @@ RSpec.describe Declaration, type: :model do
     context "with default initial state" do
       let(:declaration) { create(:declaration) }
 
-      it { is_expected.to eq [{ title: "Submitted", at: declaration.created_at }] }
+      it { is_expected.to eq [["submitted", declaration.created_at]] }
 
       context "and changes" do
         let(:new_state_at) { 1.hour.ago.beginning_of_minute }
@@ -924,14 +924,14 @@ RSpec.describe Declaration, type: :model do
           travel_to(new_state_at) { declaration.mark_eligible! }
         end
 
-        it { is_expected.to eq [{ title: "Submitted", at: declaration.created_at }, { title: "Eligible", at: new_state_at }] }
+        it { is_expected.to eq [["submitted", declaration.created_at], ["eligible", new_state_at]] }
       end
     end
 
     context "with specific initial state" do
       let(:declaration) { create(:declaration, :payable) }
 
-      it { is_expected.to eq [{ title: "Payable", at: declaration.created_at }] }
+      it { is_expected.to eq [["payable", declaration.created_at]] }
 
       context "and changes" do
         let(:new_state_at) { 1.hour.ago.beginning_of_minute }
@@ -941,7 +941,7 @@ RSpec.describe Declaration, type: :model do
           travel_to(new_state_at) { declaration.mark_paid! }
         end
 
-        it { is_expected.to eq [{ title: "Payable", at: declaration.created_at }, { title: "Paid", at: new_state_at }] }
+        it { is_expected.to eq [["payable", declaration.created_at], ["paid", new_state_at]] }
       end
     end
   end

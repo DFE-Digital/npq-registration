@@ -1,7 +1,12 @@
 class TimelineComponent < BaseComponent
-  attr_reader :items
+  class TimelineItemComponent < BaseComponent
+    attr_reader :title, :date
 
-  def initialize(items:)
-    @items = items
+    def initialize(title:, date:)
+      @title = title
+      @date = date
+    end
   end
+
+  renders_many :items, "TimelineItemComponent"
 end

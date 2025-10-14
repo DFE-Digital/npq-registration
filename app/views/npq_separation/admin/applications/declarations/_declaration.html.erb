@@ -63,6 +63,12 @@
 
     <hr class="govuk-section-break govuk-section-break--m">
     <h2 class="govuk-heading-m">State history</h2>
-    <%= render(TimelineComponent.new(items: declaration.state_history)) %>
+    <%=
+      render TimelineComponent.new do |timeline|
+        declaration.state_history.each do |state, date|
+          timeline.with_item(title: state.humanize, date:)
+        end
+      end
+    %>
   </div>
 </div>

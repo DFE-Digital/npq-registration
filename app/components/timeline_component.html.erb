@@ -1,12 +1,5 @@
 <div class="moj-timeline">
-  <%- items.each do |item| %>
-    <div class="moj-timeline__item">
-      <div class="moj-timeline__header">
-        <h2 class="moj-timeline__title"><%= item[:title] %></h2>
-      </div>
-      <p class="moj-timeline__date">
-        <time datetime="<%= item[:at].rfc3339 %>"><%= item[:at].to_fs(:govuk_short) %></time>
-      </p>
-    </div>
+  <% items.each do |item| %>
+    <%= item %>
   <% end %>
 </div>
