@@ -10,14 +10,21 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     assign(:declarations, declarations)
   end
 
-  describe "a row for a full application" do
+  describe "a summary card for a full application" do
     let :application do
       build_stubbed :application, :accepted, :with_school
     end
 
     let :declarations do
-      build_stubbed_pair :declaration, application_id: application.id,
-                                       lead_provider: application.lead_provider
+      [
+        build_stubbed(:declaration, application_id: application.id,
+                                    lead_provider: application.lead_provider,
+                                    declaration_type: "started",
+                                    delivery_partner: nil),
+        build_stubbed(:declaration, application_id: application.id,
+                                    lead_provider: application.lead_provider,
+                                    declaration_type: "retained-1"),
+      ]
     end
 
     it { is_expected.to have_css(".govuk-caption-m", text: "#{application.user.full_name}, #{application.course.name}, #{application.created_at.to_date.to_fs(:govuk_short)}", normalize_ws: true) }
@@ -28,6 +35,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
 
       it { is_expected.to have_summary_item "Name", application.user.full_name }
       it { is_expected.to have_summary_item "Application ID", application.ecf_id }
+      it { is_expected.to have_summary_item "User ID", application.user.ecf_id }
       it { is_expected.to have_summary_item "Provider", application.lead_provider.name }
       it { is_expected.to have_summary_item "Course", application.course.name }
     end
@@ -42,7 +50,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     it { is_expected.not_to have_link(application.employer_name_to_display) }
   end
 
-  describe "a row for a minimal application" do
+  describe "a summary card for a minimal application" do
     let :application do
       build_stubbed :application, cohort: nil, itt_provider: nil, school: nil
     end

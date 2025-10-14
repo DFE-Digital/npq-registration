@@ -137,6 +137,22 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
     context "when serializing the `v3` view" do
       subject(:attributes) { JSON.parse(described_class.render(declaration, view: :v3))["attributes"] }
 
+      context "when LP_SELF_SERVE feature flag is on" do
+        before do
+          Flipper.enable(Feature::LP_SELF_SERVE)
+        end
+
+        it "serializes the `application_id`" do
+          expect(attributes["application_id"]).to eq(application.ecf_id)
+        end
+      end
+
+      context "when LP_SELF_SERVE feature flag is off" do
+        it "does not serialize the `application_id`" do
+          expect(attributes).not_to have_key("application_id")
+        end
+      end
+
       it "serializes the `delivery_partner_id`" do
         expect(attributes["delivery_partner_id"]).to eq(primary_partner.ecf_id)
       end

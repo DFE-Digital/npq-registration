@@ -16,14 +16,17 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
   let(:old_date_of_birth) { 30.years.ago.to_date }
   let(:old_trn) { "1234567" }
   let(:old_trn_verified) { false }
+  let(:old_trn_lookup_status) { nil }
+  let(:old_name) { "John Doe" }
 
   let(:user) do
     create(:user,
            :with_get_an_identity_id,
            email: old_email,
            date_of_birth: old_date_of_birth,
-           full_name: "John Doe",
+           full_name: old_name,
            trn: old_trn,
+           trn_lookup_status: old_trn_lookup_status,
            trn_verified: old_trn_verified)
   end
 
@@ -37,10 +40,10 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
       { "user" => {
           "trn" => new_trn,
           "userId" => user.get_an_identity_id,
-          "lastName" => "something",
-          "firstName" => "something",
+          "lastName" => new_last_name,
+          "firstName" => new_first_name,
           "middleName" => nil,
-          "preferredName" => new_name,
+          "preferredName" => new_preferred_name,
           "dateOfBirth" => new_date_of_birth,
           "emailAddress" => new_email,
           "mobileNumber" => nil,
@@ -50,7 +53,9 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
     end
 
     let(:new_email) { "#{SecureRandom.uuid}@example.com" }
-    let(:new_name) { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
+    let(:new_first_name) { Faker::Name.first_name }
+    let(:new_last_name) { Faker::Name.last_name }
+    let(:new_preferred_name) { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
     let(:new_date_of_birth) { 20.years.ago.to_date }
     let(:new_trn) { rand(1_000_000..9_999_999).to_s }
     let(:new_trn_status) { "Found" }
@@ -58,27 +63,24 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
     it "updates user data" do
       expect {
         subject
-      }.to change { user.reload.dup }.from(
-        an_object_having_attributes(
-          email: old_email,
-          trn: old_trn,
-          trn_verified: false,
-          trn_lookup_status: nil,
-          full_name: "John Doe",
-          date_of_birth: old_date_of_birth,
-          updated_from_tra_at: nil,
-        ),
-      ).to(
-        an_object_having_attributes(
-          email: new_email,
-          trn: new_trn,
-          trn_verified: true,
-          trn_lookup_status: new_trn_status,
-          full_name: new_name,
-          date_of_birth: new_date_of_birth,
-          updated_from_tra_at: sent_at,
-        ),
-      )
+        user.reload
+      }
+        .to change(user, :email).from(old_email).to(new_email)
+        .and change(user, :trn).from(old_trn).to(new_trn)
+        .and change(user, :trn_verified).from(false).to(true)
+        .and change(user, :trn_lookup_status).from(nil).to(new_trn_status)
+        .and change(user, :full_name).from("John Doe").to("#{new_first_name} #{new_last_name}")
+        .and change(user, :preferred_name).from(nil).to(new_preferred_name)
+        .and change(user, :date_of_birth).from(old_date_of_birth).to(new_date_of_birth)
+        .and change(user, :updated_from_tra_at).from(nil).to(sent_at)
+    end
+
+    with_versioning do
+      it "saves the proper papertrail whodunnit attribute" do
+        subject
+
+        expect(user.reload.versions.last.whodunnit).to eq("UserUpdatedProcessor")
+      end
     end
 
     context "when the new email is already in use" do
@@ -108,27 +110,35 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
       it "stores the data without changing the TRN" do
         expect {
           subject
-        }.to change { user.reload.dup }.from(
-          an_object_having_attributes(
-            email: old_email,
-            trn: old_trn,
-            trn_verified: false,
-            trn_lookup_status: nil,
-            full_name: "John Doe",
-            date_of_birth: old_date_of_birth,
-            updated_from_tra_at: nil,
-          ),
-        ).to(
-          an_object_having_attributes(
-            email: new_email,
-            trn: old_trn,
-            trn_verified: false,
-            trn_lookup_status: nil,
-            full_name: new_name,
-            date_of_birth: new_date_of_birth,
-            updated_from_tra_at: sent_at,
-          ),
-        )
+          user.reload
+        }
+          .to change(user, :updated_from_tra_at).to(sent_at)
+         .and not_change { user.trn }.from(old_trn)
+      end
+    end
+
+    context "when there are no new attributes in the webhook" do
+      let(:old_trn_verified) { true }
+      let(:old_trn_lookup_status) { "Found" }
+
+      let(:new_email) { old_email }
+      let(:new_name) { old_name }
+      let(:new_date_of_birth) { old_date_of_birth }
+      let(:new_trn) { old_trn }
+      let(:new_first_name) { "John" }
+      let(:new_last_name) { "Doe" }
+      let(:new_preferred_name) { nil }
+
+      before do
+        subject
+      end
+
+      it "does not save the user" do
+        expect(user.reload.updated_from_tra_at).to be_nil
+      end
+
+      it "leaves appropriate comment on webhook" do
+        expect(webhook_message.reload.status_comment).to eq("Skipped - no data changes")
       end
     end
 

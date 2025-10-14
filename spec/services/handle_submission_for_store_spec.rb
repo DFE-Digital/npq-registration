@@ -14,7 +14,7 @@ RSpec.describe HandleSubmissionForStore do
 
   let(:store) do
     {
-      "current_user" => user,
+      "current_user_id" => user.id,
       "course_identifier" => course.identifier,
       "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
       "lead_provider_id" => lead_provider.id,
@@ -22,6 +22,30 @@ RSpec.describe HandleSubmissionForStore do
       "works_in_school" => "no",
       "kind_of_nursery" => "private_nursery",
       "teacher_catchment" => "england",
+    }
+  end
+
+  let(:expected_user_attributes) do
+    {
+      "email" => user.email,
+      "ecf_id" => user.ecf_id,
+      "trn" => "0012345",
+      "full_name" => user.full_name,
+      "provider" => nil,
+      "raw_tra_provider_data" => nil,
+      "date_of_birth" => 30.years.ago.to_date.to_s,
+      "uid" => nil,
+      "active_alert" => false,
+      "archived_email" => nil,
+      "archived_at" => nil,
+      "get_an_identity_id_synced_to_ecf" => false,
+      "national_insurance_number" => nil,
+      "notify_user_for_future_reg" => false,
+      "preferred_name" => user.preferred_name,
+      "trn_auto_verified" => false,
+      "trn_lookup_status" => nil,
+      "trn_verified" => false,
+      "feature_flag_id" => user.feature_flag_id,
     }
   end
 
@@ -35,10 +59,25 @@ RSpec.describe HandleSubmissionForStore do
       record.as_json(except: %i[id created_at updated_at significantly_updated_at updated_from_tra_at DEPRECATED_school_urn email_updates_status email_updates_unsubscribe_key])
     end
 
-    context "when store includes information from the school path" do
+    context "when the store includes a user object (legacy behaviour)" do
       let(:store) do
         {
           "current_user" => user,
+          "course_identifier" => course.identifier,
+          "lead_provider_id" => lead_provider.id,
+        }
+      end
+
+      it "creates an application for the user" do
+        subject.call
+        expect(user.applications.reload.count).to eq 1
+      end
+    end
+
+    context "when store includes information from the school path" do
+      let(:store) do
+        {
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "School-#{school.urn}",
           "lead_provider_id" => lead_provider.id,
@@ -53,51 +92,13 @@ RSpec.describe HandleSubmissionForStore do
       end
 
       it "stores data from store" do
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "uid" => nil,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_lookup_status" => nil,
-          "trn_verified" => false,
-          "feature_flag_id" => user.feature_flag_id,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
 
         subject.call
 
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_verified" => false,
-          "trn_lookup_status" => nil,
-          "feature_flag_id" => user.feature_flag_id,
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 1
         last_application = user.applications.last
         expect(stable_as_json(last_application)).to match({
@@ -141,13 +142,14 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => false,
           "works_in_school" => true,
           "work_setting" => "a_school",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => "yes",
           "senco_start_date" => "2024-12-12",
           "on_submission_trn" => "1234321",
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -156,7 +158,7 @@ RSpec.describe HandleSubmissionForStore do
       let(:courses) { [Course.ehco] }
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -173,51 +175,13 @@ RSpec.describe HandleSubmissionForStore do
       end
 
       it "stores data from store" do
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_lookup_status" => nil,
-          "trn_verified" => false,
-          "feature_flag_id" => user.feature_flag_id,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
 
         subject.call
 
-        expect(stable_as_json(user.reload)).to match({
-          "email" => user.email,
-          "ecf_id" => user.ecf_id,
-          "trn" => "0012345",
-          "full_name" => "John Doe",
-          "date_of_birth" => 30.years.ago.to_date.to_s,
-          "active_alert" => false,
-          "archived_email" => nil,
-          "archived_at" => nil,
-          "get_an_identity_id_synced_to_ecf" => false,
-          "national_insurance_number" => nil,
-          "notify_user_for_future_reg" => false,
-          "trn_auto_verified" => false,
-          "trn_verified" => false,
-          "trn_lookup_status" => nil,
-          "feature_flag_id" => user.feature_flag_id,
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
-        })
+        expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 1
         last_application = user.applications.last
         expect(stable_as_json(last_application)).to match({
@@ -261,13 +225,14 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -326,7 +291,7 @@ RSpec.describe HandleSubmissionForStore do
       context "happy path" do
         let(:store) do
           {
-            "current_user" => user,
+            "current_user_id" => user.id,
             "course_identifier" => ehco_course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
@@ -346,7 +311,7 @@ RSpec.describe HandleSubmissionForStore do
       context "a headteacher for over five years" do
         let(:store) do
           {
-            "current_user" => user,
+            "current_user_id" => user.id,
             "course_identifier" => Course.ehco.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
@@ -369,7 +334,7 @@ RSpec.describe HandleSubmissionForStore do
     context "when teacher catchment is not in the UK catchment area" do
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -430,13 +395,14 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -444,7 +410,7 @@ RSpec.describe HandleSubmissionForStore do
     context "when teacher catchment is empty" do
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -505,13 +471,14 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -523,7 +490,7 @@ RSpec.describe HandleSubmissionForStore do
 
       let(:store) do
         {
-          "current_user" => user,
+          "current_user_id" => user.id,
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
@@ -590,13 +557,14 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
-          "raw_application_data" => store.except("current_user"),
+          "raw_application_data" => store.except("current_user_id"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end

@@ -283,28 +283,6 @@ RSpec.describe User do
     end
   end
 
-  describe "#get_an_identity_user" do
-    let(:user) { create(:user, :with_get_an_identity_id, uid:) }
-    let(:uid) { SecureRandom.uuid }
-    let(:external_user) { instance_double(External::GetAnIdentity::User) }
-
-    context "when get_an_identity_id is present" do
-      it "returns the external user from GetAnIdentity" do
-        allow(External::GetAnIdentity::User).to receive(:find).with(uid).and_return(external_user)
-        expect(user.get_an_identity_user).to eq(external_user)
-      end
-    end
-
-    context "when get_an_identity_id is blank" do
-      let(:uid) { nil }
-
-      it "returns nil without calling the external service" do
-        expect(External::GetAnIdentity::User).not_to receive(:find)
-        expect(user.get_an_identity_user).to be_nil
-      end
-    end
-  end
-
   describe "#get_an_identity_provider?" do
     context "when the user is using GAI" do
       let(:user) { create(:user, :with_get_an_identity_id) }

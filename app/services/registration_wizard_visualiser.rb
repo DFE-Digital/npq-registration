@@ -2,8 +2,8 @@ require "method_source"
 
 class RegistrationWizardVisualiser
   class << self
-    def call
-      new.call
+    def call(generate_image: true)
+      new.call(generate_image:)
     end
   end
 
@@ -83,10 +83,10 @@ class RegistrationWizardVisualiser
     margin: "25,15",
   }.freeze
 
-  def call
+  def call(generate_image: true)
     Rails.logger.debug("Generating .dot file")
     digraph_output = generate_digraph_output
-    generate_and_save_graph(digraph_output)
+    generate_and_save_graph(digraph_output, generate_image:)
   end
 
 private
@@ -103,7 +103,7 @@ private
     FileUtils.mkdir_p(output_dir)
   end
 
-  def generate_and_save_graph(digraph_output)
+  def generate_and_save_graph(digraph_output, generate_image: true)
     make_output_dir
 
     output_digraph_filename = output_dir.join("registration_wizard_visualisation.dot")
@@ -111,12 +111,15 @@ private
 
     save_file(output_digraph_filename, digraph_output)
 
+    return unless generate_image
+
     Rails.logger.debug("Generating #{output_graph_filename}")
-
     generate_graph_command = "dot -Tpng #{output_digraph_filename} -o #{output_graph_filename}"
-    Rails.logger.debug(generate_graph_command)
 
+    Rails.logger.debug(generate_graph_command)
     system(generate_graph_command)
+
+    raise "Graph generation failed" unless $CHILD_STATUS.exitstatus.zero?
   end
 
   def save_file(name, content)
@@ -289,7 +292,7 @@ private
   end
 
   def extract_steps_from_source(method_source)
-    steps = method_source.scan(/[^:]:\w+/).map(&:strip).map { |s| s.delete_prefix(":") }
+    steps = method_source.scan(/^\s*:\w+/).map(&:strip).map { |s| s.delete_prefix(":") }
 
     helper_step_methods = method_source.scan(/(#{flow_helper_methods.join("|")})/).flatten
 

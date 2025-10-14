@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
+RSpec.feature "Managing schedules", :ecf_api_disabled, :no_js, type: :feature do
   include Helpers::AdminLogin
 
   let(:admin)  { create :admin }
@@ -18,6 +18,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
   end
 
   before do
+    create(:application, :accepted, schedule: schedules[1], cohort:, course: create(:course, :additional_support_offer))
     sign_in_as admin
   end
 
@@ -86,6 +87,13 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
 
       click_on delete_button_text
       expect { click_on "Confirm" }.to change(Schedule, :count).by(-1)
+
+      # try deleting a schedule that has an application
+      visit_cohort
+      click_on schedules[1].name
+      click_on delete_button_text
+      click_on "Confirm"
+      expect(page).to have_text("Cannot delete because associated applications exist")
     end
   end
 

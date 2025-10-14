@@ -348,6 +348,7 @@ RSpec.describe Statements::SummaryCalculator do
 
     context "with declaration" do
       before do
+        application.schedule.update! applies_from: statement.deadline_date - 1.month
         earlier_statement = create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:)
 
         awaiting_clawback = travel_to(earlier_statement.deadline_date) do
@@ -394,6 +395,7 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     before do
+      application.schedule.update! applies_from: statement.deadline_date - 1.month
       earlier_statement = create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:)
 
       awaiting_clawback = travel_to(earlier_statement.deadline_date) do

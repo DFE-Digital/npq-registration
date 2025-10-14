@@ -15,7 +15,7 @@ private
 
   def process_csv_row(application_ecf_id)
     application = Application.find_by(ecf_id: application_ecf_id)
-    reject_service = Applications::Reject.new(application:)
+    reject_service = Applications::Reject.new(application:, reason_for_rejection: Application.reason_for_rejections[:registration_expired])
     success = reject_service.reject
     outcome(success, application, reject_service.errors)
   end

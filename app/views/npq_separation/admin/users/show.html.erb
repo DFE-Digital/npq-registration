@@ -20,6 +20,14 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
+          Preferred Name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.preferred_name.presence || @user.full_name %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
           Email
         </dt>
         <dd class="govuk-summary-list__value">

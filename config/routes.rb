@@ -250,6 +250,9 @@ Rails.application.routes.draw do
 
       resources :delivery_partners, path: "delivery-partners", except: %i[show destroy] do
         resource :delivery_partnerships, path: "delivery-partnerships", only: :edit
+        collection do
+          post :continue
+        end
       end
 
       resources :schools, only: %i[index show]
@@ -317,6 +320,12 @@ Rails.application.routes.draw do
 
         resources :update_and_verify_trns, controller: "update_and_verify_trns", only: %i[index create show] do
           post "run", on: :member
+        end
+      end
+
+      resources :actions_log, path: "actions-log", controller: "actions_log", only: %i[index show] do
+        collection do
+          post :search
         end
       end
     end

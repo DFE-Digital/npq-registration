@@ -41,6 +41,8 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
     else
       render :destroy
     end
+  rescue ActiveRecord::RecordNotDestroyed
+    render :destroy, status: :unprocessable_entity
   end
 
 private

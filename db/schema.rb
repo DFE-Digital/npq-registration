@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_30_132614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
+  enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
@@ -24,11 +25,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
   create_enum "declaration_state_reasons", ["duplicate"]
   create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
+  create_enum "employment_types", ["hospital_school", "lead_mentor_for_accredited_itt_provider", "local_authority_supply_teacher", "local_authority_virtual_school", "young_offender_institution", "other"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
+  create_enum "reasons_for_rejection", ["registration_expired", "rejected_by_provider", "other_application_in_this_cohort_accepted"]
   create_enum "review_statuses", ["needs_review", "awaiting_information", "reregister", "decision_made"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
@@ -64,7 +67,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
   create_table "adjustments", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.string "description", null: false
-    t.integer "amount", default: 0, null: false
+    t.decimal "amount", precision: 18, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["statement_id"], name: "index_adjustments_on_statement_id"
@@ -132,7 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
     t.jsonb "raw_application_data", default: {}
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
-    t.string "employment_type"
+    t.enum "employment_type", enum_type: "employment_types"
     t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
@@ -157,6 +160,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
     t.date "senco_start_date"
     t.string "on_submission_trn"
     t.enum "review_status", enum_type: "review_statuses"
+    t.enum "reason_for_rejection", enum_type: "reasons_for_rejection"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
@@ -590,6 +594,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
     t.string "archived_email"
     t.datetime "archived_at"
     t.datetime "significantly_updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "preferred_name"
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -608,6 +613,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
     t.json "object_changes"
     t.string "note"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_versions_on_whodunnit"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

@@ -3,7 +3,7 @@
     <h2 class="govuk-summary-card__title"><%= course_name %></h2>
   </div>
   <div class="govuk-summary-card__content">
-    <%= govuk_table do |table|
+    <%= helpers.govuk_table do |table|
       table.with_head do |head|
         head.with_row do |row|
           row.with_cell(text: t(".payment_type"))
@@ -25,7 +25,7 @@
       end
     end %>
 
-    <%= govuk_summary_list do |summary_list|
+    <%= helpers.govuk_summary_list do |summary_list|
       counts.each do |label, count|
         summary_list.with_row do |row|
           row.with_key { label }

@@ -24,7 +24,14 @@
 
     <%= render partial: "shared/cookies/banner" %>
 
-    <%= render partial: "layouts/shared/header" %>
+    <%= govuk_header %>
+
+    <%=
+      govuk_service_navigation(
+        service_name: "Register for a national professional qualification",
+        service_url: root_path,
+      )
+    %>
 
     <%= render partial: "layouts/shared/maintenance_banner" %>
 

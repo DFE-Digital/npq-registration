@@ -65,6 +65,25 @@ RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
       }.to have_enqueued_job.with(request_data, response_data, status_code, created_at)
     end
 
+    context "when logging" do
+      let(:io)  { StringIO.new }
+      let(:log) { io.tap(&:rewind).read }
+      let(:log_line) { log.lines.find { |line| line.include? described_class.to_s } }
+      let(:pii) { /teacher_reference_number.*123/ }
+
+      before do
+        SemanticLogger.add_appender(io:, level: :info)
+        SemanticLogger.sync!
+        allow(analytics_event).to receive(:with_data) { analytics_event }
+        job
+      end
+
+      it "does not log the parameters used in the request" do
+        expect(log_line).to be_present
+        expect(log_line).not_to include(pii)
+      end
+    end
+
     context "when API Request response is success" do
       it "sends a DfE::Analytics custom event" do
         expect(analytics_event).to receive(:with_data).with(

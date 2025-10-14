@@ -7,7 +7,7 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.4.5"
+        default: "3.4.6"
       node-version:
         description: Node version
         type: string
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -51,7 +51,7 @@ jobs:
           bundler-cache: true
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ inputs.node-version }}
           cache: yarn

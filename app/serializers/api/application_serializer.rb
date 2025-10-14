@@ -22,6 +22,7 @@ module API
       field(:school_urn) { |a| a.school&.urn }
       field(:ukprn, name: :school_ukprn)
       field(:lead_provider_approval_status, name: :status)
+      field(:reason_for_rejection, if: proc { Feature.lp_self_serve? })
       field(:works_in_school)
       field(:cohort) { |a| a.cohort&.start_year&.to_s }
       field(:eligible_for_dfe_funding?, name: :eligible_for_funding)
@@ -41,7 +42,11 @@ module API
       end
 
       view :v3 do
+        lp_self_serve_feature_flag_checker = ->(*) { Feature.lp_self_serve? }
+
         field(:schedule_identifier) { |a| a.schedule&.identifier }
+        field(:senco_in_role, name: :works_as_senco, if: lp_self_serve_feature_flag_checker)
+        field(:senco_start_date, if: lp_self_serve_feature_flag_checker) { |application| application.senco_start_date&.as_json }
       end
     end
 

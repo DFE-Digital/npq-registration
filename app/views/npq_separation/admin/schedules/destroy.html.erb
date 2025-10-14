@@ -3,6 +3,7 @@
 <p class="govuk-body">Are you sure you want to delete this schedule? There is no way to undo this action.</p>
 
 <%= form_with model: [:npq_separation, :admin, @schedule.cohort, @schedule], method: 'delete' do |f| %>
+  <%= f.govuk_error_summary %>
   <%= hidden_field_tag :confirm, 1 %>
   <%= f.govuk_submit 'Confirm delete schedule', warning: true %>
   <%= govuk_button_link_to('Cancel', npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), secondary: true) %>

@@ -256,6 +256,68 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       it "serializes the `schedule_identifier`" do
         expect(attributes["schedule_identifier"]).to eq(application.schedule.identifier)
       end
+
+      context "when LP_SELF_SERVE feature flag is on" do
+        let(:application) { build(:application, :senco, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
+
+        before do
+          Flipper.enable(Feature::LP_SELF_SERVE)
+        end
+
+        it "serializes the `works_as_senco`" do
+          expect(attributes["works_as_senco"]).to eq(application.senco_in_role)
+        end
+
+        it "serializes the `senco_start_date`" do
+          expect(attributes["senco_start_date"]).to eq(application.senco_start_date.as_json)
+        end
+
+        context "when application is non senco application" do
+          let(:application) { build(:application, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
+
+          it "serializes the `works_as_senco`" do
+            expect(attributes["works_as_senco"]).to be_nil
+          end
+
+          it "serializes the `senco_start_date`" do
+            expect(attributes["senco_start_date"]).to be_nil
+          end
+        end
+      end
+
+      context "when LP_SELF_SERVE feature flag is off" do
+        it "does not serialize the `works_as_senco`" do
+          expect(attributes).not_to have_key("works_as_senco")
+        end
+
+        it "does not serialize the `senco_start_date`" do
+          expect(attributes).not_to have_key("senco_start_date")
+        end
+      end
+    end
+  end
+
+  describe "reason_for_rejection serialization" do
+    subject(:attributes) { JSON.parse(described_class.render(application))["attributes"] }
+
+    let(:reason_for_rejection) { Application.reason_for_rejections[:registration_expired] }
+    let(:application) { build(:application, :rejected, reason_for_rejection:) }
+    let(:feature) { Feature::LP_SELF_SERVE }
+
+    context "when the lp_self_serve feature flag is disabled" do
+      before { Flipper.disable(feature) }
+
+      it "does not include the `reason_for_rejection` field" do
+        expect(attributes).not_to have_key("reason_for_rejection")
+      end
+    end
+
+    context "when the lp_self_serve feature flag is enabled" do
+      before { Flipper.enable(feature) }
+
+      it "serializes the `reason_for_rejection`" do
+        expect(attributes["reason_for_rejection"]).to eq(reason_for_rejection)
+      end
     end
   end
 end

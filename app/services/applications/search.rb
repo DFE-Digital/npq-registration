@@ -18,6 +18,7 @@ module Applications
       scope.where(ecf_id: query)
         .or(scope.where(declarations: { ecf_id: query }))
         .or(scope.where("users.full_name ilike ?", "%#{query}%"))
+        .or(scope.where("users.preferred_name ilike ?", "%#{query}%"))
         .distinct(:ecf_id)
     end
 

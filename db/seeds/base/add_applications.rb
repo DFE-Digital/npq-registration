@@ -149,12 +149,12 @@ course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
 
 # Make sure some applications will appear in the In Review list
 [
-  { employment_type: "hospital_school" },
-  { employment_type: "lead_mentor_for_accredited_itt_provider" },
-  { employment_type: "local_authority_supply_teacher" },
-  { employment_type: "local_authority_virtual_school" },
-  { employment_type: "young_offender_institution" },
-  { employment_type: "other" },
+  { employment_type: :hospital_school },
+  { employment_type: :lead_mentor_for_accredited_itt_provider },
+  { employment_type: :local_authority_supply_teacher },
+  { employment_type: :local_authority_virtual_school },
+  { employment_type: :young_offender_institution },
+  { employment_type: :other },
   { referred_by_return_to_teaching_adviser: "yes" },
 ].each do |application_attrs|
   FactoryBot.create(:application, :manual_review, **application_attrs.merge(course:))

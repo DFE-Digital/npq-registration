@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe Applications::Search do
   subject { described_class.search(q) }
 
-  let(:application)  { create(:application) }
+  let(:user)         { build(:user, preferred_name: "Rasmus Lerdorf") }
+  let(:application)  { create(:application, user:) }
   let(:declarations) { create_list(:declaration, 2, application:) }
 
   before do
@@ -25,6 +26,18 @@ RSpec.describe Applications::Search do
 
   context "when name partially matches" do
     let(:q) { application.user.full_name.split(" ").first }
+
+    it_behaves_like "a search returning matching applications"
+  end
+
+  context "when preferred name matches" do
+    let(:q) { application.user.preferred_name }
+
+    it_behaves_like "a search returning matching applications"
+  end
+
+  context "when preferred name partially matches" do
+    let(:q) { application.user.preferred_name.split(" ").first }
 
     it_behaves_like "a search returning matching applications"
   end

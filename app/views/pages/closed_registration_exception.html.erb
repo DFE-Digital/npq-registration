@@ -4,29 +4,26 @@
 
     <p class="govuk-body">You’ve been given access to make a late registration for an NPQ whilst the service is closed.</p>
 
-    <p class="govuk-body">You will also need to apply separately with your training provider, if you have not done so already.</p>
+    <p class="govuk-body">You will also need to apply separately with your training provider.</p>
 
     <h2 class="govuk-heading-m">Before you start</h2>
 
     <p class="govuk-body">
       You should have already chosen which NPQ you want to do and who your provider is.
       If you have not chosen yet,
-      <%= govuk_link_to("find out about NPQ courses",
-                        "https://www.gov.uk/guidance/national-professional-qualification-npq-courses") %>.
+      <%= external_link_to("find out about NPQ courses", :find_out_about_npq_courses) %>.
     </p>
 
     <p class="govuk-body">
       You’ll also need a teacher reference number (TRN) to register, even if
       you’re not a teacher.
-      <%= govuk_link_to "Learn about TRNs",
-                        "https://www.gov.uk/guidance/teacher-reference-number-trn" %>
+      <%= external_link_to "Learn about TRNs", :learn_about_trns %>
       including how to request on if you do not have one.
     </p>
 
     <p class="govuk-body">
       If you work in early years or childcare,
-      <%= govuk_link_to("check if your workplace is registered with Ofsted",
-                        "https://reports.ofsted.gov.uk/childcare") %>
+      <%= external_link_to("check if your workplace is registered with Ofsted", :check_if_your_workplace_is_registered_with_ofsted) %>
       and get their Ofsted unique reference number (URN), if they have one.
     </p>
 

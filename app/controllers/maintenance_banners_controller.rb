@@ -2,7 +2,7 @@
 
 class MaintenanceBannersController < PublicPagesController
   def dismiss
-    cookies[:dismiss_maintenance_banner_until] = 1.week.from_now
+    cookies[:dismiss_maintenance_banner_until] = 1.day.from_now
 
     redirect_back(fallback_location: root_path)
   end

@@ -20,6 +20,10 @@
       row.with_value(text: @application.ecf_id)
     end
     sl.with_row do |row|
+      row.with_key(text: "User ID")
+      row.with_value(text: @application.user.ecf_id)
+    end
+    sl.with_row do |row|
       row.with_key(text: "Course")
       row.with_value(text: @application.course.name)
     end
@@ -162,6 +166,16 @@
         sl.with_row do |row|
           row.with_key(text: "Provider")
           row.with_value(text: declaration.lead_provider.name)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Delivery partner")
+          row.with_value { declaration.delivery_partner&.name || tag.em("-") }
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Secondary delivery partner")
+          row.with_value { declaration.secondary_delivery_partner&.name || tag.em("-") }
         end
 
         sl.with_row do |row|

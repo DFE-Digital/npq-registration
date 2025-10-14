@@ -241,6 +241,7 @@ shared:
     - senco_start_date
     - on_submission_trn
     - review_status
+    - reason_for_rejection
   :users:
     - id
     - created_at
@@ -248,6 +249,8 @@ shared:
     - ecf_id
     - trn_verified
     - trn
+    - email
+    - full_name
     - active_alert
     - trn_auto_verified
     - feature_flag_id

@@ -19,7 +19,7 @@ module Helpers
 
         lead_provider = create(:lead_provider)
         delivery_partner = create(:delivery_partner)
-        schedule = create(:schedule, cohort:, course_group: course.course_group, allowed_declaration_types: %w[started completed])
+        schedule = create(:schedule, cohort:, course_group: course.course_group, allowed_declaration_types: %w[started completed], applies_from: Date.yesterday)
 
         # Create required contracts and partnerships
         statement = create(:statement, cohort:, lead_provider:)

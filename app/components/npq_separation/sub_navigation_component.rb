@@ -1,5 +1,5 @@
 module NpqSeparation
-  class SubNavigationComponent < ViewComponent::Base
+  class SubNavigationComponent < BaseComponent
     attr_accessor :current_path, :current_section, :structure, :heading
 
     def initialize(current_path, structure:, heading: {})

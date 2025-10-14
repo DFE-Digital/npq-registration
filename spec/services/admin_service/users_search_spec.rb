@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe AdminService::UsersSearch do
   subject { described_class.new(q:) }
 
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, preferred_name: "Jonny D") }
   let!(:application) do
     create(:application,
            user:)
@@ -20,6 +20,14 @@ RSpec.describe AdminService::UsersSearch do
 
     context "when user#full_name match" do
       let(:q) { user.full_name }
+
+      it "returns the hit" do
+        expect(subject.call).to include(user)
+      end
+    end
+
+    context "when user#preferred_name match" do
+      let(:q) { user.preferred_name.split(" ").first }
 
       it "returns the hit" do
         expect(subject.call).to include(user)

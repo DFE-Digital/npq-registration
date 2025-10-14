@@ -42,7 +42,8 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
 
     context "when a statement is paid" do
       before do
-        create(:statement, :paid, lead_provider:, month: Time.zone.today.month + 3, year: Time.zone.today.year)
+        date = Time.zone.today + 3.months
+        create(:statement, :paid, lead_provider:, month: date.month, year: date.year)
       end
 
       it "does not allow changes" do

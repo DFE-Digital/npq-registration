@@ -14,16 +14,30 @@ module NpqSeparation
     #             this isn't done on the fly so we can pass the value along from
     #             the primary nav to the sub nav
     # * nodes   - a list of nodes that sit under this one in the structure
-    Node = Struct.new(:name, :href, :prefix, :current, :nodes, keyword_init: true)
+    Node = Struct.new(:name, :href, :prefix, :current, :nodes, keyword_init: true) do
+      def to_service_navigation_item
+        { text: name, href: href, active_when: prefix }
+      end
+    end
 
     def primary_structure
       structure.keys
     end
 
-    def sub_structure(primary_section_name)
-      primary_section = structure.keys.find { |section| section.name == primary_section_name } or fail(SectionNotFoundError)
+    def sub_structure(path, default_to_first_section: false)
+      primary_section = primary_structure.find { |section| path.start_with?(section.prefix) }
+
+      if primary_section.nil?
+        fail(SectionNotFoundError) unless default_to_first_section
+
+        primary_section = primary_structure.first
+      end
 
       structure.fetch(primary_section)
+    end
+
+    def service_navigation_items
+      primary_structure.map(&:to_service_navigation_item)
     end
 
   private

@@ -9,6 +9,7 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
     {
       course_identifier: course.identifier,
       lead_provider_id: lead_provider.id,
+      current_user: build_stubbed(:user),
     }.stringify_keys
   end
 
@@ -17,7 +18,7 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
       current_step: :senco_in_role,
       store:,
       request: nil,
-      current_user: build(:user),
+      current_user: nil,
     )
   end
 

@@ -1,5 +1,10 @@
 FactoryBot.define do
   factory :get_an_identity_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+    transient do
+      middle_name { nil }
+      date_of_birth { "1995-01-01" }
+    end
+
     message_id { SecureRandom.uuid }
     message_type { "UserUpdated" }
     status { "failed" }
@@ -14,8 +19,8 @@ FactoryBot.define do
             "userId" => SecureRandom.uuid,
             "lastName" => "Doe",
             "firstName" => "John",
-            "middleName" => nil,
-            "dateOfBirth" => "1995-01-01",
+            "middleName" => middle_name,
+            "dateOfBirth" => date_of_birth,
             "emailAddress" => Faker::Internet.email(name: "John Doe"),
             "mobileNumber" => nil,
             "preferredName" => "John Doe",
