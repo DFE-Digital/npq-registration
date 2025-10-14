@@ -84,105 +84,106 @@
       text-decoration: underline;
     }
   }
-}
-.card {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  max-width: 600px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
 
-.card-icon {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-}
+  .card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
 
-.card-text h3 {
-  margin: 0;
-  font-size: 1.2em;
-}
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
 
-.card-text p {
-  margin: 5px 0 0;
-  font-size: 1em;
-}
-.card-text ul {
-  list-style-type: disc;
-  margin-left: 20px;
-  padding-left: 0;
-}
+  .card-text {
+    flex: 1 1 auto;
+    min-width: 0; /* ensure long text wraps inside the card */
 
-.card-text ul li {
-  margin-bottom: 8px;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-.card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 24px; /* Adds space between cards */
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.25rem;
+    }
 
-<!-- Added: CSS to align content consistently inside each .card -->
-<style>
-.card {
-  border: 1px solid #ddd;
-  padding: 16px;
-  border-radius: 0px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
-  background: #fff;
-}
+    h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
 
-.card img.participant,
-.card img.provider,
-.card img.dfe,
-.card img.api {
-  width: 80px;
-  height: auto;
-  flex: 0 0 80px;
-  display: block;
-}
+    p {
+      margin: 5px 0 0;
+      font-size: 1em;
+    }
 
-.card-text {
-  flex: 1 1 auto;
-  min-width: 0; /* ensure long text wraps inside the card */
-}
+    ul {
+      list-style-type: disc;
+      margin-left: 20px;
+      padding-left: 0;
+    }
 
-.card-text h2 {
-  margin: 0 0 12px 0;
-  font-size: 1.25rem;
-}
+    ul li {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
 
-.govuk-body,
-.govuk-list {
-  margin: 0 0 12px 0;
-  line-height: 1.5;
-}
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px; /* Adds space between cards */
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
 
-.govuk-list.govuk-list--bullet {
-  margin-left: 1.25rem;
-}
+  .card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 0px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+  }
 
-/* centre the arrow image on the page */
-.arrow-container {
-  text-align: center;
-  margin: 1.5rem 0;
-}
-.arrow-container img.arrow {
-  display: inline-block;
-  max-width: 160px;
-  height: auto;
-}
-</style>
+  .card img.participant,
+  .card img.provider,
+  .card img.dfe,
+  .card img.api {
+    width: 80px;
+    height: auto;
+    flex: 0 0 80px;
+    display: block;
+  }
 
+
+
+  .govuk-body,
+  .govuk-list {
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+  }
+
+  .govuk-list.govuk-list--bullet {
+    margin-left: 1.25rem;
+  }
+
+  /* centre the arrow image on the page */
+  .arrow-container {
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+  .arrow-container img.arrow {
+    display: inline-block;
+    max-width: 160px;
+    height: auto;
+  }
+}
