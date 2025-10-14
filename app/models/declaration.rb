@@ -204,7 +204,7 @@ class Declaration < ApplicationRecord
   end
 
   def state_history
-    changes = versions.where_attribute_changes(:state).order(created_at: :asc)
+    changes = versions.where_attribute_changes(:state).order(created_at: :asc, id: :asc)
 
     if changes.none?
       [{ title: state.humanize, at: created_at }]
