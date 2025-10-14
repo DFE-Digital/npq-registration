@@ -1,0 +1,75 @@
+@import "govuk-frontend/dist/govuk/base";
+
+@media print {
+  .print-notice {
+    display: none;
+  }
+}
+
+body {
+  zoom: 90%;
+}
+
+header {
+  display: none;
+}
+
+footer {
+  display: none;
+}
+
+a {
+  display: none;
+}
+
+div.govuk-cookie-banner {
+  display: none;
+}
+
+section.govuk-service-navigation {
+  display: none;
+}
+
+div.side-navigation {
+  display: none;
+}
+
+div.govuk-grid-column-three-quarters {
+  width: 90%;
+}
+
+div.govuk-button-group {
+  display: none;
+}
+
+div.govuk-summary-card {
+  page-break-inside: avoid;
+}
+
+details.contract-information {
+  page-break-inside: avoid;
+}
+
+.noprint {
+  display: none;
+}
+
+.avoid-page-break {
+  page-break-inside: avoid;
+}
+
+.avoid-page-break-after {
+  page-break-after: avoid;
+}
+
+.print-notice {
+  @include govuk-responsive-padding(4);
+  margin-bottom: govuk-spacing(4);
+  border: 1px solid $govuk-border-colour;
+  background-color: lightyellow;
+  height: 2.4em;
+}
+
+.align-baseline {
+  vertical-align: baseline;
+}

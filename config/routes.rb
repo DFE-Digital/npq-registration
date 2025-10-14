@@ -289,6 +289,8 @@ Rails.application.routes.draw do
             resource :assurance_report, controller: "statements/assurance_reports", only: "show"
             resource :payment_authorisation, controller: "statements/payment_authorisations", only: %i[new create]
             resources :voided, controller: "statements/voided", only: :index
+            get :print_provider
+            get :print_dfe_user
 
             namespace :statements, path: nil do
               resource :change_deadline_date, controller: "change_deadline_date", only: %i[show create]

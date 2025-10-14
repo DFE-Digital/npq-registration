@@ -43,7 +43,6 @@ RSpec.feature "Statement", type: :feature do
     component = NpqSeparation::Admin::StatementSummaryComponent.new(statement:)
     expect(page).to have_component(component)
 
-    expect(page).to have_css("a", text: "Save as PDF")
     expect(page).to have_link("Download declarations (CSV)", href: npq_separation_admin_finance_assurance_report_path(statement, format: :csv))
 
     contracts.each do |contract|
@@ -92,5 +91,24 @@ RSpec.feature "Statement", type: :feature do
     end
 
     expect(page).to be_accessible
+  end
+
+  scenario "print views" do
+    visit npq_separation_admin_finance_statement_path(statement)
+
+    within(".govuk-inset-text.noprint") do
+      print_providers_window = window_opened_by do
+        click_link "Providers"
+      end
+      within_window print_providers_window do
+        expect(page).to have_current_path(print_provider_npq_separation_admin_finance_statement_path(statement))
+      end
+      print_dfe_users_window = window_opened_by do
+        click_link "DfE users"
+      end
+      within_window print_dfe_users_window do
+        expect(page).to have_current_path(print_dfe_user_npq_separation_admin_finance_statement_path(statement))
+      end
+    end
   end
 end
