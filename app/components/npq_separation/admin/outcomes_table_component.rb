@@ -17,9 +17,9 @@ module NpqSeparation
         [
           "Outcome",
           helpers.safe_join([
-                              "Course started".html_safe,
-                              helpers.tag.div("The declaration date on the started declaration", class: "govuk-hint govuk-!-margin-top-1")
-                            ]),
+            "Course started".html_safe,
+            helpers.tag.div("The declaration date on the started declaration", class: "govuk-hint govuk-!-margin-top-1"),
+          ]),
           "Course completed",
           "Submitted by provider",
         ]
@@ -29,7 +29,7 @@ module NpqSeparation
         outcomes.map do |outcome|
           [
             outcome_status_tag(outcome.state),
-            course_started_date(outcome.declaration)&.to_date.to_fs(:govuk_short),
+            course_started_date(outcome.declaration)&.to_date&.to_fs(:govuk_short),
             outcome.completion_date.to_fs(:govuk_short),
             outcome.created_at.to_date.to_fs(:govuk_short),
           ]
