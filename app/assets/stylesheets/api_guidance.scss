@@ -86,13 +86,28 @@
   }
 
   .card {
+    max-width: 600px;
+    border: 1px solid #ddd;
+    padding: 16px;
     display: flex;
     align-items: flex-start;
-    gap: 15px;
-    max-width: 600px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    gap: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+
+    img {
+      flex: 0 0 40px;
+      width: 40px;
+      height: auto;
+      display: block;
+    }
+
+    @include govuk-media-query($from: tablet) {
+      img {
+        flex: 0 0 80px;
+        width: 80px;
+      }
+    }
   }
 
   .card-icon {
@@ -133,38 +148,6 @@
     }
   }
 
-  .card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px; /* Adds space between cards */
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .card {
-    border: 1px solid #ddd;
-    padding: 16px;
-    border-radius: 0px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 16px;
-    background: #fff;
-  }
-
-  .card img.participant,
-  .card img.provider,
-  .card img.dfe,
-  .card img.api {
-    width: 80px;
-    height: auto;
-    flex: 0 0 80px;
-    display: block;
-  }
-
-
 
   .govuk-body,
   .govuk-list {
@@ -174,16 +157,5 @@
 
   .govuk-list.govuk-list--bullet {
     margin-left: 1.25rem;
-  }
-
-  /* centre the arrow image on the page */
-  .arrow-container {
-    text-align: center;
-    margin: 1.5rem 0;
-  }
-  .arrow-container img.arrow {
-    display: inline-block;
-    max-width: 160px;
-    height: auto;
   }
 }
