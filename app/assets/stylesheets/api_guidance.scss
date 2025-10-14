@@ -119,43 +119,5 @@
   .card-text {
     flex: 1 1 auto;
     min-width: 0; /* ensure long text wraps inside the card */
-
-    h2 {
-      margin: 0 0 12px 0;
-      font-size: 1.25rem;
-    }
-
-    h3 {
-      margin: 0;
-      font-size: 1.2em;
-    }
-
-    p {
-      margin: 5px 0 0;
-      font-size: 1em;
-    }
-
-    ul {
-      list-style-type: disc;
-      margin-left: 20px;
-      padding-left: 0;
-    }
-
-    ul li {
-      margin-bottom: 8px;
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-  }
-
-
-  .govuk-body,
-  .govuk-list {
-    margin: 0 0 12px 0;
-    line-height: 1.5;
-  }
-
-  .govuk-list.govuk-list--bullet {
-    margin-left: 1.25rem;
   }
 }
