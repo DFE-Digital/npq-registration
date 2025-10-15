@@ -48,7 +48,7 @@ module NpqSeparation
       end
 
       def course_started_date(declaration)
-        declaration.application.declarations.find_by(declaration_type: "started").declaration_date
+        declaration.application.declarations.find_by(declaration_type: "started")&.declaration_date
       end
 
       def caption_text
