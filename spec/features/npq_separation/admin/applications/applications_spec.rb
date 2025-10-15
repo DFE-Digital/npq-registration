@@ -66,6 +66,12 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_application(application)
   end
 
+  scenario "foo bar"  do
+    # go to applications
+    # create application with declaration
+    # go to first application
+  end
+
   scenario "filtering applications by provider approval status" do
     application = applications_in_order.last
     application.update! lead_provider_approval_status: :accepted, funded_place: false
@@ -205,6 +211,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing application details with declarations" do
     visit(npq_separation_admin_applications_path)
 
+    # given
     application = Application.order(created_at: :asc, id: :asc).first
     started_declaration = create(:declaration, :from_ecf, :with_secondary_delivery_partner, application:)
     completed_declaration = create(:declaration, :completed, application:)
@@ -212,13 +219,18 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     payable_declaration = create(:declaration, :payable, application:, statement: payable_statement)
     paid_statement = create(:statement, :paid, declaration: payable_declaration)
 
+    # when
+    # it reads: within tr element that includes user full name click 'view'
     within("tr", text: application.user.full_name) do
       click_link("View")
     end
 
+    # then
     expect(page).to have_css("h2", text: "Declarations")
 
+    # given
     summary_cards = all("[data-declarations] .govuk-summary-card")
+    # then
     expect(summary_cards).to have_attributes(length: 3)
 
     within(summary_cards[0]) do |summary_card|

@@ -16,11 +16,10 @@ RSpec.feature "Viewing participant outcomes", type: :feature do
     visit(npq_separation_admin_applications_path)
 
     application = Application.order(created_at: :asc, id: :asc).first
-    started_declaration = create(:declaration, :from_ecf, :with_secondary_delivery_partner, application:)
+    started_declaration = create(:declaration, :started, application:)
     completed_declaration = create(:declaration, :completed, application:)
 
-    # Create an outcome
-    outcome = create(:outcome, declaration: completed_declaration)
+    outcome = create(:participant_outcome, :passed, declaration: completed_declaration)
 
     # Navigate to application
     within("tr", text: application.user.full_name) do
@@ -31,9 +30,9 @@ RSpec.feature "Viewing participant outcomes", type: :feature do
     click_link("Course outcome")
 
     # check that the outcome is displayed
-    expect(page).to include(outcome.state)
-    expect(page).to include(outcome.declaration.course_start_date.to_date.to_fs(:govuk_short))
-    expect(page).to include(outcome.completion_date.to_fs)
-    expect(page).to include(outcome.created_at.to_date.to_fs(:govuk_short))
+    expect(page).to have_text("Passed")
+    expect(page).to have_text(started_declaration.declaration_date.to_date.to_fs(:govuk_short))
+    expect(page).to have_text(outcome.completion_date.to_fs(:govuk_short))
+    expect(page).to have_text(outcome.created_at.to_date.to_fs(:govuk_short))
   end
 end

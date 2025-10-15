@@ -211,6 +211,11 @@ class Application < ApplicationRecord
     }&.reason
   end
 
+  # We can implement such method instead using the one in component...
+  def course_start_date
+    declarations.find_by(declaration_type: "started")&.declaration_date
+  end
+
 private
 
   def funding_eligibility(with_funded_place:)
