@@ -50,22 +50,6 @@ class Course < ApplicationRecord
     npq-early-years-leadership
   ].freeze
 
-  # Two courses do not have short codes:
-  # - npq-early-headship-coaching-offer
-  # - npq-additional-support-offer
-  SHORT_CODES = {
-    "npq-leading-teaching" => "NPQLT",
-    "npq-leading-behaviour-culture" => "NPQLBC",
-    "npq-leading-teaching-development" => "NPQLTD",
-    "npq-leading-literacy" => "NPQLL",
-    "npq-senior-leadership" => "NPQSL",
-    "npq-headship" => "NPQH",
-    "npq-executive-leadership" => "NPQEL",
-    "npq-early-years-leadership" => "NPQEYL",
-    "npq-leading-primary-mathematics" => "NPQLPM",
-    "npq-senco" => "NPQSENCO",
-  }.freeze
-
   def schedule_for(cohort: Cohort.current, schedule_date: Date.current)
     course_group.schedule_for(cohort:, schedule_date:)
   end
@@ -141,11 +125,12 @@ class Course < ApplicationRecord
   end
 
   def short_code
-    SHORT_CODES.fetch(identifier)
-  rescue KeyError => e
-    Rails.logger.warn("A NPQ Qualification types mapping is missing: #{e.message}")
-    Sentry.capture_exception(e)
-
-    nil
+    super.tap do |sc|
+      if sc.nil?
+        message = "A NPQ Qualification types mapping is missing: #{identifier}"
+        Rails.logger.warn(message)
+        Sentry.capture_message(message)
+      end
+    end
   end
 end
