@@ -815,6 +815,12 @@ en:
             <p class="govuk-body">When this feature is turned on, course providers can use the API to see which delivery partners are associated with declarations.</p>
           maintenance_banner_html: |
             <p class="govuk-body">When this feature is turned on, a banner will be displayed at the top of every page to inform users that the service is down for maintenance.</p>
+          dfe_analytics_enabled_html: |
+            <p class="govuk-body">When this feature is turned on, events will be sent to DfE Analytics.</p>
+          lead_provider_self_serve_html: |
+            <p class="govuk-body">When this feature is turned on, lead provider self-service features are enabled.</p>
+          lead_provider_transferred_declarations_visibility_html: |
+            <p class="govuk-body">When this feature is turned on, lead providers can see transferred declarations.</p>
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment
