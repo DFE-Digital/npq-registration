@@ -102,7 +102,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
                 .and include("Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
-                .and include("Migrating 0 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
+                .and include("No declarations to migrate for #{lead_provider2.name}")
         end
 
         context "when restrict_to_declaration_types contains a string" do
@@ -132,7 +132,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                .and include("Migrating 0 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                .and include("No declarations to migrate for #{lead_provider.name}")
                 .and include("Migrating 1 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
         end
 
@@ -155,7 +155,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
           migrate
 
           expect(from_statement.reload).to have_attributes(from_statement_updates)
-          expect(logged_output).to include("Statement #{from_statement.year}-#{from_statement.month} for #{from_statement.lead_provider.name} updated from: {\"output_fee\" => true} to {\"output_fee\" => false}")
+          expect(logged_output).to include("Statement #{from_statement.year}-#{from_statement.month} for #{from_statement.lead_provider.name} (ID: #{from_statement.id}) " \
+                                           "updated from: {\"output_fee\" => true} to {\"output_fee\" => false}")
         end
       end
 
@@ -170,7 +171,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
           migrate
 
           expect(to_statement.reload).to have_attributes(to_statement_updates)
-          expect(logged_output).to include("Statement #{to_statement.year}-#{to_statement.month} for #{to_statement.lead_provider.name} " \
+          expect(logged_output).to include("Statement #{to_statement.year}-#{to_statement.month} for #{to_statement.lead_provider.name} (ID: #{to_statement.id}) " \
                                            "updated from: {\"deadline_date\" => #{old_deadline_date.inspect}, \"payment_date\" => #{old_payment_date.inspect}} " \
                                            "to {\"deadline_date\" => #{new_deadline_date.inspect}, \"payment_date\" => #{new_payment_date.inspect}}")
         end
@@ -206,7 +207,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                .and include("Migrating 0 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                .and include("No declarations to migrate for #{lead_provider.name}")
                 .and include("Migrating 1 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
         end
       end
