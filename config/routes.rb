@@ -253,6 +253,9 @@ Rails.application.routes.draw do
         collection do
           post :continue
         end
+        member do
+          post :continue
+        end
       end
 
       resources :schools, only: %i[index show]

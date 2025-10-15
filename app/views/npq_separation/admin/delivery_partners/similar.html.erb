@@ -6,10 +6,16 @@
 
 <%= govuk_list @similarly_named_delivery_partners.map(&:name), type: :bullet %>
 
-<%= form_for @continue_form, url: continue_npq_separation_admin_delivery_partners_path(@delivery_partner), as: :continue_form do |f| %>
+<% form_action = if @delivery_partner.persisted? %>
+  <% continue_npq_separation_admin_delivery_partner_path(@delivery_partner) %>
+<% else %>
+  <% continue_npq_separation_admin_delivery_partners_path(@delivery_partner) %>
+<% end %>
+
+<%= form_for @continue_form, url: form_action, as: :continue_form do |f| %>
   <%= f.govuk_error_summary %>
 
-  <%= f.govuk_radio_buttons_fieldset :continue, legend: { text: "Are you sure you want to add '#{@delivery_partner.name}'?", tag: 'h1', size: 'm' } do %>
+  <%= f.govuk_radio_buttons_fieldset :continue, legend: { text: "Are you sure you want to #{@delivery_partner.persisted? ? 'edit' : 'add'} '#{@delivery_partner.name}'?", tag: 'h1', size: 'm' } do %>
     <%= f.govuk_radio_button :continue, "yes", label: { text: "Yes" }, link_errors: true %>
     <%= f.govuk_radio_button :continue, "no", label: { text: "No" } %>
   <% end %>

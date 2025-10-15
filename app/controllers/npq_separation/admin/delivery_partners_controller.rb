@@ -1,8 +1,8 @@
 class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminController
-  before_action :set_similarly_named_delivery_partners, only: %i[create continue]
-  before_action :set_existing_delivery_partner, only: %i[edit update]
-  before_action :set_new_delivery_partner, only: %i[create continue]
-  before_action :set_continue_form, only: %i[create continue]
+  before_action :set_existing_delivery_partner, only: %i[edit]
+  before_action :set_delivery_partner, only: %i[create continue update]
+  before_action :set_similarly_named_delivery_partners, only: %i[create continue update]
+  before_action :set_continue_form, only: %i[create continue update]
 
   def index
     @pagy, @delivery_partners = pagy(scope, limit: 10)
@@ -22,7 +22,7 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   end
 
   def create
-    if @delivery_partner.name.present? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
+    if @delivery_partner.name.present? && @delivery_partner.name_changed? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
       render :similar
     elsif save_delivery_partner
       redirect_to action: :index
@@ -36,8 +36,9 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   end
 
   def update
-    if @delivery_partner.update(delivery_partners_params)
-      flash[:success] = "Delivery partner updated"
+    if @delivery_partner.name.present? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
+      render :similar
+    elsif save_delivery_partner
       redirect_to action: :index
     else
       render :edit
@@ -47,8 +48,9 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
 private
 
   def save_delivery_partner
+    message = @delivery_partner.persisted? ? "Delivery partner updated" : "Delivery partner created"
     @delivery_partner.save.tap do |success| # rubocop:disable Rails/SaveBang - result of save is used by caller
-      flash[:success] = "Delivery partner created" if success
+      flash[:success] = message if success
     end
   end
 
@@ -76,14 +78,20 @@ private
     @delivery_partner = DeliveryPartner.find(params[:id])
   end
 
-  def set_new_delivery_partner
-    @delivery_partner = DeliveryPartner.new(delivery_partners_params)
+  def set_delivery_partner
+    @delivery_partner = if params[:id]
+                          DeliveryPartner.find(params[:id]).tap do |delivery_partner|
+                            delivery_partner.assign_attributes(delivery_partners_params)
+                          end
+                        else
+                          DeliveryPartner.new(delivery_partners_params)
+                        end
   end
 
   def set_similarly_named_delivery_partners
     return [] if params.dig(:delivery_partner, :name).blank?
 
-    @similarly_named_delivery_partners = DeliveryPartner.name_similar_to(params.dig(:delivery_partner, :name))
+    @similarly_named_delivery_partners = DeliveryPartner.name_similar_to(params.dig(:delivery_partner, :name)).where.not(id: @delivery_partner&.id)
   end
 
   def set_continue_form
