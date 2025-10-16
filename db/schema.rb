@@ -313,6 +313,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_02_113306) do
     t.index ["lead_provider_id"], name: "index_delivery_partnerships_on_lead_provider_id"
   end
 
+  create_table "eligibility_list_entries", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "identifier", null: false
+    t.string "identifier_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_eligibility_list_entries_on_identifier"
+    t.index ["type", "identifier", "identifier_type"], name: "idx_on_type_identifier_identifier_type_3a4f491990", unique: true
+    t.index ["type"], name: "index_eligibility_list_entries_on_type"
+  end
+
   create_table "financial_change_logs", force: :cascade do |t|
     t.string "operation_description", null: false
     t.json "data_changes", null: false

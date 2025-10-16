@@ -258,7 +258,12 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :schools, only: %i[index show]
+      resources :schools, only: %i[index show] do
+        collection do
+          resource :eligibility_lists, controller: "eligibility_lists", only: %i[show create], path: "eligibility-lists"
+        end
+      end
+
       resources :courses, only: %i[index show]
       resources :users, only: %i[index show] do
         member do

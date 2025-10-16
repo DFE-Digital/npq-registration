@@ -1,0 +1,36 @@
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Last Updated")
+      row.with_value(text: eligibility_last_updated_at.to_formatted_s(:govuk_short))
+    end
+    sl.with_row do |row|
+      not_used = eligibility_list_type.any? ? " (not used yet)" : ""
+      row.with_key(text: "Number of entries")
+      row.with_value(text: "#{eligibility_list_type.count}#{not_used}")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Number of legacy entries")
+      row.with_value(text: "#{legacy_count}")
+    end
+  end
+%>
+
+<%= form_for @service, url: npq_separation_admin_eligibility_lists_path(anchor: fragment) do |f| %>
+  <%= f.govuk_error_summary %>
+  <div class="govuk-form-group">
+    <%= f.govuk_file_field :file,
+      label: { text: "Upload new eligibility list", tag: "h2", size: "m" },
+      hint: { text: "File must be in CSV format." },
+      javascript: true
+    %>
+    <%= govuk_details(summary_text: "Example CSV", classes: 'govuk-!-margin-top-3') do %>
+      <pre class="govuk-!-padding-5 govuk-!-font-size-16 csv-example">
+<%= eligibility_list_type::IDENTIFIER_CSV_HEADERS.join(",") %>
+<%= eligibility_list_type::IDENTIFIER_CSV_EXAMPLE %></pre>
+      <p class="govuk-body"><%= local_assigns.fetch :csv_note, nil %></p>
+    <% end %>
+  </div>
+  <%= f.hidden_field :eligibility_list_type, value: eligibility_list_type %>
+  <%= f.govuk_submit "Update eligibility list" %>
+<% end %>
