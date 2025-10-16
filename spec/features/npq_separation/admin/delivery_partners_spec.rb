@@ -111,6 +111,43 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
       expect(page).not_to have_content("Original Partner Name")
     end
 
+    context "when updating a delivery partner with a similar name to an existing delivery partner" do
+      before do
+        create(:delivery_partner, name: "Teaching")
+        create(:delivery_partner, name: "Learning")
+      end
+
+      scenario "it shows similarly named delivery partners" do
+        visit npq_separation_admin_delivery_partners_path
+        within("tr", text: "Learning") do
+          click_link "Change"
+        end
+        fill_in "Enter delivery partner name", with: "Teaching TSH"
+        click_button "Save"
+
+        expect(page).to have_css("h1", text: "We found similar delivery partners")
+        expect(page).to have_content("Teaching")
+
+        click_button "Continue"
+        expect(page).to have_content("There is a problem")
+
+        choose "No", visible: :all
+        click_button "Continue"
+        expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
+
+        within("tr", text: "Learning") do
+          click_link "Change"
+        end
+        fill_in "Enter delivery partner name", with: "Teaching TSH"
+        click_button "Save"
+        choose "Yes", visible: :all
+        click_button "Continue"
+        expect(page).to have_content("Delivery partner updated")
+        expect(page).to have_content("Teaching TSH")
+        expect(DeliveryPartner.where(name: "Teaching TSH").count).to eq(1)
+      end
+    end
+
     scenario "when updating a delivery partner with invalid data, it shows validation errors" do
       create(:delivery_partner, name: "Original Partner Name")
 
