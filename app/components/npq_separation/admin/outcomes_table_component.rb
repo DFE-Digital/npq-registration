@@ -17,7 +17,7 @@ module NpqSeparation
         [
           "Outcome",
           helpers.safe_join([
-            "Course started".html_safe,
+            "Course started",
             helpers.tag.div("The declaration date on the started declaration", class: "govuk-hint govuk-!-margin-top-1"),
           ]),
           "Course completed",

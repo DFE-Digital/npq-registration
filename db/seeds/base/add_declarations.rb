@@ -47,7 +47,7 @@ lead_providers.each do |lead_provider|
 
                 user = application.user
                 old_full_name = user.full_name
-                user.full_name = "Kate #{old_full_name}"
+                user.full_name = "Outcome #{old_full_name}"
                 user.save!
               end
             end
