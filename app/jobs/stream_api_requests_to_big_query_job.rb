@@ -1,5 +1,3 @@
-require "google/cloud/bigquery"
-
 class StreamAPIRequestsToBigQueryJob < ApplicationJob
   include ActionController::HttpAuthentication::Token
 

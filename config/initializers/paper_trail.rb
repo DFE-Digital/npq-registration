@@ -1,3 +1,7 @@
+require "./lib/paper_trail_extensions/version"
+
+PaperTrail::Version.include PaperTrailExtensions::Version
+
 PaperTrail.serializer = PaperTrail::Serializers::JSON
 
 Rails.application.configure do
