@@ -100,7 +100,7 @@ module Participants
       return unless application
       return unless new_schedule
 
-      if applicable_declarations.any? && new_schedule.cohort.start_year != application.schedule.cohort.start_year
+      if applicable_declarations.any? && new_schedule.cohort.id != application.schedule.cohort.id
         errors.add(:cohort, :cannot_change_with_declarations)
       end
     end

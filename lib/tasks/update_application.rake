@@ -54,20 +54,20 @@ class UpdateApplicationRakeTask
       end
 
       desc "Change cohort on an application"
-      task :change_cohort, %i[application_ecf_id new_cohort_year override_declarations_check] => :environment do |_t, args|
+      task :change_cohort, %i[application_ecf_id new_cohort_identifier override_declarations_check] => :environment do |_t, args|
         find_application(args.application_ecf_id)
 
-        new_cohort = Cohort.find_by(start_year: args.new_cohort_year)
-        raise "Cohort not found: #{args.new_cohort_year}" unless new_cohort
+        new_cohort = Cohort.find_by(identifier: args.new_cohort_identifier)
+        raise "Cohort not found: #{args.new_cohort_identifier}" unless new_cohort
 
-        cohort_before_update = application.cohort.start_year
+        cohort_before_update = application.cohort.identifier
 
         override_declarations_check = args.override_declarations_check == "true"
         service = Applications::ChangeCohort.new(application:, cohort_id: new_cohort.id, override_declarations_check:)
         result = service.change_cohort
         raise service.errors.messages.values.flatten.to_sentence unless result
 
-        logger.info("Application #{application.ecf_id} cohort changed from #{cohort_before_update} to #{application.cohort.start_year}")
+        logger.info("Application #{application.ecf_id} cohort changed from #{cohort_before_update} to #{application.cohort.identifier}")
       end
 
       desc "Change the schedule on an application"

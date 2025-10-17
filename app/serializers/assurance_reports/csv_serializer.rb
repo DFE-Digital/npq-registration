@@ -11,7 +11,7 @@ class AssuranceReports::CsvSerializer
   end
 
   def filename
-    "NPQ-Declarations-#{lead_provider.name.gsub(/\W/, '')}-Cohort#{cohort.start_year}-#{statement_name(statement).gsub(/\W/, '')}.csv"
+    "NPQ-Declarations-#{lead_provider.name.gsub(/\W/, '')}-Cohort#{cohort.name}-#{statement_name(statement).gsub(/\W/, '')}.csv"
   end
 
   def serialize

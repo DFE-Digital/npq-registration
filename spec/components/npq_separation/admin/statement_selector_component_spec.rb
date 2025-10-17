@@ -46,7 +46,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
 
   it "has dropdown with cohorts" do
     expect(rendered).to have_selector("select#cohort-id-field")
-    expect(rendered).to have_selector("select#cohort-id-field option[value='#{cohort.id}']", text: cohort.start_year)
+    expect(rendered).to have_selector("select#cohort-id-field option[value='#{cohort.id}']", text: cohort.name)
   end
 
   it "has dropdown with statement dates" do
@@ -116,7 +116,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     let(:cohort_param) { cohort.id }
 
     it "defaults to selected cohort" do
-      expect(rendered).to have_selector("select#cohort-id-field option[selected]", text: statement.cohort.start_year, visible: :all)
+      expect(rendered).to have_selector("select#cohort-id-field option[selected]", text: statement.cohort.name, visible: :all)
     end
   end
 

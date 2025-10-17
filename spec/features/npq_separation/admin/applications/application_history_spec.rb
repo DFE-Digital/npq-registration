@@ -41,7 +41,7 @@ RSpec.feature "viewing application history", :versioning, type: :feature do
 
     scenario "viewing application history" do
       visit npq_separation_admin_applications_history_path(application)
-      expect(page).to have_css("h2", text: "Cohort changed to 2023")
+      expect(page).to have_css("h2", text: "Cohort changed to #{older_cohort.name}")
       expect(page).to have_css("h2", text: "Schedule changed to #{Schedule.last.name}")
       expect(page).to have_content("by test user")
       expect(page).to have_css("h2", text: "Provider changed to UCL Institute of Education")
