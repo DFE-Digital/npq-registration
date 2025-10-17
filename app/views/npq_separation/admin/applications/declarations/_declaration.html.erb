@@ -56,11 +56,6 @@
       end
     end %>
 
-    <%- if declaration.participant_outcomes.any? %>
-      <hr class="govuk-section-break govuk-section-break--m">
-      <%= render(NpqSeparation::Admin::OutcomesTableComponent.new(declaration.participant_outcomes)) %>
-    <% end %>
-
     <hr class="govuk-section-break govuk-section-break--m">
     <h2 class="govuk-heading-m">State history</h2>
     <%=
