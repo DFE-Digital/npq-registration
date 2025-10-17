@@ -40,3 +40,18 @@ jobs:
         mode: ${{ inputs.mode }}
         docker-repository: ghcr.io/dfe-digital/npq-registration-maintenance
         github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Notify Teams channel
+      if: always()   # ensures this runs even if previous step fails
+      run: |
+        payload=$(jq -n \
+          --arg status "${{ job.status }}" \
+          --arg env "${{ inputs.environment }}" \
+          --arg mode "${{ inputs.mode }}" \
+          --arg repo "${{ github.repository }}" \
+          --arg run_url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          '{text: ("Maintenance mode " + $mode + " on " + $env + " completed with status: " + $status + " (" + $repo + ") <" + $run_url + ">")}')
+
+        curl -X POST -H 'Content-Type: application/json' \
+          -d "$payload" \
+          "${{ secrets.TEAMS_WEBHOOK_URL }}"
