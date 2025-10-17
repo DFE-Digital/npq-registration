@@ -7,7 +7,7 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.4.6"
+        default: "3.4.7"
       node-version:
         description: Node version
         type: string
