@@ -7,8 +7,8 @@ on:
         required: true
         type: choice
         options:
-        - sandbox
-        - production
+        - review
+
       mode:
         required: true
         type: choice
@@ -27,16 +27,17 @@ jobs:
     environment: ${{ inputs.environment }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v5
+    - name: Notify Teams channel
+      if: always()   # ensures this runs even if previous step fails
+      run: |
+        payload=$(jq -n \
+          --arg status "${{ job.status }}" \
+          --arg env "${{ inputs.environment }}" \
+          --arg mode "${{ inputs.mode }}" \
+          --arg repo "${{ github.repository }}" \
+          --arg run_url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          '{text: ("Maintenance mode " + $mode + " on " + $env + " completed with status: " + $status + " (" + $repo + ") <" + $run_url + ">")}')
 
-    - name: Enable or disable maintenance mode
-      uses: DFE-Digital/github-actions/maintenance@master
-      with:
-        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        environment: ${{ inputs.environment }}
-        mode: ${{ inputs.mode }}
-        docker-repository: ghcr.io/dfe-digital/npq-registration-maintenance
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        curl -X POST -H 'Content-Type: application/json' \
+          -d "$payload" \
+          "${{ secrets.TEAMS_WEBHOOK_URL }}"
