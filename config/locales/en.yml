@@ -1014,10 +1014,11 @@ en:
         course_start_date_three: "Early headship coaching offer start dates vary by provider and are throughout the year."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
-          a_school_html: "Includes:<ul><li>local authority maintained schools (some may provide hospital education, for example pupil referral units, alternative provision or special schools)</li><li>secure children’s homes and secure training centres</li></ul>"
-          an_academy_trust: "Some may provide hospital education (for example, alternative provision or academy special schools)"
-          another_setting_html: "For example: <ul><li>local authority (for staff in a direct teaching role, virtual school headteachers and staff in defined deputy headteacher roles)</li><li>initial teacher training (ITT) providers (for ITT lead mentors)</li><li>independent hospital education organisations</li><li>young offender institutions</li></ul>"
-          other_html: "Select ‘Other’ if you were referred by the Return to Teaching Advisory (RTTA) service, or if none of the above options apply to you, for example you’re:<ul><li>self-employed</li><li>not working in an educational setting</li><li>an agency supply teacher</li><li>working in any other independent setting</li></ul>"
+          a_16_to_19_educational_setting_html: "Includes:<ul class=\"question-hint-list\"><li>sixth form colleges</li><li>further education colleges</li><li>schools that also teach ages 16 to 19</li></ul>"
+          a_school_html: "Includes:<ul class=\"question-hint-list\"><li>local authority maintained schools (some may provide hospital education, for example pupil referral units, alternative provision or special schools)</li><li>secure children’s homes and secure training centres</li></ul>"
+          an_academy_trust_html: "<div class=\"govuk-!-margin-bottom-1\">Some may provide hospital education (for example, alternative provision or academy special schools)</p>"
+          another_setting_html: "For example: <ul class=\"question-hint-list\"><li>local authority (for staff in a direct teaching role, virtual school headteachers and staff in defined deputy headteacher roles)</li><li>initial teacher training (ITT) providers (for ITT lead mentors)</li><li>independent hospital education organisations</li><li>young offender institutions</li></ul>"
+          other_html: "Select ‘Other’ if you were referred by the Return to Teaching Advisory (RTTA) service, or if none of the above options apply to you, for example you’re:<ul class=\"question-hint-list\"><li>self-employed</li><li>not working in an educational setting</li><li>an agency supply teacher</li><li>working in any other independent setting</li></ul>"
         employment_type_options:
           local_authority_supply_teacher: "This could be as a supply teacher or peripatetic teacher."
         employment_role: "For example: Administrator, business manager"
