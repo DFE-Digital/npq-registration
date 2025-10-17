@@ -10,7 +10,7 @@
       <p class="govuk-body">
         <strong>Schedule Cohort</strong>
         <br/>
-        <%= @application.cohort.start_year %>
+        <%= @application.cohort.name %>
       </p>
     </div>
 
@@ -21,7 +21,7 @@
       <%= f.govuk_collection_radio_buttons :cohort_id,
                                            f.object.cohort_options,
                                            :id,
-                                           :start_year,
+                                           :name,
                                            legend: { tag: 'h1', size: 'm' } %>
       <div class="govuk-button-group">
         <%= f.govuk_submit t("shared.continue") %>

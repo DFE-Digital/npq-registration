@@ -38,7 +38,7 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
 
     it "shows an item for each change" do
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                  text: "Cohort changed from 2024 to 2023, Schedule changed from #{Schedule.first.name} to #{Schedule.last.name}")
+                                  text: "Cohort changed from #{cohort.name} to #{older_cohort.name}, Schedule changed from #{Schedule.first.name} to #{Schedule.last.name}")
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
                                   text: "Provider changed from #{original_lead_provider.name} to #{new_lead_provider.name}")
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",

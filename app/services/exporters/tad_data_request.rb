@@ -46,7 +46,7 @@ private
         lead_provider&.name,
         course&.name,
         schedule&.name,
-        cohort&.start_year,
+        cohort&.name,
         application.eligible_for_funding,
         application.training_status,
         application.targeted_support_funding_eligibility,
