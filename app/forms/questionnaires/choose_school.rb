@@ -74,10 +74,6 @@ module Questionnaires
       institution_location.present? && wizard.store["institution_name"].present?
     end
 
-    def course
-      @course ||= wizard.query_store.course
-    end
-
     def institution_location
       wizard.store["institution_location"]
     end

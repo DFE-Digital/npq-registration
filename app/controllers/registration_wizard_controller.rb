@@ -3,6 +3,7 @@ class RegistrationWizardController < PublicPagesController
   before_action :set_wizard
   before_action :set_form
   before_action :check_end_of_journey, only: %i[update]
+  before_action :check_course_defined, only: %i[show]
 
   rescue_from FundingEligibility::MissingMandatoryInstitution, with: :redirect_to_institution_picker
   rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date
@@ -99,6 +100,11 @@ private
       @wizard.save!
       redirect_to accounts_user_registration_path(current_user.applications.last, success: true)
     end
+  end
+
+  def check_course_defined
+    redirect_to_course_start_date if !@form.instance_of?(Questionnaires::ChooseYourNpq) && defined?(@form.course) && !@form.course
+    redirect_to_course_start_date if @form.instance_of?(Questionnaires::CheckAnswers) && !@wizard.course
   end
 
   def registration_closed
