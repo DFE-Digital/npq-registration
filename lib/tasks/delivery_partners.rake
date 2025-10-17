@@ -53,13 +53,13 @@ namespace :delivery_partners do
         raise "Delivery Partnerships already exist" unless DeliveryPartnership.count.zero?
 
         lead_providers = LeadProvider.all.index_by(&:ecf_id)
-        cohorts = Cohort.all.index_by(&:start_year).transform_keys(&:to_s)
+        cohorts = Cohort.all.index_by(&:identifier).transform_keys(&:to_s)
         delivery_partners = DeliveryPartner.all.index_by(&:ecf_id)
 
         CSV.foreach(args[:import_file], headers: true) do |row|
           DeliveryPartnership.create!(
             lead_provider: lead_providers[row["Lead Provider ECF Id"]],
-            cohort: cohorts[row["Cohort Start Year"]],
+            cohort: cohorts[row["Cohort"]],
             delivery_partner: delivery_partners[row["Delivery Partner ECF Id"]],
           )
         end
@@ -77,7 +77,7 @@ namespace :delivery_partners do
       raise "Export file not specified" if args[:export_file].blank?
 
       CSV.open(args[:export_file], "w") do |csv|
-        csv << ["Lead Provider ECF Id", "Cohort Start Year", "Delivery Partner ECF Id"]
+        csv << ["Lead Provider ECF Id", "Cohort", "Delivery Partner ECF Id"]
 
         DeliveryPartnership
             .order(id: :asc)
@@ -85,7 +85,7 @@ namespace :delivery_partners do
             .find_each(batch_size: 500) do |partnership|
           csv << [
             partnership.lead_provider.ecf_id,
-            partnership.cohort.start_year,
+            partnership.cohort.identifier,
             partnership.delivery_partner.ecf_id,
           ]
         end

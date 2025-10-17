@@ -17,25 +17,37 @@
   govuk_summary_list(card: { title: "Overview" }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Cohort")
-      row.with_value(text: @statement.cohort.start_year)
+      row.with_value(text: @statement.cohort.name)
     end
+
+    if internal_dfe_use
+      sl.with_row do |row|
+        row.with_key(text: "Cohort description")
+        row.with_value(text: @statement.cohort.description)
+      end
+    end
+
     sl.with_row do |row|
       row.with_key(text: "Output payment date")
       row.with_value(text: @statement.payment_date.to_fs(:govuk))
     end
+
     sl.with_row do |row|
       row.with_key(text: "Status")
       row.with_value(text: @statement.state.humanize)
     end
+
     sl.with_row do |row|
       row.with_key(text: "Statement ID")
       row.with_value(text: @statement.ecf_id)
     end
+
     if internal_dfe_use
       sl.with_row do |row|
         row.with_key(text: "Payment run")
         row.with_value(text: boolean_red_green_tag(@statement.output_fee))
       end
+
       if @statement.marked_as_paid_with_date?
         sl.with_row do |row|
           row.with_key(text: "Payment status")
