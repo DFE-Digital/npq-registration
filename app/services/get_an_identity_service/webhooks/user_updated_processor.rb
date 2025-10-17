@@ -72,6 +72,13 @@ module GetAnIdentityService
       end
 
       def update_user
+        user_with_clashing_email = User.where.not(id: user.id).find_by(email: decorated_message.email)
+
+        if user_with_clashing_email
+          Rails.logger.info("[GAI webhook] Clashing user found with same email, UID=#{user_with_clashing_email.uid}, ID=#{user_with_clashing_email.id}, merging and archiving clashing user")
+          Users::MergeAndArchive.new(user_to_merge: user_with_clashing_email, user_to_keep: user).call(dry_run: false)
+        end
+
         user.assign_attributes({
           full_name: decorated_message.full_name,
           preferred_name: decorated_message.preferred_name,
