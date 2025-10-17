@@ -107,6 +107,10 @@ module Questionnaires
 
   private
 
+    def build_option_struct(**kwargs)
+      super(**kwargs.deep_merge(label: { size: "s" }))
+    end
+
     def works_in_school?
       SCHOOL_SETTINGS.include?(work_setting)
     end

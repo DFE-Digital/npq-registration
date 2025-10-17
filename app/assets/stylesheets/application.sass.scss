@@ -62,3 +62,12 @@ $admin-template-max-width: 1200px;
 .ml-auto {
   margin-left: auto;
 }
+
+.question-hint-list {
+  margin-top: govuk-spacing(1);
+  padding-left: govuk-spacing(4);
+
+  li {
+    margin-bottom: govuk-spacing(1);
+  }
+}
