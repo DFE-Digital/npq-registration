@@ -7,8 +7,8 @@ on:
         required: true
         type: choice
         options:
-        -review
-        
+        - review
+
       mode:
         required: true
         type: choice
