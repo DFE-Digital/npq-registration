@@ -47,7 +47,7 @@ RSpec.describe "Delivery Partner endpoints", type: :request do
       it "calls the correct query" do
         expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, cohort_start_year: "2023")).and_call_original
 
-        api_get(path, params: { filter: { cohort: "2023" } })
+        api_get(path, params: { filter: { cohort: 2023 } })
       end
     end
   end

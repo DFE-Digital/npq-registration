@@ -1,5 +1,5 @@
 class CreateContractRakeTask
-  COHORT_YEAR = 2023
+  COHORT_NAME = 2023
   STATEMENT_YEAR = 2025
   FEBRUARY = 2
   STATEMENT_MONTH = FEBRUARY
@@ -26,7 +26,7 @@ class CreateContractRakeTask
         end
 
         row = CSV.read(csv_file_path, headers: true).first
-        statement = Statement.find_by(year: STATEMENT_YEAR, month: STATEMENT_MONTH, cohort: Cohort.find_by(start_year: COHORT_YEAR), lead_provider: LeadProvider.find_by(name: LEAD_PROVIDER_NAME))
+        statement = Statement.find_by(year: STATEMENT_YEAR, month: STATEMENT_MONTH, cohort: Cohort.find_by(name: COHORT_NAME), lead_provider: LeadProvider.find_by(name: LEAD_PROVIDER_NAME))
         course = Course.find_by(identifier: row["course_identifier"])
 
         if Contract.where(course: course, statement: statement).exists?

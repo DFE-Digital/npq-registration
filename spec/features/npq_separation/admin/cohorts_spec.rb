@@ -5,7 +5,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
   include Helpers::FileHelper
 
   let(:admin)  { create :admin }
-  let(:cohort) { Cohort.find_by start_year: 2026 }
+  let(:cohort) { Cohort.find_by name: 2026 }
 
   let(:new_button_text)    { "New cohort" }
   let(:edit_button_text)   { "Edit cohort details" }

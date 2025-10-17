@@ -105,7 +105,7 @@ RSpec.describe "update_application" do
         it "raises an error" do
           expect { run_task }.to raise_error(
             RuntimeError,
-            "Schedule not found for course group leadership, cohort 2029 and identifier #{application.schedule.identifier}",
+            "Schedule not found for course group leadership, cohort #{new_cohort.name} and identifier #{application.schedule.identifier}",
           )
         end
       end

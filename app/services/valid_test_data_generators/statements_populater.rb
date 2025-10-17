@@ -68,7 +68,7 @@ module ValidTestDataGenerators
         logger.info "StatementsPopulater: Statement #{month}/#{year} successfully created!"
       end
 
-      logger.info "StatementsPopulater: #{cohort.start_year} cohort statements for #{lead_provider.name} successfully created!"
+      logger.info "StatementsPopulater: #{cohort.name} cohort statements for #{lead_provider.name} successfully created!"
     end
 
     def state_for(payment_date, deadline_date)
