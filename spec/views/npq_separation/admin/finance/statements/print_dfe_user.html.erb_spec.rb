@@ -19,7 +19,8 @@ RSpec.describe "npq_separation/admin/finance/statements/print_dfe_user", type: :
 
   it "shows the statement overview" do
     summary_card = rendered.find(".govuk-summary-card", text: "Overview")
-    expect(summary_card).to have_summary_item("Cohort", statement.cohort.start_year)
+    expect(summary_card).to have_summary_item("Cohort", statement.cohort.name)
+    expect(summary_card).to have_summary_item("Cohort description", statement.cohort.description)
     expect(summary_card).to have_summary_item("Output payment date", statement.payment_date.to_fs(:govuk))
     expect(summary_card).to have_summary_item("Status", statement.state.humanize)
     expect(summary_card).to have_summary_item("Statement ID", statement.ecf_id)

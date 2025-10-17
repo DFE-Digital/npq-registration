@@ -231,7 +231,7 @@ RSpec.feature "Applications in review", type: :feature do
 
     expect(page).to have_css("h2", text: "Schedule")
     within(summary_lists[3]) do |summary_list|
-      expect(summary_list).to have_summary_item("Cohort", application.cohort.start_year)
+      expect(summary_list).to have_summary_item("Cohort", application.cohort.name)
       expect(summary_list).to have_summary_item("Schedule identifier", application.schedule.identifier)
     end
 
