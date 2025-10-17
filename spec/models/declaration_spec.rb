@@ -907,4 +907,42 @@ RSpec.describe Declaration, type: :model do
       end
     end
   end
+
+  describe "#state_history", :versioning do
+    subject { declaration.state_history }
+
+    context "with default initial state" do
+      let(:declaration) { create(:declaration) }
+
+      it { is_expected.to eq [["submitted", declaration.created_at]] }
+
+      context "and changes" do
+        let(:new_state_at) { 1.hour.ago.beginning_of_minute }
+
+        before do
+          travel_to(1.day.ago)    { declaration.update! ecf_id: SecureRandom.uuid } # changing anything other than state is ignored
+          travel_to(new_state_at) { declaration.mark_eligible! }
+        end
+
+        it { is_expected.to eq [["submitted", declaration.created_at], ["eligible", new_state_at]] }
+      end
+    end
+
+    context "with specific initial state" do
+      let(:declaration) { create(:declaration, :payable) }
+
+      it { is_expected.to eq [["payable", declaration.created_at]] }
+
+      context "and changes" do
+        let(:new_state_at) { 1.hour.ago.beginning_of_minute }
+
+        before do
+          travel_to(1.day.ago)    { declaration.update! ecf_id: SecureRandom.uuid } # changing anything other than state is ignored
+          travel_to(new_state_at) { declaration.mark_paid! }
+        end
+
+        it { is_expected.to eq [["payable", declaration.created_at], ["paid", new_state_at]] }
+      end
+    end
+  end
 end

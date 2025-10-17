@@ -203,6 +203,16 @@ class Declaration < ApplicationRecord
     [delivery_partner, secondary_delivery_partner].compact
   end
 
+  def state_history
+    changes = versions.where_attribute_changes(:state).order(created_at: :asc, id: :asc)
+
+    return [[state, created_at]] if changes.none?
+
+    result = changes.map { |v| [v.object_changes.dig("state", 1), v.created_at] }
+    result.prepend([changes.first.object_changes.dig("state", 0), created_at]) unless changes.first.created_at == created_at
+    result
+  end
+
 private
 
   def validate_declaration_date_within_schedule

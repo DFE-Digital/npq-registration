@@ -13,6 +13,19 @@ def load_base_file(file)
   load(base_file)
 end
 
+def with_versioning
+  was_enabled = PaperTrail.enabled?
+  was_enabled_for_request = PaperTrail.request.enabled?
+  PaperTrail.enabled = true
+  PaperTrail.request.enabled = true
+  begin
+    yield
+  ensure
+    PaperTrail.enabled = was_enabled
+    PaperTrail.request.enabled = was_enabled_for_request
+  end
+end
+
 Rails.logger.info("Seeding database")
 
 # Due to migrations modifying the tables, we need to reset column informations before running seeds
