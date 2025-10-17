@@ -8,8 +8,6 @@
 
 <h1 class="govuk-heading-l">Course outcome</h1>
 
-<% all_outcomes = @application.declarations.flat_map(&:participant_outcomes) %>
-
 <% if @outcomes.any? %>
   <%= render NpqSeparation::Admin::OutcomesTableComponent.new(@outcomes) %>
 <% else %>

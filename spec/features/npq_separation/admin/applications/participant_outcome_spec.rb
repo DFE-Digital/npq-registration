@@ -2,24 +2,20 @@ require "rails_helper"
 
 RSpec.feature "Viewing participant outcomes", type: :feature do
   include Helpers::AdminLogin
-  include Helpers::MailHelper
-
-  let(:applications_per_page) { Pagy::DEFAULT[:limit] }
-  let(:applications_in_order) { Application.order(created_at: :asc, id: :asc) }
 
   before do
-    create_list(:application, applications_per_page + 1)
     sign_in_as(create(:admin))
   end
 
   scenario "viewing an application with outcomes" do
+    application = create(:application)
+
+    # The declaration is started by default (declaration_type: "started")
+    started_declaration   = create(:declaration, application: application)
+    completed_declaration = create(:declaration, :completed, application: application)
+    outcome               = create(:participant_outcome, :passed, declaration: completed_declaration)
+
     visit(npq_separation_admin_applications_path)
-
-    application = Application.order(created_at: :asc, id: :asc).first
-    started_declaration = create(:declaration, :started, application:)
-    completed_declaration = create(:declaration, :completed, application:)
-
-    outcome = create(:participant_outcome, :passed, declaration: completed_declaration)
 
     within("tr", text: application.user.full_name) do
       click_link("View")
@@ -34,14 +30,16 @@ RSpec.feature "Viewing participant outcomes", type: :feature do
   end
 
   scenario "viewing an application without outcomes" do
+    application = create(:application)
+
     visit(npq_separation_admin_applications_path)
-    application = Application.order(created_at: :asc, id: :asc).first
 
     within("tr", text: application.user.full_name) do
       click_link("View")
     end
 
     click_link("Course outcome")
+
     expect(page).to have_text("There are no outcomes for this application yet")
   end
 end
