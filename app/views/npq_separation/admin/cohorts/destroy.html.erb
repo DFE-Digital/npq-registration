@@ -1,4 +1,4 @@
-<h1 class="govuk-heading-l">Delete cohort <%= format_cohort @cohort %></h1>
+<h1 class="govuk-heading-l">Delete cohort <%= @cohort.description %></h1>
 
 <p class="govuk-body">Are you sure you want to delete this cohort and <%= pluralize @cohort.schedules.count, 'associated schedule' %>? There is no way to undo this action.</p>
 

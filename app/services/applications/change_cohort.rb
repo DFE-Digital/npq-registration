@@ -31,9 +31,9 @@ module Applications
           .where(schedules: { course_group: application.course.course_group })
           .where.not(id: application.cohort.id)
           .distinct
-          .order(:start_year)
+          .order(:name)
       else
-        Cohort.where.not(id: application.cohort.id).order(:start_year)
+        Cohort.where.not(id: application.cohort.id).order(:name)
       end
     end
 

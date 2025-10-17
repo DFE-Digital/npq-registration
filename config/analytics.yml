@@ -185,6 +185,8 @@ shared:
     - updated_at
     - funding_cap
     - ecf_id
+    - name
+    - description
   :application_states:
     - id
     - application_id
