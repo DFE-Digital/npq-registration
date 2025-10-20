@@ -11,7 +11,7 @@ module Statements
              to: :contract
 
     delegate :cohort,
-             :show_targeted_delivery_funding?,
+             :use_targeted_delivery_funding?,
              to: :statement
 
     def initialize(contract:)
@@ -101,7 +101,7 @@ module Statements
     end
 
     def course_has_targeted_delivery_funding?
-      show_targeted_delivery_funding? && !course.ehco? && !course.aso?
+      use_targeted_delivery_funding? && !course.ehco? && !course.aso?
     end
 
     def targeted_delivery_funding_declarations_count

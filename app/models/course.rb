@@ -68,10 +68,6 @@ class Course < ApplicationRecord
     end
   end
 
-  def supports_targeted_delivery_funding?
-    !ehco?
-  end
-
   def npqh?
     identifier == NPQ_HEADSHIP
   end

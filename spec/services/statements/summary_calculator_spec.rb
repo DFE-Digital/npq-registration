@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Statements::SummaryCalculator do
-  let(:cohort) { create(:cohort, :current) }
+  let(:cohort) { create(:cohort, :has_targeted_delivery_funding) }
   let(:lead_provider) { create :lead_provider }
   let(:statement) { create(:statement, :next_output_fee, lead_provider:, reconcile_amount: 0, cohort:) }
   let(:application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
@@ -190,13 +190,13 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     context "when there are clawbacks" do
-      let(:paid_statement) { create(:statement, :paid, lead_provider:) }
+      let(:paid_statement) { create(:statement, :paid, lead_provider:, cohort:) }
       let!(:declaration) do
         travel_to paid_statement.deadline_date do
           create(:declaration, :paid, declaration_type:, lead_provider:, application:, cohort:, statement: paid_statement)
         end
       end
-      let!(:statement) { create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
+      let!(:statement) { create(:statement, :next_output_fee, cohort:, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
 
       before do
         travel_to statement.deadline_date do
@@ -287,22 +287,22 @@ RSpec.describe Statements::SummaryCalculator do
   end
 
   context "when there exists contracts over multiple cohorts" do
-    let!(:cohort_2022) { create(:cohort, :next) }
-    let!(:statement_2022) { create(:statement, lead_provider:, cohort: cohort_2022) }
+    let!(:cohort_2023) { create(:cohort, :next) }
+    let!(:statement_2023) { create(:statement, lead_provider:, cohort: cohort_2023) }
 
     before do
-      create(:contract, statement: statement_2022, course:)
+      create(:contract, statement: statement_2023, course:)
       create(
         :declaration,
         :eligible,
         application:,
-        statement: statement_2022,
+        statement: statement_2023,
       )
     end
 
     it "only includes declarations for the related cohort" do
       expect(described_class.new(statement:).total_starts).to be_zero
-      expect(described_class.new(statement: statement_2022).total_starts).to be(1)
+      expect(described_class.new(statement: statement_2023).total_starts).to be(1)
     end
   end
 
