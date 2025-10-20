@@ -42,5 +42,11 @@ FactoryBot.define do
     trait(:with_existing_lead_provider) do
       lead_provider { LeadProvider.first }
     end
+
+    trait :has_targeted_delivery_funding do
+      cohort { create(:cohort, :has_targeted_delivery_funding) }
+      year { 2025 }
+      month { 9 }
+    end
   end
 end

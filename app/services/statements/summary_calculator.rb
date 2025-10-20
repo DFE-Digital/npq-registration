@@ -4,7 +4,7 @@ module Statements
   class SummaryCalculator
     attr_reader :statement
 
-    delegate :show_targeted_delivery_funding?, to: :statement
+    delegate :use_targeted_delivery_funding?, to: :statement
 
     def initialize(statement:)
       @statement = statement

@@ -57,8 +57,12 @@ class Statement < ApplicationRecord
     payable? && marked_as_paid_at?
   end
 
-  def show_targeted_delivery_funding?
-    cohort.start_year >= 2022
+  def use_targeted_delivery_funding?
+    if Date.new(year, month) <= Date.new(2025, 10)
+      cohort.start_year >= 2022
+    else
+      cohort.start_year.between?(2022, 2023)
+    end
   end
 
   def past?

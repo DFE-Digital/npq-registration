@@ -1,7 +1,15 @@
 LeadProvider.find_each do |lead_provider|
   Cohort.find_each do |cohort|
-    date    = cohort.registration_start_date.to_date
-    periods = ((date.beginning_of_month - 2.months)...(date + 2.years)).map { [_1.year, _1.month] }.uniq
+    date = cohort.registration_start_date.to_date
+    period_end_year = case cohort.start_year # based on production statements
+                      when 2021..2023
+                        2026
+                      when 2024..2025
+                        2027
+                      else
+                        Date.current.year + 2
+                      end
+    periods = ((date.beginning_of_month - 2.months)...date.change(year: period_end_year)).map { [_1.year, _1.month] }.uniq
 
     periods.each.with_index(1) do |(year, month), i|
       final_statement  = i == periods.count
