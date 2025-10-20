@@ -24,26 +24,27 @@ jobs:
   set-maintenance-mode:
     name: Notify Teams channel
     if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send notification to Teams
+        run: |
+          payload=$(jq -n \
+          --arg repo "${{ github.repository }}" \
+          --arg actor "${{ github.actor }}" \
+          --arg env "${{ inputs.environment }}" \
+          --arg mode "${{ inputs.mode }}" \
+          --arg status "${{ job.status }}" \
+          --arg url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          '{
+            repository: $repo,
+            actor: $actor,
+            environment: $env,
+            mode: $mode,
+            status: $status,
+            run_url: $url
+          }')
 
-  steps:
-    - name: Send notification to Teams
-      run: |
-        payload=$(jq -n \
-        --arg repo "${{ github.repository }}" \
-        --arg actor "${{ github.actor }}" \
-        --arg env "${{ inputs.environment }}" \
-        --arg mode "${{ inputs.mode }}" \
-        --arg status "${{ job.status }}" \
-        --arg url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-        '{
-          repository: $repo,
-          actor: $actor,
-          environment: $env,
-          mode: $mode,
-          status: $status,
-          run_url: $url
-        }')
-
-        curl -X POST -H 'Content-Type: application/json' \
-          -d "$payload" \
-          "${{ secrets.TEAMS_WEBHOOK_URL }}"
+          curl -X POST -H 'Content-Type: application/json' \
+            -d "$payload" \
+            "${{ secrets.TEAMS_WEBHOOK_URL }}"
