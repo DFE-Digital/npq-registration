@@ -30,7 +30,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
 
     it { is_expected.to validate_presence_of(:lead_provider_id) }
 
-    it "course for lead_provider_id must exist" do
+    it "lead provider must exist" do
       subject.lead_provider_id = 0
       subject.valid?
       expect(subject.errors[:lead_provider_id]).to be_present
