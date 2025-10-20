@@ -101,6 +101,11 @@ module NpqSeparation
             href: npq_separation_admin_actions_log_index_path,
             prefix: "/npq-separation/admin/actions-log",
           ) => [],
+          Node.new(
+            name: "Glossary",
+            href: npq_separation_admin_glossary_index_path,
+            prefix: "/npq-separation/admin/glossary",
+            ) => [],
         }
       end
 
