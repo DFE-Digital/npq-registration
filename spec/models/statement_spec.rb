@@ -289,4 +289,55 @@ RSpec.describe Statement, type: :model do
       it { is_expected.not_to be_past }
     end
   end
+
+  describe "#use_targeted_delivery_funding?" do
+    subject { statement.use_targeted_delivery_funding? }
+
+    let(:statement) { build(:statement, cohort:) }
+    let(:cohort) { build(:cohort, start_year: cohort_start_year) }
+
+    context "when cohort start year is 2021" do
+      let(:cohort_start_year) { 2021 }
+
+      it { is_expected.to be false }
+    end
+
+    (2023..2023).each do |year|
+      context "when cohort start year is #{year}" do
+        let(:cohort_start_year) { year }
+
+        context "and statement is on or before October 2025" do
+          let(:statement) { build(:statement, month: 10, year: 2025, cohort:) }
+
+          it { is_expected.to be true }
+        end
+
+        context "and statement is after October in a year before 2025" do
+          let(:statement) { build(:statement, month: 11, year: 2022, cohort:) }
+
+          it { is_expected.to be true }
+        end
+
+        context "and statement is after October 2025" do
+          let(:statement) { build(:statement, month: 11, year: 2025, cohort:) }
+
+          it { is_expected.to be false }
+        end
+
+        context "and statement is before October 2026" do
+          let(:statement) { build(:statement, month: 9, year: 2026, cohort:) }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
+
+    (2024..2025).each do |year|
+      context "when cohort start year is #{year}" do
+        let(:cohort_start_year) { year }
+
+        it { is_expected.to be false }
+      end
+    end
+  end
 end
