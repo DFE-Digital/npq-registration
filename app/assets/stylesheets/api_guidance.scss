@@ -71,17 +71,53 @@
     background-color: govuk-colour("light-grey");
     white-space : pre-wrap;
     font-size: 0.8em;
-  
+
     .govuk-panel--confirmation & {
       background-color: transparent;
     }
-  
+
     a {
       text-decoration: none;
     }
-  
+
     a:hover {
       text-decoration: underline;
     }
-  }  
+  }
+
+  .card {
+    max-width: 600px;
+    border: 1px solid #ddd;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+
+    img {
+      flex: 0 0 40px;
+      width: 40px;
+      height: auto;
+      display: block;
+    }
+
+    @include govuk-media-query($from: tablet) {
+      img {
+        flex: 0 0 80px;
+        width: 80px;
+      }
+    }
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
+
+  .card-text {
+    flex: 1 1 auto;
+    min-width: 0; /* ensure long text wraps inside the card */
+  }
 }
