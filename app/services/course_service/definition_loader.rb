@@ -26,6 +26,7 @@ module CourseService
           display: hash[:display],
           identifier: hash[:identifier],
           course_group:,
+          short_code: hash[:short_code],
         )
 
         unless silent

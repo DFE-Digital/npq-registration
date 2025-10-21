@@ -8,6 +8,7 @@ module Courses
       course_group_name: "support",
       description: "The Additional Support Offer is a targeted support package for new headteachers.",
       display: false,
+      short_code: "ASO",
     },
     {
       position: 1,
@@ -16,6 +17,7 @@ module Courses
       identifier: "npq-leading-behaviour-culture",
       course_group_name: "specialist",
       display: true,
+      short_code: "NPQLBC",
     },
     {
       position: 2,
@@ -24,6 +26,7 @@ module Courses
       identifier: "npq-leading-literacy",
       course_group_name: "specialist",
       display: true,
+      short_code: "NPQLL",
     },
     {
       position: 3,
@@ -32,6 +35,7 @@ module Courses
       identifier: "npq-leading-teaching",
       course_group_name: "specialist",
       display: true,
+      short_code: "NPQLT",
     },
     {
       position: 3,
@@ -40,6 +44,7 @@ module Courses
       identifier: "npq-leading-teaching-development",
       course_group_name: "specialist",
       display: true,
+      short_code: "NPQLTD",
     },
     {
       position: 5,
@@ -48,6 +53,7 @@ module Courses
       identifier: "npq-senior-leadership",
       course_group_name: "leadership",
       display: true,
+      short_code: "NPQSL",
     },
     {
       position: 5,
@@ -56,6 +62,7 @@ module Courses
       identifier: "npq-leading-primary-mathematics",
       course_group_name: "specialist",
       display: true,
+      short_code: "NPQLPM",
     },
     {
       position: 6,
@@ -64,6 +71,7 @@ module Courses
       identifier: "npq-headship",
       course_group_name: "leadership",
       display: true,
+      short_code: "NPQH",
     },
     {
       position: 7,
@@ -72,6 +80,7 @@ module Courses
       identifier: "npq-executive-leadership",
       course_group_name: "leadership",
       display: true,
+      short_code: "NPQEL",
     },
     {
       position: 8,
@@ -80,6 +89,7 @@ module Courses
       identifier: "npq-early-years-leadership",
       course_group_name: "leadership",
       display: true,
+      short_code: "NPQEYL",
     },
     {
       position: 9,
@@ -88,6 +98,7 @@ module Courses
       identifier: "npq-senco",
       course_group_name: "leadership",
       display: true,
+      short_code: "NPQSENCO",
     },
     {
       position: 10,
@@ -97,6 +108,7 @@ module Courses
       course_group_name: "ehco",
       description: "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship.",
       display: true,
+      short_code: "EHCO",
     },
   ].freeze
 end
