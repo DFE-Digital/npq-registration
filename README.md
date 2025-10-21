@@ -1,3 +1,5 @@
+[![View performance data on Skylight](https://badges.skylight.io/status/IJcwqwvLcUcW.svg)](https://oss.skylight.io/app/applications/IJcwqwvLcUcW)
+
 # Register for a national professional qualification (NPQ)
 
 1. [What is NPQ and how does it work](docs/how_does_npq_work.md)
