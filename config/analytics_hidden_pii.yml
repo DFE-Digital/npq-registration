@@ -16,3 +16,4 @@ shared:
     - trn
     - email
     - full_name
+    - preferred_name

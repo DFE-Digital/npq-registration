@@ -265,6 +265,7 @@ shared:
     - email_updates_unsubscribe_key
     - archived_at
     - significantly_updated_at
+    - preferred_name
   :eligibility_list_entries:
     - id
     - type

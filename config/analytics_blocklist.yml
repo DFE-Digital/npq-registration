@@ -87,7 +87,6 @@ shared:
     - national_insurance_number
     - archived_email
     - raw_tra_provider_data
-    - preferred_name
   :applications:
     - raw_application_data
     - DEPRECATED_school_urn
