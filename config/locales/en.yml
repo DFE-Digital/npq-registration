@@ -1036,7 +1036,9 @@ en:
           - If you do not agree to share your information you will not be able to progress with your NPQ.
         choose_childcare_provider_html: "Begin entering the name of your workplace, then select from the drop-down box that appears. For example, enter <strong>‘St Luk’</strong> and select <strong>‘St Lukes Primary School’</strong>.<br>If you work for a trust, enter the name of the workplace that matches the postcode you gave."
         choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
-        choose_school_html: "Begin entering the name of your workplace, then select from the drop-down box that appears. For example, enter <strong>‘St Luk’</strong> and select <strong>‘St Lukes Primary School’</strong>.<br>If you work for a trust, enter the name of the school that matches the postcode you gave."
+        choose_school_html: |
+          <p class="govuk-body">Search for your workplace by postcode, unique reference number (URN) or name.</p>
+          <p class="govuk-body">If you work for a trust, use the details of one of its schools.</p>
         choose_school_search: "Start your search by entering the name of your workplace. If you work for a trust, enter the name of one of their schools."
         choose_private_childcare_provider: "For example a 7 digit number (1234567) or a 6 digit number sometimes prefixed with EY (EY456789)"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"

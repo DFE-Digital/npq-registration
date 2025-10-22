@@ -1,3 +1,21 @@
+<%= content_for :before_submit do %>
+  <%= govuk_details(summary_text: "My workplace is not listed") do %>
+    <p>Check the following:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the postcode or URN – <%= external_link_to "make sure it’s correct", :gias_establishment_search, new_tab: true %></li>
+      <li>the spelling – try entering part of the name</li>
+      <li>your browser settings – JavaScript must be enabled</li>
+    </ul>
+
+    <p>
+      If your workplace is still not listed,
+      <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "contact us", target: "_blank" %>
+      for support.
+    </p>
+  <% end %>
+<% end %>
+
 <%=
   render(
     'registration_wizard/shared/questions_page',
@@ -5,19 +23,3 @@
     wizard: @wizard,
   )
 %>
-
-<%= govuk_details(summary_text: "My workplace is not listed") do %>
-  <p>You can:</p>
-
-  <ul class="govuk-list govuk-list--bullet">
-    <li>check the spelling and try entering part of the name</li>
-    <li>make sure the <%= external_link_to "name matches the postcode", :gias_establishment_search, new_tab: true %> you entered</li>
-    <li>make sure your web browser settings have JavaScript enabled</li>
-  </ul>
-
-  <p>
-    If it’s still not listed,
-    <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "contact us", target: "_blank" %>
-    for support.
-  </p>
-<% end %>
