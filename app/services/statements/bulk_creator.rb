@@ -9,7 +9,8 @@ module Statements
     validate :validate_statements_csv
     validate :validate_contracts_csv
     validate :validate_statement_uniqueness
-    validate :validate_contract_uniqueness
+    validate :validate_statement_csv_duplicates
+    validate :validate_contract_csv_duplicates
 
     def initialize(cohort:, statements_csv_id:, contracts_csv_id:)
       @cohort = cohort
@@ -42,6 +43,17 @@ module Statements
       contract_parser.errors.each { errors.add :contracts_csv, _1 }
     end
 
+    def validate_statement_csv_duplicates
+      return if errors.any?
+
+      statement_rows = statement_parser.valid_rows
+      statement_rows.each.with_index(2) do |statement_row, line_number|
+        if statement_rows.map(&:attributes).count(statement_row.attributes) > 1
+          errors.add(:statements_csv, "Statement row is a duplicate on line #{line_number}")
+        end
+      end
+    end
+
     def validate_statement_uniqueness
       return if statements_csv_id.blank? || contracts_csv_id.blank?
 
@@ -59,7 +71,7 @@ module Statements
       end
     end
 
-    def validate_contract_uniqueness
+    def validate_contract_csv_duplicates
       return if errors.any?
 
       contract_rows = contract_parser.valid_rows

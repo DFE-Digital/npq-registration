@@ -75,6 +75,19 @@ RSpec.describe Statements::BulkCreator do
   end
 
   describe "statement CSV" do
+    context "with duplicate statement rows" do
+      let(:statements_csv) do
+        tempfile <<~CSV
+          year,month,deadline_date,payment_date,output_fee
+          2025,2,2024-12-25,2025-01-26,true
+          2025,2,2024-12-25,2025-01-26,true
+        CSV
+      end
+
+      it { is_expected.to have_error :statements_csv, "Statement row is a duplicate on line 2" }
+      it { is_expected.to have_error :statements_csv, "Statement row is a duplicate on line 3" }
+    end
+
     context "when a statement already exists" do
       before { Statement.create!(cohort:, lead_provider: LeadProvider.last, year: 2025, month: 4) }
 
@@ -166,8 +179,8 @@ RSpec.describe Statements::BulkCreator do
         CSV
       end
 
-      it { is_expected.to have_error :contracts_csv, "Contract row is a duplicate on line 1" }
       it { is_expected.to have_error :contracts_csv, "Contract row is a duplicate on line 2" }
+      it { is_expected.to have_error :contracts_csv, "Contract row is a duplicate on line 3" }
     end
 
     context "when it is not a CSV" do
