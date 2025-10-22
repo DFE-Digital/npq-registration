@@ -74,13 +74,13 @@ RSpec.describe Statements::BulkCreator do
     end
   end
 
-  context "when a statement already exists" do
-    before { Statement.create!(cohort:, lead_provider: LeadProvider.last, year: 2025, month: 4) }
-
-    it { is_expected.to have_error :statements_csv, "Statement already exists on line 4" }
-  end
-
   describe "statement CSV" do
+    context "when a statement already exists" do
+      before { Statement.create!(cohort:, lead_provider: LeadProvider.last, year: 2025, month: 4) }
+
+      it { is_expected.to have_error :statements_csv, "Statement already exists on line 4" }
+    end
+
     context "when it is not a CSV" do
       let(:statements_csv_id) { ActiveStorage::Blob.create_and_upload!(io: file_fixture("excel_file.xlsx").open, filename: "statements.xlsx").signed_id }
 
@@ -157,6 +157,19 @@ RSpec.describe Statements::BulkCreator do
   end
 
   describe "contracts CSV" do
+    context "with duplicate contract rows" do
+      let(:contracts_csv) do
+        tempfile <<~CSV
+          lead_provider_name,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course,monthly_service_fee
+          "#{LeadProvider.first.name}",#{Course.first.identifier},30,1000,12,false,100
+          "#{LeadProvider.first.name}",#{Course.first.identifier},30,1000,12,false,100
+        CSV
+      end
+
+      it { is_expected.to have_error :contracts_csv, "Contract row is a duplicate on line 1" }
+      it { is_expected.to have_error :contracts_csv, "Contract row is a duplicate on line 2" }
+    end
+
     context "when it is not a CSV" do
       let(:contracts_csv_id) { ActiveStorage::Blob.create_and_upload!(io: file_fixture("excel_file.xlsx").open, filename: "contracts.xlsx").signed_id }
 
