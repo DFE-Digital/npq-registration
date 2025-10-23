@@ -84,21 +84,31 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
     end
 
     context "when the new email is already in use" do
+      let(:clashing_user) { create(:user, email: new_email) }
+      let(:application) { create(:application, :accepted, user: clashing_user) }
+
       before do
-        create(:user, email: new_email)
+        application
       end
 
-      it "marks the webhook_message as failed" do
+      it "archives the clashing user" do
+        expect { subject }.to change { clashing_user.reload.archived? }.from(false).to(true)
+      end
+
+      it "moves any applications to the updated user" do
+        subject
+        expect(application.reload.user).to eq(user)
+      end
+
+      it "marks the webhook_message as processed" do
         expect {
           subject
         }.to change {
-          webhook_message.reload.slice(:status, :status_comment)
+          webhook_message.reload.slice(:status)
         }.from(
           "status" => "pending",
-          "status_comment" => nil,
         ).to({
-          "status" => "failed",
-          "status_comment" => "Email Email address must be unique",
+          "status" => "processed",
         })
       end
     end
