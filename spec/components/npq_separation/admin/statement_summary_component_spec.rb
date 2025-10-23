@@ -13,7 +13,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
 
   let(:calculator) do
     OpenStruct.new(
-      show_targeted_delivery_funding?: false,
+      use_targeted_delivery_funding?: false,
       total_targeted_delivery_funding: 99,
       total_service_fees: 0,
       total_output_payment: 100.12,
@@ -59,7 +59,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
 
   context "with targeted delivery funding" do
     before do
-      allow(calculator).to receive(:show_targeted_delivery_funding?).and_return(true)
+      allow(calculator).to receive(:use_targeted_delivery_funding?).and_return(true)
       subject
     end
 

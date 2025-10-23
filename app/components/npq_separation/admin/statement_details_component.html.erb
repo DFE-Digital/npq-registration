@@ -8,7 +8,7 @@
         <span class="float-right"><%= number_to_currency(@calculator.total_output_payment) %></span>
       </p>
 
-      <% if @calculator.show_targeted_delivery_funding? %>
+      <% if @calculator.use_targeted_delivery_funding? %>
         <p class="govuk-body-s govuk-!-margin-bottom-2">
           <%= t(".targeted_delivery_funding") %>
           <span class="float-right"><%= number_to_currency(@calculator.total_targeted_delivery_funding) %></span>

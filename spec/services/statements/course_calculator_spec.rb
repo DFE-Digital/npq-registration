@@ -235,6 +235,9 @@ RSpec.describe Statements::CourseCalculator do
   describe "#course_has_targeted_delivery_funding?" do
     subject { calculator.course_has_targeted_delivery_funding? }
 
+    let(:cohort) { create(:cohort, :has_targeted_delivery_funding) }
+    let(:statement) { create(:statement, :has_targeted_delivery_funding, :next_output_fee, cohort:) }
+
     context "with early headship coaching offer" do
       let(:course) { create(:course, :early_headship_coaching_offer) }
 
@@ -275,6 +278,9 @@ RSpec.describe Statements::CourseCalculator do
     end
 
     context "when there are targeted delivery funding declarations" do
+      let(:cohort) { create(:cohort, :has_targeted_delivery_funding) }
+      let(:statement) { create(:statement, :has_targeted_delivery_funding, :next_output_fee, cohort:) }
+
       before do
         create(:declaration, :eligible, course:, lead_provider:, application:, cohort:, statement:)
       end
@@ -283,6 +289,9 @@ RSpec.describe Statements::CourseCalculator do
     end
 
     context "when multiple declarations from same user of one type" do
+      let(:cohort) { create(:cohort, :has_targeted_delivery_funding) }
+      let(:statement) { create(:statement, :has_targeted_delivery_funding, :next_output_fee, cohort:) }
+
       let(:application) do
         create(
           :application,
@@ -313,6 +322,9 @@ RSpec.describe Statements::CourseCalculator do
 
   describe "#targeted_delivery_funding_refundable_declarations_count" do
     subject { calculator.targeted_delivery_funding_refundable_declarations_count }
+
+    let(:cohort) { create(:cohort, :has_targeted_delivery_funding) }
+    let(:statement) { create(:statement, :has_targeted_delivery_funding, :next_output_fee, cohort:) }
 
     before { application.update! targeted_delivery_funding_eligibility: true }
 

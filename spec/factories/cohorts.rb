@@ -27,5 +27,9 @@ FactoryBot.define do
     trait :without_funding_cap do
       funding_cap { false }
     end
+
+    trait :has_targeted_delivery_funding do
+      start_year { 2022 }
+    end
   end
 end
