@@ -9,13 +9,15 @@ RSpec.describe Statements::BulkCreator do
   let(:statements_csv_id) { ActiveStorage::Blob.create_and_upload!(io: statements_csv, filename: "statements.csv").signed_id }
   let(:contracts_csv_id)  { ActiveStorage::Blob.create_and_upload!(io: contracts_csv, filename: "contracts.csv").signed_id }
 
-  subject { described_class.new(cohort:, statements_csv_id:, contracts_csv_id:) }
+  subject(:service) { described_class.new(cohort:, statements_csv_id:, contracts_csv_id:) }
 
   it { is_expected.to be_valid }
 
   context "when dry run is false" do
+    let(:dry_run) { false }
+
     it "creates statements and contracts" do
-      expect { subject.call(dry_run: false) }
+      expect { subject.call(dry_run:) }
         .to change(Statement, :count).by(6)
         .and change(ContractTemplate, :count).by(3)
         .and change(Contract, :count).by(9)
@@ -70,6 +72,38 @@ RSpec.describe Statements::BulkCreator do
         expect(contract_template.number_of_payment_periods).to eq(3)
         expect(contract_template.service_fee_percentage).to eq(40)
         expect(contract_template.output_payment_percentage).to eq(60)
+      end
+    end
+  end
+
+  context "when dry run is true" do
+    let(:dry_run) { true }
+
+    context "when an unexpected error occurs creating contracts" do
+      before do
+        allow_any_instance_of(Contract).to receive(:save).and_return(false)
+        errors = ActiveModel::Errors.new(nil)
+        errors.add(:base, "Some error")
+        allow_any_instance_of(Contract).to receive(:errors).and_return(errors)
+      end
+
+      it "sets errors" do
+        subject.call(dry_run:)
+        expect(subject.errors[:base]).to eq ["Some error", "Some error", "Some error"]
+      end
+    end
+
+    context "when an unexpected error occurs creating statements" do
+      before do
+        allow_any_instance_of(Statement).to receive(:save).and_return(false)
+        errors = ActiveModel::Errors.new(nil)
+        errors.add(:base, "Some error")
+        allow_any_instance_of(Statement).to receive(:errors).and_return(errors)
+      end
+
+      it "sets errors" do
+        subject.call(dry_run:)
+        expect(subject.errors[:base]).to eq ["Some error", "Some error", "Some error"]
       end
     end
   end

@@ -16,6 +16,6 @@ RSpec.describe Contract, type: :model do
   end
 
   describe "validations" do
-    it { is_expected.to validate_uniqueness_of(:course_id).scoped_to(:statement_id).with_message("Can only have one contract for statement and course") }
+    it { is_expected.to validate_uniqueness_of(:course_id).scoped_to(:statement_id).with_message("can only have one contract for statement and course") }
   end
 end

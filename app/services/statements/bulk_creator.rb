@@ -86,12 +86,23 @@ module Statements
       cache = {}
 
       statement_parser.each do |statement_row|
+        errors_to_add = []
         contract_parser.each do |contract_row|
           statement_attributes = statement_attributes_for(statement_row, contract_row)
           contract_attributes = contract_attributes_for(contract_row)
 
-          cache[statement_attributes] ||= Statement.create!(statement_attributes)
-          cache[statement_attributes].contracts.create!(contract_attributes)
+          cache[statement_attributes] ||= Statement.create(statement_attributes)
+          if cache[statement_attributes].persisted?
+            contract = cache[statement_attributes].contracts.create(contract_attributes)
+            unless contract.persisted?
+              errors_to_add << contract.errors.full_messages.to_sentence
+            end
+          else
+            errors_to_add << cache[statement_attributes].errors.full_messages.to_sentence
+          end
+        end
+        errors_to_add.uniq.each do |error_message|
+          errors.add(:base, :failed, message: error_message)
         end
       end
 
