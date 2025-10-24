@@ -27,7 +27,7 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
     let(:new_lead_provider) { LeadProvider.last }
     let(:original_ecf_id) { SecureRandom.uuid }
     let(:application) { create(:application, :accepted, cohort:, lead_provider: original_lead_provider, itt_provider: original_itt_provider, ecf_id: original_ecf_id) }
-    let(:whodunnit) { nil }
+    let(:whodunnit) { "some user" }
 
     before do
       create(:schedule, cohort: older_cohort, course_group: application.course.course_group, identifier: application.schedule.identifier)
@@ -47,10 +47,8 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
     end
 
     it "shows the date of each change" do
-      expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__date time",
-                                  text: "1 Jan 2025 2:00pm")
-      expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__date time",
-                                  text: "1 Jan 2025 3:00pm")
+      expect(subject).to have_css(".moj-timeline__byline", text: "by some user, 1 Jan 2025 2:00pm")
+      expect(subject).to have_css(".moj-timeline__byline", text: "by some user, 1 Jan 2025 3:00pm")
     end
 
     context "when the user is an Admin" do
@@ -155,14 +153,9 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
                                   text: "Notes updated")
     end
 
-    it "shows who made the change using the whodunnit string" do
+    it "shows who made the change using the whodunnit string and the date of the change" do
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header p.moj-timeline__byline",
-                                  text: "by #{whodunnit}")
-    end
-
-    it "shows the date of the change" do
-      expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__date time",
-                                  text: "1 Jan 2025 4:00pm")
+                                  text: "by #{whodunnit}, 1 Jan 2025 4:00pm")
     end
 
     it "renders the note with a details component" do

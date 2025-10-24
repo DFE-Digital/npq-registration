@@ -4,11 +4,8 @@
       <div class="moj-timeline__item">
         <div class="moj-timeline__header">
           <h2 class="moj-timeline__title"><%= change[:title] %></h2>
-          <p class="moj-timeline__byline">by <%= change[:by] %></p>
+          <p class="moj-timeline__byline">by <%= change[:by] %>, <time datetime="<%= change[:at].rfc3339 %>"><%= change[:at].to_fs(:govuk_short) %></time></p>
         </div>
-        <p class="moj-timeline__date">
-          <time datetime="<%= change[:at].rfc3339 %>"><%= change[:at].to_fs(:govuk_short) %></time>
-        </p>
         <% if change[:description].present? %>
           <% if change[:description][:inset] %>
             <%= helpers.govuk_inset_text(text: change[:description][:inset]) %>
