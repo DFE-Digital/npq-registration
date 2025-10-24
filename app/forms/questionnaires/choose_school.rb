@@ -27,7 +27,7 @@ module Questionnaires
     end
 
     def previous_step
-      :find_school
+      :work_setting
     end
 
     def questions
