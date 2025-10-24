@@ -9,6 +9,8 @@ module Statements
     validate :validate_statements_csv
     validate :validate_contracts_csv
     validate :validate_statement_uniqueness
+    validate :validate_statement_csv_duplicates
+    validate :validate_contract_csv_duplicates
 
     def initialize(cohort:, statements_csv_id:, contracts_csv_id:)
       @cohort = cohort
@@ -41,6 +43,17 @@ module Statements
       contract_parser.errors.each { errors.add :contracts_csv, _1 }
     end
 
+    def validate_statement_csv_duplicates
+      return if errors.any?
+
+      statement_rows = statement_parser.valid_rows
+      statement_rows.each.with_index(2) do |statement_row, line_number|
+        if statement_rows.map(&:attributes).count(statement_row.attributes) > 1
+          errors.add(:statements_csv, "Statement row is a duplicate on line #{line_number}")
+        end
+      end
+    end
+
     def validate_statement_uniqueness
       return if statements_csv_id.blank? || contracts_csv_id.blank?
 
@@ -58,16 +71,38 @@ module Statements
       end
     end
 
+    def validate_contract_csv_duplicates
+      return if errors.any?
+
+      contract_rows = contract_parser.valid_rows
+      contract_rows.each.with_index(2) do |contract_row, line_number|
+        if contract_rows.map(&:attributes).count(contract_row.attributes) > 1
+          errors.add(:contracts_csv, "Contract row is a duplicate on line #{line_number}")
+        end
+      end
+    end
+
     def create_statements
       cache = {}
 
       statement_parser.each do |statement_row|
+        errors_to_add = []
         contract_parser.each do |contract_row|
           statement_attributes = statement_attributes_for(statement_row, contract_row)
           contract_attributes = contract_attributes_for(contract_row)
 
-          cache[statement_attributes] ||= Statement.create!(statement_attributes)
-          cache[statement_attributes].contracts.create!(contract_attributes)
+          cache[statement_attributes] ||= Statement.create(statement_attributes)
+          if cache[statement_attributes].persisted?
+            contract = cache[statement_attributes].contracts.create(contract_attributes)
+            unless contract.persisted?
+              errors_to_add << contract.errors.full_messages.to_sentence
+            end
+          else
+            errors_to_add << cache[statement_attributes].errors.full_messages.to_sentence
+          end
+        end
+        errors_to_add.uniq.each do |error_message|
+          errors.add(:base, :failed, message: error_message)
         end
       end
 

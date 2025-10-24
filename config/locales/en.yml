@@ -204,7 +204,7 @@ en:
         contract:
           attributes:
             course_id:
-              taken: "Can only have one contract for statement and course"
+              taken: "can only have one contract for statement and course"
         course:
           attributes:
             identifier:
