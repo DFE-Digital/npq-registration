@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class HistoryComponent < BaseComponent
+    class ApplicationHistoryComponent < BaseComponent
       attr_reader :record, :changes
 
       def initialize(record:, &)
@@ -10,37 +10,50 @@ module NpqSeparation
 
     private
 
-      def build_changes(&block)
+      def build_changes
         record.versions.where(event: "update").where.not(object_changes: nil)
           .select { |version| (version.object_changes.keys - %w[updated_at]).any? }
           .pluck(:created_at, :whodunnit, :object_changes)
-          .map do |created_at, whodunnit, object_changes|
-            {
-              title: object_changes
-                .except("updated_at")
-                .map { |key, value| show_object_changes(key, value) }.join(", "),
-              by: show_whodunnit(whodunnit),
-              at: created_at,
-              description: block_given? ? block.call(record, created_at, object_changes) : nil,
-            }
-          end
+          .map { |created_at, whodunnit, object_changes|
+            object_changes.except("updated_at", "funding_eligiblity_status_code").map do |key, value|
+              {
+                title: show_object_changes(key, value),
+                by: show_whodunnit(whodunnit),
+                at: created_at,
+                description: description(record, object_changes, created_at, key, value),
+              }
+            end
+          }.flatten
       end
 
       def show_object_changes(key, change)
         if key =~ /_id$/
           label = key.sub(/_id$/, "")
-          change_from = format_change(label, change[0])
-          change_to = format_change(label, change[1])
+          change_to = "[#{format_change(label, change[1])}]"
         else
           label = key
-          change_from = change[0]
-          change_to = change[1]
+          change_to = "[#{format_boolean(change[1])}]"
         end
 
         record.class.human_attribute_name(label).tap do |output_string|
-          output_string << " changed"
-          output_string << " from #{change_from}" if change_from
-          output_string << " to #{change_to}" if change_to
+          if key == "notes"
+            output_string << " updated"
+          else
+            output_string << " changed"
+            output_string << " to #{change_to}" if change_to
+          end
+        end
+      end
+
+      def description(record, object_changes, created_at, key, value)
+        case key
+        when "training_status"
+          reason = record.lookup_state_change_reason(changed_at: created_at, changed_status: value[1])
+          { inset: "Reason for training status change: #{reason}" } if reason
+        when "notes"
+          { details_summary: "Review notes", details: simple_format(value[1]) }
+        when "eligible_for_funding"
+          { bullet: "Status code changed to [#{object_changes['funding_eligiblity_status_code'][1]}]" }
         end
       end
 
@@ -54,6 +67,14 @@ module NpqSeparation
           object.respond_to?(:name) ? object.name : fallback
         else
           fallback
+        end
+      end
+
+      def format_boolean(value)
+        if [TrueClass, FalseClass].include?(value.class)
+          value ? "Yes" : "No"
+        else
+          value
         end
       end
 
