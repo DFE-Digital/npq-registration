@@ -20,7 +20,7 @@ class Exporters::Contracts
     CSV.generate(encoding: "utf-8") do |csv|
       csv << FIELD_NAMES
       query.each do |record|
-        csv << FIELD_NAMES.map { |field| record.attributes[field] }
+        csv << FIELD_NAMES.map { |field| attribute(field, record) }
       end
     end
   end
@@ -28,6 +28,12 @@ class Exporters::Contracts
 private
 
   attr_reader :cohort
+
+  def attribute(field, record)
+    record.attributes[field].tap do |value|
+      return 0 if field == "monthly_service_fee" && value.nil?
+    end
+  end
 
   def query
     ContractTemplate
