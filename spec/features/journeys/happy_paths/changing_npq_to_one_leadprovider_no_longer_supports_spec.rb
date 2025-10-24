@@ -1,16 +1,10 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
-  before do
-    stub_const("PP50_SCHOOLS_URN_HASH", { "100000" => false })
-    stub_const("EY_OFSTED_URN_HASH", { "100000" => false })
-  end
-
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
