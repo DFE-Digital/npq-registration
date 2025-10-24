@@ -6,7 +6,6 @@ RSpec.feature "Happy journeys",
   include Helpers::JourneyAssertionHelper
   include ApplicationHelper
 
-  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
