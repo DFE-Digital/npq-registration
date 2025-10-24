@@ -5,7 +5,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "with default schedules"
   include_context "Stub Get An Identity Omniauth Responses"
 
   context "when JavaScript is enabled", :js do
