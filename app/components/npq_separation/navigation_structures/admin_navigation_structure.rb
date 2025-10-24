@@ -13,7 +13,7 @@ module NpqSeparation
       # Returns a hash where the keys are primary nodes and the values are
       # sub nodes nested with the 'nodes: key'
       def structure
-        admin_nodes.merge(super_admin_nodes)
+        admin_nodes
       end
 
       def super_admin_nodes
@@ -35,7 +35,7 @@ module NpqSeparation
       end
 
       def admin_nodes
-        {
+        nodes = {
           Node.new(
             name: "Dashboards",
             href: npq_separation_admin_path,
@@ -102,6 +102,16 @@ module NpqSeparation
             prefix: "/npq-separation/admin/actions-log",
           ) => [],
         }
+
+        nodes.merge!(super_admin_nodes)
+
+        nodes[Node.new(
+          name: "Glossary",
+          href: npq_separation_admin_glossary_index_path,
+          prefix: "/npq-separation/admin/glossary",
+        )] = []
+
+        nodes
       end
 
       def dashboard_nodes

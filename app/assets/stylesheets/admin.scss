@@ -170,3 +170,8 @@
 .nowrap {
   white-space: nowrap;
 }
+
+.glossary-letter-list {
+  display: flex;
+  flex-wrap: wrap;
+}

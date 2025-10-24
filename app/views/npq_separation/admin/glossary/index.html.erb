@@ -1,0 +1,355 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">Glossary</h1>
+
+    <p class="govuk-body">The NPQ glossary explains the terms used by DfE teams working on national professional qualifications.</p>
+
+    <ul class="govuk-list glossary-letter-list">
+      <% ("A".."Z").each do |letter| %>
+        <li class="govuk-!-padding-right-3 govuk-!-padding-bottom-2">
+          <a class="govuk-link govuk-body-m govuk-!-padding-2" href="#<%= letter %>"><%= letter %></a>
+        </li>
+      <% end %>
+    </ul>
+
+    <h2 id="A" class="govuk-heading-l">A</h2>
+    <h3 class="govuk-heading-s">Application</h3>
+    <p class="govuk-body">The user applies to join a course run by a training provider. This happens when they register with the Department for Education (DfE).</p>
+
+    <h3 class="govuk-heading-s">Application ID</h3>
+    <p class="govuk-body">Each application has a unique ID. You can use this ID to find a specific application. Application ID example: 0594fe7b-fcd2-4f3f-9e8d-17ab5538a2b9.</p>
+
+    <h3 class="govuk-heading-s">Application programming interface (API)</h3>
+    <p class="govuk-body">A set of tools and protocols that allow different software systems to securely connect with ours to:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>collect new applications</li>
+      <li>accept or reject applications</li>
+      <li>update application, participant, and declaration details</li>
+      <li>submit declarations and outcomes</li>
+    </ul>
+
+    <h3 class="govuk-heading-s">Application status</h3>
+    <p class="govuk-body">The status shows if a user is currently taking part in an NPQ course. The status can be:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>‘Active’ – they’re currently doing the course</li>
+      <li>‘Deferred’ – they’ve taken a break from the course (only possible if a start declaration has been submitted)</li>
+      <li>‘Withdrawn’ – they’ve stopped training and are no longer doing the course</li>
+    </ul>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="B" class="govuk-heading-l">B</h2>
+    <!-- No entries yet -->
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="C" class="govuk-heading-l">C</h2>
+    <h3 class="govuk-heading-s">Clawbacks</h3>
+    <p class="govuk-body">The total amount of money reclaimed after paid declarations were voided.</p>
+
+    <h3 class="govuk-heading-s">Cohorts</h3>
+    <p class="govuk-body">These are groups of users who start an NPQ course and progress through it at the same time. They usually run on an annual basis and are made up of different training schedules.</p>
+
+    <h3 class="govuk-heading-s">Continuous professional development (CPD)</h3>
+    <p class="govuk-body">Continuing Professional Development (CPD) is a programme run by the Department for Education (DfE). It helps teachers and school leaders access high-quality training.</p>
+
+    <h3 class="govuk-heading-s">Course ID</h3>
+    <p class="govuk-body">Each course has a unique identifier known as a course ID.</p>
+
+    <h3 class="govuk-heading-s">Course identifier</h3>
+    <p class="govuk-body">This is the name of the NPQ course the application is for, written in the format used by the API. For example: npq-headship. Use this format when searching for or retrieving course data through the API.</p>
+
+    <h3 class="govuk-heading-s">Course name</h3>
+    <p class="govuk-body">The name of the course linked to the application. For example: NPQ for Headship (NPQH).</p>
+
+    <h3 class="govuk-heading-s">Course provider</h3>
+    <p class="govuk-body">DfE-accredited organisations that deliver teacher and school leader training, such as NPQs.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="D" class="govuk-heading-l">D</h2>
+    <h3 class="govuk-heading-s">Declaration ID</h3>
+    <p class="govuk-body">The unique ID for a declaration. This ID can be used to search for a specific declaration through the API, or to find an application.</p>
+
+    <h3 class="govuk-heading-s">Declaration date</h3>
+    <p class="govuk-body">The date a milestone was reached.</p>
+
+    <h3 class="govuk-heading-s">Declaration type</h3>
+    <p class="govuk-body">The type of declaration made for the course. It shows whether the training has started, is in progress, or has been completed.</p>
+
+    <h3 class="govuk-heading-s">Declarations</h3>
+    <p class="govuk-body">A marker that shows a milestone has been reached in an NPQ training programme.</p>
+
+    <h3 class="govuk-heading-s">Delivery partner (DP)</h3>
+    <p class="govuk-body">An organisation that supports a provider by delivering parts of a training or induction programme, such as the Early Career Framework (ECF) or NPQs.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="E" class="govuk-heading-l">E</h2>
+    <h3 class="govuk-heading-s">Early headship coaching offer (EHCO)</h3>
+    <p class="govuk-body">A programme that provides free, one-to-one coaching and peer support for new headteachers within their first 5 years of headship to help them effectively apply leadership knowledge in their specific school context.</p>
+
+    <h3 class="govuk-heading-s">Early years (EY)</h3>
+    <p class="govuk-body">The phase of education covering children from birth to age 5, including nursery, preschool, and reception.</p>
+
+    <h3 class="govuk-heading-s">Edit details (cohorts)</h3>
+    <p class="govuk-body">Console users can edit cohort details including the start year, registration date and the funding cap.</p>
+
+    <h3 class="govuk-heading-s">Eligible for funding</h3>
+    <p class="govuk-body">The user meets the funding criteria and is eligible for scholarship funding to cover their course fees.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="F" class="govuk-heading-l">F</h2>
+    <h3 class="govuk-heading-s">Funded place</h3>
+    <p class="govuk-body">A funded place confirms that the applicant meets the provider’s course requirements, is eligible for funding, and has been offered a funded place on a course by the provider.</p>
+
+    <h3 class="govuk-heading-s">Funding cap</h3>
+    <p class="govuk-body">If this is turned on in the admin console for a cohort, then providers must confirm which applications will be assigned DfE funding at the point of acceptance.</p>
+
+    <h3 class="govuk-heading-s">Funding choice</h3>
+    <p class="govuk-body">If an application is not eligible for funding, the applicant chooses how they want to pay. Options include:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>self-funded</li>
+      <li>funded by their school</li>
+      <li>shared with their workplace</li>
+      <li>other</li>
+    </ul>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="G" class="govuk-heading-l">G</h2>
+    <h3 class="govuk-heading-s">Get information about schools (GIAS)</h3>
+    <p class="govuk-body">A public online database created by DfE containing detailed information about schools in England.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="H" class="govuk-heading-l">H</h2>
+    <h3 class="govuk-heading-s">Headteacher status</h3>
+    <p class="govuk-body">This field is to indicate whether the user is a headteacher or not at the point of registration, or if the user will be granted headteacher status during their NPQ training.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="I" class="govuk-heading-l">I</h2>
+    <h3 class="govuk-heading-s">Initial teacher training (ITT)</h3>
+    <p class="govuk-body">This is the training a person does to become a qualified teacher.</p>
+
+    <h3 class="govuk-heading-s">Initial teacher training (ITT) lead mentor</h3>
+    <p class="govuk-body">If a user is an ITT lead mentor, they may be eligible for funded NPQ courses focused on leading teacher development (NPQ LTD).</p>
+
+    <h3 class="govuk-heading-s">Initial teacher training (ITT) provider</h3>
+    <p class="govuk-body">Organisations that are accredited by DfE to deliver ITT training.</p>
+
+    <h3 class="govuk-heading-s">In review</h3>
+    <p class="govuk-body">Some NPQ registrations need to be manually reviewed by funding policy staff. This happens when a decision is needed on whether the applicant qualifies for scholarship funding.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="J" class="govuk-heading-l">J</h2>
+    <!-- No entries yet -->
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="K" class="govuk-heading-l">K</h2>
+    <!-- No entries yet -->
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="L" class="govuk-heading-l">L</h2>
+    <!-- No entries yet -->
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="M" class="govuk-heading-l">M</h2>
+    <h3 class="govuk-heading-s">Manual adjustments</h3>
+    <p class="govuk-body">Manual adjustments made by an admin user to financial statements. These changes affect the total amount shown in the statement.</p>
+
+    <h3 class="govuk-heading-s">Multi-academy trust (MAT)</h3>
+    <p class="govuk-body">A group of academies governed by a single legal entity that oversees finances, standards, and school improvement across its member schools.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="N" class="govuk-heading-l">N</h2>
+    <h3 class="govuk-heading-s">National professional qualifications (NPQs)</h3>
+    <p class="govuk-body">Accredited leadership development programmes for teachers and school leaders at various stages of their careers.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="O" class="govuk-heading-l">O</h2>
+
+    <h3 class="govuk-heading-s">Output payment</h3>
+    <p class="govuk-body">The total amount paid for all milestones reached. This contributes to the overall fee shown in the financial statement, along with the service fee.</p>
+
+    <h3 class="govuk-heading-s">Output payment date</h3>
+    <p class="govuk-body">The date that the payment for a statement is due.</p>
+
+    <h3 class="govuk-heading-s">Output payment deadline</h3>
+    <p class="govuk-body">The deadline for submitting a declaration so it can be included in a statement.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="P" class="govuk-heading-l">P</h2>
+
+    <h3 class="govuk-heading-s">Provider approval status</h3>
+    <p class="govuk-body">Shows whether a provider has accepted or rejected a user’s application to join their course.</p>
+
+    <h3 class="govuk-heading-s">Paid and unpaid status (financial statements)</h3>
+    <p class="govuk-body">Shows whether payment has already been made for a statement, or if it’s still pending.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="Q" class="govuk-heading-l">Q</h2>
+    <h3 class="govuk-heading-s">Qualified teacher status (QTS)</h3>
+    <p class="govuk-body">A legal certification required to teach in most state schools in England, awarded after completing initial teacher training.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="R" class="govuk-heading-l">R</h2>
+    <h3 class="govuk-heading-s">Registration start date</h3>
+    <p class="govuk-body">This is the date that the Register for an NPQ service opens to accept registrations for a cohort.</p>
+
+    <h3 class="govuk-heading-s">Remove (cohorts)</h3>
+    <p class="govuk-body">Admin users can remove cohorts. Once removed, the admin user cannot restore the cohort.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="S" class="govuk-heading-l">S</h2>
+    <h3 class="govuk-heading-s">Schedule identifier</h3>
+    <p class="govuk-body">Identifies which schedule the user is on for their NPQ course. Within a cohort year, there can be multiple schedules — for example, autumn or spring. Schedules may also differ by course type, such as specialist or leadership.</p>
+
+    <h3 class="govuk-heading-s">School UK Provider Reference Number (UKPRN)</h3>
+    <p class="govuk-body">Given to higher education organisations to help identify the institution.</p>
+
+    <h3 class="govuk-heading-s">Service fees (statements)</h3>
+    <p class="govuk-body">Contributes to the total figure of a statement, along with the total output payment - this represents the amount paid each month over an agreed installment.</p>
+
+    <h3 class="govuk-heading-s">Special educational needs and disabilities co-ordinator (SENDCO)</h3>
+    <p class="govuk-body">A teacher who oversees and coordinates support for pupils with special educational needs or disabilities (SEND).</p>
+
+    <h3 class="govuk-heading-s">Special educational needs co-ordinator (SENCO)</h3>
+    <p class="govuk-body">Another term for SENDCO; used interchangeably to describe the same role in supporting pupils with additional needs.</p>
+
+    <h3 class="govuk-heading-s">Start year (cohorts)</h3>
+    <p class="govuk-body">The year that a cohort begins.</p>
+
+    <h3 class="govuk-heading-s">State (declarations)</h3>
+    <p class="govuk-body">This refers to the current stage or condition of a payment linked to a submitted declaration. Possible statuses include:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Submitted – declaration has been received.</li>
+      <li>Eligible – declaration meets the criteria for payment.</li>
+      <li>Ineligible – declaration does not meet the criteria for payment.</li>
+      <li>Voided – declaration has been cancelled or invalidated.</li>
+      <li>Payable – payment is approved and ready to be issued.</li>
+      <li>Paid – payment has been successfully made.</li>
+      <li>Awaiting clawback – A repayment is expected due to overpayment or error.</li>
+      <li>Clawed back – payment has been recovered.</li>
+    </ul>
+
+    <h3 class="govuk-heading-s">Statements</h3>
+    <p class="govuk-body">We create and send financial statements to course providers. These statements explain what we owe to each provider.</p>
+
+    <h3 class="govuk-heading-s">Statement ID</h3>
+    <p class="govuk-body">Each statement has a unique ID. You can use this ID to find and track specific statements.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="T" class="govuk-heading-l">T</h2>
+    <h3 class="govuk-heading-s">Teacher reference number (TRN)</h3>
+    <p class="govuk-body">A unique, 7 digit identification number that helps identify users in the education system in England. This is needed to register for an NPQ and to download certificates.</p>
+
+    <h3 class="govuk-heading-s">Teacher reference number (TRN) not verified</h3>
+    <p class="govuk-body">The user’s teacher reference number (TRN) has not been verified in the Teaching Record System (TRS).</p>
+
+    <h3 class="govuk-heading-s">Teacher reference number (TRN) verified</h3>
+    <p class="govuk-body">The user’s teacher reference number (TRN) has been verified in the Teaching Record System (TRS).</p>
+
+    <h3 class="govuk-heading-s">Teaching regulation agency (TRA)</h3>
+    <p class="govuk-body">This is a government organisation responsible for:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>handling teacher misconduct cases</li>
+      <li>awarding qualified teacher status (QTS)</li>
+      <li>keeping the official record of qualified teachers in England</li>
+    </ul>
+
+    <h3 class="govuk-heading-s">Teaching record system (TRS)</h3>
+    <p class="govuk-body">A government-maintained record of teachers in England who have been awarded qualified teacher status (QTS).</p>
+
+    <h3 class="govuk-heading-s">Teaching school hub (TSH)</h3>
+    <p class="govuk-body">A regional centre designated by DfE to lead on teacher training, professional development, and school improvement in a local area.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="U" class="govuk-heading-l">U</h2>
+    <h3 class="govuk-heading-s">Unique reference number (URN)</h3>
+
+    <p class="govuk-body">A URN is a unique identifier assigned to educational settings in England by DfE. It’s sometimes called a ‘School URN’.</p>
+
+    <p class="govuk-body">Early years settings registered with Ofsted also have a URN. It’s sometimes referred to as an ‘Ofsted URN’ or a ‘Private childcare provider URN’.</p>
+
+    <h3 class="govuk-heading-s">Upload contracts</h3>
+    <p class="govuk-body">The following information needs to be uploaded to the admin console to create contracts: lead provider names, course identifiers, recruitment targets, fee per participant, service fee installments, monthly fees.</p>
+
+    <h3 class="govuk-heading-s">Upload statements</h3>
+    <p class="govuk-body">To upload a statement a CSV file with the year, month, deadline date, payment date and output fee information must be uploaded.</p>
+
+    <h3 class="govuk-heading-s">User ID</h3>
+    <p class="govuk-body">Each user has a unique ID. This helps you search for and identify individual users. A user might have several applications—or none at all.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="V" class="govuk-heading-l">V</h2>
+    <h3 class="govuk-heading-s">Voids</h3>
+    <p class="govuk-body">This field indicates the number of declarations that have been cancelled or voided.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="W" class="govuk-heading-l">W</h2>
+    <h3 class="govuk-heading-s">Work setting</h3>
+    <p class="govuk-body">This is the environment the user works in during their NPQ course. The setting helps determine whether the user is eligible for funding for specific courses.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="X" class="govuk-heading-l">X</h2>
+    <!-- No entries yet -->
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="Y" class="govuk-heading-l">Y</h2>
+    <h3 class="govuk-heading-s">Year of application</h3>
+    <p class="govuk-body">This is the year the user applied for the course. It also determines which cohort they’ll be part of.</p>
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <h2 id="Z" class="govuk-heading-l">Z</h2>
+    <!-- No entries yet -->
+
+    <p><a href="#top" class="govuk-link">Back to top</a></p>
+
+  </div>
+</div>

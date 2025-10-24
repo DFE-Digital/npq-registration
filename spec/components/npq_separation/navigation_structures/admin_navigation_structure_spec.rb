@@ -23,6 +23,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
         "Webhook messages" => "/npq-separation/admin/webhook-messages",
         "Registration closed" => "/npq-separation/admin/registration-closed",
         "Actions log" => "/npq-separation/admin/actions-log",
+        "Glossary" => "/npq-separation/admin/glossary",
       }
     expected_structure.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
@@ -43,13 +44,13 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       let(:admin) { build_stubbed(:super_admin) }
 
       it "includes feature flags" do
-        expect(subject[-2]).to have_attributes(name: "Feature flags")
-        expect(subject[-2]).to have_attributes(href: "/npq-separation/admin/features")
+        expect(subject[-3]).to have_attributes(name: "Feature flags")
+        expect(subject[-3]).to have_attributes(href: "/npq-separation/admin/features")
       end
 
       it "includes admins" do
-        expect(subject[-1]).to have_attributes(name: "Admins")
-        expect(subject[-1]).to have_attributes(href: "/npq-separation/admin/admins")
+        expect(subject[-2]).to have_attributes(name: "Admins")
+        expect(subject[-2]).to have_attributes(href: "/npq-separation/admin/admins")
       end
     end
   end
