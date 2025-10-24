@@ -46,7 +46,7 @@ module Questionnaires
     end
 
     def previous_step
-      :find_childcare_provider
+      :kind_of_nursery
     end
 
     def search_term_entered_in_no_js_fallback_form?
