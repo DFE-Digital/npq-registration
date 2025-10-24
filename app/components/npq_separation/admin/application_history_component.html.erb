@@ -10,9 +10,15 @@
           <time datetime="<%= change[:at].rfc3339 %>"><%= change[:at].to_fs(:govuk_short) %></time>
         </p>
         <% if change[:description].present? %>
-        <div class="govuk-inset-text">
-          <%= change[:description] %>
-        </div>
+          <% if change[:description][:inset] %>
+            <%= helpers.govuk_inset_text(text: change[:description][:inset]) %>
+          <% end %>
+          <% if change[:description][:details] %>
+            <%= helpers.govuk_details(summary_text: change[:description][:details_summary], text: change[:description][:details]) %>
+          <% end %>
+          <% if change[:description][:bullet] %>
+            <%= helpers.govuk_list [change[:description][:bullet]], type: :bullet %>
+          <% end %>
         <% end %>
       </div>
     <% end %>
