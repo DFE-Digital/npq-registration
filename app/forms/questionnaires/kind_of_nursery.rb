@@ -24,7 +24,7 @@ module Questionnaires
       if ofsted_route?
         :have_ofsted_urn
       else
-        :find_childcare_provider
+        :choose_childcare_provider
       end
     end
 
