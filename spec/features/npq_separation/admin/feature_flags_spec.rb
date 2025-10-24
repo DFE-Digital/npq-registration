@@ -31,4 +31,15 @@ RSpec.feature "Administering feature flags", :rack_test_driver, type: :feature d
     expect(page).to have_content("You have turned the Registration open feature flag off.")
     expect(Flipper.enabled?(Feature::REGISTRATION_OPEN)).to be(false)
   end
+
+  scenario "check all feature flag pages are not missing translations" do
+    sign_in_as_super_admin
+
+    Feature::FEATURE_FLAG_KEYS.each do |feature_flag|
+      visit npq_separation_admin_features_path
+      within("tr", text: feature_flag) do
+        page.click_link("View")
+      end
+    end
+  end
 end
