@@ -95,15 +95,15 @@ GEM
     amazing_print (1.8.1)
     ast (2.4.3)
     attr_required (1.0.2)
-    axe-core-api (4.10.3)
+    axe-core-api (4.11.0)
       dumb_delegator
       ostruct
       virtus
-    axe-core-capybara (4.10.3)
-      axe-core-api (= 4.10.3)
+    axe-core-capybara (4.11.0)
+      axe-core-api (= 4.11.0)
       dumb_delegator
-    axe-core-rspec (4.10.3)
-      axe-core-api (= 4.10.3)
+    axe-core-rspec (4.11.0)
+      axe-core-api (= 4.11.0)
       dumb_delegator
       ostruct
       virtus
@@ -408,7 +408,7 @@ GEM
       webfinger (~> 2.0)
     orm_adapter (0.5.0)
     os (1.1.4)
-    ostruct (0.6.1)
+    ostruct (0.6.3)
     pagy (9.4.0)
     paper_trail (16.0.0)
       activerecord (>= 6.1)
@@ -725,7 +725,7 @@ DEPENDENCIES
   activerecord-session_store
   amazing_print
   axe-core-capybara (~> 4.7)
-  axe-core-rspec (~> 4.10)
+  axe-core-rspec (~> 4.11)
   azure-blob
   blueprinter
   bootsnap (>= 1.1.0)
