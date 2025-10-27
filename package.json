@@ -6,7 +6,7 @@
   "dependencies": {
     "@babel/core": "^7.28.5",
     "@babel/plugin-transform-class-properties": "^7.25.4",
-    "@babel/plugin-transform-runtime": "^7.28.3",
+    "@babel/plugin-transform-runtime": "^7.28.5",
     "@babel/preset-env": "^7.28.3",
     "@ministryofjustice/frontend": "3.7.2",
     "accessible-autocomplete": "^3.0.1",
