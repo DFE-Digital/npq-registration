@@ -34,7 +34,7 @@ RSpec.describe School do
   describe "::search_by_name" do
     context "regarding apostrophes" do
       before do
-        create(:school, name: "andrew's")
+        create(:school, name: "andrew's", postcode: "NW5")
       end
 
       it "can find with apostrophe" do
@@ -48,9 +48,16 @@ RSpec.describe School do
       it "can find partial match" do
         expect(described_class.search_by_name("andrew").count).to be(1)
       end
+
+      context "chaining with search_by_location" do
+
+        it "can find with search_by_location" do
+          expect(described_class.search_by_location("NW5").search_by_name(nil).count).to be(0)
+        end
+      end
     end
 
-    context "regarding hyphesn" do
+    context "regarding hyphen" do
       before do
         create(:school, name: "mary-anne")
       end
