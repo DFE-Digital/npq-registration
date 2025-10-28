@@ -36,8 +36,7 @@ module Questionnaires
           name: :institution_identifier,
           locale_name: :choose_school,
           picker: :school,
-          options: possible_institutions,
-          data_attributes: { institution_location: },
+          # options: possible_institutions,
           display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
           search_question: QuestionTypes::TextField.new(
             name: :institution_name,
@@ -52,12 +51,10 @@ module Questionnaires
 
       schools = School
         .open
-        .search_by_location(institution_location)
         .search_by_name(institution_name)
         .limit(10)
 
       local_authorities = LocalAuthority
-        .search_by_location(institution_location)
         .search_by_name(institution_name)
         .limit(10)
 
@@ -68,19 +65,14 @@ module Questionnaires
 
     def search_term_entered_in_no_js_fallback_form?
       # This combination of fields is only used in the no-js fallback form
-      # institution_location will be set from the previous question
       # institution_name will be set from the search term being entered into the search
       # field that is only visible when JS is disabled.
-      institution_location.present? && wizard.store["institution_name"].present?
-    end
-
-    def institution_location
-      wizard.store["institution_location"]
+      wizard.store["institution_name"].present?
     end
 
     def validate_school_name_returns_results
       if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank?
-        errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
+        errors.add(:institution_name, :no_results, name: institution_name)
       end
     end
   end

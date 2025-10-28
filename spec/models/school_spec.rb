@@ -49,11 +49,8 @@ RSpec.describe School do
         expect(described_class.search_by_name("andrew").count).to be(1)
       end
 
-      context "chaining with search_by_location" do
-
-        it "can find with search_by_location" do
-          expect(described_class.search_by_location("NW5").search_by_name(nil).count).to be(0)
-        end
+      it "can return no matches" do
+        expect(described_class.search_by_name("bob").open.count).to be(0)
       end
     end
 
