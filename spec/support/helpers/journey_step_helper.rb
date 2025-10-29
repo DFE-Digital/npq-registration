@@ -3,10 +3,6 @@ module Helpers
     def choose_a_school(js:, location:, name:)
       build_sample_schools
 
-      expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-        page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: location
-      end
-
       if js
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
           expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js:)
@@ -15,7 +11,7 @@ module Helpers
             page.fill_in "What is the name of your workplace?", with: name
           end
 
-          expect(page).to have_content("open #{location} school")
+          expect(page).to have_content("open school")
 
           page.find("#school-picker__option--0").click
         end
@@ -30,7 +26,7 @@ module Helpers
           page.click_button("Continue")
 
           expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback", institution_location: location))
-          page.choose "open #{location} school"
+          page.choose "open school"
         end
       end
     end
@@ -135,9 +131,9 @@ module Helpers
     def build_sample_schools(location: "manchester", other_location: "newcastle")
       return if School.where(urn: [100_000, 100_001, 100_002]).exists?
 
-      School.create!(urn: 100_000, name: "open #{location} school", address_1: "street 1", town: location, establishment_status_code: "1")
-      School.create!(urn: 100_001, name: "closed #{location} school", address_1: "street 2", town: location, establishment_status_code: "2")
-      School.create!(urn: 100_002, name: "open #{other_location} school", address_1: "street 3", town: other_location, establishment_status_code: "1")
+      School.create!(urn: 100_000, name: "open school", address_1: "street 1", town: location, establishment_status_code: "1")
+      School.create!(urn: 100_001, name: "closed school", address_1: "street 2", town: location, establishment_status_code: "2")
+      School.create!(urn: 100_002, name: "other school", address_1: "street 3", town: other_location, establishment_status_code: "1")
     end
   end
 end

@@ -1041,7 +1041,7 @@ en:
           - "For more information about who we share your data with read our <a href=\"https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ\" class=\"govuk-link\">privacy notice</a>."
           - If you do not agree to share your information you will not be able to progress with your NPQ.
         choose_childcare_provider_html: "Search for your workplace by postcode, unique reference number (URN) or name."
-        choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
+        choose_childcare_provider_search: "Search for your workplace"
         choose_school_html: "Search for your workplace by postcode, unique reference number (URN) or name. If you work for a trust, use the details of one of its schools."
         choose_school_search: "Start your search by entering the name of your workplace. If you work for a trust, enter the name of one of their schools."
         choose_private_childcare_provider: "For example a 7 digit number (1234567) or a 6 digit number sometimes prefixed with EY (EY456789)"
@@ -1172,7 +1172,7 @@ en:
 
         choose_school: "What is the name of your workplace?"
         choose_school_search: "Workplace not shown above"
-        choose_school_fallback: "Select your workplace in %{institution_location}"
+        choose_school_fallback: "Select your workplace"
 
         choose_private_childcare_provider: "Enter your or your employer’s unique reference number (URN)"
         choose_private_childcare_provider_search: "My employer is not shown above"
