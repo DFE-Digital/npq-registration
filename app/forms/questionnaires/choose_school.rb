@@ -36,7 +36,7 @@ module Questionnaires
           name: :institution_identifier,
           locale_name: :choose_school,
           picker: :school,
-          # options: possible_institutions,
+          options: possible_institutions,
           display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
           search_question: QuestionTypes::TextField.new(
             name: :institution_name,
