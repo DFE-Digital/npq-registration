@@ -50,8 +50,8 @@ module Questionnaires
       return @possible_institutions if @possible_institutions
 
       schools = School
-        .open
         .search_by_name(institution_name)
+        .open
         .limit(10)
 
       local_authorities = LocalAuthority
