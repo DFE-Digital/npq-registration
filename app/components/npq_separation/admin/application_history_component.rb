@@ -29,10 +29,10 @@ module NpqSeparation
       def show_object_changes(key, change)
         if key =~ /_id$/
           label = key.sub(/_id$/, "")
-          change_to = "[#{format_change(label, change[1])}]"
+          change_to = format_change(label, change[1])
         else
           label = key
-          change_to = "[#{format_boolean(change[1])}]"
+          change_to = format_boolean(change[1])
         end
 
         record.class.human_attribute_name(label).tap do |output_string|
@@ -53,7 +53,7 @@ module NpqSeparation
         when "notes"
           { details_summary: "Review notes", details: simple_format(value[1]) }
         when "eligible_for_funding"
-          { bullet: "Status code changed to [#{object_changes['funding_eligiblity_status_code'][1]}]" }
+          { bullet: "Status code changed to #{object_changes['funding_eligiblity_status_code'][1]}" }
         end
       end
 
@@ -72,7 +72,7 @@ module NpqSeparation
 
       def format_boolean(value)
         if [TrueClass, FalseClass].include?(value.class)
-          value ? "Yes" : "No"
+          value ? "yes" : "no"
         else
           value
         end

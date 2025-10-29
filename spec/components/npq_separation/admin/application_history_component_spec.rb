@@ -39,11 +39,11 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
 
     it "shows an item for each change" do
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                  text: "Cohort changed to [2023]")
+                                  text: "Cohort changed to 2023")
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                  text: "Schedule changed to [#{Schedule.last.name}]")
+                                  text: "Schedule changed to #{Schedule.last.name}")
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                  text: "Provider changed to [#{new_lead_provider.name}]")
+                                  text: "Provider changed to #{new_lead_provider.name}")
     end
 
     it "shows the date of each change" do
@@ -111,7 +111,7 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
 
       it "shows the change using an ID" do
         expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                    text: "Itt provider changed to [ID: #{application.itt_provider.id}]")
+                                    text: "Itt provider changed to ID: #{application.itt_provider.id}")
       end
     end
 
@@ -122,7 +122,7 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
 
       it "shows the change using an ID" do
         expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                    text: "Ecf changed to [ID: #{new_ecf_id}]")
+                                    text: "Ecf changed to ID: #{new_ecf_id}")
       end
     end
   end
@@ -171,17 +171,17 @@ RSpec.describe NpqSeparation::Admin::ApplicationHistoryComponent, :versioning, t
 
     it "shows the eligibility funding change" do
       expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                  text: "Eligible for funding changed to [Yes]")
+                                  text: "Eligible for funding changed to yes")
     end
 
     it "does not show the funding eligibility status code change as a separate item" do
       expect(subject).not_to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
-                                      text: "Funding eligibility status code changed to [marked_funded_by_policy]")
+                                      text: "Funding eligibility status code changed to marked_funded_by_policy")
     end
 
     it "shows the funding eligibility status code change as a bullet point" do
       expect(subject).to have_css(".govuk-list--bullet",
-                                  text: "Status code changed to [marked_funded_by_policy]")
+                                  text: "Status code changed to marked_funded_by_policy")
     end
   end
 
