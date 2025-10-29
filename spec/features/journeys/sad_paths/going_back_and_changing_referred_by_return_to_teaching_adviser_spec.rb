@@ -7,7 +7,6 @@ RSpec.feature "Sad journey", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include ApplicationHelper
 
-  include_context "with default schedules"
   include_context "Stub Get An Identity Omniauth Responses"
 
   context "when JavaScript is disabled", :no_js do
