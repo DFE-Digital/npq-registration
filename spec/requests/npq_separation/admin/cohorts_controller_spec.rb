@@ -6,8 +6,19 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
   subject { response }
 
   let(:cohort)         { create(:cohort) }
-  let(:valid_params)   { { cohort: { start_year: 2029, funding_cap: true, registration_start_date: "2029-03-02" } } }
-  let(:invalid_params) { { cohort: { start_year: 1066 } } }
+  let(:invalid_params) { valid_params.deep_merge(cohort: { start_year: 1066 }) }
+
+  let :valid_params do
+    {
+      cohort: {
+        start_year: 2029,
+        funding_cap: true,
+        registration_start_date: "2029-03-02",
+        name: "2029",
+        description: "2029 to 2030",
+      },
+    }
+  end
 
   context "when logged in as super admin" do
     before { sign_in_as_admin(super_admin: true) }

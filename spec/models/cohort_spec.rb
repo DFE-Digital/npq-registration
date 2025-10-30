@@ -45,14 +45,18 @@ RSpec.describe Cohort, type: :model do
               .is_less_than(2030),
           )
       }
+    end
 
-      it "validates uniqueness of start_year" do
-        existing_cohort = create :cohort, start_year: 2025
-        new_cohort = Cohort.new(start_year: existing_cohort.start_year)
+    describe "#name" do
+      it { is_expected.to validate_presence_of(:name) }
+      it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
+      it { is_expected.to validate_length_of(:name).is_at_most(10) }
+    end
 
-        new_cohort.valid?
-        expect(new_cohort.errors[:start_year]).to include("has already been taken")
-      end
+    describe "#description" do
+      it { is_expected.to validate_presence_of(:description) }
+      it { is_expected.to validate_uniqueness_of(:description).case_insensitive }
+      it { is_expected.to validate_length_of(:description).is_at_least(5).is_at_most(50) }
     end
 
     describe "changing funding_cap when there are applications" do
@@ -104,11 +108,5 @@ RSpec.describe Cohort, type: :model do
         expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
-  end
-
-  describe "#name" do
-    subject { cohort.name }
-
-    it { is_expected.to eq cohort.start_year }
   end
 end
