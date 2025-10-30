@@ -54,7 +54,6 @@ module Helpers
           page.click_button("Continue")
 
           expect(page).to have_text("Search for your workplace")
-          debugger
           page.choose "open manchester school"
         end
       end
