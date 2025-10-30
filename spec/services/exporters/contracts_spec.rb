@@ -18,7 +18,7 @@ RSpec.describe Exporters::Contracts do
 
   let(:contract_template) { create(:contract_template) }
   let(:duplicate_contract_template) { create(:contract_template) } # yes, there are duplicate contracts templates in production
-  let(:contract_template_2) { create(:contract_template, per_participant: 801) }
+  let(:contract_template_2) { create(:contract_template, per_participant: 801, monthly_service_fee: nil) }
   let(:other_cohort_contract_template) { create(:contract_template, per_participant: 802) }
 
   before do
@@ -53,7 +53,7 @@ RSpec.describe Exporters::Contracts do
         contract_template_2.per_participant,
         contract_template_2.service_fee_installments,
         contract_template_2.special_course,
-        contract_template_2.monthly_service_fee,
+        0,
       ].join(","),
       [
         "Another Provider",
