@@ -8,12 +8,4 @@
 
 <h1 class="govuk-heading-l">Application history</h1>
 
-<%=
-  render(NpqSeparation::Admin::HistoryComponent.new(record: @application) do |application, version_created_at, object_changes|
-    if object_changes["training_status"].present?
-      # reason = ApplicationState.lookup_reason(application:, created_at: version_created_at, state: object_changes["training_status"].last)
-      reason = @application.lookup_state_change_reason(changed_at: version_created_at, changed_status: object_changes["training_status"].last)
-    end
-    "Reason for training status change: #{reason}" if reason
-  end)
-%>
+<%= render(NpqSeparation::Admin::ApplicationHistoryComponent.new(record: @application)) %>
