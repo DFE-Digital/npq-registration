@@ -7,10 +7,10 @@ module PaperTrailExtensions
   private
 
     def send_to_dfe_analytics
-      StreamVersionsToBigQueryJob.perform_later(attributes["whodunnit"], data)
+      StreamVersionsToBigQueryJob.perform_later(attributes["whodunnit"], analytics_data)
     end
 
-    def data
+    def analytics_data
       table_name = attributes["item_type"].constantize.table_name
 
       { "item_table_name" => table_name }.tap do |data|
