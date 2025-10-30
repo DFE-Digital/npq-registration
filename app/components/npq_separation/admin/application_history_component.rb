@@ -29,10 +29,10 @@ module NpqSeparation
       def show_object_changes(key, change)
         if key =~ /_id$/
           label = key.sub(/_id$/, "")
-          change_to = format_change(label, change[1])
+          change_to = format_association_change(label, change[1])
         else
           label = key
-          change_to = format_boolean(change[1])
+          change_to = format_change(change[1])
         end
 
         record.class.human_attribute_name(label).tap do |output_string|
@@ -57,7 +57,7 @@ module NpqSeparation
         end
       end
 
-      def format_change(label, change)
+      def format_association_change(label, change)
         return unless change
 
         fallback = "ID: #{change}"
@@ -70,7 +70,7 @@ module NpqSeparation
         end
       end
 
-      def format_boolean(value)
+      def format_change(value)
         if [TrueClass, FalseClass].include?(value.class)
           value ? "yes" : "no"
         else
