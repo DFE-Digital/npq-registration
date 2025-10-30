@@ -92,7 +92,7 @@ group :test do
   gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 6.5"
   gem "site_prism", "~> 5.1"
-  gem "webmock", "~> 3.25"
+  gem "webmock", "~> 3.26"
 end
 
 group :development, :test, :review, :sandbox do
