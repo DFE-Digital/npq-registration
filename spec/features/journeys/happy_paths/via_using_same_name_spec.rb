@@ -47,7 +47,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    choose_a_school(js:, location: "manchester", name: "open")
+    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
