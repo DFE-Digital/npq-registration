@@ -11,7 +11,7 @@ module Helpers
             page.fill_in "What is the name of your workplace?", with: name
           end
 
-          expect(page).to have_content("open manchester school")
+          expect(page).to have_content(name)
 
           page.find("#school-picker__option--0").click
         end
@@ -26,7 +26,7 @@ module Helpers
           page.click_button("Continue")
 
           expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback"))
-          page.choose "open manchester school"
+          page.choose name
         end
       end
     end
@@ -40,7 +40,7 @@ module Helpers
             page.fill_in "What is the name of your workplace?", with: "open"
           end
 
-          expect(page).to have_content("open manchester school")
+          expect(page).to have_content(name)
           page.find("#nursery-picker__option--0").click
         end
       else
@@ -54,7 +54,7 @@ module Helpers
           page.click_button("Continue")
 
           expect(page).to have_text("Search for your workplace")
-          page.choose "open manchester school"
+          page.choose name
         end
       end
     end
