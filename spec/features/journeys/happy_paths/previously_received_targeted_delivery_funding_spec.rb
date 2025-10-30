@@ -55,7 +55,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
       number_of_pupils: 100,
     )
 
-    choose_a_school(js:, location: "manchester", name: "open")
+    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")

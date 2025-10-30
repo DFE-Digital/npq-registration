@@ -46,7 +46,7 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
     end
 
     School.create!(urn: 100_099, name: "open wrexham school", address_1: "street 4", town: "wrexham", establishment_status_code: "1", establishment_type_code: "30")
-    choose_a_school(js:, location: "wrexham", name: "open wrexham school")
+    choose_a_school(js:, name: "open wrexham school")
 
     expect_page_to_have(path: "/registration/school-not-in-england", submit_form: false) do
       expect(page).to have_text("School or college must be in England")
