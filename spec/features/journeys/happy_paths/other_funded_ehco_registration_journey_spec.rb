@@ -194,7 +194,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
         "email_template" => "not_eligible_ehco_funding",
         "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "funding_amount" => nil,

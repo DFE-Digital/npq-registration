@@ -188,7 +188,6 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",

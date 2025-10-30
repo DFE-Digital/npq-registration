@@ -1168,7 +1168,7 @@ en:
 
         choose_childcare_provider: "What is the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
-        choose_childcare_provider_fallback: "Select your workplace in %{institution_location}"
+        choose_childcare_provider_fallback: "Select your workplace"
 
         choose_school: "What is the name of your workplace?"
         choose_school_search: "Workplace not shown above"
