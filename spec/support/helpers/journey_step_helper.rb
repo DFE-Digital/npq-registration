@@ -1,6 +1,6 @@
 module Helpers
   module JourneyStepHelper
-    def choose_a_school(js:, location:, name:)
+    def choose_a_school(js:, name:)
       build_sample_schools
 
       if js
@@ -11,7 +11,7 @@ module Helpers
             page.fill_in "What is the name of your workplace?", with: name
           end
 
-          expect(page).to have_content("open school")
+          expect(page).to have_content("open manchester school")
 
           page.find("#school-picker__option--0").click
         end
@@ -25,13 +25,13 @@ module Helpers
 
           page.click_button("Continue")
 
-          expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback", institution_location: location))
-          page.choose "open school"
+          expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback"))
+          page.choose "open manchester school"
         end
       end
     end
 
-    def choose_a_childcare_provider(js:, location:, name:)
+    def choose_a_childcare_provider(js:, name:)
       if js
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           expect(page).to have_text("What is the name of your workplace?")
@@ -40,7 +40,7 @@ module Helpers
             page.fill_in "What is the name of your workplace?", with: "open"
           end
 
-          expect(page).to have_content("open #{location} school")
+          expect(page).to have_content("open manchester school")
           page.find("#nursery-picker__option--0").click
         end
       else
@@ -53,8 +53,9 @@ module Helpers
 
           page.click_button("Continue")
 
-          expect(page).to have_text("Search for your workplace in #{location}")
-          page.choose "open #{location} school"
+          expect(page).to have_text("Search for your workplace")
+          debugger
+          page.choose "open manchester school"
         end
       end
     end
@@ -131,7 +132,7 @@ module Helpers
     def build_sample_schools(location: "manchester", other_location: "newcastle")
       return if School.where(urn: [100_000, 100_001, 100_002]).exists?
 
-      School.create!(urn: 100_000, name: "open school", address_1: "street 1", town: location, establishment_status_code: "1")
+      School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: location, establishment_status_code: "1")
       School.create!(urn: 100_001, name: "closed school", address_1: "street 2", town: location, establishment_status_code: "2")
       School.create!(urn: 100_002, name: "other school", address_1: "street 3", town: other_location, establishment_status_code: "1")
     end

@@ -55,12 +55,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose(public_kind_of_nursery, visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
-      expect(page).to have_text(I18n.t("helpers.title.registration_wizard.institution_location"))
-      page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: "manchester"
-    end
-
-    choose_a_childcare_provider(js:, location: "manchester", name: "open")
+    choose_a_childcare_provider(js:, name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -174,7 +169,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "funding" => "school",
         "funding_eligiblity_status_code" => "early_years_invalid_npq",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "funding_amount" => nil,
         "kind_of_nursery" => public_kind_of_nursery_key,

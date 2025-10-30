@@ -210,7 +210,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
