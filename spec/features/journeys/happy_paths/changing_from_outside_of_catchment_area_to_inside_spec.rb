@@ -97,7 +97,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("A school", visible: :all)
     end
 
-    choose_a_school(js:, location: "manchester", name: "open")
+    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -210,7 +210,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

@@ -55,7 +55,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
       number_of_pupils: 100,
     )
 
-    choose_a_school(js:, location: "manchester", name: "open")
+    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -159,7 +159,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
