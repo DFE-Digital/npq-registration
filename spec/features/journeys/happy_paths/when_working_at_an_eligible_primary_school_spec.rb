@@ -52,8 +52,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
                    establishment_type_code: 1,
                    number_of_pupils: 150,
                    phase_name: "Primary")
-    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
-    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     choose_a_school(js:, name: "open")
 
