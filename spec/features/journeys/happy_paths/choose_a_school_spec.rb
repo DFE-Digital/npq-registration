@@ -10,8 +10,9 @@ RSpec.feature "Choose a school page", :with_default_schedules, type: :feature do
   before do
     stub_participant_validation_request
 
-    School.create!(urn: 100_000, name: "open school", establishment_status_code: "1")
+    School.create!(urn: 100_000, name: "an open school", establishment_status_code: "1")
     School.create!(urn: 100_001, name: "closed school", establishment_status_code: "2")
+    School.create!(urn: 100_002, name: "another open school", establishment_status_code: "1")
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
@@ -43,7 +44,8 @@ RSpec.feature "Choose a school page", :with_default_schedules, type: :feature do
           page.fill_in "What is the name of your workplace?", with: "open"
         end
 
-        expect(page).to have_content("open school")
+        expect(page).to have_content("an open school")
+        expect(page).to have_content("another open school")
 
         page.find("#school-picker__option--0").click
         page.click_button("Continue")
@@ -53,7 +55,11 @@ RSpec.feature "Choose a school page", :with_default_schedules, type: :feature do
     end
 
     scenario "choosing a school with no results" do
-      # TODO
+      within ".npq-js-reveal" do
+        page.fill_in "What is the name of your workplace?", with: "xxxx"
+      end
+
+      expect(page).to have_current_path("/registration/choose-school")
     end
   end
 
@@ -69,8 +75,10 @@ RSpec.feature "Choose a school page", :with_default_schedules, type: :feature do
         page.click_button("Continue")
 
         expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback"))
+        expect(page).to have_content("an open school")
+        expect(page).to have_content("another open school")
 
-        page.choose "open school"
+        page.choose "an open school"
         page.click_button("Continue")
 
         expect(page).to have_current_path("/registration/choose-your-npq")
@@ -78,7 +86,26 @@ RSpec.feature "Choose a school page", :with_default_schedules, type: :feature do
     end
 
     scenario "choosing a school with no results" do
-      # TODO
+      within ".npq-js-hidden" do
+        page.fill_in "What is the name of your workplace?", with: "xxxx"
+      end
+
+      page.click_button("Continue")
+
+      expect(page).to have_current_path("/registration/choose-school")
+    end
+
+    scenario "using 'Workplace not shown above' radio button" do
+      within ".npq-js-hidden" do
+        page.fill_in "What is the name of your workplace?", with: "open"
+      end
+      page.click_button("Continue")
+      page.choose "Workplace not shown above"
+      page.fill_in "registration-wizard-institution-name-field", with: "xxxx"
+      page.click_button("Continue")
+
+      expect(page).to have_content("No schools with the name xxxx were found, please try again")
+      expect(page).to have_current_path("/registration/choose-school")
     end
   end
 end

@@ -6,7 +6,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
   include_context "Stub Get An Identity Omniauth Responses"
 
-  # n.b. from this perspective there is no difference between manually
+  # N.B. from this perspective there is no difference between manually
   # navigating and having two browser windows open
   scenario "when an unintended journey leaves mandatory institution missing" do
     # start a journey in window 1 that doesn't require an institution
@@ -55,19 +55,19 @@ RSpec.feature "Sad journeys", type: :feature do
       page.choose("A school", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/find-school", submit_form: false)
+    expect_page_to_have(path: "/registration/choose-school", submit_form: false)
 
     # back to window 1 (with the store work setting now changed from window 2)
     navigate_to_page(path: "/registration/choose-your-npq", submit_form: true) do
       page.choose("Headship", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/find-school", submit_form: true)
+    expect_page_to_have(path: "/registration/choose-school", submit_form: true)
 
     navigate_to_page(path: "/registration/share-provider", submit_form: true) do
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/find-school", submit_form: true)
+    expect_page_to_have(path: "/registration/choose-school", submit_form: true)
   end
 end

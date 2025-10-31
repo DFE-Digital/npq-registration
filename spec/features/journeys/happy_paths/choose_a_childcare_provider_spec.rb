@@ -10,8 +10,9 @@ RSpec.feature "Choose a childcare provider page", :with_default_schedules, type:
   before do
     stub_participant_validation_request
 
-    School.create!(urn: 100_000, name: "open school", establishment_status_code: "1")
+    School.create!(urn: 100_000, name: "an open school", establishment_status_code: "1")
     School.create!(urn: 100_001, name: "closed school", establishment_status_code: "2")
+    School.create!(urn: 100_002, name: "another open school", establishment_status_code: "1")
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
@@ -50,13 +51,18 @@ RSpec.feature "Choose a childcare provider page", :with_default_schedules, type:
           page.fill_in "What is the name of your workplace?", with: "open"
         end
 
-        expect(page).to have_content("open school")
+        expect(page).to have_content("an open school")
+        expect(page).to have_content("another open school")
         page.find("#nursery-picker__option--0").click
       end
     end
 
     scenario "choosing a childcare provider with no results" do
-      # TODO
+      within ".npq-js-reveal" do
+        page.fill_in "What is the name of your workplace?", with: "xxxx"
+      end
+
+      expect(page).to have_current_path("/registration/choose-childcare-provider")
     end
   end
 
@@ -71,13 +77,34 @@ RSpec.feature "Choose a childcare provider page", :with_default_schedules, type:
 
         page.click_button("Continue")
 
-        expect(page).to have_text("Search for your workplace")
-        page.choose "open school"
+        expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_childcare_provider_fallback"))
+        expect(page).to have_content("an open school")
+        expect(page).to have_content("another open school")
+        page.choose "an open school"
       end
     end
 
     scenario "choosing a childcare provider with no results" do
-      # TODO
+      within ".npq-js-hidden" do
+        page.fill_in "What is the name of your workplace?", with: "xxxx"
+      end
+
+      page.click_button("Continue")
+
+      expect(page).to have_current_path("/registration/choose-childcare-provider")
+    end
+
+    scenario "using 'Workplace not shown above' radio button" do
+      within ".npq-js-hidden" do
+        page.fill_in "What is the name of your workplace?", with: "open"
+      end
+      page.click_button("Continue")
+      page.choose "Workplace not shown above"
+      page.fill_in "registration-wizard-institution-name-field", with: "xxxx"
+      page.click_button("Continue")
+
+      expect(page).to have_content("No nurseries with the name xxxx were found, please try again")
+      expect(page).to have_current_path("/registration/choose-childcare-provider")
     end
   end
 end

@@ -42,9 +42,7 @@ class RegistrationWizard
     senco_start_date
     funding_eligibility_maths
     choose_your_provider
-    find_school
     choose_school
-    find_childcare_provider
     choose_childcare_provider
     kind_of_nursery
     have_ofsted_urn
