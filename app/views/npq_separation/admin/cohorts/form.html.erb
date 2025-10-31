@@ -7,15 +7,15 @@
 </h1>
 
 <%= form_with model: [:npq_separation, :admin, @cohort] do |f| %>
-  <%= f.govuk_text_field :name,
-                         label: { text: "Name" },
-                         width: 10 %>
-
   <%= f.govuk_text_field :description %>
 
   <%= f.govuk_number_field :start_year,
                            label: { text: "Start year" },
                            width: 4 %>
+
+  <%= f.govuk_number_field :suffix,
+                           label: { text: "Suffix" },
+                           width: 2 %>
 
   <%= f.govuk_check_box :funding_cap,
                         1,

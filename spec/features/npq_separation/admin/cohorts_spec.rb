@@ -5,7 +5,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
   include Helpers::FileHelper
 
   let(:admin)  { create :admin }
-  let(:cohort) { Cohort.find_by start_year: 2026 }
+  let(:cohort) { Cohort.find_by! name: "2026-1" }
 
   let(:new_button_text)    { "New cohort" }
   let(:edit_button_text)   { "Edit cohort details" }
@@ -54,7 +54,6 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       visit_index
       click_on new_button_text
 
-      fill_in "Name", with: "2029"
       fill_in "Description", with: "2029 to 2030"
       fill_in "Start year", with: "2029"
       check "Funding cap", visible: :all
@@ -67,9 +66,10 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       end
 
       cohort = Cohort.order(created_at: :desc, id: :desc).first
-      expect(cohort.name).to eq("2029")
+      expect(cohort.name).to eq("2029-1")
       expect(cohort.description).to eq("2029 to 2030")
       expect(cohort.start_year).to be(2029)
+      expect(cohort.suffix).to be(1)
       expect(cohort.funding_cap).to be(true)
       expect(cohort.registration_start_date).to eq(Date.new(2029, 3, 2))
       expect(cohort.delivery_partnerships.pluck(:delivery_partner_id, :lead_provider_id)).to eq(partnerships.pluck(:delivery_partner_id, :lead_provider_id))
@@ -81,9 +81,9 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       navigate_to_cohort
       click_on edit_button_text
 
-      fill_in "Name", with: "2025"
       fill_in "Description", with: "2025 to 2026"
       fill_in "Start year", with: "2025"
+      fill_in "Suffix", with: "2"
       check "Funding cap", visible: :all
       fill_in "Day", with: "6"
       fill_in "Month", with: "5"
@@ -93,9 +93,11 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect(page).to have_text("Cohort updated")
 
       cohort.reload
-      expect(cohort.name).to eq("2025")
+
+      expect(cohort.name).to eq("2025-2")
       expect(cohort.description).to eq("2025 to 2026")
       expect(cohort.start_year).to be(2025)
+      expect(cohort.suffix).to be(2)
       expect(cohort.funding_cap).to be(true)
       expect(cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
     end

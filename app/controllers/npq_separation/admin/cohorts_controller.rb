@@ -59,7 +59,7 @@ private
       :start_year,
       :registration_start_date,
       :funding_cap,
-      :name,
+      :suffix,
       :description,
     )
   end
