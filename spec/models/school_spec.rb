@@ -32,6 +32,94 @@ RSpec.describe School do
   end
 
   describe "::search_by_name" do
+    context "searching by name" do
+      before { create(:school, name: "a school") }
+
+      it "returns schools matching the name" do
+        expect(described_class.search_by_name("a school").count).to be(1)
+      end
+    end
+
+    context "searching by la_name" do
+      before { create(:school, la_name: "Swindon") }
+
+      it "returns schools matching the la_name" do
+        expect(described_class.search_by_name("Swindon").count).to be(1)
+      end
+    end
+
+    context "searching by address_1" do
+      before { create(:school, address_1: "someplace") }
+
+      it "returns schools matching the address_1" do
+        expect(described_class.search_by_name("someplace").count).to be(1)
+      end
+    end
+
+    context "searching by address_2" do
+      before { create(:school, address_2: "someplace") }
+
+      it "returns schools matching the address_2" do
+        expect(described_class.search_by_name("someplace").count).to be(1)
+      end
+    end
+
+    context "searching by address_3" do
+      before { create(:school, address_3: "someplace") }
+
+      it "returns schools matching the address_3" do
+        expect(described_class.search_by_name("someplace").count).to be(1)
+      end
+    end
+
+    context "searching by town" do
+      before { create(:school, town: "someplace") }
+
+      it "returns schools matching the town" do
+        expect(described_class.search_by_name("someplace").count).to be(1)
+      end
+    end
+
+    context "searching by county" do
+      before { create(:school, county: "someplace") }
+
+      it "returns schools matching the county" do
+        expect(described_class.search_by_name("someplace").count).to be(1)
+      end
+    end
+
+    context "searching by postcode" do
+      before { create(:school, postcode: "AB12 3CD") }
+
+      it "returns schools matching the postcode" do
+        expect(described_class.search_by_name("AB12 3CD").count).to be(1)
+      end
+    end
+
+    context "searching by postcode without spaces" do
+      before { create(:school, postcode_without_spaces: "AB123CD") }
+
+      it "returns schools matching the postcode without spaces" do
+        expect(described_class.search_by_name("AB123CD").count).to be(1)
+      end
+    end
+
+    context "searching by region" do
+      before { create(:school, region: "someplace") }
+
+      it "returns schools matching the region" do
+        expect(described_class.search_by_name("someplace").count).to be(1)
+      end
+    end
+
+    context "searching by URN" do
+      before { create(:school, urn: "123456") }
+
+      it "returns schools matching the URN" do
+        expect(described_class.search_by_name("123456").count).to be(1)
+      end
+    end
+
     context "regarding apostrophes" do
       before do
         create(:school, name: "andrew's", postcode: "NW5")

@@ -37,7 +37,9 @@ class School < ApplicationRecord
   }.freeze
 
   pg_search_scope :search_by_name,
-                  against: %i[name la_name address_1 address_2 address_3 town county postcode postcode_without_spaces region],
+                  against: %i[
+                    name la_name address_1 address_2 address_3 town county postcode postcode_without_spaces region urn
+                  ],
                   using: {
                     tsearch: {
                       prefix: true,
