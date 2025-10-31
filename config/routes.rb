@@ -6,7 +6,6 @@ Rails.application.routes.draw do
   get "/up", to: "monitoring#up"
   get "/robots", to: "robots_txt#show", format: :text, as: "robots_txt"
 
-  resources :schools, only: [:index]
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
