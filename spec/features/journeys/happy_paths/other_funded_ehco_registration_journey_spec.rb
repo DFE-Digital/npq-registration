@@ -44,8 +44,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
-    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     choose_a_school(js:, name: "open")
 
