@@ -4,7 +4,10 @@ FactoryBot.define do
     registration_start_date { Date.new(start_year, 4, 3) }
     funding_cap { true }
     suffix { 1 }
-    description { "#{start_year} to #{start_year.next}" }
+    description do
+      suffix_label = suffix == 1 ? nil : ": suffix #{suffix}"
+      "#{start_year} to #{start_year.next}#{suffix_label}"
+    end
 
     initialize_with do
       Cohort.find_or_create_by(start_year:, suffix:)

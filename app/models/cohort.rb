@@ -12,10 +12,9 @@ class Cohort < ApplicationRecord
               less_than: 2030,
             }
 
-  validates :name,
+  validates :suffix,
             presence: true,
-            uniqueness: { case_sensitive: false },
-            length: { maximum: 10 }
+            uniqueness: { scope: :start_year }
 
   validates :description,
             presence: true,
@@ -30,7 +29,7 @@ class Cohort < ApplicationRecord
 
   def self.current(timestamp = Time.zone.today)
     where(registration_start_date: ..timestamp)
-      .order(start_year: :desc)
+      .order(start_year: :desc, suffix: :desc)
       .first!
   end
 
