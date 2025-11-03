@@ -1,22 +1,25 @@
-<h1 class="govuk-heading-l">Update and verify TRNs</h1>
+<h1 class="govuk-heading-l">Backfill declaration delivery partners</h1>
 
-<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_update_and_verify_trns_path, method: :post, multipart: true do |f| %>
+<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_backfill_declaration_delivery_partners_path, method: :post, multipart: true do |f| %>
   <%= f.govuk_error_summary %>
 
   <p class="govuk-body">
-    If the service shows multiple incorrect teacher reference numbers (TRNs),
-    you can fix this by uploading a CSV file with the correct TRNs.
-    The service will then verify the TRNs you provide.
+    Backfill the delivery partner and (optionally) secondary delivery partner for declarations
   </p>
 
   <p class="govuk-body">
-    Create a CSV file with the headings:
+    Your file must include the following column headers:
   </p>
 
   <ul class="govuk-list govuk-list--bullet">
-    <li>‘User ID’, followed by the relevant user IDs</li>
-    <li>‘Updated TRN’, followed by the replacement TRNs</li>
+    <li>Declaration ID</li>
+    <li>Primary Delivery Partner ID</li>
+    <li>Secondary Delivery Partner ID</li>
   </ul>
+
+  <p class="govuk-body">
+    The above columns can be in any order, and other columns can be included, they will just be ignored.
+  </p>
 
   <div class="govuk-form-group">
     <%= f.govuk_file_field :file,
@@ -49,15 +52,15 @@
       table.with_body do |body|
         @bulk_operations.each do |bulk_operation|
           body.with_row do |row|
-            row.with_cell(text: govuk_link_to(bulk_operation.file.filename, npq_separation_admin_bulk_operations_update_and_verify_trn_path(bulk_operation)))
+            row.with_cell(text: govuk_link_to(bulk_operation.file.filename, npq_separation_admin_bulk_operations_backfill_declaration_delivery_partner_path(bulk_operation)))
             row.with_cell(text: bulk_operation.row_count)
             row.with_cell(text: bulk_operation.created_at.to_formatted_s(:govuk_short))
             row.with_cell(text: bulk_operation.started_at&.to_formatted_s(:govuk_short))
             row.with_cell do
               unless bulk_operation.started?
-                form_with url: run_npq_separation_admin_bulk_operations_update_and_verify_trn_path(bulk_operation) do |f|
+                form_with url: run_npq_separation_admin_bulk_operations_backfill_declaration_delivery_partner_path(bulk_operation) do |f|
                   tag.div(class: "govuk-button-group bulk-operation-action-button-group") do
-                    f.govuk_submit "Update and verify TRNs", class: "bulk-operation-action-button"
+                    f.govuk_submit "Backfill declaration delivery partners", class: "bulk-operation-action-button"
                   end
                 end
               end

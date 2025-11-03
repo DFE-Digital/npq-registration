@@ -22,20 +22,8 @@ class BulkOperation::UpdateAndVerifyTrns < BulkOperation
 
 private
 
-  def check_format
-    csv = CSV.read(attached_file, headers: true)
-
-    errors.add(:file, :empty) if csv.count.zero?
-
-    if csv.headers != FILE_HEADERS
-      errors.add(:file, :invalid)
-    end
-  rescue CSV::MalformedCSVError
-    errors.add(:file, :malformed)
-  end
-
   def process_csv_row(csv_row)
-    new_trn = csv_row[BulkOperation::UpdateAndVerifyTrns::FILE_HEADER_UPDATED_TRN]
+    new_trn = csv_row[FILE_HEADER_UPDATED_TRN]
     user = User.find_by(ecf_id: user_ecf_id(csv_row))
     change_trn_service = Participants::ChangeTrn.new(user:, trn: new_trn)
     success = change_trn_service.change_trn
@@ -49,6 +37,6 @@ private
   end
 
   def user_ecf_id(csv_row)
-    csv_row[BulkOperation::UpdateAndVerifyTrns::FILE_HEADER_USER_ID]
+    csv_row[FILE_HEADER_USER_ID]
   end
 end
