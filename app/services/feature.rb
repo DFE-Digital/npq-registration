@@ -7,6 +7,7 @@ class Feature
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
   MAINTENANCE_BANNER = "Maintenance banner".freeze
   LP_TRANSFERRED_DECLARATIONS_VISIBILITY = "Lead provider transferred declarations visibility".freeze
+  USE_SUFFIXED_COHORTS = "Assign new applications to suffixed cohorts".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
   # not included in this array. This approach will make tracking feature flags much easier.
@@ -68,6 +69,10 @@ class Feature
 
     def lp_transferred_declarations_visibility?
       Flipper.enabled?(LP_TRANSFERRED_DECLARATIONS_VISIBILITY)
+    end
+
+    def suffixed_cohorts?
+      Flipper.enabled?(USE_SUFFIXED_COHORTS)
     end
 
   private

@@ -125,6 +125,7 @@ RSpec.configure do |config|
 
   config.before do
     Flipper.enable(Feature::REGISTRATION_OPEN)
+    Flipper.enable(Feature::USE_SUFFIXED_COHORTS)
 
     # Allows including stream middleware when testing any api requests
     allow(StreamAPIRequestsToBigQueryJob).to receive(:perform_later)

@@ -116,12 +116,30 @@ RSpec.describe Cohort, type: :model do
       end
     end
 
-    it "when there are multiple cohorts for the past year" do
-      current_cohort = create(:cohort, start_year: 2022, suffix: 2, registration_start_date: Date.new(2022, 4, 10))
-      _older_cohort = create(:cohort, start_year: 2022, suffix: 1, registration_start_date: Date.new(2022, 1, 10))
-      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+    context "when there are multiple cohorts for the past year" do
+      subject { Cohort.current(Date.new(2022, 4, 11)) }
 
-      expect(Cohort.current(Date.new(2022, 4, 11))).to eq(current_cohort)
+      before { cohorts }
+
+      let :cohorts do
+        {
+          current: create(:cohort, start_year: 2022, suffix: 2, registration_start_date: Date.new(2022, 4, 10)),
+          older: create(:cohort, start_year: 2022, suffix: 1, registration_start_date: Date.new(2022, 1, 10)),
+          future: create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)),
+        }
+      end
+
+      context "when suffixed cohorts are enabled" do
+        before { allow(Feature).to receive(:suffixed_cohorts?).and_return true }
+
+        it { is_expected.to eq(cohorts[:current]) }
+      end
+
+      context "when suffixed cohorts are not enabled" do
+        before { allow(Feature).to receive(:suffixed_cohorts?).and_return false }
+
+        it { is_expected.to eq(cohorts[:older]) }
+      end
     end
   end
 
