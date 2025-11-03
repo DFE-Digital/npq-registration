@@ -32,9 +32,14 @@ class Cohort < ApplicationRecord
   validate :changing_funding_cap_with_dependent_applications
 
   def self.current(timestamp = Time.zone.today)
-    where(registration_start_date: ..timestamp)
+    scope = where(registration_start_date: ..timestamp)
       .order(start_year: :desc, suffix: :desc)
-      .first!
+
+    unless Feature.suffixed_cohorts?
+      scope = scope.where(suffix: 1)
+    end
+
+    scope.first!
   end
 
   def name

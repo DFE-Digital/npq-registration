@@ -128,4 +128,20 @@ RSpec.describe Feature do
       end
     end
   end
+
+  describe ".suffixed_cohorts" do
+    subject { described_class.suffixed_cohorts? }
+
+    context "when disabled" do
+      before { Flipper.disable Feature::USE_SUFFIXED_COHORTS }
+
+      it { is_expected.to be false }
+    end
+
+    context "when enabled" do
+      before { Flipper.enable Feature::USE_SUFFIXED_COHORTS }
+
+      it { is_expected.to be true }
+    end
+  end
 end
