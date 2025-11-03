@@ -14,7 +14,8 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
   let!(:this_months_contract) { create(:contract, statement: this_months_statement, course:) }
   let(:next_months_statement) { create(:statement, lead_provider:, month: Time.zone.today.month + 1, year: Time.zone.today.year) }
   let!(:next_months_contract) { create(:contract, statement: next_months_statement, course:) }
-  let(:future_statement) { create(:statement, lead_provider:, month: Time.zone.today.month + 2, year: Time.zone.today.year) }
+  let(:future_date) { Time.zone.today + 2.months }
+  let(:future_statement) { create(:statement, lead_provider:, month: future_date.month, year: future_date.year) }
   let!(:future_contract) { create(:contract, statement: future_statement, course:) }
   let!(:contract_for_other_course) { create(:contract, statement: next_months_statement, course: create(:course, :early_headship_coaching_offer)) }
   let(:statement_in_other_cohort) { create(:statement, lead_provider:, cohort: create(:cohort, :next)) }
