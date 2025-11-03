@@ -8,18 +8,18 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
   let(:lead_provider) { create(:lead_provider) }
   let(:statement) { create(:statement, lead_provider:) }
   let(:course) { create(:course, :senior_leadership) }
-  let(:last_months_statement) { create(:statement, lead_provider:, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
+  let(:last_months_statement) { create(:statement, lead_provider:, for_date: 1.month.ago) }
   let!(:last_months_contract) { create(:contract, statement: last_months_statement, course:) }
-  let(:this_months_statement) { create(:statement, lead_provider:, month: Time.zone.today.month, year: Time.zone.today.year) }
+  let(:this_months_statement) { create(:statement, lead_provider:, for_date: Time.zone.today) }
   let!(:this_months_contract) { create(:contract, statement: this_months_statement, course:) }
-  let(:next_months_statement) { create(:statement, lead_provider:, month: Time.zone.today.month + 1, year: Time.zone.today.year) }
+  let(:next_months_statement) { create(:statement, lead_provider:, for_date: 1.month.from_now) }
   let!(:next_months_contract) { create(:contract, statement: next_months_statement, course:) }
-  let(:future_statement) { create(:statement, lead_provider:, month: Time.zone.today.month + 2, year: Time.zone.today.year) }
+  let(:future_statement) { create(:statement, lead_provider:, for_date: 2.months.from_now) }
   let!(:future_contract) { create(:contract, statement: future_statement, course:) }
   let!(:contract_for_other_course) { create(:contract, statement: next_months_statement, course: create(:course, :early_headship_coaching_offer)) }
   let(:statement_in_other_cohort) { create(:statement, lead_provider:, cohort: create(:cohort, :next)) }
   let!(:contract_in_other_cohort) { create(:contract, statement: statement_in_other_cohort, course:) }
-  let(:statement_for_other_provider) { create(:statement, lead_provider: create(:lead_provider), month: Time.zone.today.month + 1, year: Time.zone.today.year) }
+  let(:statement_for_other_provider) { create(:statement, lead_provider: create(:lead_provider), for_date: 1.month.from_now) }
   let!(:contract_for_other_provider) { create(:contract, statement: statement_for_other_provider, course:) }
   let(:per_participant) { "1234.56" }
 
@@ -41,10 +41,7 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
     end
 
     context "when a statement is paid" do
-      before do
-        date = Time.zone.today + 3.months
-        create(:statement, :paid, lead_provider:, month: date.month, year: date.year)
-      end
+      before { create(:statement, :paid, lead_provider:, for_date: 3.months.from_now) }
 
       it "does not allow changes" do
         expect(subject).not_to be_valid
