@@ -3,16 +3,17 @@ FactoryBot.define do
     transient do
       declaration {}
       sequence(:months_from_start_of_2021) { |n| (n - 1) % 48 }
+      for_date { nil }
     end
 
-    after(:create) do |statement, evaluator|
+    after :create do |statement, evaluator|
       if evaluator.declaration
         create(:statement_item, declaration: evaluator.declaration, statement:)
       end
     end
 
-    month { months_from_start_of_2021 % 12 + 1 }
-    year { 2021 + months_from_start_of_2021 / 12 }
+    month { for_date&.month || (months_from_start_of_2021 % 12 + 1) }
+    year { for_date&.year || (2021 + months_from_start_of_2021 / 12) }
     deadline_date { Faker::Date.forward(days: 30) }
     payment_date { deadline_date ? deadline_date + 3.days : Faker::Date.forward(days: 30) }
     cohort { create(:cohort, :current) }
@@ -22,12 +23,12 @@ FactoryBot.define do
     ecf_id { SecureRandom.uuid }
     output_fee { true }
 
-    trait(:next_output_fee) do
+    trait :next_output_fee do
       deadline_date { 1.day.from_now }
       output_fee { true }
     end
 
-    trait(:paid) do
+    trait :paid do
       state { "paid" }
       marked_as_paid_at { 1.week.ago }
     end
@@ -39,7 +40,7 @@ FactoryBot.define do
       deadline_date { Time.zone.yesterday }
     end
 
-    trait(:with_existing_lead_provider) do
+    trait :with_existing_lead_provider do
       lead_provider { LeadProvider.first }
     end
 
