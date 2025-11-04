@@ -50,7 +50,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
     end
 
     scenario "creation" do
-      partnerships = create_list(:delivery_partnership, 3, cohort: Cohort.order(:start_year).last)
+      partnerships = create_list(:delivery_partnership, 3, cohort: Cohort.order_by_latest.first)
       visit_index
       click_on new_button_text
 

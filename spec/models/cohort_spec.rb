@@ -3,6 +3,15 @@ require "rails_helper"
 RSpec.describe Cohort, type: :model do
   let(:cohort) { create(:cohort) }
 
+  let :suffixed_cohorts do
+    (2024..2026).to_a.shuffle.flat_map do |start_year|
+      (1..2).to_a.shuffle.map do |suffix|
+        registration_start_date = Date.new(start_year, suffix * 4, 10)
+        create :cohort, start_year:, suffix:, registration_start_date:
+      end
+    end
+  end
+
   subject { cohort }
 
   describe "relationships" do
@@ -89,6 +98,30 @@ RSpec.describe Cohort, type: :model do
         end
       end
     end
+  end
+
+  describe ".order_by_latest" do
+    subject { described_class.order_by_latest.pluck(:identifier) }
+
+    before { suffixed_cohorts }
+
+    it { is_expected.to eq %w[2026-2 2026-1 2025-2 2025-1 2024-2 2024-1] }
+  end
+
+  describe ".order_by_oldest" do
+    subject { described_class.order_by_oldest.pluck(:identifier) }
+
+    before { suffixed_cohorts }
+
+    it { is_expected.to eq %w[2024-1 2024-2 2025-1 2025-2 2026-1 2026-2] }
+  end
+
+  describe ".prior_to" do
+    subject { described_class.prior_to(autumn2025).pluck(:identifier) }
+
+    let(:autumn2025) { suffixed_cohorts && Cohort.find_by!(identifier: "2025-2") }
+
+    it { is_expected.to match_array %w[2025-1 2024-2 2024-1] }
   end
 
   describe ".current" do

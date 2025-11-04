@@ -4,7 +4,7 @@
     render NpqSeparation::SubNavigationComponent.new(
       request.path,
       structure:
-        Cohort.order(start_year: :desc).map do |cohort|
+        Cohort.order_by_latest.map do |cohort|
           NpqSeparation::NavigationStructure::Node.new(
             name: "Cohort #{cohort.description}",
             href: npq_separation_admin_lead_provider_cohort_path(@lead_provider, cohort),
