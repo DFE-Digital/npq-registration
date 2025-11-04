@@ -6,18 +6,12 @@
   )
 %>
 
-<%= govuk_details(summary_text: "My workplace is not listed") do %>
-  <p>Check the following:</p>
+<%= govuk_details(summary_text: "If you cannot find your workplace") do %>
+  <p>You can:</p>
 
   <ul class="govuk-list govuk-list--bullet">
-    <li><%= external_link_to "your postcode or URN", :gias_establishment_search, new_tab: true %> – check it’s correct</li>
-    <li>the spelling – try entering part of the name</li>
-    <li>your browser settings – JavaScript must be enabled</li>
+    <li><%= external_link_to "check your workplace details", :gias_establishment_search, new_tab: true %> – including spelling</li>
+    <li>use any combination of postcode, workplace name, URN or street name</li>
   </ul>
 
-  <p>
-    If your workplace is still not listed,
-    <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "contact us", target: "_blank" %>
-    for support.
-  </p>
 <% end %>
