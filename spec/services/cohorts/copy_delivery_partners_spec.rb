@@ -11,6 +11,14 @@ RSpec.describe Cohorts::CopyDeliveryPartners do
     let(:delivery_partner_1) { create(:delivery_partner) }
     let(:delivery_partner_2) { create(:delivery_partner) }
 
+    shared_examples "does not copy delivery partners" do
+      it "does not create any delivery partnerships" do
+        expect {
+          service.copy
+        }.not_to(change { cohort.delivery_partnerships.count })
+      end
+    end
+
     context "when the previous cohort has delivery partners" do
       let(:partnerships) { cohort.delivery_partnerships }
 
@@ -35,11 +43,29 @@ RSpec.describe Cohorts::CopyDeliveryPartners do
       end
     end
 
-    shared_examples "does not copy delivery partners" do
-      it "does not create any delivery partnerships" do
+    context "when previous cohort is same in a year" do
+      before do
+        create(:delivery_partnership,
+               cohort: same_year_cohort,
+               lead_provider: lead_provider_1,
+               delivery_partner: delivery_partner_1)
+        create(:delivery_partnership,
+               cohort: same_year_cohort,
+               lead_provider: lead_provider_2,
+               delivery_partner: delivery_partner_2)
+      end
+
+      let(:partnerships) { cohort.delivery_partnerships }
+      let(:cohort) { create(:cohort, start_year: 2025, suffix: 2) }
+      let(:same_year_cohort) { create(:cohort, start_year: 2025, suffix: 1) }
+
+      it "copies delivery partners from the previous cohort" do
         expect {
           service.copy
-        }.not_to(change { cohort.delivery_partnerships.count })
+        }.to change { cohort.delivery_partnerships.count }.from(0).to(2)
+
+        expect(partnerships.pluck(:lead_provider_id)).to contain_exactly(lead_provider_1.id, lead_provider_2.id)
+        expect(partnerships.pluck(:delivery_partner_id)).to contain_exactly(delivery_partner_1.id, delivery_partner_2.id)
       end
     end
 

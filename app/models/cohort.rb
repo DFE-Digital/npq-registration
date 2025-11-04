@@ -31,9 +31,16 @@ class Cohort < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
   validate :changing_funding_cap_with_dependent_applications
 
+  scope :order_by_latest, -> { order(start_year: :desc, suffix: :desc) }
+  scope :order_by_oldest, -> { order(start_year: :asc, suffix: :asc) }
+
+  scope :prior_to, lambda { |cohort|
+    where("start_year < :year OR (start_year = :year AND suffix < :suffix)",
+          year: cohort.start_year, suffix: cohort.suffix)
+  }
+
   def self.current(timestamp = Time.zone.today)
-    scope = where(registration_start_date: ..timestamp)
-      .order(start_year: :desc, suffix: :desc)
+    scope = order_by_latest.where(registration_start_date: ..timestamp)
 
     unless Feature.suffixed_cohorts?
       scope = scope.where(suffix: 1)
