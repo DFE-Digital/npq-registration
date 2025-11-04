@@ -36,7 +36,7 @@ module NpqSeparation
       end
 
       def cohorts
-        Cohort.all.order(:start_year)
+        Cohort.order_by_oldest
       end
 
       def statements

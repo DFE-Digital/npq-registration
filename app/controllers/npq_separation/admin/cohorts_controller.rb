@@ -3,7 +3,7 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
   before_action :cohort, only: %i[show edit update destroy]
 
   def index
-    @pagy, @cohorts = pagy(Cohort.all.order(start_year: :desc))
+    @pagy, @cohorts = pagy(Cohort.order_by_latest)
   end
 
   def show; end
