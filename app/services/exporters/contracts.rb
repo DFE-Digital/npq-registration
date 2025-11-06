@@ -20,7 +20,7 @@ class Exporters::Contracts
     CSV.generate(encoding: "utf-8") do |csv|
       csv << FIELD_NAMES
       query.each do |record|
-        csv << FIELD_NAMES.map { |field| attribute(field, record) }
+        csv << FIELD_NAMES.map { |field| record.attributes[field] }
       end
     end
   end
@@ -29,27 +29,20 @@ private
 
   attr_reader :cohort
 
-  def attribute(field, record)
-    case field
-    when "monthly_service_fee"
-      record.attributes[field] || 0
-    else
-      record.attributes[field]
-    end
-  end
-
   def query
     ContractTemplate
       .joins(contracts: [{ statement: :lead_provider }, :course])
-      .where(statements: { cohort: })
+      .where(statements: { cohort:, output_fee: true })
+      .where("MAKE_DATE(statements.year, statements.month, 1) <= DATE_TRUNC('month', CURRENT_DATE)")
+      .order(:lead_provider_name, :course_identifier, "statements.year desc", "statements.month desc")
       .select(
-        "lead_providers.name as lead_provider_name",
-        "courses.identifier as course_identifier",
+        "DISTINCT ON (lead_provider_name, course_identifier) lead_providers.name AS lead_provider_name",
+        "courses.identifier AS course_identifier",
         :recruitment_target,
         :per_participant,
         :service_fee_installments,
         :special_course,
-        :monthly_service_fee,
-      ).distinct
+        "COALESCE(monthly_service_fee, 0.0) AS monthly_service_fee",
+      )
   end
 end

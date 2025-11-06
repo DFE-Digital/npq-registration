@@ -53,7 +53,7 @@ RSpec.describe Exporters::Contracts do
         contract_template_2.per_participant,
         contract_template_2.service_fee_installments,
         contract_template_2.special_course,
-        0,
+        0.0,
       ].join(","),
       [
         "Another Provider",
@@ -65,5 +65,43 @@ RSpec.describe Exporters::Contracts do
         contract_template.monthly_service_fee,
       ].join(","),
     )
+  end
+
+  context "when there are statements that have different values for the same cohort, lead provider and course" do
+    subject { described_class.new(cohort: older_cohort).call }
+
+    let(:older_cohort) { create(:cohort, start_year: 2022) }
+    let(:older_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true) }
+    let(:older_statement_output_fee_false) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: false) }
+    let(:latest_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true) }
+    let(:latest_statement_output_fee_false) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: false) }
+    let(:future_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true, year: Time.zone.today.year + 1) }
+    let(:contract_template_1) { create(:contract_template, service_fee_installments: 50, monthly_service_fee: nil) }
+    let(:contract_template_2) { create(:contract_template, service_fee_installments: 24, monthly_service_fee: 10) }
+    let(:contract_template_3) { create(:contract_template, service_fee_installments: 0, monthly_service_fee: 0.0) }
+    let(:contract_template_4) { create(:contract_template, service_fee_installments: 100, monthly_service_fee: 200) }
+    let(:contract_template_5) { create(:contract_template, service_fee_installments: 200, monthly_service_fee: 300) }
+
+    before do
+      create(:contract, statement: older_statement_output_fee_true, course:, contract_template: contract_template_1)
+      create(:contract, statement: older_statement_output_fee_false, course:, contract_template: contract_template_2)
+      create(:contract, statement: latest_statement_output_fee_true, course:, contract_template: contract_template_3)
+      create(:contract, statement: latest_statement_output_fee_false, course:, contract_template: contract_template_4)
+      create(:contract, statement: future_statement_output_fee_true, course:, contract_template: contract_template_5)
+    end
+
+    it "generates a CSV using the values of the latest output_fee statement" do
+      expect(subject.lines.drop(1).map(&:chomp)).to contain_exactly(
+        [
+          "Some Lead Provider",
+          course.identifier,
+          contract_template_3.recruitment_target,
+          contract_template_3.per_participant,
+          contract_template_3.service_fee_installments,
+          contract_template_3.special_course,
+          contract_template_3.monthly_service_fee,
+        ].join(","),
+      )
+    end
   end
 end
