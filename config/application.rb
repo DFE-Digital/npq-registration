@@ -73,8 +73,6 @@ module NpqRegistration
                                                secure: !Rails.env.local?,
                                                expire_after: 2.weeks
 
-    config.x.disable_legacy_api = true
-
     config.skylight.environments += ["review", "sandbox", "staging"]
   end
 end
