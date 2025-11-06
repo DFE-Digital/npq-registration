@@ -30,8 +30,11 @@ private
   attr_reader :cohort
 
   def attribute(field, record)
-    record.attributes[field].tap do |value|
-      return 0 if field == "monthly_service_fee" && value.nil?
+    case field
+    when "monthly_service_fee"
+      record.attributes[field] || 0
+    else
+      record.attributes[field]
     end
   end
 
