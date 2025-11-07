@@ -95,11 +95,29 @@
         )
       %>
     </div>
-
     <%= f.govuk_submit "Search" %>
-  <% end %>
-</div>
+  </div>
 
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full flex-end-with-gap">
+      <span class="govuk-label govuk-label--s">Sort by</span>
+      <%=
+        f.govuk_select(
+          :sort_by,
+          options_for_select([
+            ['Oldest submissions first', 'ASC'],
+            ['Newest submissions first', 'DESC']
+          ], params[:sort_by]),
+          label: { text: "Sort by", hidden: true }
+        )
+      %>
+
+      <%= f.govuk_submit "Sort" %>
+    </div>
+  </div>
+  <% end %>
+
+  
 <%=
   govuk_table do |table|
     table.with_head do |header|
@@ -110,7 +128,7 @@
         row.with_cell(text: "Eligible for funding")
         row.with_cell(text: "Provider approval status")
         row.with_cell(text: "Notes", classes: 'govuk-!-width-one-third')
-        row.with_cell(text: "Actions")
+        row.with_cell(text: "Registration details")
       end
     end
 
@@ -119,7 +137,7 @@
         body.with_row do |row|
           row.with_cell(text: application.created_at.to_formatted_s(:govuk_short))
           row.with_cell do
-            concat tag.p(application.user.full_name, class: "govuk-body")
+            concat tag.p(class: "govuk-body") { tag.strong(application.user.full_name) }
             concat tag.p(application.employment_type.try(:humanize), class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
             concat tag.p(application.employer_name_to_display, class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
           end

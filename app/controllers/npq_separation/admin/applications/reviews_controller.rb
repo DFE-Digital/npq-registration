@@ -12,7 +12,7 @@ module NpqSeparation
                                     .merge(filter_scope)
                                     .merge(search_scope)
                                     .merge(funding_decision_scope)
-                                    .order("applications.created_at DESC")
+                                    .order(sort_scope)
 
           @pagy, @applications = pagy(applications, limit: 9)
         end
@@ -56,6 +56,11 @@ module NpqSeparation
 
         def search_scope
           AdminService::ApplicationsSearch.new(q: params[:q]).call
+        end
+
+        def sort_scope
+          direction = params[:sort_by]&.upcase == "DESC" ? "DESC" : "ASC"
+          "applications.created_at #{direction}"
         end
       end
     end

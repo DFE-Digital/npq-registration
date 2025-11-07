@@ -332,8 +332,80 @@ RSpec.feature "Applications in review", type: :feature do
   end
 
   scenario "Applications should display in correct order" do
-    first_record = application_for_young_offender_institution.user.full_name
-    second_record = application_for_hospital_school.user.full_name
+    first_record = application_for_hospital_school.user.full_name
+    second_record = application_for_young_offender_institution.user.full_name
     expect(page).to have_text(/#{first_record}.*#{second_record}/m)
+  end
+
+  scenario "default sort order shows oldest submissions first" do
+    # Default sort should be ASC (oldest first)
+    # application_with_funding_decision created 12 days ago (oldest in review)
+    # application_for_young_offender_institution created 6 days ago (newest in default view)
+    first_record = application_with_funding_decision.user.full_name
+    last_record = application_for_rtta_yes.user.full_name # created 4 days ago
+
+    expect(page).to have_text(/#{first_record}.*#{last_record}/m)
+  end
+
+  scenario "sorting by oldest submissions first" do
+    select "Oldest submissions first", from: "Sort by"
+    click_on "Sort"
+
+    # Should show oldest first (ASC order)
+    first_record = application_with_funding_decision.user.full_name # 12 days ago
+    last_record = application_for_rtta_yes.user.full_name # 4 days ago
+
+    expect(page).to have_text(/#{first_record}.*#{last_record}/m)
+  end
+
+  scenario "sorting by newest submissions first" do
+    select "Newest submissions first", from: "Sort by"
+    click_on "Sort"
+
+    # Should show newest first (DESC order)
+    first_record = application_for_rtta_yes.user.full_name # 4 days ago
+    last_record = application_with_funding_decision.user.full_name # 12 days ago
+
+    expect(page).to have_text(/#{first_record}.*#{last_record}/m)
+  end
+
+  scenario "sort parameter persists when combined with other filters" do
+    # Apply a filter first
+    select "Hospital school", from: "Employment type"
+    click_on "Search"
+
+    expect(page).to have_text(application_for_hospital_school.user.full_name)
+    expect(page).to have_text(application_with_funding_decision.user.full_name)
+
+    # Now apply DESC sort
+    select "Newest submissions first", from: "Sort by"
+    click_on "Sort"
+
+    # Should maintain the filter and apply DESC sort
+    # application_for_hospital_school created 10 days ago
+    # application_with_funding_decision created 12 days ago
+    first_record = application_for_hospital_school.user.full_name
+    last_record = application_with_funding_decision.user.full_name
+
+    expect(page).to have_text(/#{first_record}.*#{last_record}/m)
+    expect(page).to have_select("Employment type", selected: "Hospital school")
+  end
+
+  scenario "switching between sort orders" do
+    # Start with DESC
+    select "Newest submissions first", from: "Sort by"
+    click_on "Sort"
+
+    first_record_desc = application_for_rtta_yes.user.full_name # 4 days ago
+    expect(page).to have_text(/#{first_record_desc}/)
+
+    # Switch to ASC
+    select "Oldest submissions first", from: "Sort by"
+    click_on "Sort"
+
+    first_record_asc = application_with_funding_decision.user.full_name # 12 days ago
+    last_record_asc = application_for_rtta_yes.user.full_name # 4 days ago
+
+    expect(page).to have_text(/#{first_record_asc}.*#{last_record_asc}/m)
   end
 end
