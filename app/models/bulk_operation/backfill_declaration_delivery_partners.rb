@@ -36,34 +36,28 @@ private
 
     existing_delivery_partner = declaration.delivery_partner
     existing_secondary_delivery_partner = declaration.secondary_delivery_partner
-    delivery_partner_id = csv_row[FILE_HEADER_DELIVERY_PARTNER_ID]
-    secondary_delivery_partner_id = csv_row[FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID]
-    secondary_delivery_partner_id = nil if secondary_delivery_partner_id == "#N/A"
+    new_secondary_delivery_partner_id = csv_row[FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID] unless csv_row[FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID] == "#N/A"
 
-    new_delivery_partner_id = existing_delivery_partner ? existing_delivery_partner.ecf_id : delivery_partner_id
-    new_secondary_delivery_partner_id =
-      existing_secondary_delivery_partner ? existing_secondary_delivery_partner.ecf_id : secondary_delivery_partner_id
+    return "Declaration already has delivery partner" if new_secondary_delivery_partner_id.nil? && existing_delivery_partner
+    return "Declaration already has secondary delivery partner" if existing_secondary_delivery_partner && new_secondary_delivery_partner_id
 
-    unless DeliveryPartner.exists?(ecf_id: new_delivery_partner_id)
-      return "Primary Delivery Partner not found: ID:#{new_delivery_partner_id}"
+    delivery_partner_id = existing_delivery_partner ? existing_delivery_partner.ecf_id : csv_row[FILE_HEADER_DELIVERY_PARTNER_ID]
+    secondary_delivery_partner_id = existing_secondary_delivery_partner ? existing_secondary_delivery_partner.ecf_id : new_secondary_delivery_partner_id
+
+    return "Primary Delivery Partner not found: ID:#{delivery_partner_id}" unless DeliveryPartner.exists?(ecf_id: delivery_partner_id)
+
+    if secondary_delivery_partner_id && !DeliveryPartner.exists?(ecf_id: secondary_delivery_partner_id)
+      return "Secondary Delivery Partner not found: ID:#{secondary_delivery_partner_id}"
     end
 
-    if new_secondary_delivery_partner_id
-      unless DeliveryPartner.exists?(ecf_id: new_secondary_delivery_partner_id)
-        return "Secondary Delivery Partner not found: ID:#{new_secondary_delivery_partner_id}"
-      end
+    change_delivery_partner(declaration, delivery_partner_id, secondary_delivery_partner_id)
+  end
 
-      if existing_secondary_delivery_partner && new_secondary_delivery_partner_id == existing_secondary_delivery_partner.ecf_id
-        return "Declaration already has secondary delivery partner"
-      end
-    elsif new_delivery_partner_id == existing_delivery_partner&.ecf_id
-      return "Declaration already has delivery partner"
-    end
-
+  def change_delivery_partner(declaration, delivery_partner_id, secondary_delivery_partner_id)
     change_delivery_partner = Declarations::ChangeDeliveryPartner.new(
       declaration:,
-      delivery_partner_id: new_delivery_partner_id,
-      secondary_delivery_partner_id: new_secondary_delivery_partner_id,
+      delivery_partner_id:,
+      secondary_delivery_partner_id:,
     )
 
     success = change_delivery_partner.change_delivery_partner

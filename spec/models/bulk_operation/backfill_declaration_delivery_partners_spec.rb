@@ -146,7 +146,7 @@ RSpec.describe BulkOperation::BackfillDeclarationDeliveryPartners, type: :model 
       expect(bulk_operation.reload.finished_at).to be_present
     end
 
-    context "when updating secondary delivery partner only" do
+    context "when updating only the secondary delivery partner" do
       let(:declaration_1) { create(:declaration, lead_provider:, cohort:, delivery_partner: delivery_partner_1) }
 
       let(:file) do
@@ -274,6 +274,19 @@ RSpec.describe BulkOperation::BackfillDeclarationDeliveryPartners, type: :model 
       end
 
       it { expect(run[declaration_1.ecf_id]).to match("Secondary Delivery Partner not found: ID:rubbish") }
+    end
+
+    context "when there is an error updating a declaration" do
+      let(:delivery_partner_for_wrong_lead_provider) { create(:delivery_partner, lead_providers: { cohort => create(:lead_provider) }) }
+
+      let(:file) do
+        tempfile(
+          "#{BulkOperation::BackfillDeclarationDeliveryPartners::FILE_HEADERS.join(",")}\n" \
+          "#{declaration_1.ecf_id},#{delivery_partner_for_wrong_lead_provider.ecf_id},\n",
+        )
+      end
+
+      it { expect(run[declaration_1.ecf_id]).to match("The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort") }
     end
   end
 end
