@@ -65,6 +65,8 @@ class RegistrationWizard
     about_npq
     choosen_start_date
     confirmation
+    find_school
+    find_childcare_provider
   ].freeze
 
   attr_reader :current_step, :params, :store, :request, :current_user

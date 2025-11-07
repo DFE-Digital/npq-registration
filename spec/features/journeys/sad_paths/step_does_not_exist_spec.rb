@@ -8,10 +8,10 @@ RSpec.feature "visiting steps that do not exist", type: :feature do
       visit "/registration/confirmation"
       expect(page).to have_current_path "/"
 
-      visit "/registration/about_npq"
+      visit "/registration/about-npq"
       expect(page).to have_current_path "/"
 
-      visit "/registration/choosen_start_date"
+      visit "/registration/choosen-start-date"
       expect(page).to have_current_path "/"
     end
   end
@@ -26,10 +26,16 @@ RSpec.feature "visiting steps that do not exist", type: :feature do
       visit "/registration/confirmation"
       expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/about_npq"
+      visit "/registration/about-npq"
       expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/choosen_start_date"
+      visit "/registration/choosen-start-date"
+      expect(page).to have_current_path "/registration/course-start-date"
+
+      visit "/registration/find-school"
+      expect(page).to have_current_path "/registration/course-start-date"
+
+      visit "/registration/find-childcare-provider"
       expect(page).to have_current_path "/registration/course-start-date"
     end
   end
