@@ -54,6 +54,9 @@ namespace :one_off do
             application.schedule = schedule_map.fetch(schedule_key)
           end
 
+          # Save without changing the applications updated_at timestamp
+          # but do use correct time for PaperTrail created at
+          application.paper_trail_options[:synchronize_version_creation_timestamp] = false
           application.save!(touch: false)
         end
       end
