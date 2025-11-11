@@ -23,4 +23,6 @@ Rails.application.config.filter_parameters += %i[
   key
   code
   trn
+  cvv
+  cvc
 ]
