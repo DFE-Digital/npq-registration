@@ -121,16 +121,4 @@ RSpec.describe BulkOperation, type: :model do
       end
     end
   end
-
-  describe "#ids_to_update" do
-    subject(:ids_to_update) { bulk_operation.ids_to_update }
-
-    let(:bulk_operation) { create(:reject_applications_bulk_operation) }
-
-    before { bulk_operation.file.attach(valid_file.open) }
-
-    it "returns an array of application ECF IDs" do
-      expect(ids_to_update.to_a).to eq [application_ecf_id]
-    end
-  end
 end

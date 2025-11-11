@@ -83,30 +83,6 @@ RSpec.describe BulkOperation::BackfillDeclarationDeliveryPartners, type: :model 
     end
   end
 
-  describe "#ids_to_update" do
-    subject(:ids_to_update) { bulk_operation.ids_to_update }
-
-    let(:bulk_operation) { create(:backfill_declaration_delivery_partners_bulk_operation) }
-    let(:file) do
-      tempfile(
-        "#{BulkOperation::BackfillDeclarationDeliveryPartners::FILE_HEADERS.join(",")}\n" \
-        "a99d373d-0ca6-4153-a9a2-38aec8cb9c41,dad2badb-0823-4412-b1a9-508a6918506e\n" \
-        "720be8f3-76ed-4f91-842d-fd7664078540,bcedf334-1484-4509-af4f-80f7f386d4cf,563c1e1a-4365-4099-8f1d-d9411a31fe8e\n",
-      )
-    end
-
-    before { bulk_operation.file.attach(file.open) }
-
-    it "returns a CSV::Table object" do
-      expect(ids_to_update).to be_a(CSV::Table)
-      expect(ids_to_update.to_a).to eq [
-        ["Declaration ID", "Primary Delivery Partner ID", "Secondary Delivery Partner ID"],
-        ["a99d373d-0ca6-4153-a9a2-38aec8cb9c41", "dad2badb-0823-4412-b1a9-508a6918506e", nil],
-        %w[720be8f3-76ed-4f91-842d-fd7664078540 bcedf334-1484-4509-af4f-80f7f386d4cf 563c1e1a-4365-4099-8f1d-d9411a31fe8e],
-      ]
-    end
-  end
-
   describe "#run!" do
     let(:lead_provider) { LeadProvider.first }
     let(:cohort) { create(:cohort, start_year: 2023) }

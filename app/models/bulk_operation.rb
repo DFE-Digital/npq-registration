@@ -19,11 +19,11 @@ class BulkOperation < ApplicationRecord
     finished_at.present?
   end
 
+private
+
   def ids_to_update
     file.open { CSV.read(_1, headers: false).flatten }
   end
-
-private
 
   def file_valid
     return unless file.attached?

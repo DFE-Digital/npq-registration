@@ -71,25 +71,6 @@ RSpec.describe BulkOperation::UpdateAndVerifyTrns, type: :model do
     end
   end
 
-  describe "#ids_to_update" do
-    subject(:ids_to_update) { bulk_operation.ids_to_update }
-
-    let(:bulk_operation) { create(:update_and_verify_trns_bulk_operation) }
-    let(:file) do
-      tempfile(
-        "#{BulkOperation::UpdateAndVerifyTrns::FILE_HEADERS.join(",")}\n" \
-        "f43cbfc0-33f1-44e0-85d5-93d6fa12cdf3,1234567\n",
-      )
-    end
-
-    before { bulk_operation.file.attach(file.open) }
-
-    it "returns a CSV::Table object" do
-      expect(ids_to_update).to be_a(CSV::Table)
-      expect(ids_to_update.to_a).to eq [["User ID", "Updated TRN"], %w[f43cbfc0-33f1-44e0-85d5-93d6fa12cdf3 1234567]]
-    end
-  end
-
   describe "#run!" do
     let(:trns_to_update) { [[user1.ecf_id, "1234567"], [user2.ecf_id, "2345678"]] }
     let(:bulk_operation) { create(:update_and_verify_trns_bulk_operation, admin: create(:admin)) }

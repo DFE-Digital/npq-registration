@@ -9,19 +9,29 @@ class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
     FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID,
   ].freeze
 
-  def ids_to_update
-    file.open { CSV.read(_1, headers: true) }
-  end
-
   def run!
     result = {}
 
     return result unless valid?
 
     ActiveRecord::Base.transaction do
-      result = ids_to_update.each_with_object({}) do |csv_row, outcomes_hash|
-        outcomes_hash[declaration_ecf_id(csv_row)] = process_csv_row(csv_row)
+      CSV.parse(file.download, headers: true).each_slice(1000) do |csv_rows|
+        processed_ids = []
+        ids_to_process = csv_rows.map { |row| row[FILE_HEADER_DECLARATION_ID] }
+
+        Declaration
+          .where(ecf_id: ids_to_process)
+          .includes(:delivery_partner, :secondary_delivery_partner).find_each do |declaration|
+          csv_row = csv_rows.select { |row| row[FILE_HEADER_DECLARATION_ID] == declaration.ecf_id }.first
+          result[declaration.ecf_id] = process_declaration(declaration, csv_row[FILE_HEADER_DELIVERY_PARTNER_ID], csv_row[FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID])
+          processed_ids << declaration.ecf_id
+        end
+
+        (ids_to_process - processed_ids).each do |missing_id|
+          result[missing_id] = "Declaration not found"
+        end
       end
+
       update!(result: result.to_json, finished_at: Time.zone.now)
     end
 
@@ -30,47 +40,43 @@ class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
 
 private
 
-  def process_csv_row(csv_row)
-    declaration = Declaration.find_by(ecf_id: declaration_ecf_id(csv_row))
+  def process_declaration(declaration, csv_delivery_partner_id, csv_secondary_delivery_partner_id)
     return "Declaration not found" unless declaration
 
     existing_delivery_partner = declaration.delivery_partner
     existing_secondary_delivery_partner = declaration.secondary_delivery_partner
-    new_secondary_delivery_partner_id = csv_row[FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID] unless csv_row[FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID] == "#N/A"
+    new_secondary_delivery_partner_id = csv_secondary_delivery_partner_id unless csv_secondary_delivery_partner_id == "#N/A"
 
     return "Declaration already has delivery partner" if new_secondary_delivery_partner_id.nil? && existing_delivery_partner
     return "Declaration already has secondary delivery partner" if existing_secondary_delivery_partner && new_secondary_delivery_partner_id
 
-    delivery_partner_id = existing_delivery_partner ? existing_delivery_partner.ecf_id : csv_row[FILE_HEADER_DELIVERY_PARTNER_ID]
-    secondary_delivery_partner_id = existing_secondary_delivery_partner ? existing_secondary_delivery_partner.ecf_id : new_secondary_delivery_partner_id
+    if existing_delivery_partner
+      delivery_partner = existing_delivery_partner
+    else
+      new_delivery_partner = DeliveryPartner.where(ecf_id: csv_delivery_partner_id).first
+      return "Primary Delivery Partner not found: ID:#{csv_delivery_partner_id}" unless new_delivery_partner
 
-    return "Primary Delivery Partner not found: ID:#{delivery_partner_id}" unless DeliveryPartner.exists?(ecf_id: delivery_partner_id)
-
-    if secondary_delivery_partner_id && !DeliveryPartner.exists?(ecf_id: secondary_delivery_partner_id)
-      return "Secondary Delivery Partner not found: ID:#{secondary_delivery_partner_id}"
+      delivery_partner = new_delivery_partner
     end
 
-    change_delivery_partner(declaration, delivery_partner_id, secondary_delivery_partner_id)
+    if new_secondary_delivery_partner_id
+      new_secondary_delivery_partner = DeliveryPartner.where(ecf_id: new_secondary_delivery_partner_id).first
+      return "Secondary Delivery Partner not found: ID:#{new_secondary_delivery_partner_id}" unless new_secondary_delivery_partner
+
+      secondary_delivery_partner = new_secondary_delivery_partner
+    end
+
+    change_delivery_partner(declaration, delivery_partner, secondary_delivery_partner)
   end
 
-  def change_delivery_partner(declaration, delivery_partner_id, secondary_delivery_partner_id)
-    change_delivery_partner = Declarations::ChangeDeliveryPartner.new(
-      declaration:,
-      delivery_partner_id:,
-      secondary_delivery_partner_id:,
-    )
-
-    success = change_delivery_partner.change_delivery_partner
-    outcome(success, change_delivery_partner.errors)
+  def change_delivery_partner(declaration, delivery_partner, secondary_delivery_partner)
+    success = declaration.update(delivery_partner:, secondary_delivery_partner:)
+    outcome(success, declaration.errors)
   end
 
   def outcome(success, errors)
     return "Declaration updated" if success
 
     errors.messages.values.flatten.to_sentence
-  end
-
-  def declaration_ecf_id(csv_row)
-    csv_row[FILE_HEADER_DECLARATION_ID]
   end
 end
