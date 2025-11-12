@@ -8,7 +8,12 @@ module API
 
       view :v3 do
         field(:name)
-        field(:cohort) { |object, options| object.cohorts_for_lead_provider(options[:lead_provider]).map(&:start_year) }
+        field(:cohort) do |object, options|
+          object.cohorts_for_lead_provider(options[:lead_provider])
+                .map(&:start_year)
+                .uniq
+                .sort
+        end
         field(:created_at)
         field(:updated_at)
       end

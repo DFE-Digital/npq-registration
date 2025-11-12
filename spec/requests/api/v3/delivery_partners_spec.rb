@@ -50,5 +50,27 @@ RSpec.describe "Delivery Partner endpoints", type: :request do
         api_get(path, params: { filter: { cohort: 2023 } })
       end
     end
+
+    context "with multiple cohorts per year" do
+      before do
+        create(:delivery_partnership, cohort: autumn_cohort,
+                                      lead_provider: current_lead_provider,
+                                      delivery_partner:)
+      end
+
+      let(:spring_cohort) { create(:cohort, start_year: 2025, suffix: 1) }
+      let(:autumn_cohort) { create(:cohort, start_year: 2025, suffix: 2) }
+
+      let :delivery_partner do
+        create(:delivery_partner, lead_providers: { spring_cohort => current_lead_provider })
+      end
+
+      it "returns unique list of delivery partners" do
+        api_get(path, params: { filter: { cohort: "2025" } })
+
+        expect(parsed_response["data"].size).to eq(1)
+        expect(parsed_response["data"].first["id"]).to eq(delivery_partner.ecf_id)
+      end
+    end
   end
 end

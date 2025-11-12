@@ -6,6 +6,7 @@ RSpec.describe DeliveryPartners::Query do
   let(:cohort_21) { create :cohort, start_year: 2021 }
   let(:cohort_22) { create :cohort, start_year: 2022 }
   let(:cohort_23) { create :cohort, start_year: 2023 }
+  let(:cohort_21_2) { create :cohort, start_year: 2021, suffix: 2 }
   let(:sort) { nil }
 
   subject(:query) { described_class.new(lead_provider: lead_provider_1, sort: sort) }
@@ -51,6 +52,24 @@ RSpec.describe DeliveryPartners::Query do
 
       it "returns delivery partners for the specified cohort" do
         expect(query.delivery_partners).to eq([delivery_partner_2])
+      end
+    end
+
+    context "when in use in multiple cohorts in a single year" do
+      subject :query do
+        described_class.new(lead_provider: lead_provider_1,
+                            cohort_start_year: cohort_21.start_year)
+      end
+
+      before do
+        create(:delivery_partnership, delivery_partner: delivery_partner_1,
+                                      cohort: cohort_21_2,
+                                      lead_provider: lead_provider_1)
+      end
+
+      it "returns delivery partners for the specified cohort year" do
+        expect(query.delivery_partners)
+          .to contain_exactly(delivery_partner_1, delivery_partner_2)
       end
     end
   end
