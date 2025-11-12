@@ -28,10 +28,18 @@ RSpec.describe Applications::ChangeCohort, type: :model do
     end
 
     context "when the application has declarations" do
-      let(:application) { create(:application, :with_declaration, cohort: cohort_2021) }
+      let(:application) { create(:application, :with_declaration, cohort: cohort_2021, schedule: create(:schedule, :npq_leadership_autumn, cohort: cohort_2021)) }
+
+      before { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
 
       it { is_expected.not_to be_valid }
       it { is_expected.to have_error(:cohort_id, :declarations_present, "Cannot change cohort for an application with declarations") }
+
+      context "when override_declarations_check is true" do
+        subject(:service) { described_class.new(application:, cohort_id:, override_declarations_check: true) }
+
+        it { is_expected.to be_valid }
+      end
     end
 
     context "when the application has a schedule" do

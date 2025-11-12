@@ -8,11 +8,12 @@ module Applications
 
     attribute :application
     attribute :cohort_id, :integer
+    attribute :override_declarations_check, :boolean, default: false
 
     validates :application, presence: true
     validates :cohort_id, presence: true
     validate :different_cohort, if: :application
-    validate :declarations_present, if: :application
+    validate :declarations_present, if: :application, unless: :override_declarations_check
     validate :schedule_exists_in_new_cohort, if: :application
 
     def change_cohort
