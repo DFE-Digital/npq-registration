@@ -67,7 +67,7 @@ module Questionnaires
 
     def next_step
       if wizard.query_store.inside_catchment?
-        return :find_school if works_in_school?
+        return :choose_school if works_in_school?
         return :kind_of_nursery if works_in_childcare?
         return :referred_by_return_to_teaching_adviser if works_in_other?
 

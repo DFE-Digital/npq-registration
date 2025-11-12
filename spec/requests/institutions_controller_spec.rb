@@ -7,20 +7,21 @@ RSpec.describe InstitutionsController do
       create(:school, name: "health", town: "London")
       create(:school, :closed, name: "heat", town: "London")
       create(:school, name: "heal", town: "Manchester", postcode: "EC1N 2TD", postcode_without_spaces: "EC1N2TD")
+      create(:school, name: "St Mary's", town: "Manchester")
 
       create(:local_authority, name: "heap", town: "London")
     end
 
     it "returns all possible matches" do
-      get "/institutions.json?location=london&name=hea"
+      get "/institutions.json?location=&name=hea"
 
       parsed_response = JSON.parse(response.body)
 
-      expect(parsed_response.size).to be(3)
+      expect(parsed_response.size).to be(4)
     end
 
     it "returns only needed data" do
-      get "/institutions.json?location=london&name=hea"
+      get "/institutions.json?location=&name=hea"
 
       parsed_response = JSON.parse(response.body)
 
@@ -28,8 +29,8 @@ RSpec.describe InstitutionsController do
       expect(parsed_response.sample["address"]).to be_a(String)
     end
 
-    it "returns postcode when whitespace is removed" do
-      get "/institutions.json?location=ec1n2td&name=hea"
+    it "searches using a postcode" do
+      get "/institutions.json?location=&name=ec1n2td"
 
       parsed_response = JSON.parse(response.body)
 

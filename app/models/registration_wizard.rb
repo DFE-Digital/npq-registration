@@ -42,9 +42,7 @@ class RegistrationWizard
     senco_start_date
     funding_eligibility_maths
     choose_your_provider
-    find_school
     choose_school
-    find_childcare_provider
     choose_childcare_provider
     kind_of_nursery
     have_ofsted_urn
@@ -67,6 +65,8 @@ class RegistrationWizard
     about_npq
     choosen_start_date
     confirmation
+    find_school
+    find_childcare_provider
   ].freeze
 
   attr_reader :current_step, :params, :store, :request, :current_user
@@ -169,9 +169,9 @@ class RegistrationWizard
 
     if inside_catchment?
       if works_in_school?
-        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :find_school)
+        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_school)
       elsif works_in_childcare? && kind_of_nursery_public?
-        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :find_childcare_provider)
+        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_childcare_provider)
       end
     end
 

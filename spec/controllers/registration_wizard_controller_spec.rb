@@ -25,7 +25,7 @@ RSpec.describe RegistrationWizardController do
     context "when working in a school" do
       let(:registration_store) { { "works_in_school" => "yes" } }
 
-      it { is_expected.to redirect_to registration_wizard_show_path("find-school") }
+      it { is_expected.to redirect_to registration_wizard_show_path("choose-school") }
     end
 
     context "when working in a private nursery" do
@@ -39,7 +39,7 @@ RSpec.describe RegistrationWizardController do
     context "when working in an early years setting" do
       let(:registration_store) { { "works_in_childcare" => "yes" } }
 
-      it { is_expected.to redirect_to registration_wizard_show_path("find-childcare-provider") }
+      it { is_expected.to redirect_to registration_wizard_show_path("choose-childcare-provider") }
     end
   end
 

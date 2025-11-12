@@ -1,64 +1,43 @@
 module Helpers
   module JourneyStepHelper
-    def choose_a_school(js:, location:, name:)
-      build_sample_schools
-
-      expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-        page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: location
-      end
-
+    def choose_a_school(js:, name:)
       if js
-        expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js:)
-
+        navigate_to_page(path: "/registration/choose-school", submit_form: true) do
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: name
           end
-
-          expect(page).to have_content("open #{location} school")
 
           page.find("#school-picker__option--0").click
         end
       else
-        expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js:)
-
+        navigate_to_page(path: "/registration/choose-school", submit_form: true) do
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name
           end
 
           page.click_button("Continue")
-
-          expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback", institution_location: location))
-          page.choose "open #{location} school"
+          page.choose name
         end
       end
     end
 
-    def choose_a_childcare_provider(js:, location:, name:)
+    def choose_a_childcare_provider(js:, name:)
       if js
-        expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-          expect(page).to have_text("What is the name of your workplace?")
-          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js:)
+        navigate_to_page(path: "/registration/choose-childcare-provider", submit_form: true) do
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: "open"
           end
 
-          expect(page).to have_content("open #{location} school")
           page.find("#nursery-picker__option--0").click
         end
       else
-        expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js:)
-
+        navigate_to_page(path: "/registration/choose-childcare-provider", submit_form: true) do
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name
           end
 
           page.click_button("Continue")
-
-          expect(page).to have_text("Search for your workplace in #{location}")
-          page.choose "open #{location} school"
+          page.choose name
         end
       end
     end
@@ -128,16 +107,6 @@ module Helpers
           page.choose(region)
         end
       end
-    end
-
-  private
-
-    def build_sample_schools(location: "manchester", other_location: "newcastle")
-      return if School.where(urn: [100_000, 100_001, 100_002]).exists?
-
-      School.create!(urn: 100_000, name: "open #{location} school", address_1: "street 1", town: location, establishment_status_code: "1")
-      School.create!(urn: 100_001, name: "closed #{location} school", address_1: "street 2", town: location, establishment_status_code: "2")
-      School.create!(urn: 100_002, name: "open #{other_location} school", address_1: "street 3", town: other_location, establishment_status_code: "1")
     end
   end
 end

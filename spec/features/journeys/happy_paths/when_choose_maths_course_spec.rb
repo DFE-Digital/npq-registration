@@ -47,12 +47,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
                    establishment_type_code: 1,
                    number_of_pupils: 150,
                    phase_name: "Primary")
-    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
-    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: "manchester"
-    end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
       expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"))
@@ -202,7 +196,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
         "institution_name" => "",
         "lead_provider_id" => "3",
         "maths_eligibility_teaching_for_mastery" => "yes",
