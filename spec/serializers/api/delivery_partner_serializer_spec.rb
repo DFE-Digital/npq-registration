@@ -48,6 +48,19 @@ RSpec.describe API::DeliveryPartnerSerializer, type: :serializer do
       it "serializes the `updated_at`" do
         expect(attributes["updated_at"]).to eq(delivery_partner.updated_at.rfc3339)
       end
+
+      context "with multiple cohorts for the same year" do
+        before do
+          create(:delivery_partnership,
+                 cohort: create(:cohort, start_year: 2021, suffix: 2),
+                 lead_provider: current_lead_provider,
+                 delivery_partner: delivery_partner)
+        end
+
+        it "serializes a unique list of cohort years" do
+          expect(attributes["cohort"]).to eq([cohort_21.start_year, cohort_22.start_year])
+        end
+      end
     end
   end
 end
