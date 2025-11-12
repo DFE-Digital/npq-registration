@@ -74,6 +74,16 @@ FactoryBot.define do
       delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
     end
 
+    trait :with_sometimes_nil_delivery_partner do
+      delivery_partner do
+        if cohort.start_year.between?(2021, 2023)
+          [nil, create(:delivery_partner, lead_providers: { cohort => lead_provider })].sample
+        else
+          create(:delivery_partner, lead_providers: { cohort => lead_provider })
+        end
+      end
+    end
+
     trait :with_secondary_delivery_partner do
       secondary_delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
     end
