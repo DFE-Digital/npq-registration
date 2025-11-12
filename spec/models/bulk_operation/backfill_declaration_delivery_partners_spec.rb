@@ -264,5 +264,20 @@ RSpec.describe BulkOperation::BackfillDeclarationDeliveryPartners, type: :model 
 
       it { expect(run[declaration_1.ecf_id]).to match("The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort") }
     end
+
+    context "when the file is massive" do
+      let(:file) do
+        rows = Array.new(10_000) { "#{SecureRandom.uuid},rubbish,rubbish,#{'x' * 200}" }.join("\n")
+
+        tempfile(
+          "#{BulkOperation::BackfillDeclarationDeliveryPartners::FILE_HEADERS.join(",")},notes\n" \
+          "#{rows}",
+        )
+      end
+
+      it "processes all rows" do
+        expect(run.keys.size).to eq(10_000)
+      end
+    end
   end
 end

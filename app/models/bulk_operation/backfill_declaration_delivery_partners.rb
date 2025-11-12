@@ -9,14 +9,18 @@ class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
     FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID,
   ].freeze
 
+  def csv
+    file.open { CSV.read(_1, headers: true) }
+  end
+
   def run!
     result = {}
 
     return result unless valid?
 
     ActiveRecord::Base.transaction do
-      CSV.parse(file.download, headers: true).each_slice(1000) do |csv_rows|
-        processed_ids = []
+      processed_ids = []
+      csv.each_slice(1000) do |csv_rows|
         ids_to_process = csv_rows.map { |row| row[FILE_HEADER_DECLARATION_ID] }
 
         Declaration
@@ -41,8 +45,6 @@ class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
 private
 
   def process_declaration(declaration, csv_delivery_partner_id, csv_secondary_delivery_partner_id)
-    return "Declaration not found" unless declaration
-
     existing_delivery_partner = declaration.delivery_partner
     existing_secondary_delivery_partner = declaration.secondary_delivery_partner
     new_secondary_delivery_partner_id = csv_secondary_delivery_partner_id unless csv_secondary_delivery_partner_id == "#N/A"
