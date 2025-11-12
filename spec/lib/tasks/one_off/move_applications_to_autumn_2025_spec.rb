@@ -5,12 +5,18 @@ RSpec.describe "one_off:move_applications_to_autumn_2025" do
     Rake::Task["one_off:move_applications_to_autumn_2025"].invoke(lead_provider.id, dry_run)
   end
 
+  before { autumn_statement }
   after { Rake::Task["one_off:move_applications_to_autumn_2025"].reenable }
 
   let(:lead_provider) { create(:lead_provider) }
   let(:dry_run) { "false" }
   let(:spring) { create(:cohort, start_year: 2025, suffix: 1) }
   let(:autumn) { create(:cohort, start_year: 2025, suffix: 2) }
+
+  let :autumn_statement do
+    create :statement, :open, :next_output_fee, cohort: autumn,
+                                                lead_provider:
+  end
 
   let :applications do
     travel_to Time.zone.parse("2025-10-01") do
@@ -125,9 +131,14 @@ RSpec.describe "one_off:move_applications_to_autumn_2025" do
         .invoke(another_provider.id, false)
     end
 
-    before { applications && autumn }
+    before { applications && autumn && another_provider_statement }
 
     let(:another_provider) { create(:lead_provider) }
+
+    let :another_provider_statement do
+      create :statement, :open, :next_output_fee, cohort: autumn,
+                                                  lead_provider: another_provider
+    end
 
     it "does not change those applications" do
       expect { run_task }
@@ -138,16 +149,72 @@ RSpec.describe "one_off:move_applications_to_autumn_2025" do
   end
 
   context "when an application has declarations" do
-    before { autumn && declaration }
+    before do
+      autumn && applications
+
+      travel_to 10.days.ago do
+        declaration && spring_statement && autumn_statement
+      end
+    end
 
     let(:declaration) { create :declaration, application: applications[1] }
 
-    it "does not move applications between cohorts" do
+    let :spring_statement do
+      create :statement, :open, :next_output_fee, cohort: spring,
+                                                  lead_provider:,
+                                                  declaration:
+    end
+
+    it "moves declarations between cohorts and attaches to new statement" do
       expect { run_task }
-        .to raise_exception(RuntimeError, /have declarations/)
-        .and(not_change { applications[0].reload.cohort })
-        .and(not_change { applications[1].reload.cohort })
-        .and(not_change { applications[2].reload.cohort })
+        .to change { applications[1].declarations.first.cohort }.from(spring).to(autumn)
+        .and change { applications[1].declarations.first.updated_at }
+                    .from(be_within(5.seconds).of(10.days.ago))
+                    .to(be_within(5.seconds).of(Time.zone.now))
+    end
+
+    it "creates a version record for the declarations cohort change", :versioning do
+      run_task
+
+      expect(applications[1].declarations.first.versions.last)
+          .to have_attributes "object_changes" => { "cohort_id" => [spring.id, autumn.id] },
+                              "created_at" => be_within(5.seconds).of(Time.zone.now)
+    end
+
+    it "attaches declarations to appropriate statement in autumn cohort" do
+      expect { run_task }
+        .to change { applications[1].declarations.first.statements }
+                    .from([spring_statement])
+                    .to([autumn_statement])
+    end
+
+    it "creates a version record for the statement change", :versioning do
+      run_task
+
+      expect(applications[1].declarations.first.statement_items.first.versions.last)
+          .to have_attributes("created_at" => be_within(5.seconds).of(Time.zone.now),
+                              "object_changes" => {
+                                "statement_id" => [spring_statement.id, autumn_statement.id],
+                              })
+    end
+
+    it "rejects changes if any declarations are on payable statements" do
+      Statements::MarkAsPayable.new(statement: spring_statement).mark
+
+      expect { run_task }
+        .to raise_exception(RuntimeError, /payable statements/i)
+        .and(not_change { applications[1].cohort })
+        .and(not_change { applications[1].declarations.first.statements.to_a })
+    end
+
+    it "rejects changes if any declarations are on paid statements" do
+      Statements::MarkAsPayable.new(statement: spring_statement).mark
+      Statements::MarkAsPaid.new(spring_statement).mark
+
+      expect { run_task }
+        .to raise_exception(RuntimeError, /payable statements/i)
+        .and(not_change { applications[1].cohort })
+        .and(not_change { applications[1].declarations.first.statements.to_a })
     end
   end
 

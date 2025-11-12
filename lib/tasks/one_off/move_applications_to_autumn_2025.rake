@@ -17,18 +17,26 @@ namespace :one_off do
                         created_at: Time.zone.parse("2025-08-01 00:00:00")..)
 
     Application.transaction do
-      if Declaration.joins(:application).merge(application_scope).any?
-        raise "Applications already have declarations"
+      if Declaration.joins(:application, :statements)
+                    .merge(application_scope)
+                    .where.not(statements: { state: :open })
+                    .any?
+        raise "Applications already have declarations on paid or payable statements"
       end
 
       selected_schedules = Schedule.distinct
                                   .joins(:applications)
                                   .merge(application_scope)
                                   .pluck(:course_group_id, :identifier)
-      missing_schedules = (selected_schedules - schedule_map.keys)
 
+      missing_schedules = (selected_schedules - schedule_map.keys)
       if missing_schedules.any?
         raise "Missing schedules in new cohort: #{missing_schedules.inspect}"
+      end
+
+      next_output_fee_statement = lead_provider.next_output_fee_statement(autumn_cohort)
+      if next_output_fee_statement.nil?
+        raise "No output fee statement in 2025-2 cohort"
       end
 
       Rails.logger.info "DRY RUN: Will rollback afterwards" if dry_run
@@ -42,14 +50,14 @@ namespace :one_off do
       logfile = if Rails.env.test?
                   Tempfile.new.open
                 else
-                  Rails.root.join("tmp/migrated_applications.txt").open("w")
+                  Rails.root.join("tmp/migrated_applications.csv").open("w")
                 end
 
       application_ids.each_slice(batch_size) do |application_ids_batch|
         count_so_far += application_ids_batch.length
         Rails.logger.info "Updating Cohort for #{count_so_far} / #{total} Applications"
 
-        Application.includes(:schedule)
+        Application.includes(:schedule, :declarations)
                    .find(application_ids_batch)
                    .each do |application|
           application.cohort = autumn_cohort
@@ -66,7 +74,23 @@ namespace :one_off do
           application.paper_trail_options[:synchronize_version_creation_timestamp] = false
           application.save!(touch: false)
 
-          logfile.write("#{application.id}\n") unless Rails.env.test?
+          logfile.write("Application,#{application.id}\n")
+
+          application.declarations.each do |declaration|
+            declaration.cohort = autumn_cohort
+            declaration.save!
+            logfile.write("Declaration,#{declaration.id}\n")
+
+            declaration.statement_items.each do |statement_item|
+              unless statement_item.statement.open?
+                raise "Declaration against paid or payable statement"
+              end
+
+              statement_item.statement = next_output_fee_statement
+              statement_item.save!
+              logfile.write("StatementItem,#{statement_item.id}\n")
+            end
+          end
         end
       end
       logfile.close
