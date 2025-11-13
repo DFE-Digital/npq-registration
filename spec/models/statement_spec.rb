@@ -11,6 +11,8 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to have_many(:contracts) }
     it { is_expected.to have_many(:declarations).through(:statement_items) }
     it { is_expected.to have_many(:adjustments) }
+    it { is_expected.to have_many(:milestones_statements) }
+    it { is_expected.to have_many(:milestones).through(:milestones_statements) }
   end
 
   describe "validations" do
@@ -55,6 +57,19 @@ RSpec.describe Statement, type: :model do
 
         it "is valid" do
           expect(statement).to be_valid
+        end
+      end
+    end
+
+    describe "output_fee validation" do
+      context "when changing output_fee from true to false with milestones attached" do
+        let(:statement) { create(:statement, :with_milestones, output_fee: true) }
+
+        it "is not valid" do
+          pending "Validation to be implemented"
+          statement.output_fee = false
+          expect(statement).to be_invalid
+          expect(statement).to have_error(:output_fee, :cannot_change_with_milestones, "Cannot change output fee when milestones are attached")
         end
       end
     end

@@ -8,12 +8,15 @@ class Statement < ApplicationRecord
   has_many :contracts
   has_many :declarations, through: :statement_items
   has_many :adjustments
+  has_many :milestones_statements
+  has_many :milestones, through: :milestones_statements
 
   validates :output_fee, inclusion: { in: [true, false] }
   validates :month, numericality: { in: 1..12, only_integer: true }
   validates :year, numericality: { in: 2020..2050, only_integer: true }
   validates :lead_provider_id, uniqueness: { scope: %i[cohort_id year month] }
   validates :ecf_id, uniqueness: { case_sensitive: false }
+  # TODO: check if milestones attached before changing output_fee
 
   validate :payment_date_on_or_after_deadline_date
 
