@@ -17,18 +17,6 @@ class BulkOperation::SubmitDeclarations < BulkOperation
 
 private
 
-  def check_format
-    csv = CSV.read(attached_file, headers: true)
-
-    errors.add(:file, :empty) if csv.count.zero?
-
-    if csv.headers != FILE_HEADERS
-      errors.add(:file, :invalid)
-    end
-  rescue CSV::MalformedCSVError
-    errors.add(:file, :malformed)
-  end
-
   def csv_rows
     file.open { CSV.read(_1, headers: true) }
   end

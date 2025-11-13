@@ -333,6 +333,10 @@ Rails.application.routes.draw do
         resources :update_and_verify_trns, controller: "update_and_verify_trns", only: %i[index create show] do
           post "run", on: :member
         end
+
+        resources :backfill_declaration_delivery_partners, controller: "backfill_declaration_delivery_partners", only: %i[index create show] do
+          post "run", on: :member
+        end
       end
 
       resources :actions_log, path: "actions-log", controller: "actions_log", only: %i[index show] do

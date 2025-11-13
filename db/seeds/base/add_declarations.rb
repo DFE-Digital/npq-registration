@@ -30,6 +30,7 @@ lead_providers.each do |lead_provider|
               declaration = FactoryBot.create(
                 :declaration,
                 :submitted_or_eligible,
+                :with_sometimes_nil_delivery_partner,
                 application:,
                 declaration_type:,
               )

@@ -19,11 +19,11 @@ class BulkOperation < ApplicationRecord
     finished_at.present?
   end
 
+private
+
   def ids_to_update
     file.open { CSV.read(_1, headers: false).flatten }
   end
-
-private
 
   def file_valid
     return unless file.attached?
@@ -44,10 +44,16 @@ private
   end
 
   def check_format
-    first_row = CSV.read(attached_file, headers: false).first
-    errors.add(:file, :invalid) if first_row.many?
-  rescue CSV::MalformedCSVError
-    errors.add(:file, :malformed)
+    csv = CSV.read(attached_file, headers: headers?)
+
+    if headers?
+      errors.add(:file, :empty) if csv.count.zero?
+      errors.add(:file, :invalid) if (self.class::FILE_HEADERS - csv.headers).any?
+    elsif csv.first.many?
+      errors.add(:file, :invalid)
+    end
+  rescue CSV::MalformedCSVError => e
+    errors.add(:file, e.message)
   end
 
   def update_row_count
