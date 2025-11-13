@@ -176,8 +176,16 @@ en:
               too_long: "Email must be shorter than %{count} characters"
         cohort:
           attributes:
+            name:
+              blank: Enter the Cohorts name
+              too_long: Name must be shorter than %{count} characters
+              taken: Name is used by another Cohort already
+            description:
+              blank: Enter a description for the Cohort
+              too_long: Description must be shorter than %{count} characters
+              taken: Description is used by another Cohort already
             funding_cap:
-              inclusion: "Choose true or false for funding cap"
+              inclusion: Choose true or false for funding cap
             ecf_id:
               *ecf_id
         contract_template:

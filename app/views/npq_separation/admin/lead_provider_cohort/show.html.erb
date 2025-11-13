@@ -4,9 +4,9 @@
     render NpqSeparation::SubNavigationComponent.new(
       request.path,
       structure:
-        Cohort.order(start_year: :desc).map do |cohort|
+        Cohort.order(name: :desc).map do |cohort|
           NpqSeparation::NavigationStructure::Node.new(
-            name: "Cohort #{format_cohort(cohort)}",
+            name: "Cohort #{cohort.description}",
             href: npq_separation_admin_lead_provider_cohort_path(@lead_provider, cohort),
             prefix: "/npq-separation/admin/providers/#{@lead_provider.id}/cohort/#{cohort.id}"
           )
@@ -16,7 +16,7 @@
 <% end %>
 
 <span class="govuk-caption-l"><%= @lead_provider.name %></span>
-<%= tag.h1("Cohort #{format_cohort(@cohort)}", class: "govuk-heading-l") %>
+<%= tag.h1("Cohort #{@cohort.description}", class: "govuk-heading-l") %>
 
 <p class="govuk-body">Delivery partners linked to <%= @lead_provider.name %> for this cohort.</p>
 
