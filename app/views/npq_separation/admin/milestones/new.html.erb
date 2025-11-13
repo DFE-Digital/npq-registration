@@ -1,0 +1,34 @@
+<%= govuk_back_link href: npq_separation_admin_cohort_schedule_path(@cohort, @schedule) %>
+
+<h1 class="govuk-heading-l">Add Milestone</h1>
+
+<%= form_with model: @schedule.milestones.new, url: npq_separation_admin_cohort_schedule_milestones_path(@cohort, @schedule) do |f| %>
+  <% if @declaration_types_available.any? %>
+    <%= f.govuk_collection_select :declaration_type,
+      @declaration_types_available,
+      :to_s,
+      :to_s,
+      label: { text: "Select declaration type", size: "m" } %>
+
+    <%= f.govuk_collection_select(
+      :statement_date,
+      @statement_date_options,
+      :year_month,
+      :label,
+      options: { include_blank: "- select date -" },
+      label: { text: "Select statement date to associate with milestone", size: "m" },
+      hint: { text: "Statements for all providers with the selected date will be associated with this milestone." }
+    ) %>
+  <div class="govuk-button-group">
+    <%= f.govuk_submit %>
+    <%= govuk_link_to("Cancel", npq_separation_admin_cohort_schedule_path(@cohort, @schedule), class: "govuk-link--no-visited-state") %>
+  </div>
+  <% else %>
+    <p class="govuk_body">
+      Milestones for all declaration types have already been created.
+      <div class="govuk-button-group">
+        <%= govuk_link_to("Cancel", npq_separation_admin_cohort_schedule_path(@cohort, @schedule), class: "govuk-link--no-visited-state") %>
+      </div>
+    </p>
+  <% end %>
+<% end %>

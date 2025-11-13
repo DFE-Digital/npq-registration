@@ -255,6 +255,10 @@ en:
           attributes:
             ecf_id:
               *ecf_id
+        milestones_statement:
+          attributes:
+            statement:
+              must_be_output_fee_true: Statement output_fee must be true
         participant_id_change:
           attributes:
             ecf_id:

@@ -35,10 +35,10 @@
 %>
 
 <% if current_admin.super_admin? %>
-  <%= govuk_button_link_to('Edit cohort details', edit_npq_separation_admin_cohort_path(@cohort)) %>
-  <%= govuk_button_link_to('Delete cohort', npq_separation_admin_cohort_path(@cohort), method: :delete, warning: true) %>
-  <%= govuk_button_link_to('Create statements', new_npq_separation_admin_cohort_statement_path(@cohort), secondary: true) %>
-  <%= govuk_button_link_to('Download contracts CSV', download_contracts_npq_separation_admin_cohort_path(@cohort), secondary: true) %>
+  <%= govuk_button_link_to("Edit cohort details", edit_npq_separation_admin_cohort_path(@cohort)) %>
+  <%= govuk_button_link_to("Delete cohort", npq_separation_admin_cohort_path(@cohort), method: :delete, warning: true) %>
+  <%= govuk_button_link_to("Create statements", new_npq_separation_admin_cohort_statement_path(@cohort), secondary: true) %>
+  <%= govuk_button_link_to("Download contracts CSV", download_contracts_npq_separation_admin_cohort_path(@cohort), secondary: true) %>
 <% end %>
 
 <hr class="govuk-section-break govuk-section-break--l">
@@ -46,27 +46,30 @@
 <h2 class="govuk-heading-m">Schedules</h1>
 
 <% if current_admin.super_admin? %>
-  <%= govuk_button_link_to('New schedule', new_npq_separation_admin_cohort_schedule_path(@cohort)) %>
+  <%= govuk_button_link_to("New schedule", new_npq_separation_admin_cohort_schedule_path(@cohort)) %>
 <% end %>
 
 <%=
   govuk_table do |table|
     table.with_head do |head|
       head.with_row do |row|
-        row.with_cell(text: 'Name')
-        row.with_cell(text: 'Applies from')
-        row.with_cell(text: 'Applies to')
-        row.with_cell(text: 'Declaration types')
+        row.with_cell(text: "Name")
+        row.with_cell(text: "Applies from")
+        row.with_cell(text: "Applies to")
+        row.with_cell(text: "Declaration types")
+        row.with_cell(text: "Milestones")
       end
     end
 
     table.with_body do |body|
-      @cohort.schedules.order(:name).each do |schedule|
+      milestone_counts = @cohort.schedules.joins(:milestones).group("schedules.id").count
+      @cohort.schedules.includes(:milestones).order(:name).each do |schedule|
         body.with_row do |row|
           row.with_cell(text: govuk_link_to(schedule.name, npq_separation_admin_cohort_schedule_path(@cohort, schedule)))
           row.with_cell(text: schedule.applies_from.to_fs(:govuk_short))
           row.with_cell(text: schedule.applies_to.to_fs(:govuk_short))
           row.with_cell(text: schedule.allowed_declaration_types.count)
+          row.with_cell(text: milestone_counts[schedule.id].to_i)
         end
       end
     end

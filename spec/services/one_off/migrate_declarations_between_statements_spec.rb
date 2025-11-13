@@ -371,5 +371,9 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
         end
       end
     end
+
+    context "when there are milestones" do
+      it "moves the milestones"
+    end
   end
 end

@@ -36,12 +36,65 @@
 
     sl.with_row do |row|
       row.with_key(text: "Declaration types")
-      row.with_value(text: @schedule.allowed_declaration_types.join(', '))
+      row.with_value(text: @schedule.allowed_declaration_types.join(", "))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Milestones")
+      row.with_value(text: @schedule.milestones.pluck(:declaration_type).join(", "))
     end
   end
 %>
 
 <% if current_admin.super_admin? %>
-  <%= govuk_button_link_to 'Edit schedule details', edit_npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule) %>
-  <%= govuk_button_link_to 'Delete schedule', npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), method: :delete, warning: true %>
+  <%= govuk_button_link_to "Edit schedule details", edit_npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule) %>
+  <%= govuk_button_link_to "Delete schedule", npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), method: :delete, warning: true %>
+<% end %>
+
+<h2 class="govuk-heading-m">Milestones</h1>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Declaration type")
+        row.with_cell(text: "Statement date")
+        row.with_cell(text: "")
+        row.with_cell(text: "")
+      end
+    end
+
+    table.with_body do |body|
+      @schedule.milestones.includes(:statements).each do |milestone|
+        body.with_row do |row|
+          row.with_cell(text: milestone.declaration_type)
+          row.with_cell(text: milestone.statement_date&.to_fs(:govuk_approx) || "-")
+          row.with_cell do
+            if current_admin.super_admin?
+              govuk_link_to("Change statement date",
+                edit_npq_separation_admin_cohort_schedule_milestone_path(
+                  @schedule.cohort,
+                  @schedule,
+                  milestone
+                ))
+            end
+          end
+          row.with_cell do
+            if current_admin.super_admin?
+              govuk_link_to(
+                "Delete milestone",
+                npq_separation_admin_cohort_schedule_milestone_path(@schedule.cohort, @schedule, milestone),
+                method: :delete,
+                warning: true,
+              )
+            end
+          end
+        end
+      end
+    end
+  end
+%>
+
+<% if current_admin.super_admin? %>
+  <%= govuk_button_link_to "Add milestone", new_npq_separation_admin_cohort_schedule_milestone_path(@schedule.cohort, @schedule) %>
 <% end %>

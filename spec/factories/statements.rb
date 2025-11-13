@@ -53,5 +53,11 @@ FactoryBot.define do
       year { 2025 }
       month { 9 }
     end
+
+    trait :with_milestones do
+      after :create do |statement|
+        create_list(:milestones_statement, 2, statement:)
+      end
+    end
   end
 end

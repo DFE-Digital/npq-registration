@@ -276,3 +276,15 @@ shared:
     - identifier_type
     - created_at
     - updated_at
+  :milestones:
+    - id
+    - declaration_type
+    - schedule_id
+    - created_at
+    - updated_at
+  :milestones_statements:
+    - id
+    - milestone_id
+    - statement_id
+    - created_at
+    - updated_at
