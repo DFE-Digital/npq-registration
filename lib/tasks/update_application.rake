@@ -54,33 +54,20 @@ class UpdateApplicationRakeTask
       end
 
       desc "Change cohort on an application"
-      task :change_cohort, %i[application_ecf_id new_cohort_year] => :environment do |_t, args|
+      task :change_cohort, %i[application_ecf_id new_cohort_year override_declarations_check] => :environment do |_t, args|
         find_application(args.application_ecf_id)
-
-        raise "Cannot change cohort for an application with declarations" if application.declarations.any?
 
         new_cohort = Cohort.find_by(start_year: args.new_cohort_year)
         raise "Cohort not found: #{args.new_cohort_year}" unless new_cohort
 
         cohort_before_update = application.cohort.start_year
 
-        if application.schedule
-          new_schedule = Schedule.find_by(course_group: application.course.course_group, cohort: new_cohort, identifier: application.schedule.identifier)
+        override_declarations_check = args.override_declarations_check == "true"
+        service = Applications::ChangeCohort.new(application:, cohort_id: new_cohort.id, override_declarations_check:)
+        result = service.change_cohort
+        raise service.errors.messages.values.flatten.to_sentence unless result
 
-          unless new_schedule
-            raise "Schedule not found for " \
-              "course group #{application.course.course_group.name}, " \
-              "cohort #{new_cohort.start_year} " \
-              "and identifier #{application.schedule.identifier}"
-          end
-
-          application.update!(cohort: new_cohort, schedule: new_schedule)
-          logger.info("Application #{application.ecf_id} cohort changed from #{cohort_before_update} to #{application.cohort.start_year}, " \
-          " and schedule updated")
-        else
-          application.update!(cohort: new_cohort)
-          logger.info("Application #{application.ecf_id} cohort changed from #{cohort_before_update} to #{application.cohort.start_year}")
-        end
+        logger.info("Application #{application.ecf_id} cohort changed from #{cohort_before_update} to #{application.cohort.start_year}")
       end
 
       desc "Change the schedule on an application"

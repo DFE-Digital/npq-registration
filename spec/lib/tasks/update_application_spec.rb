@@ -83,7 +83,7 @@ RSpec.describe "update_application" do
     after { Rake::Task["update_application:change_cohort"].reenable }
 
     let(:application) { create(:application, cohort: Cohort.first) }
-    let(:new_cohort) { Cohort.last }
+    let(:new_cohort) { create(:cohort, :next, :without_funding_cap) }
 
     it "changes the cohort of the application" do
       run_task
@@ -93,6 +93,7 @@ RSpec.describe "update_application" do
     context "when the application has a schedule" do
       let(:application) { create(:application, :accepted, cohort: Cohort.first) }
       let!(:new_schedule) { Schedule.find_by(cohort: new_cohort, identifier: application.schedule.identifier) }
+      let(:new_cohort) { Cohort.last }
 
       it "updates the schedule" do
         run_task
@@ -105,7 +106,7 @@ RSpec.describe "update_application" do
         it "raises an error" do
           expect { run_task }.to raise_error(
             RuntimeError,
-            "Schedule not found for course group leadership, cohort 2029 and identifier #{application.schedule.identifier}",
+            "There is no schedule for the current course in the specified cohort",
           )
         end
       end
@@ -130,6 +131,15 @@ RSpec.describe "update_application" do
 
       it "raises an error" do
         expect { run_task }.to raise_error(RuntimeError, "Cannot change cohort for an application with declarations")
+      end
+
+      context "when the override_declarations_check parameter is set" do
+        subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, new_cohort.start_year, "true") }
+
+        it "changes the cohort of the application" do
+          run_task
+          expect(application.reload.cohort).to eq(new_cohort)
+        end
       end
     end
   end
