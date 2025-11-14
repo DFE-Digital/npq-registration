@@ -54,6 +54,13 @@ V3_PARTICIPANT_DECLARATION_RETAINED_REQUEST = {
       nullable: false,
       example: "f0de7abf-399b-4e68-83de-2c33b503810c",
     },
+    application_id: {
+      description: "ID of application for declaration",
+      type: :string,
+      required: false,
+      nullable: true,
+      example: "fa99ba84-fbad-4e26-b9b0-d60945b6b6eb",
+    },
   },
   required: %i[
     participant_id
