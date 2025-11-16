@@ -28,7 +28,7 @@ module NpqSeparation
       end
 
       def output_fee
-        selection[:output_fee]
+        selection.key?(:output_fee) ? selection[:output_fee] : "true"
       end
 
       def lead_providers

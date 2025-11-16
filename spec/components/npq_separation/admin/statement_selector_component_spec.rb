@@ -136,6 +136,27 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     end
   end
 
+  context "when the output fee param is not present (initial page load)" do
+    let(:statement_params) do
+      { lead_provider_id: lead_provider_param,
+        cohort_id: cohort_param,
+        payment_status: payment_status_param,
+        statement: statement_param }
+    end
+
+    it "defaults to 'Yes' selected" do
+      expect(rendered).to have_selector("select#output-fee-field option[selected]", text: "Yes", visible: :all)
+    end
+  end
+
+  context "when the output fee param is blank (user selected 'All')" do
+    let(:output_fee_param) { "" }
+
+    it "does not pre-select Yes or No" do
+      expect(rendered).not_to have_selector("select#output-fee-field option[selected]", visible: :all)
+    end
+  end
+
   context "when sidebar mode is enabled" do
     let(:instance) { described_class.new(statement, format_for_sidebar: true) }
 
