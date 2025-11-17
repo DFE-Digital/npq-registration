@@ -344,5 +344,125 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         expect(application.cohort).to eql(new_cohort)
       end
     end
+
+    context "when multiple cohorts in same year" do
+      let :suffixed_cohort do
+        create(:cohort, start_year: cohort.start_year, suffix: 2).tap do |cohort|
+          create(:contract, statement: create(:statement, cohort:, lead_provider:),
+                            course:)
+        end
+      end
+
+      let :suffixed_schedule do
+        # ensure we have an equivalent schedule which this one should shadow
+        new_schedule
+
+        create :schedule, :npq_leadership_autumn, cohort: suffixed_cohort
+      end
+
+      let :declaration do
+        create(:declaration, :payable, application:, lead_provider:)
+      end
+
+      context "with cohort year specified" do
+        let :params do
+          {
+            lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier: suffixed_schedule.identifier,
+            cohort: suffixed_cohort.start_year,
+          }
+        end
+
+        it "allows change of schedule with cohort" do
+          expect(subject.change_schedule).to be_truthy
+          application.reload
+          expect(application.schedule).to eql(suffixed_schedule)
+          expect(application.cohort).to eql(suffixed_cohort)
+        end
+
+        context "with declarations" do
+          before { declaration }
+
+          it "prevents change of schedule" do
+            expect(subject.change_schedule).to be_falsey
+            expect(subject).to have_error_count(1)
+            expect(subject).to have_error(
+              :cohort,
+              :cannot_change_with_declarations,
+              "You cannot change the '#/cohort' field when there are submitted, eligible, payable, or paid declarations in the new cohort",
+            )
+
+            application.reload
+            expect(application.schedule).to eql(schedule)
+            expect(application.cohort).to eql(cohort)
+          end
+        end
+
+        context "with suffixed cohorts feature turned off" do
+          before { allow(Feature).to receive(:suffixed_cohorts?).and_return(false) }
+
+          let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: cohort) }
+
+          it "chooses schedule from cohort with suffix of 1" do
+            expect(subject.change_schedule).to be_truthy
+
+            application.reload
+            expect(application.schedule).to eql(new_schedule)
+            expect(application.cohort).to eql(cohort)
+          end
+        end
+      end
+
+      context "without cohort year specified" do
+        let :params do
+          {
+            lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier: suffixed_schedule.identifier,
+          }
+        end
+
+        it "allows change of schedule with cohort" do
+          expect(subject.change_schedule).to be_truthy
+          application.reload
+          expect(application.schedule).to eql(suffixed_schedule)
+          expect(application.cohort).to eql(suffixed_cohort)
+        end
+
+        context "with declarations" do
+          before { declaration }
+
+          it "prevents change of schedule" do
+            expect(subject.change_schedule).to be_falsey
+            expect(subject).to have_error_count(1)
+            expect(subject).to have_error(
+              :cohort,
+              :cannot_change_with_declarations,
+              "You cannot change the '#/cohort' field when there are submitted, eligible, payable, or paid declarations in the new cohort",
+            )
+
+            application.reload
+            expect(application.schedule).to eql(schedule)
+            expect(application.cohort).to eql(cohort)
+          end
+        end
+
+        context "with suffixed cohorts feature turned off" do
+          before { allow(Feature).to receive(:suffixed_cohorts?).and_return(false) }
+
+          let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: cohort) }
+
+          it "chooses schedule from cohort with suffix of 1" do
+            expect(subject.change_schedule).to be_truthy
+            application.reload
+            expect(application.schedule).to eql(new_schedule)
+            expect(application.cohort).to eql(cohort)
+          end
+        end
+      end
+    end
   end
 end
