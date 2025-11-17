@@ -27,18 +27,41 @@ module Participants
       true
     end
 
+    def cohort=(start_year)
+      @cohort_start_year = start_year
+      super
+    end
+
     def cohort
-      @cohort ||= super ? Cohort.find_by(start_year: super) : fallback_cohort
+      @cohort ||= new_schedule&.cohort || Cohort.current
     end
 
   private
 
-    def new_schedule
-      @new_schedule ||= Schedule.find_by(identifier: schedule_identifier, cohort:)
+    def cohorts_for_start_year(start_year)
+      constraints = { start_year: }
+      constraints[:suffix] = 1 unless Feature.suffixed_cohorts?
+
+      Cohort.order_by_latest.where(constraints)
     end
 
-    def fallback_cohort
-      application&.schedule&.cohort || Cohort.current
+    def requested_cohort
+      new_schedule&.cohort || cohorts_for_start_year(@cohort_start_year).first
+    end
+
+    def new_schedule
+      @new_schedule ||=
+        Schedule.joins(:cohort)
+                .merge(cohorts_for_start_year(new_schedule_start_year))
+                .find_by(identifier: schedule_identifier)
+    end
+
+    def new_schedule_start_year
+      @cohort_start_year || current_schedule_cohort&.start_year || Cohort.current.start_year
+    end
+
+    def current_schedule_cohort
+      application&.schedule&.cohort
     end
 
     def update_application!
