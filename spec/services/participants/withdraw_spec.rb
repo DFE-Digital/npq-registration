@@ -15,6 +15,19 @@ RSpec.describe Participants::Withdraw, type: :model do
     describe "validations" do
       it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::WITHDRAWAL_REASONS).with_message("The property '#/reason' must be a valid reason") }
 
+      context "with new withdrawal reasons" do
+        %w[
+          assessment-requirements-not-met
+          change-in-career
+          disengaged-and-unresponsive
+          non-payment-of-invoice
+        ].each do |new_reason|
+          it "accepts #{new_reason} as a valid withdrawal reason" do
+            expect(described_class::WITHDRAWAL_REASONS).to include(new_reason)
+          end
+        end
+      end
+
       context "when the application is already withdrawn" do
         let(:application) { create(:application, :accepted, :withdrawn) }
 
