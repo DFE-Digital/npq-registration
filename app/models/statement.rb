@@ -16,9 +16,9 @@ class Statement < ApplicationRecord
   validates :year, numericality: { in: 2020..2050, only_integer: true }
   validates :lead_provider_id, uniqueness: { scope: %i[cohort_id year month] }
   validates :ecf_id, uniqueness: { case_sensitive: false }
-  # TODO: check if milestones attached before changing output_fee
 
   validate :payment_date_on_or_after_deadline_date
+  validate :no_milestones_associated, if: :output_fee_changed?
 
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }
   scope :with_state, ->(*state) { where(state:) }
@@ -75,5 +75,11 @@ private
     return unless payment_date < deadline_date
 
     errors.add :payment_date, :invalid
+  end
+
+  def no_milestones_associated
+    return unless milestones_statements.exists?
+
+    errors.add :output_fee, :has_milestones
   end
 end
