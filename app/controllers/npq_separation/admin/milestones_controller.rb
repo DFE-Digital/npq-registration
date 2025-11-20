@@ -11,11 +11,13 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
   end
 
   def create
-    milestone = @schedule.milestones.create!(params.fetch(:milestone).permit(:declaration_type))
-    milestone.milestones_statements.find_or_create_by!(
-      statement: Statement.find_by!(cohort: @cohort, year: @new_statement_date.year, month: @new_statement_date.month),
-    )
-    flash[:success] = "Milestone created"
+    ActiveRecord::Base.transaction do
+      milestone = @schedule.milestones.create!(params.fetch(:milestone).permit(:declaration_type))
+      milestone.milestones_statements.find_or_create_by!(
+        statement: Statement.find_by!(cohort: @cohort, year: @new_statement_date.year, month: @new_statement_date.month),
+      )
+      flash[:success] = "Milestone created"
+    end
     redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
   end
 
@@ -24,20 +26,24 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
   end
 
   def update
-    @milestone.milestones_statements.destroy_all
-    @milestone.milestones_statements.find_or_create_by!(
-      statement: Statement.find_by!(cohort: @cohort, year: @new_statement_date.year, month: @new_statement_date.month),
-    )
+    ActiveRecord::Base.transaction do
+      @milestone.milestones_statements.destroy_all
+      @milestone.milestones_statements.find_or_create_by!(
+        statement: Statement.find_by!(cohort: @cohort, year: @new_statement_date.year, month: @new_statement_date.month),
+      )
 
-    flash[:success] = "Milestone updated"
+      flash[:success] = "Milestone updated"
+    end
     redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
   end
 
   def destroy
     if params[:confirm].present?
-      @milestone.milestones_statements.destroy_all
-      @milestone.destroy!
-      flash[:success] = "Milestone deleted"
+      ActiveRecord::Base.transaction do
+        @milestone.milestones_statements.destroy_all
+        @milestone.destroy!
+        flash[:success] = "Milestone deleted"
+      end
       redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
     end
   end

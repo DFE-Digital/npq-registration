@@ -5,8 +5,7 @@ class MilestonesStatement < ApplicationRecord
   belongs_to :statement
 
   validate :statement_must_be_output_fee_true
-  # TODO: validate only one statement date per milestone
-  # TODO: validate statements for all lead providers exist for the statement date
+  validate :unique_statement_date_per_milestone
 
 private
 
@@ -14,5 +13,14 @@ private
     return if statement&.output_fee?
 
     errors.add(:statement, :must_be_output_fee_true)
+  end
+
+  def unique_statement_date_per_milestone
+    return unless milestone && statement
+
+    existing_statements = milestone.statements.where.not(year: statement.year, month: statement.month)
+    if existing_statements.any?
+      errors.add(:statement, :duplicate_statement_date_for_milestone)
+    end
   end
 end
