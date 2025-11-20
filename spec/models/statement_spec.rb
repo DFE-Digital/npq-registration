@@ -66,10 +66,20 @@ RSpec.describe Statement, type: :model do
         let(:statement) { create(:statement, :with_milestones, output_fee: true) }
 
         it "is not valid" do
-          pending "Validation to be implemented"
           statement.output_fee = false
           expect(statement).to be_invalid
-          expect(statement).to have_error(:output_fee, :cannot_change_with_milestones, "Cannot change output fee when milestones are attached")
+          expect(statement).to have_error(:output_fee, :has_milestones, "Cannot change output fee when statement has milestones")
+        end
+      end
+
+      context "when changing an attribute other than output_fee with milestones attached" do
+        let(:statement) { create(:statement, :with_milestones, output_fee: true) }
+
+        it "is valid" do
+          statement.output_fee = true
+          existing_deadline_date = statement.deadline_date
+          statement.deadline_date = existing_deadline_date + 1.day
+          expect(statement).to be_valid
         end
       end
     end
