@@ -259,6 +259,7 @@ en:
           attributes:
             statement:
               must_be_output_fee_true: Statement output_fee must be true
+              different_statement_date_for_milestone: Statement month and year must be the same as other statements for this milestone
         participant_id_change:
           attributes:
             ecf_id:
