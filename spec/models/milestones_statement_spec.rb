@@ -38,6 +38,12 @@ RSpec.describe MilestonesStatement, type: :model do
         end
 
         it { is_expected.not_to be_valid }
+
+        context "when skip_statement_date_validation is true" do
+          before { subject.skip_statement_date_validation = true }
+
+          it { is_expected.to be_valid }
+        end
       end
     end
   end

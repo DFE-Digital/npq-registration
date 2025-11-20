@@ -5,7 +5,9 @@ class MilestonesStatement < ApplicationRecord
   belongs_to :statement
 
   validate :statement_must_be_output_fee_true
-  validate :unique_statement_date_per_milestone
+  validate :unique_statement_date_per_milestone, unless: :skip_statement_date_validation
+
+  attr_accessor :skip_statement_date_validation
 
 private
 
@@ -20,7 +22,7 @@ private
 
     existing_statements = milestone.statements.where.not(year: statement.year, month: statement.month)
     if existing_statements.any?
-      errors.add(:statement, :duplicate_statement_date_for_milestone)
+      errors.add(:statement, :different_statement_date_for_milestone)
     end
   end
 end
