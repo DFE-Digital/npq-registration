@@ -1,4 +1,6 @@
 class MilestonesStatement < ApplicationRecord
+  has_paper_trail
+
   belongs_to :milestone
   belongs_to :statement
 

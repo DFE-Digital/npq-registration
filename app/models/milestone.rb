@@ -1,4 +1,6 @@
 class Milestone < ApplicationRecord
+  has_paper_trail
+
   DECLARATION_TYPES = %w[started retained-1 retained-2 completed].freeze
 
   has_many :milestones_statements

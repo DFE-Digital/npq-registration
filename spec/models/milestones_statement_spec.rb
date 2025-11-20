@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe MilestonesStatement, type: :model do
+  describe "paper_trail" do
+    it { is_expected.to be_versioned }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:milestone) }
     it { is_expected.to belong_to(:statement) }
