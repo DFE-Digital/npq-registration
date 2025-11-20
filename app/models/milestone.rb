@@ -5,6 +5,8 @@ class Milestone < ApplicationRecord
   has_many :statements, through: :milestones_statements
   belongs_to :schedule
 
+  default_scope { in_order_of(:declaration_type, DECLARATION_TYPES) }
+
   def statement_date
     statement = statements.first
     Date.new(statement.year, statement.month, 1) if statement
