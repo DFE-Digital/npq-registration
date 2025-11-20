@@ -28,6 +28,17 @@ RSpec.describe MilestonesStatement, type: :model do
 
         it { is_expected.to be_valid }
       end
+
+      context "when there are already statements for a different year/month" do
+        let(:statement) { create(:statement, output_fee: true, year: 2023, month: 5) }
+
+        before do
+          other_statement = create(:statement, output_fee: true, year: 2023, month: 6)
+          create(:milestones_statement, milestone:, statement: other_statement)
+        end
+
+        it { is_expected.not_to be_valid }
+      end
     end
   end
 end
