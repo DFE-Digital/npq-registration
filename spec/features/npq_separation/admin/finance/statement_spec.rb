@@ -17,10 +17,13 @@ RSpec.feature "Statement", type: :feature do
   end
 
   before do
-    create(:schedule, :npq_leadership_autumn)
-    create(:schedule, :npq_leadership_spring)
+    schedule_1 = create(:schedule, :npq_leadership_autumn)
+    schedule_2 = create(:schedule, :npq_leadership_spring)
     create(:schedule, :npq_specialist_autumn)
     create(:schedule, :npq_specialist_spring)
+
+    create(:milestone, declaration_type: "started", schedule: schedule_1, statements: [statement])
+    create(:milestone, declaration_type: "completed", schedule: schedule_2, statements: [statement])
 
     sign_in_as(create(:admin))
   end
@@ -39,6 +42,8 @@ RSpec.feature "Statement", type: :feature do
     expect(page).to have_content("Cohort: #{start_year} to #{start_year.next}")
     expect(page).to have_content("Output payment date: #{statement.payment_date.to_fs(:govuk)}")
     expect(page).to have_content("Status: #{statement.state.humanize}")
+    expect(page).to have_content("Payment run: Yes")
+    expect(page).to have_content("Milestones: started, completed")
 
     component = NpqSeparation::Admin::StatementSummaryComponent.new(statement:)
     expect(page).to have_component(component)
