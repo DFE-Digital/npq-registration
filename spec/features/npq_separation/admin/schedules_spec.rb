@@ -93,7 +93,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, :no_js, type: :feature do
       click_on schedules[1].name
       click_on delete_button_text
       click_on "Confirm"
-      expect(page).to have_text("Cannot delete because ")
+      expect(page).to have_text("Cannot delete because associated applications exist")
     end
   end
 
