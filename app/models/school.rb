@@ -36,7 +36,14 @@ class School < ApplicationRecord
     "46" => "Academy 16 to 19 sponsor led",
   }.freeze
 
-  pg_search_scope :search_by_name,
+  NAME_SYNONYMS = {
+    "saint" => "st",
+    "st" => "saint",
+  }.freeze
+
+  NAME_SEARCH_LIMIT = 100
+
+  pg_search_scope :search_by_fields,
                   against: %i[
                     name la_name address_1 address_2 address_3 town county postcode postcode_without_spaces region urn
                   ],
@@ -58,6 +65,17 @@ class School < ApplicationRecord
     define_method("#{name.parameterize.underscore}?") do
       establishment_type_code == code
     end
+  end
+
+  def self.search_by_name(name)
+    scope = search_by_fields(name).limit(NAME_SEARCH_LIMIT)
+    NAME_SYNONYMS.find do |key, value|
+      if name&.downcase&.include?(key)
+        synonym_name = name.downcase.gsub(key, value)
+        return scope + search_by_fields(synonym_name).limit(NAME_SEARCH_LIMIT)
+      end
+    end
+    scope
   end
 
   def display_name

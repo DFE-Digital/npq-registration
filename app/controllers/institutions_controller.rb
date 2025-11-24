@@ -1,9 +1,8 @@
 class InstitutionsController < PublicPagesController
   def index
     schools = School
-      .search_by_name(params[:name])
       .open
-      .limit(100)
+      .search_by_name(params[:name])
 
     local_authorities = LocalAuthority
       .search_by_name(params[:name])
