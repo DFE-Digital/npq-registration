@@ -8,12 +8,12 @@ class AddMilestones < ActiveRecord::Migration[7.2]
 
     add_index :milestones, %i[schedule_id declaration_type], unique: true
 
-    create_table :milestones_statements do |t|
+    create_table :milestone_statements do |t|
       t.references :milestone, null: false, foreign_key: true
       t.references :statement, null: false, foreign_key: true
       t.timestamps
     end
 
-    add_index :milestones_statements, %i[milestone_id statement_id], unique: true
+    add_index :milestone_statements, %i[milestone_id statement_id], unique: true
   end
 end

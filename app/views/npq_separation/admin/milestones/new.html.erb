@@ -4,7 +4,7 @@
 
 <%= form_with model: @schedule.milestones.new, url: npq_separation_admin_cohort_schedule_milestones_path(@cohort, @schedule) do |f| %>
   <% if @declaration_types_available.any? %>
-    <%= f.govuk_collection_select :declaration_type,
+    <%= f.govuk_collection_radio_buttons :declaration_type,
       @declaration_types_available,
       :to_s,
       :to_s,

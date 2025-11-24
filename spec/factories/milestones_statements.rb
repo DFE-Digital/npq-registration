@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :milestones_statement do
+  factory :milestone_statement do
     association(:milestone)
     association(:statement)
   end

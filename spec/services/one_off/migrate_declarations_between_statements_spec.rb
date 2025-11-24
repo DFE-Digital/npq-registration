@@ -376,7 +376,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
       let(:milestone) { create(:milestone) }
 
       before do
-        create(:milestones_statement, statement: from_statement, milestone:)
+        create(:milestone_statement, statement: from_statement, milestone:)
       end
 
       context "when the to_statement is output_fee: true" do
