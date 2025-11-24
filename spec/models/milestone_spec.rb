@@ -6,8 +6,8 @@ RSpec.describe Milestone, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_many(:milestones_statements) }
-    it { is_expected.to have_many(:statements).through(:milestones_statements) }
+    it { is_expected.to have_many(:milestone_statements) }
+    it { is_expected.to have_many(:statements).through(:milestone_statements) }
     it { is_expected.to belong_to(:schedule) }
   end
 

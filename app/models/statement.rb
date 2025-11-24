@@ -8,8 +8,8 @@ class Statement < ApplicationRecord
   has_many :contracts
   has_many :declarations, through: :statement_items
   has_many :adjustments
-  has_many :milestones_statements
-  has_many :milestones, through: :milestones_statements
+  has_many :milestone_statements
+  has_many :milestones, through: :milestone_statements
 
   validates :output_fee, inclusion: { in: [true, false] }
   validates :month, numericality: { in: 1..12, only_integer: true }
@@ -68,6 +68,11 @@ class Statement < ApplicationRecord
     Date.new(year, month) < Date.current.beginning_of_month
   end
 
+  def milestone_declaration_types
+    all_declaration_types = milestones.select(:declaration_type)
+    Statement.select(:declaration_type).from(all_declaration_types).distinct.pluck(:declaration_type)
+  end
+
 private
 
   def payment_date_on_or_after_deadline_date
@@ -78,7 +83,7 @@ private
   end
 
   def no_milestones_associated
-    return unless milestones_statements.exists?
+    return unless milestone_statements.exists?
 
     errors.add :output_fee, :has_milestones
   end

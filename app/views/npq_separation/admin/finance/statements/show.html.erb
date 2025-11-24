@@ -21,7 +21,7 @@
     </p>
     <p class="govuk-body govuk-!-margin-bottom-2">
       <strong>Milestones:</strong>
-      <%= @statement.milestones.pluck(:declaration_type).uniq.join(", ") %>
+      <%= @statement.milestone_declaration_types.join(", ") %>
     </p>
     <%= govuk_details(summary_text: "Statement ID", id: "statement-id") do
           @statement.ecf_id

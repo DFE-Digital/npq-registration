@@ -14,6 +14,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_114818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
+  enable_extension "dict_xsyn"
   enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -411,6 +412,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_114818) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "milestone_statements", force: :cascade do |t|
+    t.bigint "milestone_id", null: false
+    t.bigint "statement_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["milestone_id", "statement_id"], name: "index_milestone_statements_on_milestone_id_and_statement_id", unique: true
+    t.index ["milestone_id"], name: "index_milestone_statements_on_milestone_id"
+    t.index ["statement_id"], name: "index_milestone_statements_on_statement_id"
+  end
+
   create_table "milestones", force: :cascade do |t|
     t.enum "declaration_type", null: false, enum_type: "declaration_types"
     t.bigint "schedule_id", null: false
@@ -418,16 +429,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_114818) do
     t.datetime "updated_at", null: false
     t.index ["schedule_id", "declaration_type"], name: "index_milestones_on_schedule_id_and_declaration_type", unique: true
     t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
-  end
-
-  create_table "milestones_statements", force: :cascade do |t|
-    t.bigint "milestone_id", null: false
-    t.bigint "statement_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["milestone_id", "statement_id"], name: "index_milestones_statements_on_milestone_id_and_statement_id", unique: true
-    t.index ["milestone_id"], name: "index_milestones_statements_on_milestone_id"
-    t.index ["statement_id"], name: "index_milestones_statements_on_statement_id"
   end
 
   create_table "participant_id_changes", force: :cascade do |t|
@@ -681,9 +682,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_114818) do
   add_foreign_key "delivery_partnerships", "cohorts"
   add_foreign_key "delivery_partnerships", "delivery_partners"
   add_foreign_key "delivery_partnerships", "lead_providers"
+  add_foreign_key "milestone_statements", "milestones"
+  add_foreign_key "milestone_statements", "statements"
   add_foreign_key "milestones", "schedules"
-  add_foreign_key "milestones_statements", "milestones"
-  add_foreign_key "milestones_statements", "statements"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "declarations"

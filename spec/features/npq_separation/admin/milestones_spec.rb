@@ -9,7 +9,7 @@ RSpec.feature "Milestones", :no_js, :with_default_schedules do
 
   before do
     LeadProvider.find_each do |lead_provider|
-      create(:statement, lead_provider:, cohort:)
+      create(:statement, lead_provider:, cohort:, year: 2022, month: 5)
     end
     sign_in_as(admin)
   end
@@ -23,30 +23,36 @@ RSpec.feature "Milestones", :no_js, :with_default_schedules do
 
       # creating a milestone
       click_link "Add milestone"
-      select "started", from: "Select declaration type"
+      choose "started", visible: false
       statement_date = Date.new(statement.year, statement.month)
       select statement_date.to_fs(:govuk_approx), from: "Select statement date to associate with milestone"
 
       click_button "Continue"
 
-      milestone = Milestone.last
-      expect(milestone).to have_attributes(
-        declaration_type: "started",
-        schedule:,
-      )
-      expect(milestone.statements).to include(statement)
+      LeadProvider.find_each do |lead_provider|
+        statement = lead_provider.statements.find_by(month: statement_date.month, year: statement_date.year)
+        expect(statement.milestones.where(declaration_type: "started").count).to eq 1 if statement
+      end
 
       # editing a milestone
       click_link "Change statement date"
       statement_date = Date.new(other_statement.year, other_statement.month)
       select statement_date.to_fs(:govuk_approx), from: "Select statement date to associate with milestone"
       click_button "Continue"
-      expect(milestone.reload.statements).to include(other_statement)
+
+      LeadProvider.find_each do |lead_provider|
+        statement = lead_provider.statements.find_by(month: other_statement.month, year: other_statement.year)
+        expect(statement.milestones.where(declaration_type: "started").count).to eq 1 if statement
+      end
 
       # deleting a milestone
       click_link "Delete milestone"
       click_button "Confirm delete milestone"
-      expect(Milestone.exists?(milestone.id)).to be false
+
+      LeadProvider.find_each do |lead_provider|
+        statement = lead_provider.statements.find_by(month: other_statement.month, year: other_statement.year)
+        expect(statement.milestones.where(declaration_type: "started").count).to eq 0 if statement
+      end
     end
 
     scenario "adding a milestone when all declaration types are taken" do

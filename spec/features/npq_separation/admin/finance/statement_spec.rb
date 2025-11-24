@@ -23,6 +23,8 @@ RSpec.feature "Statement", type: :feature do
     create(:schedule, :npq_specialist_spring)
 
     create(:milestone, declaration_type: "started", schedule: schedule_1, statements: [statement])
+    create(:milestone, declaration_type: "started", schedule: schedule_2, statements: [statement])
+    create(:milestone, declaration_type: "completed", schedule: schedule_1, statements: [statement])
     create(:milestone, declaration_type: "completed", schedule: schedule_2, statements: [statement])
 
     sign_in_as(create(:admin))

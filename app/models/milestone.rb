@@ -1,13 +1,13 @@
 class Milestone < ApplicationRecord
   has_paper_trail
 
-  DECLARATION_TYPES = %w[started retained-1 retained-2 completed].freeze
+  ALL_DECLARATION_TYPES = %w[started retained-1 retained-2 completed].freeze
 
-  has_many :milestones_statements
-  has_many :statements, through: :milestones_statements
+  has_many :milestone_statements
+  has_many :statements, through: :milestone_statements
   belongs_to :schedule
 
-  default_scope { in_order_of(:declaration_type, DECLARATION_TYPES) }
+  default_scope { in_order_of(:declaration_type, ALL_DECLARATION_TYPES) }
 
   def statement_date
     statement = statements.first

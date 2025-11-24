@@ -110,9 +110,9 @@ module OneOff
 
         next unless to_statement.output_fee
 
-        from_statement.milestones_statements.each do |milestones_statement|
-          milestones_statement.update!(statement: to_statement, skip_statement_date_validation: true)
-          record_info("Moved milestone ID #{milestones_statement.milestone_id} from statement ID #{from_statement.id} to statement ID #{to_statement.id}")
+        from_statement.milestone_statements.each do |milestone_statement|
+          milestone_statement.update!(statement: to_statement, skip_statement_date_validation: true)
+          record_info("Moved milestone ID #{milestone_statement.milestone_id} from statement ID #{from_statement.id} to statement ID #{to_statement.id}")
         end
       end
     end

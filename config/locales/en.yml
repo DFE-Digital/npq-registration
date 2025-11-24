@@ -255,10 +255,10 @@ en:
           attributes:
             ecf_id:
               *ecf_id
-        milestones_statement:
+        milestone_statement:
           attributes:
             statement:
-              must_be_output_fee_true: Statement output_fee must be true
+              must_be_output_fee_true: Statement must have output fee set to true
               different_statement_date_for_milestone: Statement month and year must be the same as other statements for this milestone
         participant_id_change:
           attributes:

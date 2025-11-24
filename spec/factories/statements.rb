@@ -56,7 +56,7 @@ FactoryBot.define do
 
     trait :with_milestones do
       after :create do |statement|
-        create_list(:milestones_statement, 2, statement:)
+        create_list(:milestone_statement, 2, statement:)
       end
     end
   end
