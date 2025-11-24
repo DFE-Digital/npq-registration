@@ -120,7 +120,7 @@ GEM
     bindata (2.5.1)
     bindex (0.8.1)
     blueprinter (1.2.1)
-    bootsnap (1.18.6)
+    bootsnap (1.19.0)
       msgpack (~> 1.2)
     brakeman (7.1.0)
       racc
