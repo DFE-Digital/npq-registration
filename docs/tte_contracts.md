@@ -1,6 +1,6 @@
-# NPQ Contracts
+# TTE Contracts
 
-NPQ Contract holds values that are used to calculate monthly financial statements for a lead provider and cohort.
+TTE Contract holds values that are used to calculate monthly financial statements for a lead provider and cohort.
 
 ## Schema Design
 
@@ -80,7 +80,7 @@ The following code snippet is used to update contract values for a specific coho
 
 ```ruby
 Statement.where(lead_provider:, cohort:, month: 1, year: 2023).each do |statement|
-  course = Course.where(identifier: "npq-leading-teaching").first
+  course = Course.where(identifier: "tte-leading-teaching").first
   contract = statement.contracts.where(course: course).first
   old_template = contract.contract_template
   new_template = ContractTemplate.create(
@@ -96,8 +96,3 @@ Statement.where(lead_provider:, cohort:, month: 1, year: 2023).each do |statemen
   contract.save!
 end
 ```
-
-## Notes
-
-* Spike discussion can be found here: <https://dfedigital.atlassian.net/browse/CPDLP-3328>
-* Previous `npq-separation` discussion here: <https://github.com/DFE-Digital/npq-separation/blob/main/statement-contracts-modelling.md>

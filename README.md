@@ -1,8 +1,8 @@
-[![View performance data on Skylight](https://badges.skylight.io/status/IJcwqwvLcUcW.svg)](https://oss.skylight.io/app/applications/IJcwqwvLcUcW)
+[![View performance data on Skylight](https://badges.skylight.io/status/xxxxx.svg)](https://oss.skylight.io/app/applications/xxxxxx) 
 
-# Register for a national professional qualification (NPQ)
+# Register for Teacher Training Entitlement (TTE)
 
-1. [What is NPQ and how does it work](docs/how_does_npq_work.md)
+1. [What is TTE and how does it work](docs/how_does_tte_work.md)
 1. [Setting up the app for development](docs/setup.md)
 1. [Connecting to Azure](docs/connecting-to-azure.md)
 1. [Environments](docs/environments.md)
@@ -17,7 +17,7 @@
 1. [Get an Identity](docs/get_an_identity.md)
 1. [DfE Analytics](docs/dfe_analytics.md)
 1. [Sending emails](docs/sending_emails.md)
-1. [NPQ Contracts](docs/npq_contracts.md)
+1. [TTE Contracts](docs/TTE_contracts.md)
 1. [Funding](docs/funding.md)
 1. [Data Model](docs/data_model.md)
 1. [Swagger API documentation](docs/swagger.md)
@@ -27,6 +27,3 @@
 
 1. [Lead Provider API Guidance Pages](docs/content_editors/api_guidance_pages.md)
 
-## Flow Visualisation
-
-![](https://raw.githubusercontent.com/wiki/DFE-Digital/npq-registration/visualisations/registration_wizard_visualisation.png)

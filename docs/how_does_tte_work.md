@@ -1,8 +1,8 @@
 [< Back to Navigation](../README.md)
 
-# What is NPQ?
+# What is TTE?
 
-NPQ Registration is a Rails application that allows teachers to apply for National Professional Qualifications (NPQs) in England.
+Teacher Training Entitlement is a DfE service that allows teachers to apply for funded training as part of the CPD program.
 
 1. [The Registration Wizard](#the-registration-wizard)
 1. [Courses](#courses)
@@ -14,7 +14,7 @@ NPQ Registration is a Rails application that allows teachers to apply for Nation
 
 ## The Registration Wizard
 
-The core flow of NPQ is the Registration Wizard. This is a series of questions that the user must answer in order to complete their application.
+The Registration Wizard is at the core of the digital service. Participants must answer a series of questions in order to complete their application.
 
 This core flow is a loop through the registration_wizard#show and registration_wizard#update actions. The user visits a page, the corresponding Form object is loaded with the user's store from their session, and the form is rendered. This occurs within registration_wizard#show.
 
@@ -28,7 +28,7 @@ It defines the question name, validations, and the next_step and previous_step.
 
 ### The Store
 
-The store is a session based store of the user's current application state. It is a hash that is stored in the user's session and is updated as the user progresses through the wizard. It is accessed by calling `wizard.store` on or within a form. The Query Store (detailed below) provides a way to access the store in a stuctured way.
+The store is a session based store of the user's current application state. It is a hash that is stored in the user's session and is updated as the user progresses through the wizard. It is accessed by calling `wizard.store` on or within a form. The Query Store (detailed below) provides a way to access the store in a structured way.
 
 ### RegistrationQueryStore
 

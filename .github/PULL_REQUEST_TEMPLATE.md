@@ -1,6 +1,8 @@
 ### Context
 
-Ticket: https://dfedigital.atlassian.net/browse/NPQ-000
+Ticket: https://github.com/DFE-Digital/teacher-training-entitlement-board/issues/XXX
+
+[Why are we making this change?]
 
 ### Changes proposed in this pull request
 
