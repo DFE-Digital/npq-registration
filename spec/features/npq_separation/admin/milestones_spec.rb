@@ -5,18 +5,18 @@ RSpec.feature "Milestones", :no_js, :with_default_schedules do
 
   let(:cohort) { Cohort.last }
   let(:schedule) { cohort.schedules.first }
-  let(:statement) { Statement.first }
+  let(:statement) { cohort.statements.first }
 
   before do
     LeadProvider.find_each do |lead_provider|
-      create(:statement, lead_provider:, cohort:, year: 2022, month: 5)
+      create(:statement, lead_provider:, cohort:, year: cohort.start_year, month: 5, output_fee: true)
     end
     sign_in_as(admin)
   end
 
   context "when logged in as a super admin" do
     let(:admin) { create :super_admin }
-    let(:other_statement) { Statement.last }
+    let(:other_statement) { cohort.statements.last }
 
     scenario "creating/editing/deleting a milestone" do
       visit npq_separation_admin_cohort_schedule_path(cohort, schedule)

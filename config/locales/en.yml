@@ -378,6 +378,16 @@ en:
               empty: Uploaded file is empty
               invalid_headers: Uploaded file has incorrect header
               invalid: Uploaded file is not a valid CSV
+        milestones/create:
+          attributes:
+            declaration_type:
+              blank: Please choose a declaration type
+            statement_date:
+              blank: Please choose a statement date
+        milestones/update:
+          attributes:
+            statement_date:
+              blank: Please choose a statement date
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:

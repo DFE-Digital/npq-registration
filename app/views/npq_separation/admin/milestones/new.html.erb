@@ -2,13 +2,15 @@
 
 <h1 class="govuk-heading-l">Add Milestone</h1>
 
-<%= form_with model: @schedule.milestones.new, url: npq_separation_admin_cohort_schedule_milestones_path(@cohort, @schedule) do |f| %>
+<%= form_for @service, url: npq_separation_admin_cohort_schedule_milestones_path(@cohort, @schedule) do |f| %>
+  <%= f.govuk_error_summary %>
+
   <% if @declaration_types_available.any? %>
     <%= f.govuk_collection_radio_buttons :declaration_type,
       @declaration_types_available,
       :to_s,
       :to_s,
-      label: { text: "Select declaration type", size: "m" } %>
+      legend: { text: "Select declaration type", size: "m" } %>
 
     <%= f.govuk_collection_select(
       :statement_date,
