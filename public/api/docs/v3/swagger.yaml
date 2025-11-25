@@ -118,6 +118,8 @@ paths:
                         school_urn: '106286'
                         school_ukprn: '10079319'
                         status: accepted
+                        reason_for_rejection: Application does not meet eligibility
+                          criteria
                         works_in_school: true
                         cohort: '2022'
                         eligible_for_funding: true
@@ -132,6 +134,8 @@ paths:
                         created_at: '2021-05-31T02:21:32.000Z'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
+                        works_as_senco: true
+                        senco_start_date: '2021-09-01'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
@@ -204,6 +208,8 @@ paths:
                         school_urn: '106286'
                         school_ukprn: '10079319'
                         status: rejected
+                        reason_for_rejection: Application does not meet eligibility
+                          criteria
                         works_in_school: true
                         cohort: '2022'
                         eligible_for_funding: true
@@ -218,6 +224,8 @@ paths:
                         created_at: '2021-05-31T02:21:32.000Z'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
+                        works_as_senco: true
+                        senco_start_date: '2021-09-01'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
@@ -273,6 +281,8 @@ paths:
                         school_urn: '106286'
                         school_ukprn: '10079319'
                         status: accepted
+                        reason_for_rejection: Application does not meet eligibility
+                          criteria
                         works_in_school: true
                         cohort: '2022'
                         eligible_for_funding: true
@@ -287,6 +297,8 @@ paths:
                         created_at: '2021-05-31T02:21:32.000Z'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
+                        works_as_senco: true
+                        senco_start_date: '2021-09-01'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
@@ -462,6 +474,7 @@ paths:
                         delivery_partner_name: Foo education
                         secondary_delivery_partner_id: f0de7abf-399b-4e68-83de-2c33b503810c
                         secondary_delivery_partner_name: Bar education
+                        application_id: db3a7848-7308-4879-942a-c4a70ced400a
                         updated_at: '2021-05-31T02:22:32.000Z'
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
@@ -1451,6 +1464,12 @@ components:
               - pending
               - accepted
               - rejected
+            reason_for_rejection:
+              description: The reason why the application was rejected by the lead
+                provider
+              type: string
+              nullable: true
+              example: Application does not meet eligibility criteria
             works_in_school:
               description: Indicates whether the participant is currently employed
                 by school
@@ -1547,6 +1566,18 @@ components:
               - npq-leadership-spring
               - npq-specialist-autumn
               - npq-specialist-spring
+            works_as_senco:
+              description: Indicates whether the participant works as a SENCO (Special
+                Educational Needs Coordinator)
+              type: boolean
+              nullable: true
+              example: true
+            senco_start_date:
+              description: The date when the participant started working as a SENCO
+              type: string
+              format: date
+              nullable: true
+              example: '2021-09-01'
     ApplicationAcceptRequest:
       description: A NPQ application acceptance request
       type: object
@@ -2495,6 +2526,12 @@ components:
               required: true
               nullable: true
               example: Bar education
+            application_id:
+              description: The unique identifier of the NPQ application
+              type: string
+              format: uuid
+              nullable: false
+              example: db3a7848-7308-4879-942a-c4a70ced400a
             updated_at:
               description: The date the application was last updated
               type: string
