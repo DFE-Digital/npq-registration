@@ -3,52 +3,52 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
   before_action :set_schedule
   before_action :ensure_super_admin
   before_action :set_milestone, only: %i[edit update destroy]
-  before_action :set_new_statement_date, only: %i[create update]
-  before_action :set_statement_date_options, only: %i[new edit]
+  before_action :set_statement_date_options, only: %i[new create edit update]
+  before_action :set_declaration_types_available, only: %i[new create]
 
   def new
-    @declaration_types_available = @schedule.allowed_declaration_types - @schedule.milestones.pluck(:declaration_type)
+    @service = Milestones::Create.new(schedule_id: @schedule.id)
   end
 
   def create
-    ActiveRecord::Base.transaction do
-      milestone = @schedule.milestones.create!(params.fetch(:milestone).permit(:declaration_type))
-      LeadProvider.find_each do |lead_provider|
-        statement = lead_provider
-          .statements
-          .find_by(month: @new_statement_date.month, year: @new_statement_date.year)
-        milestone.milestone_statements.find_or_create_by!(statement: statement)
-      end
+    @service = Milestones::Create.new(
+      schedule_id: @schedule.id,
+      declaration_type: params.fetch(:milestones_create, {})[:declaration_type],
+      statement_date: params.fetch(:milestones_create, {})[:statement_date],
+    )
+    if @service.valid?
+      @service.create!
       flash[:success] = "Milestone created"
+      redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
+    else
+      render :new, status: :unprocessable_entity
     end
-    redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
   end
 
   def edit
-    # empty method to appease rubocop
+    @service = Milestones::Update.new(
+      milestone_id: params[:id],
+    )
   end
 
   def update
-    @milestone.milestone_statements.destroy_all
-    ActiveRecord::Base.transaction do
-      LeadProvider.find_each do |lead_provider|
-        statement = lead_provider
-          .statements
-          .find_by(month: @new_statement_date.month, year: @new_statement_date.year)
-        @milestone.milestone_statements.find_or_create_by!(statement: statement)
-      end
+    @service = Milestones::Update.new(
+      milestone_id: params[:id],
+      statement_date: params.fetch(:milestones_update, {})[:statement_date],
+    )
+    if @service.valid?
+      @service.update!
       flash[:success] = "Milestone updated"
+      redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
+    else
+      render :edit, status: :unprocessable_entity
     end
-    redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
   end
 
   def destroy
     if params[:confirm].present?
-      ActiveRecord::Base.transaction do
-        @milestone.milestone_statements.destroy_all
-        @milestone.destroy!
-        flash[:success] = "Milestone deleted"
-      end
+      Milestones::Destroy.new(milestone_id: params[:id]).destroy!
+      flash[:success] = "Milestone deleted"
       redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
     end
   end
@@ -69,10 +69,6 @@ private
     redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
   end
 
-  def set_new_statement_date
-    @new_statement_date = Date.parse(params[:milestone][:statement_date])
-  end
-
   def set_statement_date_options
     @statement_date_options =
       Statement
@@ -86,6 +82,10 @@ private
           label: Date.new(year, month).to_fs(:govuk_approx),
         )
       end
+  end
+
+  def set_declaration_types_available
+    @declaration_types_available = @schedule.allowed_declaration_types - @schedule.milestones.pluck(:declaration_type)
   end
 
   def ensure_super_admin

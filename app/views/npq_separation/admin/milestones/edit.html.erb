@@ -15,9 +15,10 @@
   end
 %>
 
-<%= form_with model: @milestone,
+<%= form_for @service,
   url: npq_separation_admin_cohort_schedule_milestone_path(@cohort, @schedule, @milestone),
   method: :put do |f| %>
+  <%= f.govuk_error_summary %>
 
   <%= f.govuk_collection_select(
     :statement_date,

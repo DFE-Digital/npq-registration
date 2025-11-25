@@ -21,6 +21,7 @@
 
 <%= form_with model: @milestone, url: npq_separation_admin_cohort_schedule_milestone_path(@schedule.cohort, @schedule, @milestone), method: "delete" do |f| %>
   <%= f.govuk_error_summary %>
+
   <%= hidden_field_tag :confirm, 1 %>
   <%= f.govuk_submit "Confirm delete milestone", warning: true %>
   <%= govuk_button_link_to("Cancel", npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), secondary: true) %>
