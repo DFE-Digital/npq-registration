@@ -44,6 +44,7 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
         expect { perform }
           .to change { applications[0].reload.cohort }.from(spring).to(autumn)
           .and(not_change { applications[0].reload.updated_at })
+          .and(not_change { applications[0].user.reload.updated_at })
       end
 
       it "creates version records for the changes", :versioning do
@@ -173,6 +174,12 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
                     .to(be_within(5.seconds).of(Time.zone.now))
     end
 
+    it "does not update the applications timestamp" do
+      expect { perform }
+        .to not_change { applications[1].reload.updated_at }
+        .and(not_change { applications[1].user.reload.updated_at })
+    end
+
     it "creates a version record for the declarations cohort change", :versioning do
       perform
 
@@ -215,6 +222,20 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
         .to raise_exception(RuntimeError, /payable statements/i)
         .and(not_change { applications[1].cohort })
         .and(not_change { applications[1].declarations.first.statements.to_a })
+    end
+
+    context "with declarations against a different cohort" do
+      let :declaration do
+        create :declaration, application: applications[1], cohort: other_cohort
+      end
+
+      let(:other_cohort) { create :cohort, start_year: 2024 }
+
+      it "changes the cohort for the application but not the declaration" do
+        expect { perform }
+          .to change { applications[1].reload.cohort }.from(spring).to(autumn)
+          .and(not_change { applications[1].declarations.first.cohort })
+      end
     end
   end
 
