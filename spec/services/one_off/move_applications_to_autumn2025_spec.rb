@@ -136,6 +136,18 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
     end
   end
 
+  context "without a suitable output statement to move to" do
+    before { autumn && applications }
+
+    let(:autumn_statement) {}
+
+    it "raises an exception" do
+      expect { perform }
+        .to raise_exception(RuntimeError, /No output fee statement/)
+        .and(not_change { applications[0].reload.cohort })
+    end
+  end
+
   context "when an application has declarations" do
     before do
       autumn && applications
