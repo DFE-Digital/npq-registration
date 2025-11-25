@@ -20,7 +20,7 @@ module NpqSeparation
             if @service.change
               flash[:success] = "#{@service.contract.course.name} payment per participant changed" \
                 " for all #{@service.contract.statement.lead_provider.name} contracts" \
-                " in the #{@service.contract.statement.cohort.start_year} cohort from #{@service.start_date.to_fs(:govuk_approx)} onwards"
+                " in the #{@service.contract.statement.cohort.name} cohort from #{@service.start_date.to_fs(:govuk_approx)} onwards"
               redirect_to npq_separation_admin_finance_statement_path(@statement)
             else
               render :show, status: :unprocessable_entity

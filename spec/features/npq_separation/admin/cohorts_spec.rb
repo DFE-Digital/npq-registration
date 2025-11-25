@@ -39,6 +39,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect(summary_list).to have_summary_item("Name", "2026")
       expect(summary_list).to have_summary_item("Description", "2026 to 2027")
       expect(summary_list).to have_summary_item("Start year", "2026")
+      expect(summary_list).to have_summary_item("Suffix", "1")
       expect(summary_list).to have_summary_item("Registration start date", "3 April 2026")
       expect(summary_list).to have_summary_item("Funding cap", "Yes")
     end

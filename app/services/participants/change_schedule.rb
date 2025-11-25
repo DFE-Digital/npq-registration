@@ -45,10 +45,6 @@ module Participants
       Cohort.order_by_latest.where(constraints)
     end
 
-    def requested_cohort
-      new_schedule&.cohort || cohorts_for_start_year(@cohort_start_year).first
-    end
-
     def new_schedule
       @new_schedule ||=
         Schedule.joins(:cohort)

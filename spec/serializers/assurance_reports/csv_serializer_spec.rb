@@ -9,8 +9,12 @@ RSpec.describe AssuranceReports::CsvSerializer, type: :serializer do
 
   let(:data)          { AssuranceReports::Query.new(statement).declarations }
   let(:lead_provider) { create(:lead_provider) }
-  let(:statement)     { create(:statement, lead_provider:) }
-  let(:application)   { create(:application, :eligible_for_funded_place, lead_provider:) }
+  let(:statement)     { create(:statement, lead_provider:, cohort:) }
+  let(:cohort)        { create(:cohort, :current, suffix: 2) }
+
+  let :application do
+    create(:application, :eligible_for_funded_place, lead_provider:, cohort:)
+  end
 
   let :declaration do
     travel_to(statement.deadline_date) do
