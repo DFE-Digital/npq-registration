@@ -10,7 +10,7 @@
             :cohort_id,
             Cohort.order_by_latest,
             :id,
-            ->(cohort) { cohort.start_year.to_s },
+            :description,
             options: { selected: params[:cohort_id], include_blank: "All" },
             label: { text: "Search by cohort", size: "s" },
             )

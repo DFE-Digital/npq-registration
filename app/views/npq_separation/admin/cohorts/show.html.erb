@@ -18,6 +18,11 @@
     end
 
     sl.with_row do |row|
+      row.with_key(text: "Suffix")
+      row.with_value(text: @cohort.suffix)
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Registration start date")
       row.with_value(text: @cohort.registration_start_date.to_date.to_fs(:govuk))
     end

@@ -16,7 +16,7 @@ class EylUsers3181
     started_course_flag
     lead_provider_approval_status
     training_status
-    cohort_start_year
+    cohort
   ].freeze
 
   def initialize
@@ -39,7 +39,7 @@ class EylUsers3181
               started?(application),
               application.lead_provider_approval_status,
               application.training_status,
-              application.cohort.start_year,
+              application.cohort.identifier,
             ]
           end
         end

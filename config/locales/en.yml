@@ -177,13 +177,13 @@ en:
         cohort:
           attributes:
             description:
-              blank: Enter a description for the Cohort
+              blank: Enter a description for the cohort
               too_long: Description must be shorter than %{count} characters
-              taken: Description is used by another Cohort already
+              taken: Description is used by another cohort already
             start_year:
-              blank: Enter the start year for the Cohort
+              blank: Enter the start year for the cohort
             suffix:
-              blank: Enter the numeric suffix for the Cohort
+              blank: Enter the numeric suffix for the cohort
               taken: Another cohort exists for that start year and suffix
               less_than_or_equal_to: Suffix must be %{count} or less
               greater_than_or_equal_to: Suffix must be %{count} or more
