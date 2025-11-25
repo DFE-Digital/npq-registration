@@ -8,7 +8,7 @@ class Feature
   MAINTENANCE_BANNER = "Maintenance banner".freeze
   LP_SELF_SERVE = "Lead provider self serve".freeze
   LP_TRANSFERRED_DECLARATIONS_VISIBILITY = "Lead provider transferred declarations visibility".freeze
-  USE_SUFFIXED_COHORTS = "Assign new applications to suffixed cohorts".freeze
+  USE_SUFFIXED_COHORTS = "Use suffixed cohorts".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
   # not included in this array. This approach will make tracking feature flags much easier.
@@ -19,6 +19,7 @@ class Feature
     DFE_ANALYTICS_ENABLED,
     LP_SELF_SERVE,
     LP_TRANSFERRED_DECLARATIONS_VISIBILITY,
+    USE_SUFFIXED_COHORTS,
   ].freeze
 
   class << self
