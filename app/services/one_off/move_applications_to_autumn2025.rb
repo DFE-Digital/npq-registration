@@ -112,8 +112,9 @@ module OneOff
     end
 
     def move_application_batch(ids)
-      Application.includes(:schedule,
-                           declarations: { statement_items: :statement })
+      Application.includes(:schedule, :cohort,
+                           declarations: { statement_items: :statement,
+                                           cohort: [] })
                  .find(ids)
                  .each do |application|
         move_application_to_autumn(application)
@@ -129,11 +130,14 @@ module OneOff
 
       # Save without changing the applications updated_at timestamp so that this
       # is invisible to the API but do use correct time for PaperTrail created at
+      application.skip_touch_user_if_changed = true
       application.paper_trail_options[:synchronize_version_creation_timestamp] = false
       application.save!(touch: false)
       record_change(application)
 
       application.declarations.each do |declaration|
+        next unless declaration.cohort == spring_cohort
+
         move_declaration_to_autumn(declaration)
       end
     end
