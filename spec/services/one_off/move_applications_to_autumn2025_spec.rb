@@ -12,8 +12,8 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
 
   let(:lead_provider) { create(:lead_provider) }
   let(:dry_run) { false }
-  let(:spring) { create(:cohort, start_year: 2025, suffix: 1) }
-  let(:autumn) { create(:cohort, start_year: 2025, suffix: 2) }
+  let(:spring) { create(:cohort, start_year: 2025, suffix: "a") }
+  let(:autumn) { create(:cohort, start_year: 2025, suffix: "b") }
 
   let :autumn_statement do
     create :statement, :open, :next_output_fee, cohort: autumn,
