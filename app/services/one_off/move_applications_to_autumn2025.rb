@@ -21,7 +21,7 @@ module OneOff
         end
 
         if next_output_fee_statement.nil?
-          raise "No output fee statement in 2025-2 cohort"
+          raise "No output fee statement in 2025b cohort"
         end
 
         log "DRY RUN: Will rollback afterwards" if dry_run
@@ -48,11 +48,11 @@ module OneOff
     end
 
     def spring_cohort
-      @spring_cohort ||= Cohort.find_by!(identifier: "2025-1")
+      @spring_cohort ||= Cohort.find_by!(identifier: "2025a")
     end
 
     def autumn_cohort
-      @autumn_cohort ||= Cohort.find_by!(identifier: "2025-2")
+      @autumn_cohort ||= Cohort.find_by!(identifier: "2025b")
     end
 
     def applications_to_move
