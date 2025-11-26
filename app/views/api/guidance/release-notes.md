@@ -2,18 +2,16 @@
 
 If you have any questions or comments about these notes, please contact DfE via Microsoft Teams or email.
 
-## Transferred declarations visibility now available in production
+## Transferred declarations are now shown in production
 ### 1 December 2025
 
 <strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
 
-The transferred declarations visibility have been released to production
+The transferred declarations visibility has been released to production.
 
 ### Changes to API behaviour
 
-We can now:
-
-* include declarations from any lead provider for applications transferred between lead providers
+We can now include declarations from any lead provider for applications transferred between lead providers.
 
 
 ## Application and Declaration API improvements now available in production
@@ -21,7 +19,7 @@ We can now:
 
 <strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
 
-The 'self serve' API improvements have been released to production
+The 'self serve' API improvements have been released to production.
 
 ### API additions
 
@@ -33,9 +31,7 @@ We've added:
 
 ### Changes to API behaviour
 
-We can now:
-
-* allow rejection of an already accepted application
+We can now allow rejection of an already accepted application.
 
 
 ## Application and Declaration API improvements now available in sandbox
@@ -43,7 +39,7 @@ We can now:
 
 <strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
 
-The 'self serve' API improvements have been released to sandbox
+The 'self serve' API improvements have been released to sandbox.
 
 ### API additions
 
