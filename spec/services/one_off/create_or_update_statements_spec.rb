@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe OneOff::CreateOrUpdateStatements do
   describe ".call" do
     let(:cohort_year) { 2021 }
-    let(:cohort_identifier) { "#{cohort_year}-1" }
+    let(:cohort_identifier) { "#{cohort_year}a" }
     let(:csv_file) { Tempfile.new }
     let(:csv_path) { csv_file.path }
 

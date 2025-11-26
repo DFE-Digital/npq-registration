@@ -6,7 +6,7 @@ RSpec.describe DeliveryPartners::Query do
   let(:cohort_21) { create :cohort, start_year: 2021 }
   let(:cohort_22) { create :cohort, start_year: 2022 }
   let(:cohort_23) { create :cohort, start_year: 2023 }
-  let(:cohort_21_2) { create :cohort, start_year: 2021, suffix: 2 }
+  let(:cohort_21_2) { create :cohort, start_year: 2021, suffix: "b" }
   let(:sort) { nil }
 
   subject(:query) { described_class.new(lead_provider: lead_provider_1, sort: sort) }

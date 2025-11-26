@@ -52,7 +52,7 @@ RSpec.describe API::DeliveryPartnerSerializer, type: :serializer do
       context "with multiple cohorts for the same year" do
         before do
           create(:delivery_partnership,
-                 cohort: create(:cohort, start_year: 2021, suffix: 2),
+                 cohort: create(:cohort, start_year: 2021, suffix: "b"),
                  lead_provider: current_lead_provider,
                  delivery_partner: delivery_partner)
         end

@@ -1,5 +1,5 @@
 class CreateContractRakeTask
-  COHORT_IDENTIFIER = "2023-1".freeze
+  COHORT_IDENTIFIER = "2023a".freeze
   STATEMENT_YEAR = 2025
   FEBRUARY = 2
   STATEMENT_MONTH = FEBRUARY

@@ -5,7 +5,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
   include Helpers::FileHelper
 
   let(:admin)  { create :admin }
-  let(:cohort) { Cohort.find_by! identifier: "2026-1" }
+  let(:cohort) { Cohort.find_by! identifier: "2026a" }
 
   let(:new_button_text)    { "New cohort" }
   let(:edit_button_text)   { "Edit cohort details" }
@@ -39,7 +39,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect(summary_list).to have_summary_item("Name", "2026")
       expect(summary_list).to have_summary_item("Description", "2026 to 2027")
       expect(summary_list).to have_summary_item("Start year", "2026")
-      expect(summary_list).to have_summary_item("Suffix", "1")
+      expect(summary_list).to have_summary_item("Suffix", "a")
       expect(summary_list).to have_summary_item("Registration start date", "3 April 2026")
       expect(summary_list).to have_summary_item("Funding cap", "Yes")
     end
@@ -67,11 +67,11 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       end
 
       cohort = Cohort.order(created_at: :desc, id: :desc).first
-      expect(cohort.identifier).to eq("2029-1")
+      expect(cohort.identifier).to eq("2029a")
       expect(cohort.name).to eq("2029")
       expect(cohort.description).to eq("2029 to 2030")
       expect(cohort.start_year).to be(2029)
-      expect(cohort.suffix).to be(1)
+      expect(cohort.suffix).to eq("a")
       expect(cohort.funding_cap).to be(true)
       expect(cohort.registration_start_date).to eq(Date.new(2029, 3, 2))
       expect(cohort.delivery_partnerships.pluck(:delivery_partner_id, :lead_provider_id)).to eq(partnerships.pluck(:delivery_partner_id, :lead_provider_id))
@@ -85,7 +85,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
 
       fill_in "Description", with: "2025 to 2026"
       fill_in "Start year", with: "2025"
-      fill_in "Suffix", with: "2"
+      fill_in "Suffix", with: "b"
       check "Funding cap", visible: :all
       fill_in "Day", with: "6"
       fill_in "Month", with: "5"
@@ -96,11 +96,11 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
 
       cohort.reload
 
-      expect(cohort.identifier).to eq("2025-2")
-      expect(cohort.name).to eq("2025-2")
+      expect(cohort.identifier).to eq("2025b")
+      expect(cohort.name).to eq("2025b")
       expect(cohort.description).to eq("2025 to 2026")
       expect(cohort.start_year).to be(2025)
-      expect(cohort.suffix).to be(2)
+      expect(cohort.suffix).to eq("b")
       expect(cohort.funding_cap).to be(true)
       expect(cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
     end

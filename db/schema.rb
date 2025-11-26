@@ -198,9 +198,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_103425) do
     t.datetime "updated_at", null: false
     t.boolean "funding_cap", default: false, null: false
     t.uuid "ecf_id"
-    t.integer "suffix", default: 1, null: false
+    t.string "suffix", limit: 1, default: "a", null: false
     t.string "description", limit: 50, null: false
-    t.virtual "identifier", type: :string, as: "((start_year || '-'::text) || suffix)", stored: true
+    t.virtual "identifier", type: :string, as: "(start_year || (suffix)::text)", stored: true
     t.index ["description"], name: "index_cohorts_on_description", unique: true
     t.index ["ecf_id"], name: "index_cohorts_on_ecf_id", unique: true
     t.index ["identifier"], name: "index_cohorts_on_identifier", unique: true
