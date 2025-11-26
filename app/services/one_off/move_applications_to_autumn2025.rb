@@ -144,7 +144,8 @@ module OneOff
 
     def move_declaration_to_autumn(declaration)
       declaration.cohort = autumn_cohort
-      declaration.save!
+      declaration.paper_trail_options[:synchronize_version_creation_timestamp] = false
+      declaration.save!(touch: false)
       record_change(declaration)
 
       declaration.statement_items.each do |statement_item|
