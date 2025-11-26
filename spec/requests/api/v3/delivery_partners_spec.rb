@@ -58,8 +58,8 @@ RSpec.describe "Delivery Partner endpoints", type: :request do
                                       delivery_partner:)
       end
 
-      let(:spring_cohort) { create(:cohort, start_year: 2025, suffix: 1) }
-      let(:autumn_cohort) { create(:cohort, start_year: 2025, suffix: 2) }
+      let(:spring_cohort) { create(:cohort, start_year: 2025, suffix: "a") }
+      let(:autumn_cohort) { create(:cohort, start_year: 2025, suffix: "b") }
 
       let :delivery_partner do
         create(:delivery_partner, lead_providers: { spring_cohort => current_lead_provider })

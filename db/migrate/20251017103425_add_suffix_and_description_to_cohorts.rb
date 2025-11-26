@@ -3,11 +3,11 @@ class AddSuffixAndDescriptionToCohorts < ActiveRecord::Migration[7.2]
   # preferable to disabling ddl transactions - hence the safety_assured
 
   def up
-    add_column :cohorts, :suffix, :integer, default: 1, null: false
+    add_column :cohorts, :suffix, :string, limit: 1, default: "a", null: false
     add_column :cohorts, :description, :string, limit: 50
 
     safety_assured do
-      add_column :cohorts, :identifier, :virtual, type: :varchar, as: "start_year || '-' || suffix", stored: true
+      add_column :cohorts, :identifier, :virtual, type: :varchar, as: "start_year || suffix", stored: true
       add_index :cohorts, %i[start_year suffix], unique: true
       add_index :cohorts, :identifier, unique: true
       add_index :cohorts, :description, unique: true

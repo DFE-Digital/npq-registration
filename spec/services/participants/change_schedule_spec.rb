@@ -347,7 +347,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
     context "when multiple cohorts in same year" do
       let :suffixed_cohort do
-        create(:cohort, start_year: cohort.start_year, suffix: 2).tap do |cohort|
+        create(:cohort, start_year: cohort.start_year, suffix: "b").tap do |cohort|
           create(:contract, statement: create(:statement, cohort:, lead_provider:),
                             course:)
         end
@@ -405,7 +405,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
           let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: cohort) }
 
-          it "chooses schedule from cohort with suffix of 1" do
+          it "chooses schedule from cohort with suffix of a" do
             expect(subject.change_schedule).to be_truthy
 
             application.reload
@@ -455,7 +455,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
           let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: cohort) }
 
-          it "chooses schedule from cohort with suffix of 1" do
+          it "chooses schedule from cohort with suffix of a" do
             expect(subject.change_schedule).to be_truthy
             application.reload
             expect(application.schedule).to eql(new_schedule)

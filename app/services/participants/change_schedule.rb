@@ -40,7 +40,7 @@ module Participants
 
     def cohorts_for_start_year(start_year)
       constraints = { start_year: }
-      constraints[:suffix] = 1 unless Feature.suffixed_cohorts?
+      constraints[:suffix] = "a" unless Feature.suffixed_cohorts?
 
       Cohort.order_by_latest.where(constraints)
     end

@@ -56,8 +56,8 @@ RSpec.describe Cohorts::CopyDeliveryPartners do
       end
 
       let(:partnerships) { cohort.delivery_partnerships }
-      let(:cohort) { create(:cohort, start_year: 2025, suffix: 2) }
-      let(:same_year_cohort) { create(:cohort, start_year: 2025, suffix: 1) }
+      let(:cohort) { create(:cohort, start_year: 2025, suffix: "b") }
+      let(:same_year_cohort) { create(:cohort, start_year: 2025, suffix: "a") }
 
       it "copies delivery partners from the previous cohort" do
         expect {

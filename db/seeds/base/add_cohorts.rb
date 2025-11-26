@@ -12,5 +12,5 @@ end
 
 # Add suffixed cohort
 FactoryBot.create(:cohort, :with_funding_cap, start_year: 2025,
-                                              suffix: 2,
+                                              suffix: "b",
                                               description: "Autumn 2025")

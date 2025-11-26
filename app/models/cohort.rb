@@ -15,10 +15,8 @@ class Cohort < ApplicationRecord
   validates :suffix,
             presence: true,
             uniqueness: { scope: :start_year },
-            numericality: {
-              greater_than_or_equal_to: 1,
-              less_than_or_equal_to: 9,
-            }
+            length: { within: 1..1 },
+            format: { with: /\A[a-z]+\z/ }
 
   validates :description,
             presence: true,
@@ -43,14 +41,14 @@ class Cohort < ApplicationRecord
     scope = order_by_latest.where(registration_start_date: ..timestamp)
 
     unless Feature.suffixed_cohorts?
-      scope = scope.where(suffix: 1)
+      scope = scope.where(suffix: "a")
     end
 
     scope.first!
   end
 
   def name
-    suffix == 1 ? start_year.to_s : identifier
+    suffix == "a" ? start_year.to_s : identifier
   end
 
 private

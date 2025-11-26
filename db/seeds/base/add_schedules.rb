@@ -5,7 +5,7 @@
   2023 => %i[npq_leadership_spring npq_leadership_autumn npq_specialist_spring npq_specialist_autumn npq_ehco_june npq_ehco_march npq_ehco_november npq_ehco_december],
   2024 => %i[npq_leadership_autumn npq_specialist_autumn npq_ehco_june npq_ehco_november npq_ehco_december],
 }.each do |start_year, schedules|
-  cohort = Cohort.find_by(start_year:, suffix: 1)
+  cohort = Cohort.find_by(start_year:, suffix: "a")
   schedules.each do |schedule_identifier|
     FactoryBot.create(:schedule, schedule_identifier, cohort:, change_applies_dates: false)
   end
