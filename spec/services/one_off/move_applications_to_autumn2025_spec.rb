@@ -237,6 +237,26 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
           .and(not_change { applications[1].declarations.first.cohort })
       end
     end
+
+    context "when the applicant is unfunded" do
+      let :spring_statement do
+        create :statement, :open, :next_output_fee, cohort: spring, lead_provider:
+      end
+
+      it "moves declarations between cohorts without changing timestamps" do
+        expect { perform }
+          .to change { applications[1].declarations.first.cohort }.from(spring).to(autumn)
+          .and(not_change { applications[1].declarations.first.updated_at })
+      end
+
+      it "creates a version record for the declarations cohort change", :versioning do
+        perform
+
+        expect(applications[1].declarations.first.versions.last)
+            .to have_attributes "object_changes" => { "cohort_id" => [spring.id, autumn.id] },
+                                "created_at" => be_within(5.seconds).of(Time.zone.now)
+      end
+    end
   end
 
   context "when performing a dry run" do
