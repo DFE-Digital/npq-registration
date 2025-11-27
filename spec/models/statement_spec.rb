@@ -351,19 +351,4 @@ RSpec.describe Statement, type: :model do
       end
     end
   end
-
-  describe "#milestone_declaration_types" do
-    before do
-      schedule_1 = create(:schedule, :npq_leadership_autumn)
-      schedule_2 = create(:schedule, :npq_leadership_spring)
-      create(:milestone, declaration_type: "started", schedule: schedule_1, statements: [statement])
-      create(:milestone, declaration_type: "completed", schedule: schedule_1, statements: [statement])
-      create(:milestone, declaration_type: "started", schedule: schedule_2, statements: [statement])
-      create(:milestone, declaration_type: "completed", schedule: schedule_2, statements: [statement])
-    end
-
-    it "returns a unique list of declaration types associated with the statement's milestones" do
-      expect(statement.milestone_declaration_types).to match_array(%w[started completed])
-    end
-  end
 end

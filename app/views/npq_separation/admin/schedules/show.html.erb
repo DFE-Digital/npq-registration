@@ -41,7 +41,7 @@
 
     sl.with_row do |row|
       row.with_key(text: "Milestones")
-      row.with_value(text: @schedule.milestones.pluck(:declaration_type).join(", "))
+      row.with_value(text: @schedule.milestones.in_declaration_type_order.pluck(:declaration_type).join(", "))
     end
   end
 %>
@@ -65,7 +65,7 @@
     end
 
     table.with_body do |body|
-      @schedule.milestones.includes(:statements).each do |milestone|
+      @schedule.milestones.in_declaration_type_order.includes(:statements).each do |milestone|
         body.with_row do |row|
           row.with_cell(text: milestone.declaration_type)
           row.with_cell(text: milestone.statement_date&.to_fs(:govuk_approx) || "-")
