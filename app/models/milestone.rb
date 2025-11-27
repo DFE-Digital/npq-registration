@@ -7,7 +7,7 @@ class Milestone < ApplicationRecord
   has_many :statements, through: :milestone_statements
   belongs_to :schedule
 
-  default_scope { in_order_of(:declaration_type, ALL_DECLARATION_TYPES) }
+  scope :in_declaration_type_order, -> { order(:declaration_type) }
 
   def statement_date
     statement = statements.first

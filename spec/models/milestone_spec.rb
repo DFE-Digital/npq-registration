@@ -11,7 +11,7 @@ RSpec.describe Milestone, type: :model do
     it { is_expected.to belong_to(:schedule) }
   end
 
-  describe "default scope" do
+  describe "#in_declaration_type_order" do
     let(:schedule) { create(:schedule) }
     let(:started) { Milestone.create!(declaration_type: "started", schedule:) }
     let(:retained_1) { Milestone.create!(declaration_type: "retained-1", schedule:) }
@@ -27,7 +27,7 @@ RSpec.describe Milestone, type: :model do
     end
 
     it "orders by declaration_type according to DECLARATION_TYPES" do
-      expect(Milestone.all).to eq([started, retained_1, retained_2, completed])
+      expect(Milestone.all.in_declaration_type_order).to eq([started, retained_1, retained_2, completed])
     end
   end
 end
