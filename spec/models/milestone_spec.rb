@@ -11,6 +11,17 @@ RSpec.describe Milestone, type: :model do
     it { is_expected.to belong_to(:schedule) }
   end
 
+  describe "validations" do
+    context "when creating a milestone for a declaration type not in the schedule's allowed_declaration_types" do
+      subject(:milestone) { build(:milestone, declaration_type: "retained-1", schedule:, statements: [statement]) }
+
+      let(:schedule) { create(:schedule, allowed_declaration_types: %w[started completed]) }
+      let(:statement) { create(:statement) }
+
+      it { is_expected.to have_error(:declaration_type, :inclusion, "The declaration type should be one of the ones allowed by the schedule") }
+    end
+  end
+
   describe "#in_declaration_type_order" do
     let(:schedule) { create(:schedule) }
     let(:started) { Milestone.create!(declaration_type: "started", schedule:) }

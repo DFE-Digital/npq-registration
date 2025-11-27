@@ -11,11 +11,7 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
   end
 
   def create
-    @service = Milestones::Create.new(
-      schedule_id: @schedule.id,
-      declaration_type: params.fetch(:milestones_create, {})[:declaration_type],
-      statement_date: params.fetch(:milestones_create, {})[:statement_date],
-    )
+    @service = Milestones::Create.new(schedule_id: @schedule.id, **params.fetch(:milestones_create, {}).permit(:declaration_type, :statement_date))
     if @service.valid?
       @service.create!
       flash[:success] = "Milestone created"
@@ -26,16 +22,11 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
   end
 
   def edit
-    @service = Milestones::Update.new(
-      milestone_id: params[:id],
-    )
+    @service = Milestones::Update.new(milestone_id: params[:id])
   end
 
   def update
-    @service = Milestones::Update.new(
-      milestone_id: params[:id],
-      statement_date: params.fetch(:milestones_update, {})[:statement_date],
-    )
+    @service = Milestones::Update.new(milestone_id: params[:id], **params.fetch(:milestones_update, {}).permit(:statement_date))
     if @service.valid?
       @service.update!
       flash[:success] = "Milestone updated"

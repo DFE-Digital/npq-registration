@@ -14,7 +14,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_114818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
-  enable_extension "dict_xsyn"
   enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"

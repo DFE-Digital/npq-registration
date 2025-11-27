@@ -255,6 +255,10 @@ en:
           attributes:
             ecf_id:
               *ecf_id
+        milestone:
+          attributes:
+            declaration_type:
+              inclusion: The declaration type should be one of the ones allowed by the schedule
         milestone_statement:
           attributes:
             statement:
