@@ -6,7 +6,7 @@ RSpec.describe "npq_separation/admin/finance/statements/print_dfe_user", type: :
   let(:rendered) { Capybara.string(subject) }
   let(:contract) { create(:contract, course: create(:course, :leading_teaching), statement:) }
   let(:special_contract) { create(:contract, contract_template: create(:contract_template, special_course: true), statement:) }
-  let(:statement) { build(:statement, :paid, month: Time.zone.today.month, year: Time.zone.today.year) }
+  let(:statement) { create(:statement, :open, month: Time.zone.today.month, year: Time.zone.today.year) }
   let(:admin_user) { create(:admin) }
 
   before do
@@ -14,6 +14,7 @@ RSpec.describe "npq_separation/admin/finance/statements/print_dfe_user", type: :
     assign(:statement, statement)
     assign(:special_contracts, [special_contract])
     assign(:contracts, [contract])
+    statement.update!(state: "paid", marked_as_paid_at: 1.week.ago)
     without_partial_double_verification { allow(view).to receive(:current_admin).and_return(admin_user) }
   end
 

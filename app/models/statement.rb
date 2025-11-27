@@ -88,7 +88,7 @@ private
   def changing_attributes_when_payable
     return if errors.any?
 
-    allowed_to_change = %w[output_fee state]
+    allowed_to_change = %w[marked_as_paid_at output_fee state]
     errors.add :base, :statement_payable if state_was == "payable" && (changed - allowed_to_change).any?
   end
 

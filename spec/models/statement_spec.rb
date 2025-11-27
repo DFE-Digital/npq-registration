@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Statement, type: :model do
-  subject(:statement) { create(:statement) }
+  subject(:statement) { build(:statement) }
 
   describe "relationships" do
     it { is_expected.to belong_to(:cohort).required }
@@ -233,6 +233,8 @@ RSpec.describe Statement, type: :model do
   end
 
   describe "#mark_as_paid_at!" do
+    subject(:statement) { build(:statement, :payable) }
+
     it "sets marked_as_paid_at" do
       expect { subject.tap(&:mark_as_paid_at!).reload }
         .to change(subject, :marked_as_paid_at)
