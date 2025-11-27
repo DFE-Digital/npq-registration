@@ -57,6 +57,9 @@ shared:
     - created_at
     - updated_at
     - ecf_id
+    - policy_descriptor
+    - acceptance_window_start
+    - acceptance_window_end
   :registration_interests:
     - id
     - email

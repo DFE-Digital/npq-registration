@@ -20,6 +20,11 @@
     end
 
     sl.with_row do |row|
+      row.with_key(text: "Policy descriptor")
+      row.with_value(text: @schedule.policy_descriptor || "-")
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Course group")
       row.with_value(text: @schedule.course_group.name)
     end
@@ -32,6 +37,16 @@
     sl.with_row do |row|
       row.with_key(text: "Applies to")
       row.with_value(text: @schedule.applies_to.to_date.to_fs(:govuk))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Acceptance window start")
+      row.with_value(text: @schedule.acceptance_window_start&.to_date&.to_fs(:govuk))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Acceptance window end")
+      row.with_value(text: @schedule.acceptance_window_end&.to_date&.to_fs(:govuk))
     end
 
     sl.with_row do |row|

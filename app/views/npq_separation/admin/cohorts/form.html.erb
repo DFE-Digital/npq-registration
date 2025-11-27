@@ -1,3 +1,7 @@
+<% if @cohort.persisted? %>
+  <%= govuk_back_link href: npq_separation_admin_cohort_path(@cohort) %>
+<% end %>
+
 <h1 class="govuk-heading-l">
   <% if @cohort.new_record? %>
     New cohort
