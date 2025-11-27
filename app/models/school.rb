@@ -70,7 +70,7 @@ class School < ApplicationRecord
   def self.search_by_name(name)
     scope = search_by_fields(name).limit(NAME_SEARCH_LIMIT)
     NAME_SYNONYMS.find do |key, value|
-      if name&.downcase&.include?(key)
+      if name&.downcase&.match?(%r{\b#{key}\b}i)
         synonym_name = name.downcase.gsub(key, value)
         return scope + search_by_fields(synonym_name).limit(NAME_SEARCH_LIMIT)
       end
