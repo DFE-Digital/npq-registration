@@ -12,37 +12,37 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Accessibility statement</h1>
-    <p class="govuk-body">This statement applies to the Register for a national professional qualification website.</p>
-    <p class="govuk-body">This website is run by the Department for Education. We want as many people as possible to be able to use it. You should be able to:</p>
+    <p class="govuk-body">This statement applies to the Register for a national professional qualification web-based service.</p>
+    <p class="govuk-body">This service is managed by the Department for Education. We want everyone to be able to use it. You should be able to:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>change colours, contrast levels and fonts</li>
       <li>zoom in up to 300% without the text spilling off the screen</li>
       <li>navigate most of the service using just a keyboard</li>
       <li>navigate most of the service using speech recognition software</li>
-      <li>listen to most of the service using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
+      <li>listen to most of the service using a screen reader (including the most recent versions of Job Access With Speech (JAWS), Non-Visual Desktop Access (NVDA) and VoiceOver)</li>
     </ul>
-    <p class="govuk-body">We have also made the website text as simple as possible to understand.</p>
+    <p class="govuk-body">We have also made the content as simple as possible to understand.</p>
     <p class="govuk-body"><%= govuk_link_to 'AbilityNet', "https://mcmw.abilitynet.org.uk/" %> has advice on making your device easier to use if you have an access need.</p>
 
-    <h2 class="govuk-heading-l">How accessible this website is</h2>
+    <h2 class="govuk-heading-l">How accessible this service is</h2>
 
-    <p class="govuk-body">We know some parts of this website are not fully accessible:</p> 
+    <p class="govuk-body">We know some parts of this service are not fully accessible:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>page regions are not identified with ARIA landmarks</li>
-      <li>users navigating with Dragon Naturally Speaking cannot expand accordion elements</li>
-      <li>the ‘Skip to main content’ link is incorrectly positioned before the cookie notice</li>
-      <li>the focus order is not always logical when navigating with iOS VoiceOver</li>
+      <li>Page regions are not identified with Accessible Rich Internet Application (ARIA) landmarks.</li>
+      <li>Users navigating with Dragon Naturally Speaking cannot expand accordion elements.</li>
+      <li>The ‘Skip to main content’ link is incorrectly positioned before the cookie notice.</li>
+      <li>The focus order is not always logical when navigating with iOS VoiceOver.</li>
     </ul>
 
     <h2 class="govuk-heading-l">Feedback and contact information</h2>
 
-    <p class="govuk-body">If you need information on this website in a different format like accessible PDF, large print, easy read, audio recording or braille, email <%= mail_to 'continuing-professional-development@digital.education.gov.uk', 'continuing-professional-development@digital.education.gov.uk', class: 'govuk-link' %>.</p>
+    <p class="govuk-body">If you need information on this service in a different format like an accessible PDF, large print, easy read, audio recording or braille, email <%= mail_to 'continuing-professional-development@digital.education.gov.uk', 'continuing-professional-development@digital.education.gov.uk', class: 'govuk-link' %>.</p>
 
-    <p class="govuk-body">We’ll consider your request and get back to you in 7 days.</p>
+    <p class="govuk-body">We’ll consider your request and get back to you within 7 days.</p>
 
-    <h2 class="govuk-heading-l">Reporting accessibility problems with this website</h2>
+    <h2 class="govuk-heading-l">Reporting accessibility problems</h2>
 
-    <p class="govuk-body">We’re always looking to improve the accessibility of this website. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, email <%= mail_to 'continuing-professional-development@digital.education.gov.uk', 'continuing-professional-development@digital.education.gov.uk', class: 'govuk-link' %>.</p> 
+    <p class="govuk-body">We’re always looking to improve the accessibility of this service. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, email <%= mail_to 'continuing-professional-development@digital.education.gov.uk', 'continuing-professional-development@digital.education.gov.uk', class: 'govuk-link' %>.</p>
 
     <h2 class="govuk-heading-l">Enforcement procedure</h2>
     <p class="govuk-body">The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the 'accessibility regulations').</p>
@@ -52,32 +52,17 @@
     <p class="govuk-body">The Department for Education is committed to making this service accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
 
     <h3 class="govuk-heading-m">Compliance status</h3>
-    <p class="govuk-body">This service is partially compliant with the <%= govuk_link_to 'Web Content Accessibility Guidelines (WCAG) 2.2', "https://www.w3.org/TR/WCAG22" %> AA standard, due to the non-compliances listed below.</p>
+    <p class="govuk-body">This service is compliant with the <%= govuk_link_to 'Web Content Accessibility Guidelines (WCAG) 2.2', "https://www.w3.org/TR/WCAG22" %> AA standard.</p>
 
-    <h2 class="govuk-heading-l">Non-accessible content</h2>
+    <h2 class="govuk-heading-l">How we improve accessibility</h2>
 
-    <p class="govuk-body">The content listed below is non-accessible for the following reasons.</p>
-
-    <h3 class="govuk-heading-m">Non-compliance with the accessibility regulations</h3>
-
-    <p class="govuk-body">The focus order when navigating with iOS VoiceOver screen reader is not logical, with the focus of some pages starting in the middle of the page and not at the top. iOS VoiceOver users may miss page content or need to navigate backwards to reach the main page content. This fails WCAG 2.2 success criterion 2.4.3 (focus order).</p>
-
-    <p class="govuk-body">We plan to resolve this by May 2025.</p>
-
-    <p class="govuk-body">Accordion elements, such as the ‘I do not have access to a mobile phone’ accordion, cannot be expanded using voice commands when navigating the site using Dragon Naturally Speaking (speech recognition software). This fails WCAG 2.2 success criterion 4.1.2 (name, role, value).</p>
-
-    <p class="govuk-body">We plan to resolve this by May 2025.</p>
-
-    <h2 class="govuk-heading-l">What we’re doing to improve accessibility</h2>
-
-    <p class="govuk-body">Accessibility issues are captured through user feedback, automated testing, and manual audits. These issues are then prioritised based on their impact on user experience, legal compliance, and severity. We manage them through a backlog system, assigning them to relevant teams for resolution, with regular reviews to ensure timely progress and adherence to accessibility standards.</p>  
+    <p class="govuk-body">Accessibility issues are captured through user feedback, automated testing, and manual audits. These issues are then prioritised based on their impact on user experience, legal compliance, and severity. We manage them through a backlog system, assigning them to relevant teams for resolution, with regular reviews to ensure timely progress and adherence to accessibility standards.</p>
 
     <h2 class="govuk-heading-l">Preparation of this accessibility statement</h2>
 
-    <p class="govuk-body">This statement was prepared and last reviewed in September 2024.</p> 
+    <p class="govuk-body">This statement was prepared and last reviewed in November 2025.</p>
 
-    <p class="govuk-body">The website was last tested in August 2024. The test was carried out by Zoonou.</p>
-    
-    <p class="govuk-body">Zoonou used <%= govuk_link_to 'WCAG-EM', "https://www.w3.org/TR/WCAG-EM" %> to define a representative selection of pages and test approach.</p>
+    <p class="govuk-body">The service was last tested in October 2025.</p>
+
   </div>
 </div>
