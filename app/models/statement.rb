@@ -19,6 +19,8 @@ class Statement < ApplicationRecord
 
   validate :payment_date_on_or_after_deadline_date
   validate :no_milestones_associated, if: :output_fee_changed?
+  validate :changing_attributes_when_payable, on: :update
+  validate :changing_attributes_when_paid, on: :update
 
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }
   scope :with_state, ->(*state) { where(state:) }
@@ -81,5 +83,18 @@ private
     return unless milestone_statements.exists?
 
     errors.add :output_fee, :has_milestones
+  end
+
+  def changing_attributes_when_payable
+    return if errors.any?
+
+    allowed_to_change = %w[output_fee state]
+    errors.add :base, :statement_payable if state_was == "payable" && (changed - allowed_to_change).any?
+  end
+
+  def changing_attributes_when_paid
+    return if errors.any?
+
+    errors.add :base, :statement_paid if state_was == "paid" && changed.any?
   end
 end

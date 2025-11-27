@@ -22,6 +22,9 @@ class ContractTemplate < ApplicationRecord
             }
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
+  validate :used_by_payable_statement, on: :update
+  validate :used_by_paid_statement, on: :update
+
   def new_from_existing(attributes_to_override)
     new_attributes = {
       special_course: special_course,
@@ -50,5 +53,19 @@ class ContractTemplate < ApplicationRecord
       monthly_service_fee: monthly_service_fee,
       targeted_delivery_funding_per_participant: targeted_delivery_funding_per_participant,
     ).first
+  end
+
+private
+
+  def used_by_payable_statement
+    if contracts.includes(:statement).where(statement: { state: "payable" }).any?
+      errors.add(:base, :used_by_payable_statement)
+    end
+  end
+
+  def used_by_paid_statement
+    if contracts.includes(:statement).where(statement: { state: "paid" }).any?
+      errors.add(:base, :used_by_paid_statement)
+    end
   end
 end
