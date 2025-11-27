@@ -21,6 +21,75 @@ RSpec.describe ContractTemplate, type: :model do
     it { is_expected.to validate_numericality_of(:per_participant).is_greater_than(0).with_message("Must be greater than zero") }
     it { is_expected.to validate_numericality_of(:recruitment_target).only_integer.is_greater_than(0).with_message("Must be an integer greater than zero") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+
+    shared_examples_for "not allowing updates when used by a statement" do |statement_state:, attribute:|
+      it { is_expected.to have_error(:base, "used_by_#{statement_state}_statement".to_sym, "Cannot update contract template used by a #{statement_state} statement") }
+
+      it "does not save the change" do
+        expect { contract_template.save! }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(contract_template.reload.attributes[attribute]).to eq original_value
+      end
+    end
+
+    shared_examples_for "not allowing updates when used by a statement in state" do |statement_state|
+      context "when the contract template is being used by a #{statement_state} statement" do
+        subject(:contract_template) do
+          create(:contract_template,
+                 recruitment_target: original_recruitment_target,
+                 per_participant: original_per_participant,
+                 targeted_delivery_funding_per_participant: original_targeted_delivery_funding_per_participant,
+                 special_course: original_special_course)
+        end
+
+        let(:original_recruitment_target) { 72 }
+        let(:original_per_participant) { 800 }
+        let(:original_targeted_delivery_funding_per_participant) { 100 }
+        let(:original_special_course) { false }
+
+        let(:contract) { create(:contract, statement:, contract_template:) }
+        let(:statement) { create(:statement, :open) }
+
+        before do
+          contract
+          statement.update!(state: statement_state)
+        end
+
+        context "when updating the contract template recruitment_target" do
+          let(:original_value) { original_recruitment_target }
+
+          before { contract_template.recruitment_target = 1000 }
+
+          it_behaves_like "not allowing updates when used by a statement", statement_state:, attribute: "recruitment_target"
+        end
+
+        context "when updating the contract template per_participant" do
+          let(:original_value) { original_per_participant }
+
+          before { contract_template.per_participant = 9000 }
+
+          it_behaves_like "not allowing updates when used by a statement", statement_state:, attribute: "per_participant"
+        end
+
+        context "when updating the contract template targeted_delivery_funding_per_participant" do
+          let(:original_value) { original_targeted_delivery_funding_per_participant }
+
+          before { contract_template.targeted_delivery_funding_per_participant = 9000 }
+
+          it_behaves_like "not allowing updates when used by a statement", statement_state:, attribute: "targeted_delivery_funding_per_participant"
+        end
+
+        context "when updating the contract template special_course" do
+          let(:original_value) { original_special_course }
+
+          before { contract_template.special_course = true }
+
+          it_behaves_like "not allowing updates when used by a statement", statement_state:, attribute: "special_course"
+        end
+      end
+    end
+
+    it_behaves_like "not allowing updates when used by a statement in state", "payable"
+    it_behaves_like "not allowing updates when used by a statement in state", "paid"
   end
 
   describe "#new_from_existing" do
