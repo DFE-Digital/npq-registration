@@ -25,9 +25,7 @@ RSpec.describe Contract, type: :model do
         subject(:contract) { build(:contract, statement:, contract_template: create(:contract_template)) }
 
         context "when creating the contract with a contract template" do
-          before do
-            statement.update!(state:)
-          end
+          before { statement.update!(state:) }
 
           it "returns an error" do
             expect { subject.save! }.to raise_error(ActiveRecord::RecordInvalid)
@@ -61,7 +59,7 @@ RSpec.describe Contract, type: :model do
             expect { subject.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
             expect(subject.errors.first).to have_attributes(
               attribute: :base,
-              type: "statement_#{state}".to_sym,
+              type: "deleting_when_statement_#{state}".to_sym,
               message: "Cannot delete contract when statement is #{state}",
             )
             expect(Contract.exists?(subject.id)).to be true
