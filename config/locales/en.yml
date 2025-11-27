@@ -222,8 +222,8 @@ en:
         contract:
           attributes:
             base:
-              statement_payable: Cannot delete contract when statement is payable
-              statement_paid: Cannot delete contract when statement is paid
+              deleting_when_statement_payable: Cannot delete contract when statement is payable
+              deleting_when_statement_paid: Cannot delete contract when statement is paid
             course_id:
               taken: Can only have one contract for statement and course
             contract_template:
