@@ -27,7 +27,7 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
   def update
     if @schedule.update(schedule_params)
       flash[:success] = "Schedule updated"
-      redirect_to npq_separation_admin_cohort_path(cohort)
+      redirect_to npq_separation_admin_cohort_schedule_path(cohort, @schedule)
     else
       render :form, status: :unprocessable_entity
     end
@@ -48,7 +48,17 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
 private
 
   def schedule_params
-    params.require(:schedule).permit(:course_group_id, :name, :identifier, :applies_from, :applies_to, allowed_declaration_types: [])
+    params.require(:schedule).permit(
+      :course_group_id,
+      :name,
+      :identifier,
+      :policy_descriptor,
+      :applies_from,
+      :applies_to,
+      :acceptance_window_start,
+      :acceptance_window_end,
+      allowed_declaration_types: [],
+    )
   end
 
   def schedule

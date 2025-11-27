@@ -51,7 +51,7 @@ RSpec.describe NpqSeparation::Admin::SchedulesController, :ecf_api_disabled, typ
     describe "#update" do
       before { patch npq_separation_admin_cohort_schedule_path(cohort, schedule), params: valid_params }
 
-      it { is_expected.to redirect_to npq_separation_admin_cohort_path(cohort) }
+      it { is_expected.to redirect_to npq_separation_admin_cohort_schedule_path(cohort, schedule) }
 
       it "flashes success" do
         expect(flash[:success]).to match(/Schedule updated/i)
