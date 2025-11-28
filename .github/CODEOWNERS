@@ -1,4 +1,4 @@
-* @DFE-Digital/npq-cpd
+* @DFE-Digital/teacher-training-entitlement
 
 # Don't automatically assign reviewers on PRs that only modify these files,
 # as they are dependabot pull requests.
