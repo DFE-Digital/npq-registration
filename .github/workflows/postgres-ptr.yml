@@ -6,10 +6,10 @@ on:
       environment:
         description: Environment to restore
         required: true
-        default: sandbox
+        default: staging
         type: choice
         options:
-          - sandbox
+          - staging
           - production
       confirm-production:
         description: Must be set to true if restoring production
@@ -32,7 +32,7 @@ permissions:
   id-token: write
 
 env:
-  SERVICE_SHORT: cpdnpq
+  SERVICE_SHORT: cpdtte
   TF_VARS_PATH: terraform/application/config
 
 jobs:

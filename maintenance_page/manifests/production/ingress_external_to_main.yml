@@ -1,16 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: teacher-training-entitlement-maintenance.teacherservices.cloud
+  name: teacher-training-entitlement.education.gov.uk
 spec:
   ingressClassName: nginx
   rules:
-  - host: teacher-training-entitlement-maintenance.teacherservices.cloud
+  - host: teacher-training-entitlement.education.gov.uk
     http:
       paths:
       - pathType: ImplementationSpecific
         backend:
           service:
-            name: teacher-training-entitlement-maintenance
+            name: teacher-training-entitlement-production
             port:
               number: 80

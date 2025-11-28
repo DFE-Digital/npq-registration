@@ -1,16 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: npq-registration-sandbox-web-temp.teacherservices.cloud
+  name: development.teacher-training-entitlement.education.gov.uk
 spec:
   ingressClassName: nginx
   rules:
-  - host: npq-registration-sandbox-web-temp.teacherservices.cloud
+  - host: development.teacher-training-entitlement.education.gov.uk
     http:
       paths:
       - pathType: ImplementationSpecific
         backend:
           service:
-            name: npq-registration-sandbox-web
+            name: teacher-training-entitlement-development
             port:
               number: 80

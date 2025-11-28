@@ -14,9 +14,9 @@ on:
         default: review
         options:
           - review
+          - development
           - staging
           - production
-          - sandbox
       docker-image-tag:
         description: "Docker image tag to deploy"
         required: true
@@ -28,7 +28,7 @@ on:
 
 env:
   TERRAFORM_BASE: terraform/application
-  HEALTHCHECK_CMD: "healthcheck"
+  HEALTHCHECK_CMD: "healthcheck.json"
 
 permissions:
   id-token: write
@@ -55,7 +55,7 @@ jobs:
         id: deploy_manual
         with:
           environment: ${{ inputs.environment }}
-          docker-image: ghcr.io/dfe-digital/npq-registration:${{ inputs.docker-image-tag }}
+          docker-image: ghcr.io/dfe-digital/teacher-training-entitlement:${{ inputs.docker-image-tag }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

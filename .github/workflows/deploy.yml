@@ -12,7 +12,7 @@ on:
   merge_group:
 env:
   TERRAFORM_BASE: terraform/application
-  HEALTHCHECK_CMD: "healthcheck"
+  HEALTHCHECK_CMD: "healthcheck.json"
 
 permissions:
   id-token: write
@@ -48,7 +48,7 @@ jobs:
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
         with:
-          docker-repository: ghcr.io/dfe-digital/npq-registration
+          docker-repository: ghcr.io/dfe-digital/teacher-training-entitlement
           github-token: ${{ secrets.GITHUB_TOKEN }}
           snyk-token: ${{ secrets.SNYK_TOKEN }}
           max-cache: true
@@ -83,145 +83,147 @@ jobs:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  deploy-staging:
-    name: Deploy staging
-    concurrency: deploy_app_staging
-    needs: [docker, all-checks-passed]
-    runs-on: ubuntu-24.04
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: staging
-    outputs:
-      docker-image: ${{ needs.docker.outputs.docker-image }}
-    steps:
-      - uses: actions/checkout@v6
+  # deploy-development:
+  #   name: Deploy development
+  #   concurrency: deploy_app_development
+  #   needs: [docker, all-checks-passed]
+  #   runs-on: ubuntu-24.04
+  #   if: github.ref == 'refs/heads/main'
+  #   environment:
+  #     name: development
+  #   outputs:
+  #     docker-image: ${{ needs.docker.outputs.docker-image }}
+  #   steps:
+  #     - uses: actions/checkout@v6
 
-      - uses: ./.github/actions/deploy-environment-to-aks
-        id: deploy
-        with:
-          environment: staging
-          docker-image: ${{ needs.docker.outputs.docker-image }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          deploy-commit-sha: ${{ github.sha }}
-          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+  #     - uses: ./.github/actions/deploy-environment-to-aks
+  #       id: deploy
+  #       with:
+  #         environment: development
+  #         docker-image: ${{ needs.docker.outputs.docker-image }}
+  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #         deploy-commit-sha: ${{ github.sha }}
+  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_COLOR: failure
-          SLACK_TITLE: Failure deploying to staging
-          SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.docker.outputs.docker-image }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #     - name: Notify on failure
+  #       if: failure()
+  #       uses: rtCamp/action-slack-notify@master
+  #       env:
+  #         SLACK_COLOR: failure
+  #         SLACK_TITLE: Failure deploying to staging
+  #         SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.docker.outputs.docker-image }}
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  deploy-sandbox:
-    name: Deploy sandbox
-    concurrency: deploy_app_sandbox
-    needs: [deploy-staging]
-    runs-on: ubuntu-24.04
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: sandbox
-    steps:
-      - uses: actions/checkout@v6
+  # deploy-staging:
+  #   name: Deploy staging
+  #   concurrency: deploy_app_staging
+  #   needs: [docker, all-checks-passed]
+  #   runs-on: ubuntu-24.04
+  #   if: github.ref == 'refs/heads/main'
+  #   environment:
+  #     name: staging
+  #   outputs:
+  #     docker-image: ${{ needs.docker.outputs.docker-image }}
+  #   steps:
+  #     - uses: actions/checkout@v6
 
-      - uses: ./.github/actions/deploy-environment-to-aks
-        id: deploy
-        with:
-          environment: sandbox
-          docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          deploy-commit-sha: ${{ github.sha }}
-          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+  #     - uses: ./.github/actions/deploy-environment-to-aks
+  #       id: deploy
+  #       with:
+  #         environment: staging
+  #         docker-image: ${{ needs.docker.outputs.docker-image }}
+  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #         deploy-commit-sha: ${{ github.sha }}
+  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_COLOR: failure
-          SLACK_TITLE: Failure deploying to sandbox
-          SLACK_MESSAGE: Failure deploying to sandbox - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #     - name: Notify on failure
+  #       if: failure()
+  #       uses: rtCamp/action-slack-notify@master
+  #       env:
+  #         SLACK_COLOR: failure
+  #         SLACK_TITLE: Failure deploying to staging
+  #         SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.docker.outputs.docker-image }}
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  deploy-production:
-    name: Deploy production
-    concurrency: deploy_app_production
-    needs: [deploy-staging]
-    runs-on: ubuntu-24.04
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-    steps:
-      - uses: actions/checkout@v6
+  # deploy-production:
+  #   name: Deploy production
+  #   concurrency: deploy_app_production
+  #   needs: [deploy-staging]
+  #   runs-on: ubuntu-24.04
+  #   if: github.ref == 'refs/heads/main'
+  #   environment:
+  #     name: production
+  #   steps:
+  #     - uses: actions/checkout@v6
 
-      - uses: ./.github/actions/deploy-environment-to-aks
-        id: deploy
-        with:
-          environment: production
-          docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          deploy-commit-sha: ${{ github.sha }}
-          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+  #     - uses: ./.github/actions/deploy-environment-to-aks
+  #       id: deploy
+  #       with:
+  #         environment: production
+  #         docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
+  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #         deploy-commit-sha: ${{ github.sha }}
+  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_COLOR: failure
-          SLACK_TITLE: Failure deploying to production
-          SLACK_MESSAGE: Failure deploying to production - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #     - name: Notify on failure
+  #       if: failure()
+  #       uses: rtCamp/action-slack-notify@master
+  #       env:
+  #         SLACK_COLOR: failure
+  #         SLACK_TITLE: Failure deploying to production
+  #         SLACK_MESSAGE: Failure deploying to production - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  deploy_domains_infra:
-    name: Deploy Domains Infrastructure
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    concurrency: deploy_production
-    needs: [deploy-production]
-    environment:
-      name: production
-    permissions:
-      id-token: write
+  # deploy_domains_infra:
+  #   name: Deploy Domains Infrastructure
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   concurrency: deploy_production
+  #   needs: [deploy-production]
+  #   environment:
+  #     name: production
+  #   permissions:
+  #     id-token: write
 
-    steps:
-      - name: Deploy Domains Infrastructure
-        id: deploy_domains_infra
-        uses: DFE-Digital/github-actions/deploy-domains-infra@master
-        with:
-          azure-client-id:  ${{ secrets.AZURE_CLIENT_ID  }}
-          azure-tenant-id:  ${{ secrets.AZURE_TENANT_ID   }}
-          azure-subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID   }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+  #   steps:
+  #     - name: Deploy Domains Infrastructure
+  #       id: deploy_domains_infra
+  #       uses: DFE-Digital/github-actions/deploy-domains-infra@master
+  #       with:
+  #         azure-client-id:  ${{ secrets.AZURE_CLIENT_ID  }}
+  #         azure-tenant-id:  ${{ secrets.AZURE_TENANT_ID   }}
+  #         azure-subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID   }}
+  #         slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
 
-  deploy_domains_env:
-    name: Deploy Domains to ${{ matrix.domain_environment }} environment
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    concurrency: deploy_${{ matrix.domain_environment }}
-    needs: [deploy_domains_infra]
-    strategy:
-      max-parallel: 1
-      matrix:
-        domain_environment: [staging, sandbox, production]
-    environment:
-      name: production
-    permissions:
-      id-token: write
+  # deploy_domains_env:
+  #   name: Deploy Domains to ${{ matrix.domain_environment }} environment
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   concurrency: deploy_${{ matrix.domain_environment }}
+  #   needs: [deploy_domains_infra]
+  #   strategy:
+  #     max-parallel: 1
+  #     matrix:
+  #       domain_environment: [development, staging, production]
+  #   environment:
+  #     name: production
+  #   permissions:
+  #     id-token: write
 
-    steps:
-      - name: Deploy Domains Environment
-        id: deploy_domains_env
-        uses: DFE-Digital/github-actions/deploy-domains-env@master
-        with:
-          azure-client-id:  ${{ secrets.AZURE_CLIENT_ID  }}
-          azure-tenant-id:  ${{ secrets.AZURE_TENANT_ID   }}
-          azure-subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID   }}
-          environment: ${{ matrix.domain_environment }}
-          healthcheck: healthcheck
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+  #   steps:
+  #     - name: Deploy Domains Environment
+  #       id: deploy_domains_env
+  #       uses: DFE-Digital/github-actions/deploy-domains-env@master
+  #       with:
+  #         azure-client-id:  ${{ secrets.AZURE_CLIENT_ID  }}
+  #         azure-tenant-id:  ${{ secrets.AZURE_TENANT_ID   }}
+  #         azure-subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID   }}
+  #         environment: ${{ matrix.domain_environment }}
+  #         healthcheck: healthcheck.json
+  #         slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
