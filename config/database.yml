@@ -15,14 +15,14 @@ default_primary: &default_primary
 
 development:
   <<: *default_primary
-  database: npq_registration_development
+  database: cpd_tte_development
 
 review:
   <<: *default_primary
 
 test:
   <<: *default_primary
-  database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: cpd_tte_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 staging:
   <<: *default_primary
