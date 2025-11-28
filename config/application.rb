@@ -69,7 +69,7 @@ module NpqRegistration
     config.x.google_analytics_id = ENV["GOOGLE_ANALYTICS_ID"].presence
 
     # Use active record session store in all environments for consistency
-    config.session_store :active_record_store, key: "_npq_registration_session",
+    config.session_store :active_record_store, key: "_cpd_tte_session",
                                                secure: !Rails.env.local?,
                                                expire_after: 2.weeks
 
