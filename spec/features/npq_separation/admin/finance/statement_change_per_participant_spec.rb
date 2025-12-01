@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.feature "Statement - change payment per participant", type: :feature do
   include Helpers::AdminLogin
 
-  let(:statement) { create(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
+  let(:statement) { create(:statement, for_date: Time.zone.today) }
   let!(:contract) { create(:contract, course: create(:course, :leading_teaching), statement:) }
-  let(:future_statement) { create(:statement, month: Time.zone.today.month + 1, year: Time.zone.today.year, lead_provider: statement.lead_provider) }
+  let(:future_statement) { create(:statement, for_date: 1.month.from_now, lead_provider: statement.lead_provider) }
   let!(:future_contract) { create(:contract, course: contract.course, statement: future_statement) }
 
   before do

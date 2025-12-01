@@ -284,7 +284,7 @@ RSpec.describe Statement, type: :model do
     end
 
     context "when the statement is in the future" do
-      let(:statement) { build(:statement, month: Time.zone.today.month + 1, year: Time.zone.today.year) }
+      let(:statement) { build(:statement, for_date: 1.month.from_now) }
 
       it { is_expected.not_to be_past }
     end
