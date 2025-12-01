@@ -7,8 +7,6 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 <strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
 
-The transferred declarations visibility has been released to production.
-
 ### Changes to API behaviour
 
 We can now include declarations from any lead provider for applications transferred between lead providers.
