@@ -98,6 +98,21 @@ class UpdateApplicationRakeTask
 
         logger.info("Application #{application.ecf_id} participant changed from #{old_user.ecf_id} to #{new_user.ecf_id}")
       end
+
+      desc "Change the course on an application"
+      task :update_course, %i[application_ecf_id new_course_identifier] => :environment do |_t, args|
+        find_application(args.application_ecf_id)
+
+        new_course = Course.find_by(identifier: args.new_course_identifier)
+        raise "Course not found: #{args.new_course_identifier}" unless new_course
+        raise "Cannot change course for an application with declarations" if application.declarations.any?
+
+        old_course = application.course
+
+        application.update!(course: new_course)
+
+        logger.info("Application #{args.application_ecf_id} course changed from #{old_course.identifier} to #{new_course.identifier}")
+      end
     end
   end
 
