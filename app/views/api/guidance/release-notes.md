@@ -1,13 +1,43 @@
 # Release notes
 
-If you have any questions or comments about these notes, please contact DfE via Slack or email.
+If you have any questions or comments about these notes, please contact DfE via Microsoft Teams or email.
+
+## Transferred declarations are now shown in production
+### 1 December 2025
+
+<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
+
+### Changes to API behaviour
+
+We can now include declarations from any lead provider for applications transferred between lead providers.
+
+
+## Application and Declaration API improvements now available in production
+### 20 October 2025
+
+<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
+
+The 'self serve' API improvements have been released to production.
+
+### API additions
+
+We've added:
+
+* a `reason_for_rejection` field to Applications
+* `works_as_senco` and `senco_start_date` fields to Applications
+* an `application_id` field to Declarations
+
+### Changes to API behaviour
+
+We can now allow rejection of an already accepted application.
+
 
 ## Application and Declaration API improvements now available in sandbox
 ### 26 September 2025
 
 <strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
 
-The 'self serve' API improvements have been released to sandbox
+The 'self serve' API improvements have been released to sandbox.
 
 ### API additions
 
