@@ -43,7 +43,7 @@ RSpec.describe "one_off:eyl_users" do
       true,
       application.lead_provider_approval_status,
       application.training_status,
-      application.cohort.start_year,
+      application.cohort.identifier,
     ]
   end
 
@@ -61,7 +61,7 @@ RSpec.describe "one_off:eyl_users" do
       true,
       application_2.lead_provider_approval_status,
       application_2.training_status,
-      application_2.cohort.start_year,
+      application_2.cohort.identifier,
     ]
   end
 
@@ -79,7 +79,7 @@ RSpec.describe "one_off:eyl_users" do
       false,
       application_no_declarations.lead_provider_approval_status,
       application_no_declarations.training_status,
-      application_no_declarations.cohort.start_year,
+      application_no_declarations.cohort.identifier,
     ]
   end
 

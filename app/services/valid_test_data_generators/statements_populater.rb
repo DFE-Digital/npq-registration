@@ -31,7 +31,7 @@ module ValidTestDataGenerators
     end
 
     def create_statements!
-      logger.info "StatementsPopulater: Creating #{cohort.start_year} cohort statements for #{lead_provider.name}"
+      logger.info "StatementsPopulater: Creating #{cohort.identifier} cohort statements for #{lead_provider.name}"
 
       statements_names(cohort.start_year).each_with_index do |statements_name, index|
         month = statements_name[0]
@@ -68,7 +68,7 @@ module ValidTestDataGenerators
         logger.info "StatementsPopulater: Statement #{month}/#{year} successfully created!"
       end
 
-      logger.info "StatementsPopulater: #{cohort.start_year} cohort statements for #{lead_provider.name} successfully created!"
+      logger.info "StatementsPopulater: #{cohort.identifier} cohort statements for #{lead_provider.name} successfully created!"
     end
 
     def state_for(payment_date, deadline_date)

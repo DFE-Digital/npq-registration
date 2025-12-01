@@ -23,11 +23,11 @@ module OneOff
     }.freeze
     TEMPLATE_STATEMENT_YEAR = 2025
     TEMPLATE_STATEMENT_MONTH = 1
-    def call(cohort_year:, csv_path:)
+    def call(cohort_identifier:, csv_path:)
       csv_file = CSV.read(csv_path, headers: true)
 
       ActiveRecord::Base.transaction do
-        @cohort = Cohort.find_by!(start_year: cohort_year)
+        @cohort = Cohort.find_by!(identifier: cohort_identifier)
 
         csv_file.each do |row|
           # NIoT has no 2021 cohort so its excluded
