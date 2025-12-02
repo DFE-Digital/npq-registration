@@ -171,6 +171,13 @@ PARTICIPANT_DECLARATION = {
     nullable: true,
     example: "Bar education",
   }
+  h[:v3][:properties][:attributes][:properties][:application_id] = {
+    description: "The unique identifier of the NPQ application",
+    type: :string,
+    format: :uuid,
+    nullable: false,
+    example: "db3a7848-7308-4879-942a-c4a70ced400a",
+  }
   # Re-add updated_at to fix ordering
   updated_at = h[:v3][:properties][:attributes][:properties].delete(:updated_at)
   h[:v3][:properties][:attributes][:properties][:updated_at] = updated_at
