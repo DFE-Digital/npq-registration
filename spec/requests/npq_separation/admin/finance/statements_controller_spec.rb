@@ -27,6 +27,13 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :reque
       let(:params) { nil }
 
       it { is_expected.to have_http_status(:ok) }
+
+      it "defaults to showing only statements with output_fee true" do
+        subject
+        expect(response.body).to match(/October 2024<\/td>/)
+        expect(response.body).to match(/November 2024<\/td>/)
+        expect(response.body).not_to match(/December 2024<\/td>/)
+      end
     end
 
     context "with params matching one statement" do
@@ -64,6 +71,36 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :reque
       it { is_expected.to have_attributes body: %r{October 2024</td>} }
       it { is_expected.to have_attributes body: %r{November 2024</td>} }
       it { is_expected.not_to have_attributes body: %r{December 2024</td>} }
+    end
+
+    context "with output_fee set to false" do
+      let(:params) do
+        {
+          output_fee: "false",
+        }
+      end
+
+      it "shows only statements without output_fee" do
+        subject
+        expect(response.body).not_to match(/October 2024<\/td>/)
+        expect(response.body).not_to match(/November 2024<\/td>/)
+        expect(response.body).to match(/December 2024<\/td>/)
+      end
+    end
+
+    context "with output_fee explicitly set to blank (user selected 'All')" do
+      let(:params) do
+        {
+          output_fee: "",
+        }
+      end
+
+      it "shows all statements regardless of output_fee" do
+        subject
+        expect(response.body).to match(/October 2024<\/td>/)
+        expect(response.body).to match(/November 2024<\/td>/)
+        expect(response.body).to match(/December 2024<\/td>/)
+      end
     end
 
     context "with params matching no statement statement" do
