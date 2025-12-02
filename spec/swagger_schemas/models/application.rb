@@ -115,6 +115,12 @@ APPLICATION = {
             example: Application.lead_provider_approval_statuses.keys.first,
             enum: Application.lead_provider_approval_statuses.keys,
           },
+          reason_for_rejection: {
+            description: "The reason why the application was rejected by the lead provider",
+            type: :string,
+            nullable: true,
+            example: "Application does not meet eligibility criteria",
+          },
           works_in_school: {
             description: "Indicates whether the participant is currently employed by school",
             type: :boolean,
@@ -200,5 +206,18 @@ APPLICATION = {
     type: :string,
     example: Schedule::IDENTIFIERS.first,
     enum: Schedule::IDENTIFIERS,
+  }
+  h[:v3][:properties][:attributes][:properties][:works_as_senco] = {
+    description: "Indicates whether the participant works as a SENCO (Special Educational Needs Coordinator)",
+    type: :boolean,
+    nullable: true,
+    example: true,
+  }
+  h[:v3][:properties][:attributes][:properties][:senco_start_date] = {
+    description: "The date when the participant started working as a SENCO",
+    type: :string,
+    format: :date,
+    nullable: true,
+    example: "2021-09-01",
   }
 }.freeze
