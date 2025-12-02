@@ -2,11 +2,13 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
   before_action :set_statements_and_contracts, only: %i[show print_provider print_dfe_user]
 
   def index
+    params[:output_fee] = "true" unless params.key?(:output_fee)
+
     scope = Statement.includes(:lead_provider, :cohort)
                      .where(statement_params)
                      .order(payment_date: :asc)
 
-    redirect_to action: :show, id: scope.first.id and return if scope.one?
+    redirect_to action: :show, id: scope.first.id and return if scope.one? && params[:statement].present?
 
     if scope.none?
       flash.now[:error] = "No statements matched all the filters, showing all statement periods instead"
@@ -47,7 +49,7 @@ private
     params.permit(:lead_provider_id, :cohort_id, :payment_status, :statement, :output_fee)
           .tap { extract_period _1 }
           .tap { extract_state _1 }
-          .compact_blank
+          .reject { |_k, v| v.blank? && v != false }
   end
 
   def extract_period(params)
