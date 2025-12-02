@@ -18,7 +18,7 @@ module Milestones
           statement = lead_provider
             .statements
             .with_output_fee
-            .find_by(month: statement_date.month, year: statement_date.year)
+            .find_by(month: statement_date.month, year: statement_date.year, cohort: milestone.schedule.cohort)
           milestone.milestone_statements.find_or_create_by!(statement: statement)
         end
       end
