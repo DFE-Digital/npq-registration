@@ -20,6 +20,7 @@ RSpec.describe Milestones::Create, :with_default_schedules, type: :model do
 
     before do
       LeadProvider.find_each do |lead_provider|
+        create(:statement, lead_provider:, cohort: Cohort.first, year: cohort.start_year, month: statement_month, output_fee: true)
         create(:statement, lead_provider:, cohort:, year: cohort.start_year, month: statement_month, output_fee: true)
       end
       subject
@@ -33,7 +34,7 @@ RSpec.describe Milestones::Create, :with_default_schedules, type: :model do
       expect(MilestoneStatement.count).to eq(LeadProvider.count)
 
       LeadProvider.find_each do |lead_provider|
-        statement = lead_provider.statements.find_by(month: statement_month, year: cohort.start_year)
+        statement = lead_provider.statements.find_by(month: statement_month, year: cohort.start_year, cohort: schedule.cohort)
         milestone = Milestone.find_by(schedule_id: schedule.id, declaration_type:)
         expect(MilestoneStatement.exists?(milestone:, statement:)).to be true
       end
