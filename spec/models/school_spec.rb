@@ -31,7 +31,7 @@ RSpec.describe School do
     end
   end
 
-  describe "::search_by_name" do
+  describe ".search_by_name" do
     context "searching by name" do
       before { create(:school, name: "a school") }
 
@@ -157,6 +157,30 @@ RSpec.describe School do
 
       it "can find partial match" do
         expect(described_class.search_by_name("mary").count).to be(1)
+      end
+    end
+
+    context "synonym searching: st and saint" do
+      let(:st_school) { create(:school, name: "St Mary's Catholic Primary School") }
+      let(:saint_school) { create(:school, name: "Saint Mary's College") }
+      let(:school_containing_st) { create(:school, name: "Some Firsaint School") }
+
+      before do
+        st_school
+        saint_school
+        school_containing_st
+      end
+
+      it "can find 'saint' when searching for 'st'" do
+        expect(described_class.search_by_name("st mary")).to include(st_school, saint_school)
+      end
+
+      it "can find 'st' when searching for 'saint'" do
+        expect(described_class.search_by_name("saint mary")).to include(st_school, saint_school)
+      end
+
+      it "does not return matches where 'st' is not a whole word" do
+        expect(described_class.search_by_name("some first")).not_to include(school_containing_st)
       end
     end
   end
