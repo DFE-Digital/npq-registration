@@ -19,6 +19,10 @@ module Participants
       programme-not-appropriate-for-role-and-cpd-needs
       started-in-error
       expected-commitment-unclear
+      assessment-requirements-not-met
+      change-in-career
+      disengaged-and-unresponsive
+      non-payment-of-invoice
       other
     ].freeze
 
