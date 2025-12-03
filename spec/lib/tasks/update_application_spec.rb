@@ -209,4 +209,42 @@ RSpec.describe "update_application" do
       it_behaves_like "outputting an error", message: "User not found: "
     end
   end
+
+  describe "update_application:update_course" do
+    subject(:run_task) { Rake::Task["update_application:update_course"].invoke(application.ecf_id, new_course.identifier) }
+
+    after { Rake::Task["update_application:update_course"].reenable }
+
+    let(:cohort) { create(:cohort, :current) }
+    let(:schedule) { Schedule.where(cohort:, course_group: course.course_group).last }
+    let(:application) { create(:application, course:, cohort:, schedule:) }
+    let(:course) { create(:course, :leading_teaching_development) }
+    let(:new_course) { create(:course, :leading_teaching) }
+
+    it "updates the course of the application" do
+      run_task
+
+      expect(application.reload.course).to eq(new_course)
+    end
+
+    context "when the application does not exist" do
+      subject(:run_task) { Rake::Task["update_application:update_course"].invoke(SecureRandom.uuid, new_course.identifier) }
+
+      it_behaves_like "outputting an error"
+    end
+
+    context "when the course does not exist" do
+      subject(:run_task) { Rake::Task["update_application:update_course"].invoke(application.ecf_id, "nonexistent-course-identifier") }
+
+      it_behaves_like "outputting an error", message: "Course not found: nonexistent-course-identifier"
+    end
+
+    context "when the application has declarations" do
+      let(:application) { create(:application, :with_declaration, course:, cohort:, schedule:) }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Cannot change course for an application with declarations")
+      end
+    end
+  end
 end
