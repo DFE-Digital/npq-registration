@@ -5,9 +5,9 @@ RSpec.describe "update_application" do
 
   let(:cohort) { create(:cohort, :previous, :without_funding_cap) }
 
-  shared_examples "outputting an error" do
+  shared_examples "outputting an error" do |message: "Application not found: "|
     it "outputs an error message" do
-      expect { run_task }.to raise_error(RuntimeError, /Application not found: /)
+      expect { run_task }.to raise_error(RuntimeError, /#{message}/)
     end
   end
 
@@ -180,6 +180,33 @@ RSpec.describe "update_application" do
       it "raises an error" do
         expect { run_task }.to raise_error(RuntimeError, "Cannot change schedule for an application with declarations")
       end
+    end
+  end
+
+  describe "update_application:update_participant" do
+    subject(:run_task) { Rake::Task["update_application:update_participant"].invoke(application.ecf_id, new_participant.ecf_id) }
+
+    after { Rake::Task["update_application:update_participant"].reenable }
+
+    let(:old_participant) { create(:user) }
+    let(:new_participant) { create(:user) }
+    let(:application) { create(:application, :with_declaration, user: old_participant, cohort:) }
+
+    it "updates the participant of the application" do
+      run_task
+      expect(application.reload.user).to eq(new_participant)
+    end
+
+    context "when the application does not exist" do
+      subject(:run_task) { Rake::Task["update_application:update_participant"].invoke(SecureRandom.uuid, new_participant.ecf_id) }
+
+      it_behaves_like "outputting an error"
+    end
+
+    context "when the new participant does not exist" do
+      subject(:run_task) { Rake::Task["update_application:update_participant"].invoke(application.ecf_id, SecureRandom.uuid) }
+
+      it_behaves_like "outputting an error", message: "User not found: "
     end
   end
 end
