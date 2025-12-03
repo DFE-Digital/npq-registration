@@ -528,6 +528,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_28_113435) do
     t.date "acceptance_window_start"
     t.date "acceptance_window_end"
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
+    t.index ["course_group_id", "acceptance_window_start", "acceptance_window_end"], name: "idx_on_course_group_id_acceptance_window_start_acce_f27f9cb6b0"
     t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
     t.index ["ecf_id"], name: "index_schedules_on_ecf_id", unique: true
     t.index ["identifier", "cohort_id"], name: "index_schedules_on_identifier_and_cohort_id", unique: true
