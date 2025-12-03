@@ -1,6 +1,7 @@
 module OneOff
   class MoveApplicationsToAutumn2025
     BATCH_SIZE = 100
+    # AUTUMN_START_POINT = Time.zone.parse("2025-08-01 00:00:00").freeze
     AUTUMN_START_POINT = Time.zone.parse("2025-12-02 00:00:00").freeze
 
     def initialize(lead_provider:, changelog:)
