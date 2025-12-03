@@ -84,6 +84,20 @@ class UpdateApplicationRakeTask
         application.update!(schedule: new_schedule)
         logger.info("Application #{application.ecf_id} schedule changed from '#{current_schedule&.identifier}' to '#{new_schedule.identifier}'")
       end
+
+      desc "Update Participant on an application (and move declarations)"
+      task :update_participant, %i[application_ecf_id new_participant_ecf_id] => :environment do |_t, args|
+        find_application(args.application_ecf_id)
+
+        old_user = application.user
+
+        new_user = User.find_by(ecf_id: args.new_participant_ecf_id)
+        raise "User not found: #{args.new_participant_ecf_id}" unless new_user
+
+        application.update!(user: new_user)
+
+        logger.info("Application #{application.ecf_id} participant changed from #{old_user.ecf_id} to #{new_user.ecf_id}")
+      end
     end
   end
 
