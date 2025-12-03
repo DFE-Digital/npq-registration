@@ -15,6 +15,10 @@ FactoryBot.define do
 
     allowed_declaration_types { %w[started retained-1 retained-2 completed] }
 
+    policy_descriptor { 1 }
+    acceptance_window_start { Date.new(cohort.start_year, 1, 1) }
+    acceptance_window_end { Date.new(cohort.start_year, 12, 31) }
+
     initialize_with do
       Schedule.find_by(cohort:, identifier:) || new(**attributes)
     end
