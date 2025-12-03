@@ -14,7 +14,7 @@ RSpec.describe API::GuidanceController do
 
   describe "#show" do
     context "with known page" do
-      before { get api_guidance_page_path(page: "how-to-guides/how-npqs-work") }
+      before { get api_guidance_page_path(page: "how-to-guides/how-ttes-work") }
 
       it { is_expected.to have_http_status :success }
       it { expect(response.headers).to include "cache-control" => "no-store" }
