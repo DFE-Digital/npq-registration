@@ -11,6 +11,6 @@ next_cohort_start_year = Date.current.year + (Date.current.month < registration_
 end
 
 # Add suffixed cohort
-FactoryBot.create(:cohort, :with_funding_cap, start_year: 2025,
-                                              suffix: "b",
-                                              description: "Autumn 2025")
+# FactoryBot.create(:cohort, :with_funding_cap, start_year: 2025,
+#                                               suffix: "b",
+#                                               description: "Autumn 2025")
