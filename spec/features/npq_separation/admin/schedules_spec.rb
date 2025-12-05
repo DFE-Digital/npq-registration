@@ -27,8 +27,8 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, :no_js, type: :feature do
 
     expect(page).to have_css("h2", text: "Schedules")
     expect(page).to have_table(rows: [
-      [schedules[1].name, short_date(schedules[1].applies_from), short_date(schedules[1].applies_to), 2],
-      [schedules[0].name, short_date(schedules[0].applies_from), short_date(schedules[0].applies_to), 4],
+      [schedules[1].name, short_date(schedules[1].applies_from), short_date(schedules[1].applies_to), 2, 0],
+      [schedules[0].name, short_date(schedules[0].applies_from), short_date(schedules[0].applies_to), 4, 0],
     ])
   end
 

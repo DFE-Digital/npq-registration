@@ -42,6 +42,7 @@ module OneOff
         migrate_declarations_between_statements!
         update_from_statement_attributes!
         update_to_statement_attributes!
+        move_milestones_between_statements!
 
         raise ActiveRecord::Rollback if dry_run
       end
@@ -100,6 +101,19 @@ module OneOff
         record_info("Statement #{statement.year}-#{statement.month} for #{statement.lead_provider.name} (ID: #{statement.id}) updated " \
                     "from: #{statement.previous_changes.except(:updated_at).transform_values(&:first)} " \
                     "to #{statement.previous_changes.except(:updated_at).transform_values(&:last)}")
+      end
+    end
+
+    def move_milestones_between_statements!
+      from_statements_by_provider.each do |provider, from_statement|
+        to_statement = to_statements_by_provider[provider]
+
+        next unless to_statement.output_fee
+
+        from_statement.milestone_statements.each do |milestone_statement|
+          milestone_statement.update!(statement: to_statement, skip_statement_date_validation: true)
+          record_info("Moved milestone ID #{milestone_statement.milestone_id} from statement ID #{from_statement.id} to statement ID #{to_statement.id}")
+        end
       end
     end
 

@@ -19,6 +19,10 @@
       <strong>Payment run:</strong>
       <%= boolean_red_green_tag(@statement.output_fee) %>
     </p>
+    <p class="govuk-body govuk-!-margin-bottom-2">
+      <strong>Milestones:</strong>
+      <%= @statement.milestones.distinct.pluck(:declaration_type).join(", ") %>
+    </p>
     <%= govuk_details(summary_text: "Statement ID", id: "statement-id") do
           @statement.ecf_id
         end %>

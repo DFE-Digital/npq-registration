@@ -371,5 +371,42 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
         end
       end
     end
+
+    context "when there are milestones" do
+      let(:milestone) { create(:milestone) }
+
+      before do
+        create(:milestone_statement, statement: from_statement, milestone:)
+      end
+
+      context "when the to_statement is output_fee: true" do
+        it "moves the milestones" do
+          migrate
+
+          expect(from_statement.milestones).to be_empty
+          expect(to_statement.milestones).to contain_exactly(milestone)
+        end
+      end
+
+      context "when the to_statement is output_fee: false" do
+        let(:to_statement) do
+          create(:statement,
+                 output_fee: false,
+                 deadline_date: 1.day.from_now,
+                 month: 5,
+                 year: 2023,
+                 lead_provider:,
+                 cohort:,
+                 payment_date: 1.day.from_now)
+        end
+
+        it "does not move the milestones" do
+          migrate
+
+          expect(from_statement.milestones).to contain_exactly(milestone)
+          expect(to_statement.milestones).to be_empty
+        end
+      end
+    end
   end
 end

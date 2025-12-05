@@ -17,5 +17,7 @@ RSpec.describe Schedule, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:course_group) }
     it { is_expected.to belong_to(:cohort) }
+    it { is_expected.to have_many(:milestones) }
+    it { is_expected.to have_many(:statements).through(:milestones) }
   end
 end
