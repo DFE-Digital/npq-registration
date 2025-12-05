@@ -9,9 +9,11 @@
 </h1>
 
 <%= form_with model: [:npq_separation, :admin, @schedule.cohort, @schedule] do |f| %>
-  <%= f.govuk_text_field :name, class: 'govuk-input--width-20' %>
+  <%= f.govuk_text_field :name, class: "govuk-input--width-20" %>
 
-  <%= f.govuk_text_field :identifier, class: 'govuk-input--width-20' %>
+  <%= f.govuk_text_field :identifier, class: "govuk-input--width-20" %>
+
+  <%= f.govuk_text_field :policy_descriptor, class: "govuk-input--width-2", label: { text: "Policy descriptor" } %>
 
   <%=
     f.govuk_collection_select :course_group_id,
@@ -19,20 +21,24 @@
                               :id,
                               :name,
                               options: { include_blank: true },
-                              label: { text: 'Course group' }
+                              label: { text: "Course group" }
   %>
 
-  <%= f.govuk_date_field :applies_from, legend: { text: 'Applies from' } %>
+  <%= f.govuk_date_field :applies_from, legend: { text: "Applies from" } %>
 
-  <%= f.govuk_date_field :applies_to, legend: { text: 'Applies to' } %>
+  <%= f.govuk_date_field :applies_to, legend: { text: "Applies to" } %>
+
+  <%= f.govuk_date_field :acceptance_window_start, legend: { text: "Acceptance window start" } %>
+
+  <%= f.govuk_date_field :acceptance_window_end, legend: { text: "Acceptance window end" } %>
 
   <%=
     f.govuk_collection_check_boxes :allowed_declaration_types,
                                    Schedule.allowed_declaration_types,
                                    :to_s,
                                    :to_s,
-                                   legend: { text: 'Declaration types' }
+                                   legend: { text: "Declaration types" }
   %>
 
-  <%= f.govuk_submit @schedule.new_record? ? 'Create schedule' : 'Update schedule' %>
+  <%= f.govuk_submit @schedule.new_record? ? "Create schedule" : "Update schedule" %>
 <% end %>

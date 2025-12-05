@@ -13,7 +13,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, :no_js, type: :feature do
   let!(:schedules) do
     [
       create(:schedule, :npq_ehco_december, cohort:),
-      create(:schedule, :npq_aso_december, cohort:, allowed_declaration_types: %w[started completed]),
+      create(:schedule, :npq_aso_december, cohort:, allowed_declaration_types: %w[started completed], policy_descriptor: 11),
     ]
   end
 
@@ -42,6 +42,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, :no_js, type: :feature do
       expect(sl).to have_summary_item("Cohort", "2026 to 2027")
       expect(sl).to have_summary_item("Name", schedule.name)
       expect(sl).to have_summary_item("Identifier", schedule.identifier)
+      expect(sl).to have_summary_item("Policy descriptor", 11)
       expect(sl).to have_summary_item("Course group", schedule.course_group.name)
       expect(sl).to have_summary_item("Applies from", long_date(schedule.applies_from))
       expect(sl).to have_summary_item("Applies to", long_date(schedule.applies_to))
@@ -130,6 +131,7 @@ private
   def fill_in_schedule_form(course_group)
     fill_in "Name", with: "name"
     fill_in "Identifier", with: "identifier"
+    fill_in "Policy descriptor", with: "42"
     select course_group.name, from: "Course group"
 
     fieldsets = all("fieldset")
@@ -146,15 +148,30 @@ private
       fill_in "Year", with: "2026"
     end
 
+    within(fieldsets[2]) do
+      fill_in "Day", with: "5"
+      fill_in "Month", with: "6"
+      fill_in "Year", with: "2026"
+    end
+
+    within(fieldsets[3]) do
+      fill_in "Day", with: "7"
+      fill_in "Month", with: "8"
+      fill_in "Year", with: "2026"
+    end
+
     uncheck "retained-2", visible: :all
   end
 
   def expect_filled_in_schedule_attributes(schedule, course_group)
     expect(schedule.name).to eq("name")
     expect(schedule.identifier).to eq("identifier")
+    expect(schedule.policy_descriptor).to eq(42)
     expect(schedule.course_group).to eq(course_group)
     expect(schedule.applies_from).to eq(Date.new(2026, 2, 1))
     expect(schedule.applies_to).to eq(Date.new(2026, 4, 3))
+    expect(schedule.acceptance_window_start).to eq(Date.new(2026, 6, 5))
+    expect(schedule.acceptance_window_end).to eq(Date.new(2026, 8, 7))
     expect(schedule.allowed_declaration_types).to eq(%w[started retained-1 completed])
   end
 
