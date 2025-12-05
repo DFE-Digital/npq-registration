@@ -1,8 +1,9 @@
-ARM_TEMPLATE_TAG=1.1.6
-RG_TAGS={"Product" : "Register for National Professional Qualifications (NPQ)"}
+ARM_TEMPLATE_TAG=1.1.10
+RG_TAGS={"Product" : "Teacher Training Entitlement"}
 REGION=UK South
-SERVICE_NAME=npq-registration
-SERVICE_SHORT=cpdnpq
+SERVICE_NAME=teacher-training-entitlement
+SERVICE_SHORT=cpdtte
+DOCKER_REPOSITORY=ghcr.io/dfe-digital/teacher-training-entitlement
 
 # Handle BSD and GNU sed differences
 SED_INPLACE ?= $(shell if sed --version >/dev/null 2>&1; then echo "-i"; else echo "-i ''"; fi)
@@ -24,19 +25,22 @@ build-local-image:
 docker-compose-build:
 	docker-compose build --build-arg BUNDLE_FLAGS='--jobs=4 --no-binstubs --no-cache' --parallel
 
+.PHONY: development
+development: test-cluster
+	$(eval include global_config/development.sh)
+
 .PHONY: review
-review: test-cluster ## Specify review AKS environment
-	# PULL_REQUEST_NUMBER is set by the GitHub action
-	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
+review: test-cluster ## Specify review configuration
+	$(if ${PR_NUMBER},,$(error Missing PR_NUMBER))
+	$(eval ENVIRONMENT=pr-${PR_NUMBER})
 	$(eval include global_config/review.sh)
-	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
+	$(eval TERRAFORM_BACKEND_KEY=terraform-$(PR_NUMBER).tfstate)
+	$(eval export TF_VAR_app_suffix=-$(PR_NUMBER))
+	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)tterv$(PR_NUMBER)sa)
 
 .PHONY: staging
 staging: test-cluster
 	$(eval include global_config/staging.sh)
-
-sandbox: production-cluster
-	$(eval include global_config/sandbox.sh)
 
 production: production-cluster
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Missing CONFIRM_PRODUCTION=yes))
@@ -65,8 +69,8 @@ set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
 terraform-init: composed-variables set-azure-account
-	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
-	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
+	$(if $(DOCKER_IMAGE_TAG), , $(error Missing environment variable "DOCKER_IMAGE_TAG"))
+	$(if $(PR_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
@@ -81,7 +85,7 @@ terraform-init: composed-variables set-azure-account
 	$(eval export TF_VAR_config=${CONFIG})
 	$(eval export TF_VAR_service_name=${SERVICE_NAME})
 	$(eval export TF_VAR_service_short=${SERVICE_SHORT})
-	$(eval export TF_VAR_docker_image=$(DOCKER_IMAGE))
+	$(eval export TF_VAR_docker_image=${DOCKER_REPOSITORY}:${DOCKER_IMAGE_TAG})
 
 terraform-plan: terraform-init
 	terraform -chdir=terraform/application plan -var-file "config/${CONFIG}.tfvars.json"
@@ -89,7 +93,7 @@ terraform-plan: terraform-init
 terraform-apply: terraform-init
 	terraform -chdir=terraform/application apply -var-file "config/${CONFIG}.tfvars.json" ${AUTO_APPROVE}
 
-## DOCKER_IMAGE=fake-image make review terraform-unlock PULL_REQUEST_NUMBER=4169 LOCK_ID=123456
+## DOCKER_IMAGE=fake-image make review terraform-unlock PR_NUMBER=4169 LOCK_ID=123456
 ## DOCKER_IMAGE=fake-image make staging terraform-unlock LOCK_ID=123456
 .PHONY: terraform-unlock
 terraform-unlock: terraform-init
@@ -119,9 +123,9 @@ deploy-domain-arm-resources: domains domains-composed-variables arm-deployment
 
 validate-domain-arm-resources: set-what-if domains domains-composed-variables arm-deployment
 
-deploy-arm-resources: arm-deployment ## Validate ARM resource deployment. Usage: make domains validate-arm-resources
+deploy-arm-resources: arm-deployment 
 
-validate-arm-resources: set-what-if arm-deployment ## Validate ARM resource deployment. Usage: make domains validate-arm-resources
+validate-arm-resources: set-what-if arm-deployment 
 
 domains-infra-init: domains domains-composed-variables domains set-azure-account
 	rm -rf terraform/domains/infrastructure/vendor/modules/domains
@@ -147,10 +151,10 @@ domains-init: domains domains-composed-variables set-azure-account
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
 		-backend-config=key=${ENVIRONMENT}.tfstate
 
-domains-plan: domains-init
+domains-plan: domains-init  ## Terraform plan for DNS environment domains. Usage: make development domains-plan
 	terraform -chdir=terraform/domains/environment_domains plan -var-file config/${CONFIG}.tfvars.json
 
-domains-apply: domains-init
+domains-apply: domains-init ## Terraform apply for DNS environment domains. Usage: make development domains-apply
 	terraform -chdir=terraform/domains/environment_domains apply -var-file config/${CONFIG}.tfvars.json ${AUTO_APPROVE}
 
 test-cluster:
@@ -173,35 +177,34 @@ install-konduit: ## Install the konduit script, for accessing backend services
 		|| true
 
 aks-console: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c --sandbox"
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c --sandbox"
 
 aks-rw-console: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c"
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c"
 
 aks-runner: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails runner \"$(code)\""
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails runner \"$(code)\""
 
 aks-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID}-worker -- /bin/sh
 
 aks-web-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID}-web -- /bin/sh
 
-action-group-resources: set-azure-account # make env_aks action-group-resources ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true for each subscription
+action-group: set-azure-account # make production action-group ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true. Use any non-prod environment to create in the test subscription.
 	$(if $(ACTION_GROUP_EMAIL), , $(error Please specify a notification email for the action group))
-	echo ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg
-	az group create -l uksouth -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --tags "Product=Register for National Professional Qualifications (NPQ)" "Environment=Test" "Service Offering=Teacher services cloud"
-	az monitor action-group create -n ${AZURE_RESOURCE_PREFIX}-npq-registration -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --short-name ${AZURE_RESOURCE_PREFIX}-npq --action email ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-email ${ACTION_GROUP_EMAIL}
+	az group create -l uksouth -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --tags "Product=${SERVICE_NAME}"
+	az monitor action-group create -n ${AZURE_RESOURCE_PREFIX}-${SERVICE_NAME} -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --action email ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-email ${ACTION_GROUP_EMAIL}
 
 # Removes explicit postgres database URLs from database.yml
-konduit-cleanup:
-	sed $(SED_INPLACE) -e '/url\: "postgres/d' config/database.yml; \
-	exit 0
+# konduit-cleanup:
+# 	sed $(SED_INPLACE) -e '/url\: "postgres/d' config/database.yml; \
+# 	exit 0
 
 define KONDUIT_CONNECT
 	trap 'make konduit-cleanup' INT; \
@@ -218,16 +221,16 @@ endef
 
 # Creates a konduit to the DB and points development to it. The konduit URL is removed when the konduit is closed.
 konduit: get-cluster-credentials
-	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv npq-registration-${CONFIG_LONG}-web -- psql > "$$tmp_file"
+	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv teacher-training-entitlement-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
 
 # Creates a konduit to the snapshot DB and points development to it. The konduit URL is removed when the konduit is closed.
 konduit-snapshot: get-cluster-credentials
-	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv npq-registration-${CONFIG_LONG}-web -- psql > "$$tmp_file"
+	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv teacher-training-entitlement-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
 
-define SET_APP_ID_FROM_PULL_REQUEST_NUMBER
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+define SET_APP_ID_FROM_PR_NUMBER
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 endef
 
 # downloads the given file from the app/tmp directory of all
@@ -235,24 +238,24 @@ endef
 ## ie: FILENAME=restart.txt make staging aks-download-tmp-file
 ## ie: FILENAME=restart.txt make ci production aks-download-tmp-file
 aks-download-tmp-file: get-cluster-credentials
-	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(SET_APP_ID_FROM_PR_NUMBER)
 	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-download-tmp-file))
-	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
+	kubectl get pods -n ${NAMESPACE} -l app=teacher-training-entitlement-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
 
 # uploads the given file to the app/tmp directory of all
 # pods in the cluster.
 ## ie: FILENAME=local_file.txt make staging aks-upload-tmp-file
 aks-upload-tmp-file: get-cluster-credentials
-	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(SET_APP_ID_FROM_PR_NUMBER)
 	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-upload-tmp-file))
-	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
+	kubectl get pods -n ${NAMESPACE} -l app=teacher-training-entitlement-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
 
 maintenance-image-push: ## Build and push maintenance page image: make production maintenance-image-push GITHUB_TOKEN=x [MAINTENANCE_IMAGE_TAG=y]
 	$(if ${GITHUB_TOKEN},, $(error Provide a valid Github token with write:packages permissions as GITHUB_TOKEN variable))
 	$(if ${MAINTENANCE_IMAGE_TAG},, $(eval export MAINTENANCE_IMAGE_TAG=$(shell date +%s)))
-	docker build -t ghcr.io/dfe-digital/npq-registration-maintenance:${MAINTENANCE_IMAGE_TAG} maintenance_page
+	docker build -t ghcr.io/dfe-digital/teacher-training-entitlement-maintenance:${MAINTENANCE_IMAGE_TAG} maintenance_page
 	echo ${GITHUB_TOKEN} | docker login ghcr.io -u USERNAME --password-stdin
-	docker push ghcr.io/dfe-digital/npq-registration-maintenance:${MAINTENANCE_IMAGE_TAG}
+	docker push ghcr.io/dfe-digital/teacher-training-entitlement-maintenance:${MAINTENANCE_IMAGE_TAG}
 
 maintenance-fail-over: get-cluster-credentials ## Fail main app over to the maintenance page. Requires an existing maintenance docker image: make production maintenance-fail-over MAINTENANCE_IMAGE_TAG=y. See https://github.com/DFE-Digital/teacher-services-cloud/blob/main/documentation/maintenance-page.md#github-token
 	$(eval export CONFIG)
@@ -263,3 +266,58 @@ enable-maintenance: maintenance-image-push maintenance-fail-over ## Build, push,
 disable-maintenance: get-cluster-credentials ## Fail back to the main app: make production disable-maintenance
 	$(eval export CONFIG)
 	./maintenance_page/scripts/failback.sh
+
+db-seed: get-cluster-credentials # Example db seed for review apps, modify as required
+	$(if $(PR_NUMBER), , $(error can only run with PR_NUMBER))
+	$(eval NAMESPACE=$(shell jq -r '.namespace' terraform/application/config/$(CONFIG).tfvars.json))
+	kubectl -n ${NAMESPACE} exec deployment/${SERVICE_NAME}-pr-${PR_NUMBER} -- /bin/sh -c "cd /app && bundle exec rake db:seed"
+
+set-pgserver:
+	$(eval SERVERNAME=${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg)
+
+list-pglogs: composed-variables set-pgserver set-azure-account
+	az postgres flexible-server server-logs list --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME}
+
+download-pglogs: composed-variables set-pgserver set-azure-account
+	$(if $(LOG_NAME), , $(error Please specify a LOG_NAME for download))
+	az postgres flexible-server server-logs download --name ${LOG_NAME} --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME}
+	ls -l $(LOG_NAME)*
+
+enable-pglogs: composed-variables set-pgserver set-azure-account
+	echo "Enabling server logs for PostgreSQL server ${SERVERNAME}"
+	echo "Current Value"
+	az postgres flexible-server parameter show --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME} --name logfiles.download_enable --query value
+	echo "Setting Value"
+	az postgres flexible-server parameter set --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME} --name logfiles.download_enable --value on
+	echo "New Value"
+	az postgres flexible-server parameter show --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME} --name logfiles.download_enable --query value
+
+disable-pglogs: composed-variables set-pgserver set-azure-account
+	echo "Current Value"
+	az postgres flexible-server parameter show --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME} --name logfiles.download_enable --query value
+	echo "Setting Value"
+	az postgres flexible-server parameter set --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME} --name logfiles.download_enable --value off
+	echo "New Value"
+	az postgres flexible-server parameter show --resource-group ${RESOURCE_GROUP_NAME} --server-name ${SERVERNAME} --name logfiles.download_enable --query value
+
+show-service: get-cluster-credentials
+	$(if $(PR_NUMBER), $(eval export DSUFFIX="-pr-${PR_NUMBER}"), $(eval export DSUFFIX="-${CONFIG}") )
+	$(eval NAMESPACE=$(shell jq -r '.namespace' terraform/application/config/$(CONFIG).tfvars.json))
+	echo "Show service deployments"
+	kubectl -n ${NAMESPACE} get deployment/${SERVICE_NAME}${DSUFFIX}
+	kubectl -n ${NAMESPACE} get deployment/${SERVICE_NAME}${DSUFFIX}-worker
+
+scale-app: get-cluster-credentials
+	$(if $(PR_NUMBER), $(eval export DSUFFIX="-pr-${PR_NUMBER}"), $(eval export DSUFFIX="-${CONFIG}") )
+	$(if $(REPLICAS),,$(error Missing REPLICAS))
+	$(eval NAMESPACE=$(shell jq -r '.namespace' terraform/application/config/$(CONFIG).tfvars.json))
+	echo "Scaling app to ${REPLICAS}"
+	kubectl -n ${NAMESPACE} scale deployment/${SERVICE_NAME}${DSUFFIX} --replicas ${REPLICAS}
+
+scale-worker: get-cluster-credentials
+	$(if $(PR_NUMBER), $(eval export DSUFFIX="-pr-${PR_NUMBER}"), $(eval export DSUFFIX="-${CONFIG}") )
+	$(if $(REPLICAS),,$(error Missing REPLICAS))
+	$(eval NAMESPACE=$(shell jq -r '.namespace' terraform/application/config/$(CONFIG).tfvars.json))
+	echo "Scaling worker to ${REPLICAS}"
+	kubectl -n ${NAMESPACE} scale deployment/${SERVICE_NAME}${DSUFFIX}-worker --replicas ${REPLICAS}
+

@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: npq-registration-maintenance
+  name: teacher-training-entitlement-maintenance
 spec:
   selector:
-    app: npq-registration-maintenance
+    app: teacher-training-entitlement-maintenance
   ports:
     - protocol: TCP
       port: 80

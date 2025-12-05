@@ -53,11 +53,6 @@ runs:
         azure-tenant-id: ${{ inputs.azure-tenant-id }}
         azure-subscription-id: ${{ inputs.azure-subscription-id }}
 
-    - uses: google-github-actions/auth@v2
-      with:
-        project_id: ecf-bq
-        workload_identity_provider: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
-
     - name: Apply Terraform
       id: apply-terraform
       shell: bash
@@ -74,7 +69,7 @@ runs:
       shell: bash
       run: |
         make ci review get-cluster-credentials
-        kubectl exec -n cpd-development deployment/npq-registration-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && RAILS_ENV=${{ inputs.environment }} /usr/local/bin/bundle exec rails db:seed:replant"
+        kubectl exec -n cpd-development deployment/teacher-training-entitlement-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && RAILS_ENV=${{ inputs.environment }} /usr/local/bin/bundle exec rails db:seed:replant"
       env:
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
