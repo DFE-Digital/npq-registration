@@ -33,7 +33,7 @@ RSpec.describe OneOff::UpdateContracts do
       csv_file.rewind
     end
 
-    subject { described_class.call(year: 2024, month: 12, cohort_year: 2024, csv_path:, dry_run:) }
+    subject { described_class.call(year: 2024, month: 12, cohort_identifier: "2024a", csv_path:, dry_run:) }
 
     context "when operation is successful" do
       it "changes the contract templates" do

@@ -18,9 +18,7 @@ module Cohorts
   private
 
     def previous_cohort
-      @previous_cohort ||= Cohort.where("start_year < ?", @cohort.start_year)
-                                 .order(start_year: :desc)
-                                 .first
+      @previous_cohort ||= Cohort.order_by_latest.prior_to(@cohort).first
     end
 
     def previous_partnerships

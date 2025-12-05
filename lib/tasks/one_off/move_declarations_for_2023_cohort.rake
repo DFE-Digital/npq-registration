@@ -7,7 +7,7 @@ namespace :one_off do
     dry_run = args[:dry_run] != "false"
     override_date_checks = args[:override_date_checks] == "true"
 
-    cohort = Cohort.find_by!(start_year: 2023)
+    cohort = Cohort.find_by!(identifer: 2023)
 
     migration_jan_to_feb = OneOff::MigrateDeclarationsBetweenStatements
       .new(

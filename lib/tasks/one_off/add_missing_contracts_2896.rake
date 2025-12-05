@@ -37,7 +37,7 @@ end
 namespace :one_off do
   desc "Add missing contract data as per 2896 JIRA ticket"
   task :add_missing_contracts_2896, %i[csv_file_path] => :environment do |_task, args|
-    cohort = Cohort.find_by!(start_year: 2025)
+    cohort = Cohort.find_by!(identifier: "2025a")
     lead_provider = LeadProvider.find_by!(name: "UCL Institute of Education")
     row = CSV.read(args["csv_file_path"], headers: true).first
     ActiveRecord::Base.transaction do
