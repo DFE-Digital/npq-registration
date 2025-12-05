@@ -2,8 +2,8 @@ name: External links
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 4 * * *" # 4am every day
+  # schedule:
+  #   - cron: "0 4 * * *" # 4am every day
 
 env:
   RAILS_ENV: staging

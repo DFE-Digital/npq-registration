@@ -182,7 +182,7 @@ jobs:
         id: keyvault-yaml-secret
         with:
           inlineScript: |
-            SONAR_TOKEN=$(az keyvault secret show --name "SONAR-TOKEN" --vault-name "s189t01-cpdnpq-te-app-kv" --query "value" -o tsv)
+            SONAR_TOKEN=$(az keyvault secret show --name "SONAR-TOKEN" --vault-name "s189t01-cpdtte-te-app-kv" --query "value" -o tsv)
             echo "::add-mask::$SONAR_TOKEN"
             echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_OUTPUT
 
@@ -193,7 +193,7 @@ jobs:
            -Dsonar.token=${{ steps.keyvault-yaml-secret.outputs.SONAR_TOKEN }}
            -Dsonar.organization=dfe-digital
            -Dsonar.host.url=https://sonarcloud.io/
-           -Dsonar.projectKey=DFE-Digital_npq-registration
+           -Dsonar.projectKey=DFE-Digital_teacher-training-entitlement
            -Dsonar.testExecutionReportPaths=${{github.workspace}}/${{env.unit-tests-artifact-name}}_0/test-report-0.xml,\
             ${{github.workspace}}/${{env.unit-tests-artifact-name}}_1/test-report-1.xml,\
             ${{github.workspace}}/${{env.unit-tests-artifact-name}}_2/test-report-2.xml,\

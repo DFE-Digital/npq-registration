@@ -1,3 +1,7 @@
+output "hosted_zones" {
+  value = keys(var.hosted_zone)
+}
+
 output "external_urls" {
   value = flatten([
     for zone_name, zone_values in var.hosted_zone : [

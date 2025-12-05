@@ -32,11 +32,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - uses: google-github-actions/auth@v3
-        with:
-          project_id: ecf-bq
-          workload_identity_provider: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
-
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.4
@@ -51,7 +46,7 @@ jobs:
           echo "SERVICE_SHORT=${SERVICE_SHORT}" >> $GITHUB_ENV
           echo "ENVIRONMENT=${ENVIRONMENT}" >> $GITHUB_ENV
           echo "KEY_PREFIX=${PULL_REQUEST_NUMBER}" >> $GITHUB_ENV
-          echo "DOCKER_IMAGE=ghcr.io/dfe-digital/npq-registration:no-tag" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ghcr.io/dfe-digital/teacher-training-entitlement:no-tag" >> $GITHUB_ENV
 
       - name: Set pull_request_number
         id: pull_request_number
@@ -66,14 +61,12 @@ jobs:
         id: delete-review-app
         uses: DFE-Digital/github-actions/delete-review-app@master
         with:
-          gcp-wip: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
-          gcp-project-id: ecf-bq
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           container-name: terraform-state
           pr-number: ${{ github.event.pull_request.number || github.event.inputs.pr_number }}
-          resource-group-name: "s189t01-cpdnpq-rv-rg"
-          storage-account-name: "s189t01cpdnpqrvtfsa"
+          resource-group-name: "s189t01-cpdtte-rv-rg"
+          storage-account-name: "s189t01cpdttervtfsa"
           tf-state-file: "${{ github.event.pull_request.number || github.event.inputs.pr_number }}.tfstate"
 

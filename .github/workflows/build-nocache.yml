@@ -3,14 +3,14 @@ name: Build No Cache
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: '30 12 * * 0'
-    # Will run once a week on Sunday afternoon
+  # schedule:
+  #   - cron: '30 12 * * 0'
+  #   # Will run once a week on Sunday afternoon
 
 jobs:
   build-no-cache:
     env:
-      DOCKER_REPOSITORY: ghcr.io/dfe-digital/npq-registration
+      DOCKER_REPOSITORY: ghcr.io/dfe-digital/teacher-training-entitlement
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     outputs:
       docker-image-tag: ${{ steps.build-image.outputs.tag }}

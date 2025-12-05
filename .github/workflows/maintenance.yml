@@ -7,7 +7,7 @@ on:
         required: true
         type: choice
         options:
-        - sandbox
+        - staging
         - production
       mode:
         required: true
@@ -23,20 +23,20 @@ permissions:
 jobs:
   set-maintenance-mode:
     name: Set maintenance mode
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Enable or disable maintenance mode
       uses: DFE-Digital/github-actions/maintenance@master
       with:
         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         environment: ${{ inputs.environment }}
         mode: ${{ inputs.mode }}
-        docker-repository: ghcr.io/dfe-digital/npq-registration-maintenance
+        docker-repository: ghcr.io/dfe-digital/teacher-training-entitlement-maintenance
         github-token: ${{ secrets.GITHUB_TOKEN }}

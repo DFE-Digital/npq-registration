@@ -53,8 +53,8 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh -n ${{ env.NAMESPACE }} npq-registration-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
+        bin/konduit.sh -n ${{ env.NAMESPACE }} teacher-training-entitlement-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
 
     - name: Restore snapshot database
       shell: bash
-      run: bin/konduit.sh -n ${{ env.NAMESPACE }} -d s189p01-cpdnpq-pd-pg-snapshot -k s189p01-cpdnpq-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 npq-registration-${{ inputs.environment }}-web -- psql
+      run: bin/konduit.sh -n ${{ env.NAMESPACE }} -d s189p01-cpdtte-pd-pg-snapshot -k s189p01-cpdtte-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 teacher-training-entitlement-${{ inputs.environment }}-web -- psql
