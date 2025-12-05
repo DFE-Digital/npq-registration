@@ -17,7 +17,8 @@ module OneOff
         end
 
         if schedules_missing_from_autumn_cohort.any?
-          raise "Missing schedules in new cohort: #{schedules_missing_from_autumn_cohort.inspect}"
+          log "Missing schedules in new cohort: #{schedules_missing_from_autumn_cohort.inspect} " \
+            "some applications will not be moved"
         end
 
         if next_output_fee_statement.nil?
@@ -80,10 +81,10 @@ module OneOff
         (source_schedules - target_schedules.keys)
     end
 
-    def fetch_autumn_schedule(schedule)
+    def fetch_equivalent_schedule(schedule)
       schedule_key = [schedule.course_group_id, schedule.identifier]
 
-      target_schedules.fetch(schedule_key)
+      target_schedules.fetch(schedule_key, nil)
     end
 
     def paid_or_payable_declarations
@@ -125,7 +126,15 @@ module OneOff
       application.cohort = autumn_cohort
 
       if application.schedule.present?
-        application.schedule = fetch_autumn_schedule(application.schedule)
+        equivalent_schedule = fetch_equivalent_schedule(application.schedule)
+
+        unless equivalent_schedule
+          log "Skipping application #{application.id} - " \
+            "no equivalent schedule for #{application.schedule.identifier}"
+          return
+        end
+
+        application.schedule = equivalent_schedule
       end
 
       # Save without changing the applications updated_at timestamp so that this
