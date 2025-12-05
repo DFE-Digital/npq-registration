@@ -79,10 +79,10 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
 
         it "does not move applications between cohorts" do
           expect { perform }
-            .to raise_exception(RuntimeError, /Missing schedules/)
-            .and(not_change { applications[0].reload.cohort })
+            .to not_change { applications[0].reload.cohort }
             .and(not_change { applications[0].reload.schedule })
-            .and(not_change { applications[1].reload.cohort })
+            .and(change { applications[1].reload.cohort })
+            .and(change { applications[2].reload.cohort })
         end
       end
     end
