@@ -28,7 +28,9 @@ RSpec.describe "npq_separation/admin/finance/statements/show", type: :view do
     end
 
     context "when the statement is paid" do
-      let(:statement) { build(:statement, :paid, month: Time.zone.today.month, year: Time.zone.today.year) }
+      let(:statement) { build(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
+
+      before { statement.update!(state: "paid") }
 
       it { is_expected.not_to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
     end
