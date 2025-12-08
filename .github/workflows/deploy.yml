@@ -89,6 +89,8 @@ jobs:
         sha: ${{ needs.build.outputs.docker-image-tag }}
         terraform-base: ${{ env.TERRAFORM_BASE }}
         healthcheck: ${{ env.HEALTHCHECK_CMD }}
+        # db-seed: true
+        smoke-test: true
 
   # deploy_review:
   #   name: Deploy review

@@ -65,6 +65,11 @@ ci:
 	$(eval SKIP_AZURE_LOGIN=true)
 	$(eval SKIP_CONFIRM=true)
 
+smoke-test:
+	$(eval URL=$(shell cd terraform/application && terraform output -raw url))
+	$(eval SHA=$(if $(DEPLOY_COMMIT_SHA),$(DEPLOY_COMMIT_SHA),$(shell git rev-parse HEAD)))
+	bin/smoke ${URL} ${SHA}
+
 set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
