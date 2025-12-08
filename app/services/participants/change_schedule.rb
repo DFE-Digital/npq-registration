@@ -39,10 +39,7 @@ module Participants
   private
 
     def cohorts_for_start_year(start_year)
-      constraints = { start_year: }
-      constraints[:suffix] = "a" unless Feature.suffixed_cohorts?
-
-      Cohort.order_by_latest.where(constraints)
+      Cohort.order_by_latest.where(start_year:)
     end
 
     def new_schedule

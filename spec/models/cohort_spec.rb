@@ -164,17 +164,7 @@ RSpec.describe Cohort, type: :model do
         }
       end
 
-      context "when suffixed cohorts are enabled" do
-        before { allow(Feature).to receive(:suffixed_cohorts?).and_return true }
-
-        it { is_expected.to eq(cohorts[:current]) }
-      end
-
-      context "when suffixed cohorts are not enabled" do
-        before { allow(Feature).to receive(:suffixed_cohorts?).and_return false }
-
-        it { is_expected.to eq(cohorts[:older]) }
-      end
+      it { is_expected.to eq(cohorts[:current]) }
     end
   end
 
