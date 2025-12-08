@@ -8,7 +8,11 @@ FactoryBot.define do
 
     after :create do |statement, evaluator|
       if evaluator.declaration
-        create(:statement_item, declaration: evaluator.declaration, statement:)
+        evaluator.declaration.mark_eligible! if evaluator.declaration.submitted?
+
+        create(:statement_item, declaration: evaluator.declaration,
+                                state: evaluator.declaration.state,
+                                statement:)
       end
     end
 

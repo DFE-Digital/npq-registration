@@ -47,7 +47,29 @@ RSpec.describe "Delivery Partner endpoints", type: :request do
       it "calls the correct query" do
         expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, cohort_start_year: "2023")).and_call_original
 
-        api_get(path, params: { filter: { cohort: "2023" } })
+        api_get(path, params: { filter: { cohort: 2023 } })
+      end
+    end
+
+    context "with multiple cohorts per year" do
+      before do
+        create(:delivery_partnership, cohort: autumn_cohort,
+                                      lead_provider: current_lead_provider,
+                                      delivery_partner:)
+      end
+
+      let(:spring_cohort) { create(:cohort, start_year: 2025, suffix: "a") }
+      let(:autumn_cohort) { create(:cohort, start_year: 2025, suffix: "b") }
+
+      let :delivery_partner do
+        create(:delivery_partner, lead_providers: { spring_cohort => current_lead_provider })
+      end
+
+      it "returns unique list of delivery partners" do
+        api_get(path, params: { filter: { cohort: "2025" } })
+
+        expect(parsed_response["data"].size).to eq(1)
+        expect(parsed_response["data"].first["id"]).to eq(delivery_partner.ecf_id)
       end
     end
   end

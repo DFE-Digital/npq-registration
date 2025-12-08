@@ -176,10 +176,25 @@ en:
               too_long: "Email must be shorter than %{count} characters"
         cohort:
           attributes:
+            description:
+              blank: Enter a description for the cohort
+              too_long: Description must be shorter than %{count} characters
+              too_short: Description must be longer than %{count} characters
+              taken: Description is used by another cohort already
+            start_year:
+              blank: Enter the start year for the cohort
+            suffix:
+              blank: Enter the character suffix for the cohort
+              taken: Another cohort exists for that start year and suffix
+              invalid: Suffix must be a lower case character
+              too_long: Suffix must be a single character
+              too_short: Suffix must be a single character
             funding_cap:
-              inclusion: "Choose true or false for funding cap"
+              inclusion: Choose true or false for funding cap
             ecf_id:
               *ecf_id
+            registration_start_date:
+              blank: Enter the start date for the cohorts registration period
         contract_template:
           attributes:
             number_of_payment_periods: &integer_greater_than_or_equal_to_zero
@@ -818,6 +833,10 @@ en:
             <p class="govuk-body">When this feature is turned on, events will be sent to DfE Analytics.</p>
           lead_provider_transferred_declarations_visibility_html: |
             <p class="govuk-body">When this feature is turned on, lead providers can see transferred declarations.</p>
+          use_suffixed_cohorts_html: |
+            <p class="govuk-body">When turned on any new applications will be assigned to the latest suffixed cohort<p>
+            <p class="govuk-body">When turned off any new applications will be assigned to the latest cohort with a suffix of 1</p>
+            <p class"govuk-body">This enables the rollout of suffixed cohorts</p>
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment

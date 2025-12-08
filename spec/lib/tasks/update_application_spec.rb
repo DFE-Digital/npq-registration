@@ -78,7 +78,7 @@ RSpec.describe "update_application" do
   end
 
   describe "update_application:change_cohort" do
-    subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, new_cohort.start_year) }
+    subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, new_cohort.identifier) }
 
     after { Rake::Task["update_application:change_cohort"].reenable }
 
@@ -113,7 +113,7 @@ RSpec.describe "update_application" do
     end
 
     context "when the application does not exist" do
-      subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(SecureRandom.uuid, new_cohort.start_year) }
+      subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(SecureRandom.uuid, new_cohort.identifier) }
 
       it_behaves_like "outputting an error"
     end
@@ -134,7 +134,7 @@ RSpec.describe "update_application" do
       end
 
       context "when the override_declarations_check parameter is set" do
-        subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, new_cohort.start_year, "true") }
+        subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, new_cohort.identifier, "true") }
 
         it "changes the cohort of the application" do
           run_task

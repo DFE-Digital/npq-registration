@@ -2,7 +2,7 @@ namespace :tad_requests do
   desc "Generate TAD request for NPQEYL for Autumn 2023"
 
   task autumn_2023_npqeyl: :environment do
-    cohort = Cohort.find_by(start_year: 2023)
+    cohort = Cohort.find_by!(identifier: "2023a")
     schedules = Schedule.where(cohort:, identifier: "npq-leadership-autumn")
     courses = Course.where(identifier: "npq-early-years-leadership")
 

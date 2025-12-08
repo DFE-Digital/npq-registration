@@ -2,7 +2,7 @@ namespace :tad_requests do
   desc "Generate TAD request for Autumn 2024 for SENCO"
 
   task autumn_2024_senco: :environment do
-    cohort = Cohort.find_by(start_year: 2024)
+    cohort = Cohort.find_by!(identifier: "2024a")
 
     File.open("tmp/autumn_2024_senco.csv", "w") do |f|
       exporter = Exporters::TadSencoDataRequest.new(cohort:, file: f)
