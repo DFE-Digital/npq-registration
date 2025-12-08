@@ -38,13 +38,7 @@ class Cohort < ApplicationRecord
   }
 
   def self.current(timestamp = Time.zone.today)
-    scope = order_by_latest.where(registration_start_date: ..timestamp)
-
-    unless Feature.suffixed_cohorts?
-      scope = scope.where(suffix: "a")
-    end
-
-    scope.first!
+    order_by_latest.find_by!(registration_start_date: ..timestamp)
   end
 
   def name
