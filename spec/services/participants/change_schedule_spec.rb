@@ -399,20 +399,6 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
             expect(application.cohort).to eql(cohort)
           end
         end
-
-        context "with suffixed cohorts feature turned off" do
-          before { allow(Feature).to receive(:suffixed_cohorts?).and_return(false) }
-
-          let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: cohort) }
-
-          it "chooses schedule from cohort with suffix of a" do
-            expect(subject.change_schedule).to be_truthy
-
-            application.reload
-            expect(application.schedule).to eql(new_schedule)
-            expect(application.cohort).to eql(cohort)
-          end
-        end
       end
 
       context "without cohort year specified" do
@@ -446,19 +432,6 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
             application.reload
             expect(application.schedule).to eql(schedule)
-            expect(application.cohort).to eql(cohort)
-          end
-        end
-
-        context "with suffixed cohorts feature turned off" do
-          before { allow(Feature).to receive(:suffixed_cohorts?).and_return(false) }
-
-          let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: cohort) }
-
-          it "chooses schedule from cohort with suffix of a" do
-            expect(subject.change_schedule).to be_truthy
-            application.reload
-            expect(application.schedule).to eql(new_schedule)
             expect(application.cohort).to eql(cohort)
           end
         end
