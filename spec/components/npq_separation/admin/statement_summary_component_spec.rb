@@ -26,6 +26,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       total_retained: 2,
       total_completed: 3,
       total_voided: 4,
+      declaration_types:,
     )
   end
 
