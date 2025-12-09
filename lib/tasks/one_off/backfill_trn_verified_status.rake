@@ -1,6 +1,6 @@
 namespace :one_off do
   desc "Reset the TRN Verified status for users incorrectly marked as unverified"
-  task :backfill_trn_verified_status, %i[dry_run] => :environment do |_task, args|
+  task :backfill_trn_verified_status, %i[dry_run] => :versioned_environment do |_task, args|
     logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
     dry_run = args[:dry_run] != "false"
     issue_introduced = Date.parse("2024-11-28").at_beginning_of_day

@@ -1,6 +1,6 @@
 namespace :one_off do
   desc "One off task for ticket CPDNPQ-3105 to update contracts in 2024 cohort"
-  task :update_2024_contracts, %i[file_path dry_run] => :environment do |_t, args|
+  task :update_2024_contracts, %i[file_path dry_run] => :versioned_environment do |_t, args|
     dry_run = args[:dry_run] != "false"
 
     Rails.logger = Logger.new($stdout) unless Rails.env.test?

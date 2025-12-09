@@ -1,6 +1,6 @@
 namespace :one_off do
   desc "One off task for deleting stale ParticipantIdChange"
-  task delete_empty_participant_id_changes: :environment do
+  task delete_empty_participant_id_changes: :versioned_environment do
     User.joins(:participant_id_changes).where("archived_email is null").where("participant_id_changes.from_participant_id = users.ecf_id").find_each do |from_user|
       change = ParticipantIdChange.find_by(from_participant_id: from_user.ecf_id)
       to_user = User.find_by(ecf_id: change.to_participant_id)
@@ -13,7 +13,7 @@ namespace :one_off do
   end
 
   desc "One off task for fixing ParticipantIdChange circular dependencies"
-  task fix_participant_id_changes_circular_dependencies: :environment do
+  task fix_participant_id_changes_circular_dependencies: :versioned_environment do
     ActiveRecord::Base.transaction do
       User.joins(:participant_id_changes).where("archived_email is null").where("participant_id_changes.from_participant_id = users.ecf_id").find_each do |from_user|
         change = ParticipantIdChange.find_by(from_participant_id: from_user.ecf_id)
