@@ -7,15 +7,15 @@ Cohort.all.find_each do |cohort|
 
     next unless latest_statement
 
-    # Mark past statements (up to latest output fee statement) as paid
+    # Mark past statements (up to latest output fee statement) as payable
     statement_scope.where("deadline_date < ?", latest_statement.deadline_date).find_each do |statement|
       Statements::MarkAsPayable.new(statement:).mark
-      Statements::MarkAsPaid.new(statement).mark
     end
-    # Set mark_as_paid_at for paid statements from 2023, to match production
-    Statement.where(state: "paid", year: 2023..).find_each do |statement|
+    # Set mark_as_paid_at for payable statements from 2023, and mark them as paid - to match production
+    Statement.where(state: "payable", year: 2023..).find_each do |statement|
       helpers.travel_to statement.payment_date - 8.days do
         statement.mark_as_paid_at!
+        Statements::MarkAsPaid.new(statement).mark
       end
     end
 

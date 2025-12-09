@@ -10,7 +10,7 @@ RSpec.describe Statements::MarkAsPaid do
   let(:clawback_declaration) { create(:declaration, :awaiting_clawback, lead_provider:) }
 
   let :statement do
-    create(:statement, statement_state, lead_provider:) do |statement|
+    create(:statement, :open, lead_provider:) do |statement|
       create(:statement_item, :payable, statement:, declaration:)
       create(:statement_item, :payable, statement:, declaration: create(:declaration, :payable, lead_provider:))
       create(:statement_item, :payable, statement:, declaration: create(:declaration, :payable, lead_provider:))
@@ -21,7 +21,7 @@ RSpec.describe Statements::MarkAsPaid do
 
   describe "#mark" do
     context "with payable statement" do
-      before { statement.update!(marked_as_paid_at: Time.zone.now) }
+      before { statement.update!(state: statement_state, deadline_date: Time.zone.yesterday) }
 
       let(:statement_state) { :payable }
 
@@ -62,11 +62,13 @@ RSpec.describe Statements::MarkAsPaid do
         let(:voided_declaration) { create(:declaration, :voided, lead_provider:) }
 
         let :statement do
-          create(:statement, statement_state, lead_provider:) do |statement|
+          create(:statement, :open, lead_provider:) do |statement|
             create(:statement_item, :payable, statement:, declaration:)
             create(:statement_item, :voided, statement:, declaration: voided_declaration)
           end
         end
+
+        before { statement.update!(state: statement_state, deadline_date: Time.zone.yesterday) }
 
         it "does not transition the voided declaration" do
           expect { service.mark && statement.reload }

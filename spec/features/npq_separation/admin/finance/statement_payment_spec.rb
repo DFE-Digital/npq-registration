@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.feature "Statement payment", type: :feature do
   include Helpers::AdminLogin
 
-  let(:statement) { create(:statement, :payable) }
+  let(:statement) { create(:statement, :open) }
   let(:component) { NpqSeparation::Admin::StatementDetailsComponent.new(statement:, link_to_voids: false) }
 
   before do
@@ -13,6 +13,7 @@ RSpec.feature "Statement payment", type: :feature do
     # contracts needed to test queries in summary calculator are optimised
     create(:contract, course: create(:course, :leading_teaching), statement:)
     create(:contract, course: create(:course, :leading_behaviour_culture), statement:)
+    statement.update!(state: "payable", deadline_date: Time.zone.yesterday)
     sign_in_as(create(:admin))
     visit(npq_separation_admin_finance_statement_path(statement))
   end

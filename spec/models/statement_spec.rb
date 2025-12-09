@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Statement, type: :model do
-  subject(:statement) { create(:statement) }
+  subject(:statement) { build(:statement) }
 
   describe "relationships" do
     it { is_expected.to belong_to(:cohort).required }
@@ -28,8 +28,7 @@ RSpec.describe Statement, type: :model do
         let(:statement) { build(:statement, state: "madeup") }
 
         it "returns error" do
-          expect(statement).to be_invalid
-          expect(statement.errors[:state].first).to eql("is invalid")
+          expect(statement).to have_error(:state, :invalid, "is invalid")
         end
       end
     end
@@ -39,7 +38,6 @@ RSpec.describe Statement, type: :model do
         let(:statement) { build(:statement, payment_date: 1.day.ago, deadline_date: Time.zone.today) }
 
         it "returns an error" do
-          expect(statement).to be_invalid
           expect(statement).to have_error(:payment_date, :invalid, "must be on or after the deadline date")
         end
       end
@@ -81,6 +79,44 @@ RSpec.describe Statement, type: :model do
           statement.deadline_date = existing_deadline_date + 1.day
           expect(statement).to be_valid
         end
+      end
+    end
+
+    describe "changing reconcile_amount when the statement is payable" do
+      subject(:statement) { create(:statement, :payable) }
+
+      before { statement.reconcile_amount = 100 }
+
+      it "returns an error" do
+        expect(statement).to have_error(:base, :statement_payable, "Statement cannot be changed once it is payable")
+      end
+    end
+
+    describe "changing output_fee when the statement is payable" do
+      subject(:statement) { create(:statement, :payable, output_fee: true) }
+
+      before { statement.output_fee = false }
+
+      it { is_expected.to be_valid }
+    end
+
+    describe "changing reconcile_amount when the statement is paid" do
+      subject(:statement) { create(:statement, :paid) }
+
+      before { statement.reconcile_amount = 100 }
+
+      it "returns an error" do
+        expect(statement).to have_error(:base, :statement_paid, "Statement cannot be changed once it is paid")
+      end
+    end
+
+    describe "changing output_fee when the statement is paid" do
+      subject(:statement) { create(:statement, :paid, output_fee: true) }
+
+      before { statement.output_fee = false }
+
+      it "returns an error" do
+        expect(statement).to have_error(:base, :statement_paid, "Statement cannot be changed once it is paid")
       end
     end
   end
@@ -197,6 +233,8 @@ RSpec.describe Statement, type: :model do
   end
 
   describe "#mark_as_paid_at!" do
+    subject(:statement) { build(:statement, :payable) }
+
     it "sets marked_as_paid_at" do
       expect { subject.tap(&:mark_as_paid_at!).reload }
         .to change(subject, :marked_as_paid_at)
