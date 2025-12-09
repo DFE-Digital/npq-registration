@@ -177,7 +177,9 @@ Rails.application.routes.draw do
       end
 
       resources :cohorts do
-        resources :schedules, except: :index
+        resources :schedules, except: :index do
+          resources :milestones, except: :show
+        end
         resources :statements, only: %i[new create show]
         member { get :download_contracts, path: "download-contracts" }
       end

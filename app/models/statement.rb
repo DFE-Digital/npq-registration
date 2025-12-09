@@ -8,6 +8,8 @@ class Statement < ApplicationRecord
   has_many :contracts
   has_many :declarations, through: :statement_items
   has_many :adjustments
+  has_many :milestone_statements
+  has_many :milestones, through: :milestone_statements
 
   validates :output_fee, inclusion: { in: [true, false] }
   validates :month, numericality: { in: 1..12, only_integer: true }
@@ -16,6 +18,7 @@ class Statement < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }
 
   validate :payment_date_on_or_after_deadline_date
+  validate :no_milestones_associated, if: :output_fee_changed?
 
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }
   scope :with_state, ->(*state) { where(state:) }
@@ -72,5 +75,11 @@ private
     return unless payment_date < deadline_date
 
     errors.add :payment_date, :invalid
+  end
+
+  def no_milestones_associated
+    return unless milestone_statements.exists?
+
+    errors.add :output_fee, :has_milestones
   end
 end

@@ -255,6 +255,15 @@ en:
           attributes:
             ecf_id:
               *ecf_id
+        milestone:
+          attributes:
+            declaration_type:
+              inclusion: The declaration type should be one of the ones allowed by the schedule
+        milestone_statement:
+          attributes:
+            statement:
+              must_be_output_fee_true: Statement must have output fee set to true
+              different_statement_date_for_milestone: Statement month and year must be the same as other statements for this milestone
         participant_id_change:
           attributes:
             ecf_id:
@@ -273,6 +282,7 @@ en:
           attributes:
             output_fee:
               inclusion: "Choose yes or no for output fee"
+              has_milestones: Cannot change output fee when statement has milestones
             month:
               in: "Month must be a number between 1 and 12"
               not_a_number: "Month must be a number between 1 and 12"
@@ -372,6 +382,16 @@ en:
               empty: Uploaded file is empty
               invalid_headers: Uploaded file has incorrect header
               invalid: Uploaded file is not a valid CSV
+        milestones/create:
+          attributes:
+            declaration_type:
+              blank: Please choose a declaration type
+            statement_date:
+              blank: Please choose a statement date
+        milestones/update:
+          attributes:
+            statement_date:
+              blank: Please choose a statement date
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:

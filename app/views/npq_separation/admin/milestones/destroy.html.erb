@@ -1,0 +1,29 @@
+<h1 class="govuk-heading-l">Delete milestone</h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Schedule")
+      row.with_value(text: @schedule.name)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Milestone declaration type")
+      row.with_value(text: @milestone.declaration_type)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Statement date")
+      row.with_value(text: @milestone.statement_date&.to_fs(:govuk_approx) || "-")
+    end
+  end
+%>
+
+<p class="govuk-body">Are you sure you want to delete this milestone? There is no way to undo this action.</p>
+
+<%= form_with model: @milestone, url: npq_separation_admin_cohort_schedule_milestone_path(@schedule.cohort, @schedule, @milestone), method: "delete" do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= hidden_field_tag :confirm, 1 %>
+  <%= f.govuk_submit "Confirm delete milestone", warning: true %>
+  <%= govuk_button_link_to("Cancel", npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), secondary: true) %>
+<% end %>
+
