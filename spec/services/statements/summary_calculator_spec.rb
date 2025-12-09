@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe Statements::SummaryCalculator do
   let(:cohort) { create(:cohort, :has_targeted_delivery_funding) }
+  let(:other_cohort) { create(:cohort, :next) }
   let(:lead_provider) { create :lead_provider }
   let(:statement) { create(:statement, :next_output_fee, lead_provider:, reconcile_amount: 0, cohort:) }
   let(:application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
@@ -13,7 +14,7 @@ RSpec.describe Statements::SummaryCalculator do
   let!(:contract) { create(:contract, course:, statement:) }
   let(:contract_template_monthly_service_fee) { nil }
 
-  subject { described_class.new(statement:) }
+  subject(:summary_calculator) { described_class.new(statement:) }
 
   before do
     create(:schedule, :npq_leadership_autumn, cohort:)
@@ -423,6 +424,214 @@ RSpec.describe Statements::SummaryCalculator do
 
     it "returns total adjustments" do
       expect(subject.total_adjustments.to_f).to eq(300)
+    end
+  end
+
+  describe "#declaration_types" do
+    let(:milestone_1) { create(:milestone, declaration_type: "started") }
+    let(:milestone_2) { create(:milestone, declaration_type: "retained-1") }
+
+    before do
+      create(:milestone_statement, milestone: milestone_1, statement:)
+      create(:milestone_statement, milestone: milestone_2, statement:)
+    end
+
+    it "returns milestone declaration types associated with the statement" do
+      expect(subject.declaration_types).to match_array(%w[started retained-1])
+    end
+  end
+
+  describe "#expected_applications" do
+    subject(:expected_applications) { summary_calculator.expected_applications(declaration_type) }
+
+    let(:course) { leadership_course }
+    let(:leadership_course) { create(:course, :senior_leadership) }
+    let(:specialist_course) { create(:course, :leading_teaching) }
+    let(:aso_course) { create(:course, :additional_support_offer) }
+    let(:ehco_course) { create(:course, :early_headship_coaching_offer) }
+
+    let(:retained_1_milestone) { create(:milestone, declaration_type: "retained-1", schedule: started_application.schedule) }
+    let(:retained_2_milestone) { create(:milestone, declaration_type: "retained-2", schedule: leadership_retained_1_application.schedule) }
+
+    let(:not_accepted_yet_application) { create(:application, :eligible_for_funding, course:, lead_provider:, cohort:) }
+    let(:other_cohort_application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort: other_cohort) }
+
+    # started applications
+    let(:started_application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
+    let(:withdrawn_started_application) { create(:application, :withdrawn, course:, lead_provider:, cohort:) }
+    let(:deferred_started_application) { create(:application, :deferred, course:, lead_provider:, cohort:) }
+
+    # retained-1 applications
+    let(:leadership_retained_1_application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
+    let(:specialist_leadership_retained_1_application) { create(:application, :accepted, :eligible_for_funding, course: specialist_course, lead_provider:, cohort:) }
+    let(:aso_retained_1_application) { create(:application, :accepted, :eligible_for_funding, course: aso_course, lead_provider:, cohort:) }
+    let(:withdrawn_leadership_retained_1_application) { create(:application, :withdrawn, course:, lead_provider:, cohort:) }
+    let(:deferred_leadership_retained_1_application) { create(:application, :deferred, course:, lead_provider:, cohort:) }
+    let(:aso_application_not_penultimate) { create(:application, :accepted, :eligible_for_funding, course: aso_course, lead_provider:, cohort:) }
+    let(:withdrawn_specialist_leadership_retained_1_application) { create(:application, :withdrawn, course:, lead_provider:, cohort:) }
+    let(:deferred_specialist_leadership_retained_1_application) { create(:application, :deferred, course:, lead_provider:, cohort:) }
+    let(:ehco_application_not_penultimate) { create(:application, :accepted, :eligible_for_funding, course: ehco_course, lead_provider:, cohort:) }
+
+    # retained-2 applications
+    let(:leadership_retained_2_application) { create(:application, :accepted, :eligible_for_funding, course: leadership_course, lead_provider:, cohort:) }
+    let(:withdrawn_leadership_retained_2_application) { create(:application, :withdrawn, :eligible_for_funding, course: leadership_course, lead_provider:, cohort:) }
+    let(:deferred_leadership_retained_2_application) { create(:application, :deferred, :eligible_for_funding, course: leadership_course, lead_provider:, cohort:) }
+    let(:ehco_retained_2_application) { create(:application, :accepted, :eligible_for_funding, course: ehco_course, lead_provider:, cohort:) }
+
+    let(:accepted_applications) do
+      [
+        started_application,
+        leadership_retained_1_application,
+        aso_retained_1_application,
+        specialist_leadership_retained_1_application,
+        ehco_application_not_penultimate,
+        aso_application_not_penultimate,
+        leadership_retained_2_application,
+        ehco_retained_2_application,
+      ]
+    end
+
+    before do
+      other_cohort_application
+      not_accepted_yet_application
+
+      # started declarations
+      create(:declaration, declaration_type: "started", application: started_application, course:, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "started", application: withdrawn_started_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "started", application: deferred_started_application, lead_provider:, cohort:, statement:)
+
+      # retained-1 declarations
+      create(:declaration, declaration_type: "retained-1", application: leadership_retained_1_application, course:, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: withdrawn_leadership_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: deferred_leadership_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: aso_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: specialist_leadership_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: withdrawn_specialist_leadership_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: deferred_specialist_leadership_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: ehco_application_not_penultimate, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: aso_application_not_penultimate, lead_provider:, cohort:, statement:)
+
+      # retained-2 declarations
+      create(:declaration, declaration_type: "retained-2", application: leadership_retained_2_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-2", application: ehco_retained_2_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-2", application: aso_retained_1_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-2", application: withdrawn_leadership_retained_2_application, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-2", application: deferred_leadership_retained_2_application, lead_provider:, cohort:, statement:)
+    end
+
+    context "when the milestone declaration type is: started" do
+      let(:declaration_type) { "started" }
+
+      it "returns the accepted applications for the statement's cohort" do
+        expect(expected_applications).to match_array(Application.all - [not_accepted_yet_application, other_cohort_application])
+      end
+    end
+
+    context "when the milestone declaration type is: retained-1" do
+      let(:declaration_type) { "retained-1" }
+
+      before { retained_1_milestone }
+
+      it "returns the started active applications in the statement's cohort" do
+        expect(expected_applications).to contain_exactly(started_application)
+      end
+    end
+
+    context "when the milestone declaration type is: retained-2" do
+      let(:declaration_type) { "retained-2" }
+
+      before { retained_2_milestone }
+
+      it "returns the retained-1 active applications in the statement's cohort" do
+        expect(expected_applications).to contain_exactly(leadership_retained_1_application)
+      end
+    end
+
+    context "when the milestone declaration type is: completed" do
+      let(:declaration_type) { "completed" }
+
+      before do
+        create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
+        create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
+        create(:milestone, declaration_type: "retained-1", schedule: leadership_retained_1_application.schedule)
+        create(:milestone, declaration_type: "retained-1", schedule: ehco_application_not_penultimate.schedule)
+        create(:milestone, declaration_type: "retained-2", schedule: leadership_retained_2_application.schedule)
+        create(:milestone, declaration_type: "retained-2", schedule: ehco_retained_2_application.schedule)
+        create(:milestone, declaration_type: "retained-2", schedule: aso_retained_1_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: specialist_leadership_retained_1_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: ehco_retained_2_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: aso_retained_1_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: leadership_retained_2_application.schedule)
+      end
+
+      it "returns the active applications that have penultimate declarations in the statement's cohort" do
+        expect(expected_applications).to contain_exactly(
+          specialist_leadership_retained_1_application, leadership_retained_2_application, ehco_retained_2_application, aso_retained_1_application
+        )
+      end
+    end
+
+    context "when the declaration type is nil" do
+      let(:declaration_type) { nil }
+
+      before do
+        create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
+        create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
+        retained_1_milestone
+        create(:milestone, declaration_type: "retained-1", schedule: ehco_application_not_penultimate.schedule)
+        retained_2_milestone
+        create(:milestone, declaration_type: "retained-2", schedule: ehco_retained_2_application.schedule)
+        create(:milestone, declaration_type: "retained-2", schedule: aso_retained_1_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: specialist_leadership_retained_1_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: ehco_retained_2_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: aso_retained_1_application.schedule)
+        create(:milestone, declaration_type: "completed", schedule: leadership_retained_2_application.schedule)
+      end
+
+      context "when there is a started milestone" do
+        before do
+          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
+          create(:milestone_statement, milestone: started_milestone, statement:)
+        end
+
+        it "returns all active applications for the statement's cohort" do
+          expect(expected_applications).to match_array(accepted_applications + Application.where(cohort: statement.cohort).accepted)
+        end
+      end
+
+      context "when there is not a started milestone" do
+        it "returns all active applications for the statement's cohort" do
+          expect(expected_applications).to match_array(accepted_applications)
+        end
+      end
+    end
+  end
+
+  describe "#received_declarations" do
+    let(:expected_declaration) { create(:declaration, :eligible, declaration_type: "started", course:, lead_provider:, cohort:, statement:) }
+    let(:other_cohort_declaration) { create(:declaration, :eligible, declaration_type: "started", course:, lead_provider:, cohort: other_cohort, statement:) }
+    let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:) }
+
+    before do
+      travel_to statement.deadline_date do
+        expected_declaration
+        create(:declaration, :voided, declaration_type: "started", course:, lead_provider:, cohort:, statement:)
+        create(:declaration, :ineligible, declaration_type: "started", course:, lead_provider:, cohort:, statement:)
+        other_cohort_declaration
+        other_declaration_type_declaration
+        create(:declaration, :voided, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:)
+        create(:declaration, :ineligible, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:)
+      end
+    end
+
+    it "returns the billable declarations for the statement of the given declaration type, in the given cohort" do
+      expect(subject.received_declarations("started")).to contain_exactly(expected_declaration)
+    end
+
+    context "when the declaration type is nil" do
+      it "returns all billable declarations for the statement in the given cohort" do
+        expect(subject.received_declarations).to contain_exactly(expected_declaration, other_declaration_type_declaration)
+      end
     end
   end
 

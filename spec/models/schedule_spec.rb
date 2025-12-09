@@ -58,4 +58,31 @@ RSpec.describe Schedule, type: :model do
     it { is_expected.to have_many(:milestones) }
     it { is_expected.to have_many(:statements).through(:milestones) }
   end
+
+  describe "scopes" do
+    let(:schedule_with_retained_2) { create(:schedule) }
+    let(:schedule_without_retained_2) { create(:schedule) }
+
+    before do
+      create(:milestone, schedule: schedule_with_retained_2, declaration_type: "started")
+      create(:milestone, schedule: schedule_with_retained_2, declaration_type: "retained-1")
+      create(:milestone, schedule: schedule_with_retained_2, declaration_type: "retained-2")
+      create(:milestone, schedule: schedule_with_retained_2, declaration_type: "completed")
+      create(:milestone, schedule: schedule_without_retained_2, declaration_type: "started")
+      create(:milestone, schedule: schedule_without_retained_2, declaration_type: "retained-1")
+      create(:milestone, schedule: schedule_without_retained_2, declaration_type: "completed")
+    end
+
+    describe ".with_retained_2_milestone" do
+      it "returns schedules that have a retained-2 milestone" do
+        expect(Schedule.with_retained_2_milestone).to contain_exactly(schedule_with_retained_2)
+      end
+    end
+
+    describe ".without_retained_2_milestone" do
+      it "returns schedules that do not have a retained-2 milestone" do
+        expect(Schedule.without_retained_2_milestone).to contain_exactly(schedule_without_retained_2)
+      end
+    end
+  end
 end

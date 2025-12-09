@@ -10,9 +10,11 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
 
   let(:statement) { create(:statement) }
   let(:summary_list) { page.find(".govuk-summary-list") }
+  let(:declaration_types) { [] }
 
   let(:calculator) do
-    OpenStruct.new(
+    instance_double(
+      Statements::SummaryCalculator,
       use_targeted_delivery_funding?: false,
       total_targeted_delivery_funding: 99,
       total_service_fees: 0,
@@ -24,11 +26,14 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       total_retained: 2,
       total_completed: 3,
       total_voided: 4,
+      declaration_types:,
     )
   end
 
   before do
     allow(::Statements::SummaryCalculator).to receive(:new).and_return(calculator)
+    allow(calculator).to receive(:expected_applications).with(any_args).and_return([])
+    allow(calculator).to receive(:received_declarations).with(any_args).and_return([])
   end
 
   it { is_expected.to have_text "Statement summary" }
@@ -36,9 +41,6 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
 
   it "shows totals" do
     subject
-    expect(summary_list).to have_summary_item("Starts", calculator.total_starts)
-    expect(summary_list).to have_summary_item("Retained", calculator.total_retained)
-    expect(summary_list).to have_summary_item("Completed", calculator.total_completed)
     expect(summary_list).to have_summary_item("Voids", calculator.total_voided)
     expect(summary_list).to have_summary_item("Output payment", calculator.total_output_payment)
     expect(summary_list).to have_summary_item("Clawbacks", calculator.total_clawbacks)
@@ -80,6 +82,32 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
 
     it "shows total service fees" do
       expect(summary_list).to have_summary_item("Service fee", calculator.total_service_fees)
+    end
+  end
+
+  describe "milestone declarations" do
+    context "when there are no milestones" do
+      it { is_expected.to have_text "No milestones found for this statement." }
+    end
+
+    context "when there are milestones" do
+      let(:declaration_types) { %w[started completed] }
+
+      before do
+        allow(calculator).to receive(:expected_applications).with("started").and_return(Array.new(10) { :application })
+        allow(calculator).to receive(:expected_applications).with("completed").and_return(Array.new(20) { :application })
+        subject
+      end
+
+      it "shows expected declarations" do
+        expect(rendered).to have_css "tr:nth-child(1) td:nth-child(1)", text: "Started"
+        expect(rendered).to have_css "tr:nth-child(1) td:nth-child(2)", text: "10"
+      end
+
+      it "shows received declarations" do
+        expect(rendered).to have_css "tr:nth-child(2) td:nth-child(1)", text: "Completed"
+        expect(rendered).to have_css "tr:nth-child(2) td:nth-child(2)", text: "20"
+      end
     end
   end
 end
