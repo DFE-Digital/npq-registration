@@ -26,9 +26,6 @@ runs:
         tf_vars_file=terraform/application/config/${{ inputs.environment }}.tfvars.json
         echo "NAMESPACE=$(jq -r '.namespace' ${tf_vars_file})" >> $GITHUB_ENV
 
-    - name: Checkout code
-      uses: actions/checkout@v3
-
     - name: Login
       uses: azure/login@v2
       with:

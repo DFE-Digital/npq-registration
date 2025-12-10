@@ -1,4 +1,4 @@
-name: Restore Snapshot DB from production DB
+name: Update Snapshot DB
 on:
   schedule:
     - cron: "0 22 * * 0"
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Backup and restore snapshot
+      - name: Backup production and restore to snapshot
         uses: ./.github/actions/backup-and-restore-snapshot-database
         with:
           environment: production
