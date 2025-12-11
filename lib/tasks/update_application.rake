@@ -6,7 +6,7 @@ class UpdateApplicationRakeTask
   def initialize
     namespace :update_application do
       desc "Accept an application"
-      task :accept, %i[application_ecf_id] => :environment do |_t, args|
+      task :accept, %i[application_ecf_id] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         service = Applications::Accept.new(application:)
@@ -16,7 +16,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Revert an application to pending"
-      task :revert_to_pending, %i[application_ecf_id] => :environment do |_t, args|
+      task :revert_to_pending, %i[application_ecf_id] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         service = Applications::RevertToPending.new(application:, change_status_to_pending: "yes")
@@ -26,7 +26,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Change the lead provider of an application"
-      task :change_lead_provider, %i[application_ecf_id new_lead_provider_id] => :environment do |_t, args|
+      task :change_lead_provider, %i[application_ecf_id new_lead_provider_id] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         new_lead_provider = LeadProvider.find(args.new_lead_provider_id)
@@ -40,7 +40,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Withdraw an application"
-      task :withdraw, %i[application_ecf_id reason] => :environment do |_t, args|
+      task :withdraw, %i[application_ecf_id reason] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         reason = args.reason
@@ -54,7 +54,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Change cohort on an application"
-      task :change_cohort, %i[application_ecf_id new_cohort_identifier override_declarations_check] => :environment do |_t, args|
+      task :change_cohort, %i[application_ecf_id new_cohort_identifier override_declarations_check] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         new_cohort = Cohort.find_by(identifier: args.new_cohort_identifier)
@@ -71,7 +71,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Change the schedule on an application"
-      task :update_schedule, %i[application_ecf_id new_schedule_identifier] => :environment do |_t, args|
+      task :update_schedule, %i[application_ecf_id new_schedule_identifier] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         raise "Cannot change schedule for an application with declarations" if application.declarations.any?

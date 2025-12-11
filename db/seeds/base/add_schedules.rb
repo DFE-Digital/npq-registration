@@ -11,7 +11,7 @@
   end
 end
 
-Cohort.where(start_year: 2025..).find_each do |cohort|
+Cohort.where(start_year: 2025.., suffix: "a").find_each do |cohort|
   %i[
     npq_ehco_december
     npq_ehco_june
@@ -21,6 +21,17 @@ Cohort.where(start_year: 2025..).find_each do |cohort|
     npq_leadership_spring
     npq_specialist_autumn
     npq_specialist_spring
+  ].each do |schedule_identifier|
+    FactoryBot.create(:schedule, schedule_identifier, cohort:, change_applies_dates: false)
+  end
+end
+
+Cohort.where(start_year: 2025, suffix: "b").find_each do |cohort|
+  %i[
+    npq_ehco_december
+    npq_ehco_november
+    npq_leadership_autumn
+    npq_specialist_autumn
   ].each do |schedule_identifier|
     FactoryBot.create(:schedule, schedule_identifier, cohort:, change_applies_dates: false)
   end

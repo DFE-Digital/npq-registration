@@ -2,7 +2,7 @@ require "csv"
 
 namespace :get_identity_id do
   desc "Import get_identity_id from CSV file"
-  task :import, %i[file_path] => :environment do |_t, args|
+  task :import, %i[file_path] => :versioned_environment do |_t, args|
     file_path = args[:file_path]
 
     rows = []

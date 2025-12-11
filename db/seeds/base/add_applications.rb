@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 all_courses = Course.all.to_a
-all_cohorts = Cohort.all.to_a
+all_cohorts = Cohort.where(suffix: "a").to_a
 
 LeadProvider.find_each do |lead_provider|
   quantity = { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)

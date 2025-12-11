@@ -15,7 +15,7 @@ class CreateContractRakeTask
       # Example usage (perform change):
       # bundle exec rake 'one_off:create_contract[tmp/contract.csv,false]'
       desc "One off task for ticket CPDNPQ-2538 to create missing contract"
-      task :create_contract, %i[file dry_run] => :environment do |_t, args|
+      task :create_contract, %i[file dry_run] => :versioned_environment do |_t, args|
         logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
         dry_run = args[:dry_run] != "false"
         csv_file_path = args[:file]

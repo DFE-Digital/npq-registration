@@ -2,7 +2,7 @@ namespace :one_off do
   # for dry run: rake 'one_off:move_declarations_for_2023_cohort[true]'
   # for real run: rake 'one_off:move_declarations_for_2023_cohort[false]'
   desc "Move declarations from Jun25 to Feb25 for 2023 Cohort"
-  task :move_declarations_for_2023_cohort, %i[dry_run override_date_checks] => :environment do |_task, args|
+  task :move_declarations_for_2023_cohort, %i[dry_run override_date_checks] => :versioned_environment do |_task, args|
     Rails.logger = Logger.new($stdout) unless Rails.env.test?
     dry_run = args[:dry_run] != "false"
     override_date_checks = args[:override_date_checks] == "true"

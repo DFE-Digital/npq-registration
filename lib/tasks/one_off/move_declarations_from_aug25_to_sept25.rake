@@ -1,6 +1,6 @@
 namespace :one_off do
   desc "Move declarations from Aug 2025 to Sept 2025 for 2023 Cohort"
-  task :move_declarations_from_aug25_to_sept25, %i[dry_run override_date_checks] => :environment do |_task, args|
+  task :move_declarations_from_aug25_to_sept25, %i[dry_run override_date_checks] => :versioned_environment do |_task, args|
     Rails.logger = Logger.new($stdout) unless Rails.env.test?
     Rails.logger.level = Logger::INFO
     dry_run = args[:dry_run] != "false"

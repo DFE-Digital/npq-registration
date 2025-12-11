@@ -1,6 +1,6 @@
 helpers = Class.new { include ActiveSupport::Testing::TimeHelpers }.new
 
-Cohort.all.find_each do |cohort|
+Cohort.where.not(start_year: 2025).find_each do |cohort|
   LeadProvider.all.find_each do |lead_provider|
     statement_scope  = Statement.where(cohort:, lead_provider:).order(deadline_date: :desc)
     latest_statement = statement_scope.with_output_fee.where("deadline_date < ?", Time.zone.today).first
