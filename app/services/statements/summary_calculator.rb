@@ -58,6 +58,65 @@ module Statements
       statement.declarations.where(state: "voided").count
     end
 
+    def declaration_types
+      statement.milestones.distinct.pluck(:declaration_type)
+    end
+
+    def expected_applications(declaration_type = nil)
+      scope =
+        Application
+        .joins(:declarations, schedule: :milestones)
+        .where(
+          training_status: "active",
+          cohort: statement.cohort,
+        )
+
+      case declaration_type
+      when "started"
+        Application.where(cohort: statement.cohort).accepted
+      when "retained-1"
+        scope.where(
+          declarations: { declaration_type: Declaration.declaration_types[:started] },
+          schedule: { milestones: { declaration_type: Declaration.declaration_types[:"retained-1"] } },
+        )
+      when "retained-2"
+        scope.where(
+          declarations: { declaration_type: Declaration.declaration_types[:"retained-1"] },
+          schedule: { milestones: { declaration_type: Declaration.declaration_types[:"retained-2"] } },
+        )
+      when "completed"
+        scope.where(
+          declarations: { declaration_type: Declaration.declaration_types[:"retained-2"] },
+          schedule: {
+            id: Schedule.with_retained_2_milestone,
+            milestones: { declaration_type: Declaration.declaration_types[:completed] },
+          },
+        ).or(
+          scope.where(
+            declarations: { declaration_type: Declaration.declaration_types[:"retained-1"] },
+            schedule: {
+              id: Schedule.without_retained_2_milestone,
+              milestones: { declaration_type: Declaration.declaration_types[:completed] },
+            },
+          ),
+        )
+      else
+        if statement.milestones.pluck(:declaration_type).include?("started")
+          scope.distinct + Application.where(cohort: statement.cohort).accepted
+        else
+          scope.distinct
+        end
+      end
+    end
+
+    def received_declarations(declaration_type = nil)
+      if declaration_type
+        statement.declarations.billable.where(declaration_type: declaration_type, cohort: statement.cohort)
+      else
+        statement.declarations.billable.where(cohort: statement.cohort)
+      end
+    end
+
   private
 
     def course_calulators
