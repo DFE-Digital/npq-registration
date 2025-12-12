@@ -21,7 +21,7 @@ module Milestones
             .statements
             .with_output_fee
             .find_by(month: statement_date.month, year: statement_date.year, cohort: schedule.cohort)
-          milestone.milestone_statements.find_or_create_by!(statement: statement)
+          milestone.milestone_statements.find_or_create_by!(statement:) if statement
         end
       end
     end

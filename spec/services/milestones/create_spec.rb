@@ -23,14 +23,15 @@ RSpec.describe Milestones::Create, :with_default_schedules, type: :model do
         create(:statement, lead_provider:, cohort: Cohort.first, year: cohort.start_year, month: statement_month, output_fee: true)
         create(:statement, lead_provider:, cohort:, year: cohort.start_year, month: statement_month, output_fee: true)
       end
-      subject
     end
 
     it "creates a milestone with the given attributes" do
+      subject
       expect(Milestone.exists?(schedule_id: schedule.id, declaration_type:)).to be true
     end
 
     it "creates milestone statements for every lead provider for the given statement date" do
+      subject
       expect(MilestoneStatement.count).to eq(LeadProvider.count)
 
       LeadProvider.find_each do |lead_provider|
@@ -40,6 +41,19 @@ RSpec.describe Milestones::Create, :with_default_schedules, type: :model do
       end
     end
 
-    context "when there aren't statements for the given date"
+    context "when there aren't statements for the schedule's cohort for all lead providers" do
+      let(:cohort_with_missing_statements) { Cohort.left_joins(:statements).select("cohorts.*, count(statements.id) as statements_count").group("cohorts.id").having("count(statements.id) = 0").first }
+      let(:schedule) { cohort_with_missing_statements.schedules.first }
+      let(:statement_date_param) { Date.new(cohort_with_missing_statements.start_year, statement_month).to_s }
+      let(:statement) { create(:statement, lead_provider: LeadProvider.last, cohort: cohort_with_missing_statements, year: cohort_with_missing_statements.start_year, month: statement_month, output_fee: true) }
+
+      before { statement }
+
+      it "creates milestone statements for the statements that do exist" do
+        subject
+        milestone = Milestone.find_by(schedule_id: schedule.id, declaration_type:)
+        expect(MilestoneStatement.exists?(milestone:, statement:)).to be true
+      end
+    end
   end
 end
