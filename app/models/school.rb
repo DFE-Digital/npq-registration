@@ -123,21 +123,21 @@ class School < ApplicationRecord
 
   def pp50?(work_setting)
     if work_setting == Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING
-      !!PP50_FE_UKPRN_HASH[ukprn.to_s]
+      EligibilityList::Pp50FurtherEducation.eligible?(ukprn)
     else
-      !!PP50_SCHOOLS_URN_HASH[urn.to_s]
+      EligibilityList::Pp50School.eligible?(urn)
     end
   end
 
   def eyl_disadvantaged?
-    !!EY_OFSTED_URN_HASH[urn.to_s]
+    EligibilityList::DisadvantagedEarlyYearsSchool.eligible?(urn)
   end
 
   def la_disadvantaged_nursery?
-    !!LA_DISADVANTAGED_NURSERIES[urn.to_s]
+    EligibilityList::LocalAuthorityNursery.eligible?(urn)
   end
 
   def rise?
-    FundingEligibilityData.rise_school?(urn.to_s)
+    EligibilityList::RiseSchool.eligible?(urn)
   end
 end

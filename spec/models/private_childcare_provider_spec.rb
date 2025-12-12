@@ -42,4 +42,38 @@ RSpec.describe PrivateChildcareProvider, type: :model do
       end
     end
   end
+
+  describe "#eyl_disadvantaged?" do
+    subject { provider.eyl_disadvantaged? }
+
+    let(:provider) { build(:private_childcare_provider, provider_urn:) }
+    let(:provider_urn) { "100001" }
+
+    context "when the URN is in the disadvantaged_early_years_school eligibility list" do
+      before { create(:eligibility_list_entry, :disadvantaged_early_years_school, identifier: provider_urn) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the URN is not in the disadvantaged_early_years_school eligibility list" do
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#on_childminders_list?" do
+    subject { provider.on_childminders_list? }
+
+    let(:provider) { build(:private_childcare_provider, provider_urn:) }
+    let(:provider_urn) { "100001" }
+
+    context "when the URN is in the disadvantaged_early_years_school eligibility list" do
+      before { create(:eligibility_list_entry, :childminder, identifier: provider_urn) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the URN is not in the disadvantaged_early_years_school eligibility list" do
+      it { is_expected.to be false }
+    end
+  end
 end
