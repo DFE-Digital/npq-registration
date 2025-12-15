@@ -73,17 +73,17 @@ module Statements
 
       case declaration_type
       when "started"
-        Application.where(cohort: statement.cohort).accepted
+        Application.where(cohort: statement.cohort).accepted.uniq
       when "retained-1"
         scope.where(
           declarations: { declaration_type: Declaration.declaration_types[:started] },
           schedule: { milestones: { declaration_type: Declaration.declaration_types[:"retained-1"] } },
-        )
+        ).uniq
       when "retained-2"
         scope.where(
           declarations: { declaration_type: Declaration.declaration_types[:"retained-1"] },
           schedule: { milestones: { declaration_type: Declaration.declaration_types[:"retained-2"] } },
-        )
+        ).uniq
       when "completed"
         scope.where(
           declarations: { declaration_type: Declaration.declaration_types[:"retained-2"] },
@@ -99,13 +99,9 @@ module Statements
               milestones: { declaration_type: Declaration.declaration_types[:completed] },
             },
           ),
-        )
+        ).uniq
       else
-        if statement.milestones.pluck(:declaration_type).include?("started")
-          scope.distinct + Application.where(cohort: statement.cohort).accepted
-        else
-          scope.distinct
-        end
+        declaration_types.map { |declaration_type| expected_applications(declaration_type) }.flatten
       end
     end
 
