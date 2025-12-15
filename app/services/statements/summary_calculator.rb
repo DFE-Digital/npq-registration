@@ -113,6 +113,10 @@ module Statements
       end
     end
 
+    def remaining_declarations_count(declaration_type = nil)
+      expected_applications(declaration_type).uniq.count - received_declarations(declaration_type).count
+    end
+
   private
 
     def course_calulators

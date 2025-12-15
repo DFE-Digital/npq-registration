@@ -34,6 +34,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
     allow(::Statements::SummaryCalculator).to receive(:new).and_return(calculator)
     allow(calculator).to receive(:expected_applications).with(any_args).and_return([])
     allow(calculator).to receive(:received_declarations).with(any_args).and_return([])
+    allow(calculator).to receive(:remaining_declarations_count).with(any_args).and_return(0)
   end
 
   it { is_expected.to have_text "Statement summary" }
