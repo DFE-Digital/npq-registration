@@ -85,5 +85,18 @@ module Statements
         },
       )
     end
+
+    def remaining_declarations_count(declaration_type = nil)
+      current_declaration_type_index = Milestone::ALL_DECLARATION_TYPES.index(declaration_type)
+      previous_milestones_remaining_count = if current_declaration_type_index && current_declaration_type_index.positive?
+                                              previous_milestones = Milestone::ALL_DECLARATION_TYPES[..(current_declaration_type_index - 1)]
+                                              previous_milestones.sum do |previous_declaration_type|
+                                                expected_applications(previous_declaration_type).uniq.count - received_declarations(previous_declaration_type).count
+                                              end
+                                            else
+                                              0
+                                            end
+      expected_applications(declaration_type).count - received_declarations(declaration_type).count + previous_milestones_remaining_count
+    end
   end
 end
