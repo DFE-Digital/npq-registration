@@ -441,9 +441,7 @@ RSpec.describe Statements::SummaryCalculator do
     end
   end
 
-  describe "#expected_applications" do
-    subject(:expected_applications) { summary_calculator.expected_applications(declaration_type) }
-
+  describe "applications and declarations" do
     let(:course) { leadership_course }
     let(:leadership_course) { create(:course, :senior_leadership) }
     let(:specialist_course) { create(:course, :leading_teaching) }
@@ -460,6 +458,8 @@ RSpec.describe Statements::SummaryCalculator do
     let(:started_application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
     let(:withdrawn_started_application) { create(:application, :withdrawn, course:, lead_provider:, cohort:) }
     let(:deferred_started_application) { create(:application, :deferred, course:, lead_provider:, cohort:) }
+    let(:application_with_eligible_declaration) { create(:application, :accepted, course:) }
+    let(:application_with_other_declaration_type_declaration) { create(:application, :accepted, course:) }
 
     # retained-1 applications
     let(:leadership_retained_1_application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
@@ -491,6 +491,43 @@ RSpec.describe Statements::SummaryCalculator do
       ]
     end
 
+    # declarations
+    let(:eligible_declaration) { create(:declaration, :eligible, declaration_type: "started", application: application_with_eligible_declaration, course:, lead_provider:, cohort:, statement:) }
+    let(:other_cohort_declaration) { create(:declaration, :eligible, declaration_type: "started", application: other_cohort_application, course:, lead_provider:, cohort: other_cohort, statement:) }
+    let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", application: application_with_other_declaration_type_declaration, course:, lead_provider:, cohort:, statement:) }
+
+    # milestones
+    let(:milestones_for_all_declaration_types) do
+      create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
+      create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
+      retained_1_milestone
+      create(:milestone_statement, milestone: retained_1_milestone, statement:)
+      create(:milestone, declaration_type: "retained-1", schedule: ehco_application_not_penultimate.schedule)
+      retained_2_milestone
+      create(:milestone_statement, milestone: retained_2_milestone, statement:)
+      create(:milestone, declaration_type: "retained-2", schedule: ehco_retained_2_application.schedule)
+      create(:milestone, declaration_type: "retained-2", schedule: aso_retained_1_application.schedule)
+      completed_milestone = create(:milestone, declaration_type: "completed", schedule: specialist_leadership_retained_1_application.schedule)
+      create(:milestone_statement, milestone: completed_milestone, statement:)
+      create(:milestone, declaration_type: "completed", schedule: ehco_retained_2_application.schedule)
+      create(:milestone, declaration_type: "completed", schedule: aso_retained_1_application.schedule)
+      create(:milestone, declaration_type: "completed", schedule: leadership_retained_2_application.schedule)
+    end
+
+    let(:milestones_for_completed_declaration_type) do
+      create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
+      create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
+      create(:milestone, declaration_type: "retained-1", schedule: leadership_retained_1_application.schedule)
+      create(:milestone, declaration_type: "retained-1", schedule: ehco_application_not_penultimate.schedule)
+      create(:milestone, declaration_type: "retained-2", schedule: leadership_retained_2_application.schedule)
+      create(:milestone, declaration_type: "retained-2", schedule: ehco_retained_2_application.schedule)
+      create(:milestone, declaration_type: "retained-2", schedule: aso_retained_1_application.schedule)
+      create(:milestone, declaration_type: "completed", schedule: specialist_leadership_retained_1_application.schedule)
+      create(:milestone, declaration_type: "completed", schedule: ehco_retained_2_application.schedule)
+      create(:milestone, declaration_type: "completed", schedule: aso_retained_1_application.schedule)
+      create(:milestone, declaration_type: "completed", schedule: leadership_retained_2_application.schedule)
+    end
+
     before do
       other_cohort_application
       not_accepted_yet_application
@@ -517,104 +554,9 @@ RSpec.describe Statements::SummaryCalculator do
       create(:declaration, declaration_type: "retained-2", application: aso_retained_1_application, lead_provider:, cohort:, statement:)
       create(:declaration, declaration_type: "retained-2", application: withdrawn_leadership_retained_2_application, lead_provider:, cohort:, statement:)
       create(:declaration, declaration_type: "retained-2", application: deferred_leadership_retained_2_application, lead_provider:, cohort:, statement:)
-    end
 
-    context "when the milestone declaration type is: started" do
-      let(:declaration_type) { "started" }
-
-      it "returns the accepted applications for the statement's cohort" do
-        expect(expected_applications).to match_array(Application.all - [not_accepted_yet_application, other_cohort_application])
-      end
-    end
-
-    context "when the milestone declaration type is: retained-1" do
-      let(:declaration_type) { "retained-1" }
-
-      before { retained_1_milestone }
-
-      it "returns the started active applications in the statement's cohort" do
-        expect(expected_applications).to contain_exactly(started_application)
-      end
-    end
-
-    context "when the milestone declaration type is: retained-2" do
-      let(:declaration_type) { "retained-2" }
-
-      before { retained_2_milestone }
-
-      it "returns the retained-1 active applications in the statement's cohort" do
-        expect(expected_applications).to contain_exactly(leadership_retained_1_application)
-      end
-    end
-
-    context "when the milestone declaration type is: completed" do
-      let(:declaration_type) { "completed" }
-
-      before do
-        create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
-        create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
-        create(:milestone, declaration_type: "retained-1", schedule: leadership_retained_1_application.schedule)
-        create(:milestone, declaration_type: "retained-1", schedule: ehco_application_not_penultimate.schedule)
-        create(:milestone, declaration_type: "retained-2", schedule: leadership_retained_2_application.schedule)
-        create(:milestone, declaration_type: "retained-2", schedule: ehco_retained_2_application.schedule)
-        create(:milestone, declaration_type: "retained-2", schedule: aso_retained_1_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: specialist_leadership_retained_1_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: ehco_retained_2_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: aso_retained_1_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: leadership_retained_2_application.schedule)
-      end
-
-      it "returns the active applications that have penultimate declarations in the statement's cohort" do
-        expect(expected_applications).to contain_exactly(
-          specialist_leadership_retained_1_application, leadership_retained_2_application, ehco_retained_2_application, aso_retained_1_application
-        )
-      end
-    end
-
-    context "when the declaration type is nil" do
-      let(:declaration_type) { nil }
-
-      before do
-        create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
-        create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
-        retained_1_milestone
-        create(:milestone, declaration_type: "retained-1", schedule: ehco_application_not_penultimate.schedule)
-        retained_2_milestone
-        create(:milestone, declaration_type: "retained-2", schedule: ehco_retained_2_application.schedule)
-        create(:milestone, declaration_type: "retained-2", schedule: aso_retained_1_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: specialist_leadership_retained_1_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: ehco_retained_2_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: aso_retained_1_application.schedule)
-        create(:milestone, declaration_type: "completed", schedule: leadership_retained_2_application.schedule)
-      end
-
-      context "when there is a started milestone" do
-        before do
-          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
-          create(:milestone_statement, milestone: started_milestone, statement:)
-        end
-
-        it "returns all active applications for the statement's cohort" do
-          expect(expected_applications).to match_array(accepted_applications + Application.where(cohort: statement.cohort).accepted)
-        end
-      end
-
-      context "when there is not a started milestone" do
-        it "returns all active applications for the statement's cohort" do
-          expect(expected_applications).to match_array(accepted_applications)
-        end
-      end
-    end
-  end
-
-  describe "#received_declarations" do
-    let(:expected_declaration) { create(:declaration, :eligible, declaration_type: "started", course:, lead_provider:, cohort:, statement:) }
-    let(:other_cohort_declaration) { create(:declaration, :eligible, declaration_type: "started", course:, lead_provider:, cohort: other_cohort, statement:) }
-    let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:) }
-
-    before do
       travel_to statement.deadline_date do
-        expected_declaration
+        eligible_declaration
         create(:declaration, :voided, declaration_type: "started", course:, lead_provider:, cohort:, statement:)
         create(:declaration, :ineligible, declaration_type: "started", course:, lead_provider:, cohort:, statement:)
         other_cohort_declaration
@@ -624,13 +566,91 @@ RSpec.describe Statements::SummaryCalculator do
       end
     end
 
-    it "returns the billable declarations for the statement of the given declaration type, in the given cohort" do
-      expect(subject.received_declarations("started")).to contain_exactly(expected_declaration)
+    describe "#expected_applications" do
+      subject(:expected_applications) { summary_calculator.expected_applications(declaration_type) }
+
+      context "when the milestone declaration type is: started" do
+        let(:declaration_type) { "started" }
+
+        it "returns the accepted applications for the statement's cohort" do
+          expect(expected_applications).to match_array(Application.accepted.where(cohort: statement.cohort).all)
+        end
+      end
+
+      context "when the milestone declaration type is: retained-1" do
+        let(:declaration_type) { "retained-1" }
+
+        before { retained_1_milestone }
+
+        it "returns the started active applications in the statement's cohort" do
+          expect(expected_applications).to contain_exactly(started_application)
+        end
+      end
+
+      context "when the milestone declaration type is: retained-2" do
+        let(:declaration_type) { "retained-2" }
+
+        before { retained_2_milestone }
+
+        it "returns the retained-1 active applications in the statement's cohort" do
+          expect(expected_applications).to contain_exactly(leadership_retained_1_application)
+        end
+      end
+
+      context "when the milestone declaration type is: completed" do
+        let(:declaration_type) { "completed" }
+
+        before { milestones_for_completed_declaration_type }
+
+        it "returns the active applications that have penultimate declarations in the statement's cohort" do
+          expect(expected_applications).to contain_exactly(
+            specialist_leadership_retained_1_application, leadership_retained_2_application, ehco_retained_2_application, aso_retained_1_application
+          )
+        end
+      end
+
+      context "when the declaration type is nil" do
+        let(:declaration_type) { nil }
+
+        before { milestones_for_all_declaration_types }
+
+        context "when there is a started milestone" do
+          before do
+            started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
+            create(:milestone_statement, milestone: started_milestone, statement:)
+          end
+
+          it "returns the sum of all expected applications" do
+            expect(expected_applications).to match_array(
+              summary_calculator.expected_applications("started") +
+              summary_calculator.expected_applications("retained-1") +
+              summary_calculator.expected_applications("retained-2") +
+              summary_calculator.expected_applications("completed"),
+            )
+          end
+        end
+
+        context "when there is not a started milestone" do
+          it "returns the sum of all expected applications" do
+            expect(expected_applications).to match_array(
+              summary_calculator.expected_applications("retained-1") +
+              summary_calculator.expected_applications("retained-2") +
+              summary_calculator.expected_applications("completed"),
+            )
+          end
+        end
+      end
     end
 
-    context "when the declaration type is nil" do
-      it "returns all billable declarations for the statement in the given cohort" do
-        expect(subject.received_declarations).to contain_exactly(expected_declaration, other_declaration_type_declaration)
+    describe "#received_declarations" do
+      it "returns the billable declarations for the statement of the given declaration type, in the given cohort" do
+        expect(subject.received_declarations("started")).to contain_exactly(eligible_declaration)
+      end
+
+      context "when the declaration type is nil" do
+        it "returns all billable declarations for the statement in the given cohort" do
+          expect(subject.received_declarations).to contain_exactly(eligible_declaration, other_declaration_type_declaration)
+        end
       end
     end
   end
