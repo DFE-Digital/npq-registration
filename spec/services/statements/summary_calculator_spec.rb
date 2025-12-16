@@ -653,6 +653,75 @@ RSpec.describe Statements::SummaryCalculator do
         end
       end
     end
+
+    describe "#remaining_declarations_count" do
+      subject { summary_calculator.remaining_declarations_count(declaration_type) }
+
+      context "when the milestone declaration type is: started" do
+        let(:declaration_type) { "started" }
+
+        it "returns the expected applications minus received declarations count" do
+          expect(subject).to eq(summary_calculator.expected_applications(declaration_type).count - summary_calculator.received_declarations(declaration_type).count)
+        end
+      end
+
+      context "when the milestone declaration type is: retained-1" do
+        let(:declaration_type) { "retained-1" }
+
+        before { retained_1_milestone }
+
+        it "returns the expected applications minus received declarations count plus the remaining started declarations count" do
+          expect(subject).to eq(
+            summary_calculator.expected_applications(declaration_type).count -
+              summary_calculator.received_declarations(declaration_type).count +
+              (summary_calculator.expected_applications("started").uniq.count - summary_calculator.received_declarations("started").count),
+          )
+        end
+      end
+
+      context "when the milestone declaration type is: retained-2" do
+        let(:declaration_type) { "retained-2" }
+
+        before { retained_2_milestone }
+
+        it "returns the expected applications minus received declarations count plus the remaining started and retained-1 declarations count" do
+          expect(subject).to eq(
+            summary_calculator.expected_applications(declaration_type).count -
+              summary_calculator.received_declarations(declaration_type).count +
+              (summary_calculator.expected_applications("started").uniq.count - summary_calculator.received_declarations("started").count) +
+              (summary_calculator.expected_applications("retained-1").uniq.count - summary_calculator.received_declarations("retained-1").count),
+          )
+        end
+      end
+
+      context "when the milestone declaration type is: completed" do
+        let(:declaration_type) { "completed" }
+
+        before { milestones_for_completed_declaration_type }
+
+        it "returns the expected applications minus received declarations count plus the remaining started, retained-1 and retained-2 declarations count" do
+          expect(subject).to eq(
+            summary_calculator.expected_applications(declaration_type).count -
+              summary_calculator.received_declarations(declaration_type).count +
+              (summary_calculator.expected_applications("started").count - summary_calculator.received_declarations("started").count) +
+              (summary_calculator.expected_applications("retained-1").count - summary_calculator.received_declarations("retained-1").count) +
+              (summary_calculator.expected_applications("retained-2").count - summary_calculator.received_declarations("retained-2").count),
+          )
+        end
+      end
+
+      context "when the declaration type is nil" do
+        let(:declaration_type) { nil }
+
+        before do
+          milestones_for_all_declaration_types
+          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
+          create(:milestone_statement, milestone: started_milestone, statement:)
+        end
+
+        it { is_expected.to eq(summary_calculator.expected_applications.count - summary_calculator.received_declarations.count) }
+      end
+    end
   end
 
   describe "Contract with special_course" do

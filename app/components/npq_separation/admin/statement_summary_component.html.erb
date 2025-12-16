@@ -27,6 +27,7 @@
             row.with_cell(text: "Declaration type")
             row.with_cell(text: "Expected")
             row.with_cell(text: "Received")
+            row.with_cell(text: "Remaining")
           end
         end
 
@@ -36,12 +37,14 @@
               row.with_cell(text: declaration_type.humanize)
               row.with_cell(text: calculator.expected_applications(declaration_type).count)
               row.with_cell(text: calculator.received_declarations(declaration_type).count)
+              row.with_cell(text: calculator.remaining_declarations_count(declaration_type))
             end
           end
           body.with_row do |row|
             row.with_cell { tag.strong "Totals" }
             row.with_cell { tag.strong calculator.expected_applications.count }
             row.with_cell { tag.strong calculator.received_declarations.count }
+            row.with_cell { tag.strong calculator.remaining_declarations_count }
           end
         end
       end
