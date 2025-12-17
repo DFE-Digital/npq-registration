@@ -36,7 +36,6 @@ review: test-cluster ## Specify review configuration
 	$(eval include global_config/review.sh)
 	$(eval TERRAFORM_BACKEND_KEY=terraform-$(PR_NUMBER).tfstate)
 	$(eval export TF_VAR_app_suffix=-$(PR_NUMBER))
-	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)tterv$(PR_NUMBER)sa)
 
 .PHONY: staging
 staging: test-cluster
@@ -64,6 +63,11 @@ ci:
 	$(eval AUTO_APPROVE=-auto-approve)
 	$(eval SKIP_AZURE_LOGIN=true)
 	$(eval SKIP_CONFIRM=true)
+
+smoke-test:
+	$(eval URL=$(shell cd terraform/application && terraform output -raw url))
+	$(eval SHA=$(if $(DEPLOY_COMMIT_SHA),$(DEPLOY_COMMIT_SHA),$(shell git rev-parse HEAD)))
+	bin/smoke ${URL} ${SHA}
 
 set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
@@ -123,9 +127,9 @@ deploy-domain-arm-resources: domains domains-composed-variables arm-deployment
 
 validate-domain-arm-resources: set-what-if domains domains-composed-variables arm-deployment
 
-deploy-arm-resources: arm-deployment 
+deploy-arm-resources: arm-deployment
 
-validate-arm-resources: set-what-if arm-deployment 
+validate-arm-resources: set-what-if arm-deployment
 
 domains-infra-init: domains domains-composed-variables domains set-azure-account
 	rm -rf terraform/domains/infrastructure/vendor/modules/domains
@@ -320,4 +324,3 @@ scale-worker: get-cluster-credentials
 	$(eval NAMESPACE=$(shell jq -r '.namespace' terraform/application/config/$(CONFIG).tfvars.json))
 	echo "Scaling worker to ${REPLICAS}"
 	kubectl -n ${NAMESPACE} scale deployment/${SERVICE_NAME}${DSUFFIX}-worker --replicas ${REPLICAS}
-

@@ -76,8 +76,14 @@ variable "send_traffic_to_maintenance_page" {
 }
 
 locals {
-  postgres_ssl_mode = var.enable_postgres_ssl ? "require" : "disable"
+  environment_variables = yamldecode(file("${path.module}/config/${var.config}.yml"))
 
+  #azure_credentials = try(jsondecode(var.azure_credentials_json), null)
+  ## not used anywhere?
+  #access_domain          = "${var.service_name}-${var.environment}${var.app_suffix}-web.${module.cluster_data.ingress_domain}"
+  #access_external_domain = try(local.environment_variables["ACCESS_EXTERNAL_DOMAIN"], local.access_domain)
+
+  postgres_ssl_mode = var.enable_postgres_ssl ? "require" : "disable"
 }
 
 variable "enable_logit" { default = true }
@@ -93,6 +99,45 @@ variable "app_suffix" {
   default = ""
 }
 
+variable "container_delete_retention_days" {
+  type    = number
+  default = null
+  description = "Number of days to retain deleted containers"
+}
 
+variable "blob_delete_retention_days" {
+  type        = number
+  default     = null
+  description = "Number of days to retain deleted blobs"
+}
 
+variable "azure_credentials_json" {
+  default     = null
+  description = "JSON containing the service principal authentication key when running in automation"
+}
 
+variable "deploy_redis_cache" {
+  type    = bool
+  default = true
+}
+
+variable "worker_memory_max" {
+  type    = string
+  default = "1Gi"
+}
+
+variable "worker_replicas" {
+  type = number
+  default = 1
+}
+
+variable "command" {
+  type = list(string)
+  default = []
+}
+
+variable "enable_dfe_analytics_federated_auth" {
+  description = "Create the resources in Google cloud for federated authentication and enable in application"
+  type = bool
+  default = false
+}
