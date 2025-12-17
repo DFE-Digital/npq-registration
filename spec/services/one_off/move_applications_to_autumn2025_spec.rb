@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
   subject :perform do
     Tempfile.open do |changelog|
-      described_class.new(lead_provider:, changelog:)
+      described_class.new(lead_provider:, changelog:, limit:)
                      .move!(dry_run:)
     end
   end
@@ -12,6 +12,7 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
 
   let(:lead_provider) { create(:lead_provider) }
   let(:dry_run) { false }
+  let(:limit) { 2000 }
   let(:spring) { create(:cohort, start_year: 2025, suffix: "a") }
   let(:autumn) { create(:cohort, start_year: 2025, suffix: "b") }
 
@@ -87,7 +88,7 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
       end
     end
 
-    context "and some from spring cohort which should not be moved" do
+    context "with some from spring cohort which should not be moved" do
       let(:applications) { spring_applications + autumn_applications }
 
       let :spring_applications do
@@ -110,12 +111,23 @@ RSpec.describe OneOff::MoveApplicationsToAutumn2025 do
           .and change { autumn_applications[1].reload.cohort }.from(spring).to(autumn)
       end
     end
+
+    context "with more applications than the limit" do
+      let(:limit) { 2 }
+
+      it "moves applications within the limit to autumn cohort" do
+        expect { perform }
+          .to change { applications[0].reload.cohort }.from(spring).to(autumn)
+          .and change { applications[1].reload.cohort }.from(spring).to(autumn)
+          .and(not_change { applications[2].reload.cohort })
+      end
+    end
   end
 
   context "with applications for another lead provider" do
     subject :perform do
       Tempfile.open do |changelog|
-        described_class.new(lead_provider: another_provider, changelog:)
+        described_class.new(lead_provider: another_provider, changelog:, limit:)
                        .move!(dry_run:)
       end
     end

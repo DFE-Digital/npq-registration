@@ -3,9 +3,10 @@ module OneOff
     BATCH_SIZE = 100
     AUTUMN_START_POINT = Time.zone.parse("2025-08-01 00:00:00").freeze
 
-    def initialize(lead_provider:, changelog:)
+    def initialize(lead_provider:, changelog:, limit:)
       @lead_provider = lead_provider
       @changelog = changelog
+      @limit = limit
     end
 
     def move!(dry_run: true)
@@ -100,7 +101,7 @@ module OneOff
     def move_applications_in_batches!
       # fetch static list of application ids move since we are updating whether
       # those applications match the scope as we process them
-      application_ids = applications_to_move.pluck(:id)
+      application_ids = applications_to_move.limit(@limit).pluck(:id)
       total = application_ids.length
       count_so_far = 0
 
