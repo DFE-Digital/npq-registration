@@ -5,11 +5,12 @@ namespace :one_off do
 
     dry_run = args[:dry_run] != "false"
     lead_provider = LeadProvider.find(args[:lead_provider_id])
+    limit = 2000
 
     changelog = Rails.env.test? ? Tempfile : Rails.root.join("tmp/migrated_applications.csv")
 
     changelog.open("w") do |changelog|
-      OneOff::MoveApplicationsToAutumn2025.new(lead_provider:, changelog:)
+      OneOff::MoveApplicationsToAutumn2025.new(lead_provider:, changelog:, limit:)
                                           .move!(dry_run:)
     end
   end
