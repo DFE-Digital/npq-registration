@@ -35,6 +35,22 @@ env:
   HEALTHCHECK_CMD: 'healthcheck'
 
 jobs:
+  rspec:
+    name: RSpec
+    uses: ./.github/workflows/rspec.yml
+    secrets: inherit
+
+  openapi:
+    name: Lead Provider OpenAPI Check
+    uses: ./.github/workflows/lead_provider_openapi_check.yml
+
+  all-checks-passed:
+    name: All checks passed
+    needs: [rspec]
+    runs-on: ubuntu-24.04
+    steps:
+      - run: "echo 'Linting and tests passed, this branch is ready to be merged'"
+
   build:
     name: Build
     if: ${{ github.event_name != 'workflow_dispatch' }}

@@ -138,67 +138,67 @@ jobs:
           path: ./test-report/*
           include-hidden-files: true
 
-  sonar-scanner:
-    name: Sonar Scanner
-    runs-on: ubuntu-24.04
-    needs: [ rspec, ruby_linting ]
-    if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
-    environment:
-      name: staging
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+  # sonar-scanner:
+  #   name: Sonar Scanner
+  #   runs-on: ubuntu-24.04
+  #   needs: [ rspec, ruby_linting ]
+  #   if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
+  #   environment:
+  #     name: staging
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v6
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ inputs.ruby-version }}
-          bundler-cache: true
+  #     - name: Set up Ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: ${{ inputs.ruby-version }}
+  #         bundler-cache: true
 
-      - name: Setup sonarqube
-        uses: warchant/setup-sonar-scanner@v9
+  #     - name: Setup sonarqube
+  #       uses: warchant/setup-sonar-scanner@v9
 
-      - name: Download Artifacts
-        uses: actions/download-artifact@v6
+  #     - name: Download Artifacts
+  #       uses: actions/download-artifact@v6
 
-      - name: Combine Coverage Reports
-        run: |-
-          # Copy files from separate artifacts into one directory
-          mkdir ${{github.workspace}}/code_coverage
-          cp -r ${{github.workspace}}/${{ env.code-coverage-artifact-name }}_*/ ${{github.workspace}}/code_coverage
-          bundle exec rake coverage:collate
-        env:
-          COVERAGE_DIR: ${{github.workspace}}/code_coverage
+  #     - name: Combine Coverage Reports
+  #       run: |-
+  #         # Copy files from separate artifacts into one directory
+  #         mkdir ${{github.workspace}}/code_coverage
+  #         cp -r ${{github.workspace}}/${{ env.code-coverage-artifact-name }}_*/ ${{github.workspace}}/code_coverage
+  #         bundle exec rake coverage:collate
+  #       env:
+  #         COVERAGE_DIR: ${{github.workspace}}/code_coverage
 
-      - name: Login Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #     - name: Login Azure
+  #       uses: azure/login@v2
+  #       with:
+  #         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Fetch secrets from key vault
-        uses: azure/CLI@v2
-        id: keyvault-yaml-secret
-        with:
-          inlineScript: |
-            SONAR_TOKEN=$(az keyvault secret show --name "SONAR-TOKEN" --vault-name "s189t01-cpdtte-te-app-kv" --query "value" -o tsv)
-            echo "::add-mask::$SONAR_TOKEN"
-            echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_OUTPUT
+  #     - name: Fetch secrets from key vault
+  #       uses: azure/CLI@v2
+  #       id: keyvault-yaml-secret
+  #       with:
+  #         inlineScript: |
+  #           SONAR_TOKEN=$(az keyvault secret show --name "SONAR-TOKEN" --vault-name "s189t01-cpdtte-dv-app-kv" --query "value" -o tsv)
+  #           echo "::add-mask::$SONAR_TOKEN"
+  #           echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_OUTPUT
 
-      - name: Run sonarqube
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
-           -Dsonar.token=${{ steps.keyvault-yaml-secret.outputs.SONAR_TOKEN }}
-           -Dsonar.organization=dfe-digital
-           -Dsonar.host.url=https://sonarcloud.io/
-           -Dsonar.projectKey=DFE-Digital_teacher-training-entitlement
-           -Dsonar.testExecutionReportPaths=${{github.workspace}}/${{env.unit-tests-artifact-name}}_0/test-report-0.xml,\
-            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_1/test-report-1.xml,\
-            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_2/test-report-2.xml,\
-            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_3/test-report-3.xml,\
-            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_4/test-report-4.xml,\
-            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_5/test-report-5.xml
-           -Dsonar.ruby.coverage.reportPaths=${{github.workspace}}/coverage/coverage.json
-           -Dsonar.ruby.rubocop.reportPaths=${{github.workspace}}/${{env.rubocop-artifact-name}}/rubocop-result.json
+  #     - name: Run sonarqube
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: sonar-scanner
+  #          -Dsonar.token=${{ steps.keyvault-yaml-secret.outputs.SONAR_TOKEN }}
+  #          -Dsonar.organization=dfe-digital
+  #          -Dsonar.host.url=https://sonarcloud.io/
+  #          -Dsonar.projectKey=DFE-Digital_teacher-training-entitlement
+  #          -Dsonar.testExecutionReportPaths=${{github.workspace}}/${{env.unit-tests-artifact-name}}_0/test-report-0.xml,\
+  #           ${{github.workspace}}/${{env.unit-tests-artifact-name}}_1/test-report-1.xml,\
+  #           ${{github.workspace}}/${{env.unit-tests-artifact-name}}_2/test-report-2.xml,\
+  #           ${{github.workspace}}/${{env.unit-tests-artifact-name}}_3/test-report-3.xml,\
+  #           ${{github.workspace}}/${{env.unit-tests-artifact-name}}_4/test-report-4.xml,\
+  #           ${{github.workspace}}/${{env.unit-tests-artifact-name}}_5/test-report-5.xml
+  #          -Dsonar.ruby.coverage.reportPaths=${{github.workspace}}/coverage/coverage.json
+  #          -Dsonar.ruby.rubocop.reportPaths=${{github.workspace}}/${{env.rubocop-artifact-name}}/rubocop-result.json

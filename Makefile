@@ -198,7 +198,7 @@ aks-ssh: get-cluster-credentials
 
 aks-web-ssh: get-cluster-credentials
 	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID}-web -- /bin/sh
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/teacher-training-entitlement-${APP_ID} -- /bin/sh
 
 action-group: set-azure-account # make production action-group ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true. Use any non-prod environment to create in the test subscription.
 	$(if $(ACTION_GROUP_EMAIL), , $(error Please specify a notification email for the action group))
@@ -207,8 +207,8 @@ action-group: set-azure-account # make production action-group ACTION_GROUP_EMAI
 
 # Removes explicit postgres database URLs from database.yml
 # konduit-cleanup:
-# 	sed $(SED_INPLACE) -e '/url\: "postgres/d' config/database.yml; \
-# 	exit 0
+#	sed $(SED_INPLACE) -e '/url\: "postgres/d' config/database.yml; \
+#	exit 0
 
 define KONDUIT_CONNECT
 	trap 'make konduit-cleanup' INT; \
@@ -274,7 +274,7 @@ disable-maintenance: get-cluster-credentials ## Fail back to the main app: make 
 db-seed: get-cluster-credentials # Example db seed for review apps, modify as required
 	$(if $(PR_NUMBER), , $(error can only run with PR_NUMBER))
 	$(eval NAMESPACE=$(shell jq -r '.namespace' terraform/application/config/$(CONFIG).tfvars.json))
-	kubectl -n ${NAMESPACE} exec deployment/${SERVICE_NAME}-pr-${PR_NUMBER} -- /bin/sh -c "cd /app && bundle exec rake db:seed"
+	kubectl -n ${NAMESPACE} exec deployment/${SERVICE_NAME}-review-${PR_NUMBER} -- /bin/sh -c "cd /app && bundle exec rake db:seed"
 
 set-pgserver:
 	$(eval SERVERNAME=${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg)
