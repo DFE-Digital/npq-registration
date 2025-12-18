@@ -6,4 +6,4 @@ Ticket: https://github.com/DFE-Digital/teacher-training-entitlement-board/issues
 
 ### Changes proposed in this pull request
 
-
+[What has been changed?]
