@@ -3,7 +3,6 @@ Rails.application.routes.draw do
              controllers: { omniauth_callbacks: "omniauth" }
 
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
-  get "/check", to: proc { [200, {}, %w[OK]] }
   get "/up", to: "monitoring#up"
   get "/robots", to: "robots_txt#show", format: :text, as: "robots_txt"
 
