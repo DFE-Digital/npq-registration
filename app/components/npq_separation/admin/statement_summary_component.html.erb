@@ -14,23 +14,48 @@
       <%= helpers.govuk_warning_text(text: "The output payment deadline is #{statement.deadline_date.to_fs(:govuk)}") %>
     </div>
 
+    <h2 class="govuk-heading-s">Declarations</h2>
+    <p class="govuk-body">
+      This table shows how many declarations are expected, how many have been received,
+      and how many are still outstanding for each stage.
+    </p>
+
+    <%=
+      helpers.govuk_table do |table|
+        table.with_head do |head|
+          head.with_row do |row|
+            row.with_cell(text: "Declaration type")
+            row.with_cell(text: "Expected")
+            row.with_cell(text: "Received")
+          end
+        end
+
+        table.with_body do |body|
+          calculator.declaration_types.each do |declaration_type|
+            body.with_row do |row|
+              row.with_cell(text: declaration_type.humanize)
+              row.with_cell(text: calculator.expected_applications(declaration_type).count)
+              row.with_cell(text: calculator.received_declarations(declaration_type).count)
+            end
+          end
+          body.with_row do |row|
+            row.with_cell { tag.strong "Totals" }
+            row.with_cell { tag.strong calculator.expected_applications.count }
+            row.with_cell { tag.strong calculator.received_declarations.count }
+          end
+        end
+      end
+    %>
+
+    <% if calculator.declaration_types.empty? %>
+      <p class="govuk-body">
+        <em>No milestones found for this statement.</em>
+      </p>
+    <% end %>
+
+    <h2 class="govuk-heading-s">Payment details</h2>
     <%=
       helpers.govuk_summary_list do |summary_list|
-        summary_list.with_row do |row|
-          row.with_key { "Starts" }
-          row.with_value { calculator.total_starts.to_s }
-        end
-
-        summary_list.with_row do |row|
-          row.with_key { "Retained" }
-          row.with_value { calculator.total_retained.to_s }
-        end
-
-        summary_list.with_row do |row|
-          row.with_key { "Completed" }
-          row.with_value { calculator.total_completed.to_s }
-        end
-
         summary_list.with_row do |row|
           row.with_key { "Voids" }
           row.with_value { calculator.total_voided.to_s }
