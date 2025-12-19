@@ -26,14 +26,20 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       total_retained: 2,
       total_completed: 3,
       total_voided: 4,
-      declaration_types:,
+    )
+  end
+
+  let(:declarations_calculator) do
+    instance_double(
+      Statements::DeclarationsCalculator,
+      expected_applications: [],
+      received_declarations: [],
     )
   end
 
   before do
     allow(::Statements::SummaryCalculator).to receive(:new).and_return(calculator)
-    allow(calculator).to receive(:expected_applications).with(any_args).and_return([])
-    allow(calculator).to receive(:received_declarations).with(any_args).and_return([])
+    allow(::Statements::DeclarationsCalculator).to receive(:new).with(statement:).and_return(declarations_calculator)
   end
 
   it { is_expected.to have_text "Statement summary" }
@@ -94,8 +100,12 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       let(:declaration_types) { %w[started completed] }
 
       before do
-        allow(calculator).to receive(:expected_applications).with("started").and_return(Array.new(10) { :application })
-        allow(calculator).to receive(:expected_applications).with("completed").and_return(Array.new(20) { :application })
+        started_milestone = create(:milestone, declaration_type: "started")
+        completed_milestone = create(:milestone, declaration_type: "completed")
+        create(:milestone_statement, milestone: started_milestone, statement:)
+        create(:milestone_statement, milestone: completed_milestone, statement:)
+        allow(declarations_calculator).to receive(:expected_applications).with("started").and_return(Array.new(10) { :application })
+        allow(declarations_calculator).to receive(:expected_applications).with("completed").and_return(Array.new(20) { :application })
         subject
       end
 
