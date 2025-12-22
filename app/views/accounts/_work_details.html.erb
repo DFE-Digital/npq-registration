@@ -60,7 +60,7 @@
         <% if application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">ITT provider</dt>
-            <dd class="govuk-summary-list__value"><%= application.itt_provider.legal_name %></dd>
+            <dd class="govuk-summary-list__value"><%= application.itt_provider&.legal_name %></dd>
           </div>
         <% end %>
 
