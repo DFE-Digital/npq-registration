@@ -71,5 +71,17 @@ module Statements
                                             end
       expected_applications(declaration_type).count - received_declarations(declaration_type).count + previous_milestones_remaining_count
     end
+
+    def expected_output_payment(course_calculators)
+      course_calculators.sum do |course_calculator|
+        course_calculator.expected_output_payment_subtotal(expected_eligible_applications_for_course(course_calculator.course).count)
+      end
+    end
+
+  private
+
+    def expected_eligible_applications_for_course(course)
+      expected_applications.select { |application| application.course_id == course.id }
+    end
   end
 end

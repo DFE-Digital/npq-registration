@@ -70,7 +70,13 @@ RSpec.describe Statements::DeclarationsCalculator do
   let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", application: application_with_other_declaration_type_declaration, course:, lead_provider:, cohort:, statement:) }
 
   # milestones
-  let(:milestones_for_all_declaration_types) do
+  let(:started_milestone) do
+    create(:milestone, declaration_type: "started", schedule: started_application.schedule).tap do |started_milestone|
+      create(:milestone_statement, milestone: started_milestone, statement:)
+    end
+  end
+
+  let(:milestones_for_all_declaration_types_except_started) do
     create(:milestone, declaration_type: "retained-1", schedule: specialist_leadership_retained_1_application.schedule)
     create(:milestone, declaration_type: "retained-1", schedule: aso_retained_1_application.schedule)
     retained_1_milestone_leadership
@@ -188,13 +194,10 @@ RSpec.describe Statements::DeclarationsCalculator do
     context "when the declaration type is nil" do
       let(:declaration_type) { nil }
 
-      before { milestones_for_all_declaration_types }
+      before { milestones_for_all_declaration_types_except_started }
 
       context "when there is a started milestone" do
-        before do
-          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
-          create(:milestone_statement, milestone: started_milestone, statement:)
-        end
+        before { started_milestone }
 
         it "returns the sum of all expected applications" do
           expect(expected_applications).to match_array(
@@ -301,12 +304,30 @@ RSpec.describe Statements::DeclarationsCalculator do
       let(:declaration_type) { nil }
 
       before do
-        milestones_for_all_declaration_types
-        started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
-        create(:milestone_statement, milestone: started_milestone, statement:)
+        milestones_for_all_declaration_types_except_started
+        started_milestone
       end
 
       it { is_expected.to eq(declarations_calculator.expected_applications.count - declarations_calculator.received_declarations.count) }
+    end
+  end
+
+  describe "#expected_output_payment" do
+    let(:course_calculators) { statement.contracts.map { Statements::CourseCalculator.new(contract: _1) } }
+    let(:leadership_contract_template) { create(:contract_template, per_participant: 123) }
+    let(:specialist_contract_template) { create(:contract_template, per_participant: 234) }
+
+    before do
+      milestones_for_all_declaration_types_except_started
+      started_milestone
+      create(:contract, course: leadership_course, statement:, contract_template: leadership_contract_template)
+      create(:contract, course: specialist_course, statement:, contract_template: specialist_contract_template)
+    end
+
+    it "returns the expected output payment based on the expected applications and the OutputPaymentCalculator" do
+      leadership_output_payment = leadership_contract_template.per_participant * leadership_contract_template.output_payment_percentage / (100 * leadership_contract_template.number_of_payment_periods)
+      specialist_output_payment = specialist_contract_template.per_participant * specialist_contract_template.output_payment_percentage / (100 * specialist_contract_template.number_of_payment_periods)
+      expect(declarations_calculator.expected_output_payment(course_calculators)).to eq((14 * leadership_output_payment) + specialist_output_payment)
     end
   end
 end
