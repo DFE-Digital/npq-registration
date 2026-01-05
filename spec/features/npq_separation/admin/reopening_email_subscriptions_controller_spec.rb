@@ -7,7 +7,7 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
 
   before do
     sign_in_as(super_admin)
-    create(:cohort, registration_start_date: 1.year.ago, start_year: 2024)
+    create(:cohort, registration_start_date: 1.year.ago, start_year: 1.year.ago.year)
     create :user, email_updates_status: :senco, email: "example@example.org", full_name: "John Doe"
   end
 
