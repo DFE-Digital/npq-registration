@@ -12,7 +12,7 @@ RSpec.feature "Statement - change payment date", type: :feature do
 
   scenario "updating payment date" do
     visit(npq_separation_admin_finance_statement_path(statement))
-    within("p", text: "Output payment date") do
+    within(".govuk-summary-list__row", text: "Output payment date") do
       click_link "Change"
     end
 
@@ -21,7 +21,7 @@ RSpec.feature "Statement - change payment date", type: :feature do
     expect(page).to have_current_path(npq_separation_admin_finance_statement_path(statement))
 
     # check blank date validation
-    within("p", text: "Output payment date") do
+    within(".govuk-summary-list__row", text: "Output payment date") do
       click_link "Change"
     end
     click_button "Change date"
