@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - staging
+          - sandbox
           - production
       confirm-production:
         description: Must be set to true if restoring production

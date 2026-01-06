@@ -16,6 +16,7 @@ on:
           - review
           - development
           - staging
+          - sandbox
           - production
       docker-image-tag:
         description: "Docker image tag to deploy"
