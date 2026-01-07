@@ -11,7 +11,6 @@ on:
         default: review
         options:
         - review
-        - development
         - staging
         - sandbox
         - production
@@ -137,37 +136,6 @@ jobs:
   #         message: |
   #           Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  # deploy-development:
-  #   name: Deploy development
-  #   concurrency: deploy_app_development
-  #   needs: [docker]
-  #   needs: [docker, all-checks-passed]
-  #   runs-on: ubuntu-24.04
-  #   if: github.ref == 'refs/heads/main'
-  #   environment:
-  #     name: development
-  #   steps:
-  #     - uses: actions/checkout@v6
-
-  #     - uses: ./.github/actions/deploy-environment-to-aks
-  #       id: deploy
-  #       with:
-  #         environment: development
-  #         docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
-  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  #         deploy-commit-sha: ${{ github.sha }}
-  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
-
-  #     - name: Notify on failure
-  #       if: failure()
-  #       uses: rtCamp/action-slack-notify@master
-  #       env:
-  #         SLACK_COLOR: failure
-  #         SLACK_TITLE: Failure deploying to development
-  #         SLACK_MESSAGE: Failure deploying to development - Docker tag ${{ needs.docker.outputs.docker-image }}
-  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   # deploy-staging:
   #   name: Deploy staging

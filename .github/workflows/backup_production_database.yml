@@ -6,11 +6,11 @@ on:
       environment:
         description: Environment to backup
         required: true
-        default: development
+        default: staging
         type: choice
         options:
-          - development
           - staging
+          - sandbox
           - production
       backup-file:
         description: |

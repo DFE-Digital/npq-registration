@@ -9,7 +9,6 @@ on:
         default: test
         type: choice
         options:
-          - development
           - staging
           - sandbox
           - production

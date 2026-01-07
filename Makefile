@@ -25,10 +25,6 @@ build-local-image:
 docker-compose-build:
 	docker-compose build --build-arg BUNDLE_FLAGS='--jobs=4 --no-binstubs --no-cache' --parallel
 
-.PHONY: development
-development: test-cluster
-	$(eval include global_config/development.sh)
-
 .PHONY: review
 review: test-cluster ## Specify review configuration
 	$(if ${PR_NUMBER},,$(error Missing PR_NUMBER))
@@ -158,10 +154,10 @@ domains-init: domains domains-composed-variables set-azure-account
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
 		-backend-config=key=${ENVIRONMENT}.tfstate
 
-domains-plan: domains-init  ## Terraform plan for DNS environment domains. Usage: make development domains-plan
+domains-plan: domains-init  ## Terraform plan for DNS environment domains. Usage: make staging domains-plan
 	terraform -chdir=terraform/domains/environment_domains plan -var-file config/${CONFIG}.tfvars.json
 
-domains-apply: domains-init ## Terraform apply for DNS environment domains. Usage: make development domains-apply
+domains-apply: domains-init ## Terraform apply for DNS environment domains. Usage: make staging domains-apply
 	terraform -chdir=terraform/domains/environment_domains apply -var-file config/${CONFIG}.tfvars.json ${AUTO_APPROVE}
 
 test-cluster:
