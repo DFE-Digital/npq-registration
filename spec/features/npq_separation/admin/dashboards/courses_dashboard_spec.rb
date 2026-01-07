@@ -5,7 +5,11 @@ RSpec.feature "Viewing the courses dashboard", type: :feature do
 
   let(:test_course) { create(:course, name: "Test Course") }
   let(:current_cohort) { create(:cohort, :current) }
-  let(:previous_cohort) { create(:cohort, :previous) }
+
+  let :previous_cohort do
+    create(:cohort, start_year: current_cohort.start_year - 1,
+                    registration_start_date: (current_cohort.registration_start_date - 1.year))
+  end
 
   before do
     sign_in_as(create(:admin))

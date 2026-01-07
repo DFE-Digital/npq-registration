@@ -335,13 +335,13 @@ RSpec.describe Statement, type: :model do
     subject { statement }
 
     context "when the statement is in the past" do
-      let(:statement) { build(:statement, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
+      let(:statement) { build(:statement, for_date: 1.month.ago) }
 
       it { is_expected.to be_past }
     end
 
     context "when the statement is in the current month" do
-      let(:statement) { build(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
+      let(:statement) { build(:statement, for_date: Time.zone.today) }
 
       it { is_expected.not_to be_past }
     end

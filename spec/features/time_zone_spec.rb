@@ -11,12 +11,12 @@ RSpec.feature "Showing Application timestamps in UK local time", type: :feature 
   before do
     travel_to(winter_timestamp) { winter_application }
     travel_to(summer_timestamp) { summer_application }
-
-    sign_in_as create(:admin)
   end
 
   scenario "Viewing times in the winter" do
     travel_to(winter_timestamp) do
+      sign_in_as create(:admin)
+
       visit(npq_separation_admin_applications_path)
 
       expect(page).to have_css("h1", text: "Applications")
@@ -28,6 +28,8 @@ RSpec.feature "Showing Application timestamps in UK local time", type: :feature 
 
   scenario "Viewing times in the summer" do
     travel_to(summer_timestamp) do
+      sign_in_as create(:admin)
+
       visit(npq_separation_admin_applications_path)
 
       expect(page).to have_css("h1", text: "Applications")
