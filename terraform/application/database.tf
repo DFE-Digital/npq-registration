@@ -12,6 +12,7 @@ module "postgres" {
   azure_enable_monitoring     = var.enable_monitoring
   azure_enable_backup_storage = var.enable_postgres_backup_storage
   server_version              = "16"
+  azure_extensions            = ["btree_gin", "citext", "fuzzystrmatch", "pg_trgm"]
 }
 
 
