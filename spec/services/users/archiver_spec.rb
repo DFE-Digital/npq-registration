@@ -33,6 +33,20 @@ RSpec.describe Users::Archiver do
         }.to raise_error ArgumentError, "User already archived"
       end
     end
+
+    context "when there is already a user with the archived email" do
+      before do
+        create(:user, :archived, archived_email: "test1@example.com")
+      end
+
+      it "archives user by appending a unique prefix to the email" do
+        subject.archive!
+
+        expect(user).to be_archived
+        expect(user.archived_email).to eq("test1@example.com")
+        expect(user.email).to eq("archived-2-test1@example.com")
+      end
+    end
   end
 
   describe ".set_uid_to_nil!" do
