@@ -34,6 +34,11 @@ env:
   TERRAFORM_BASE: terraform/application
   HEALTHCHECK_CMD: 'healthcheck'
 
+permissions:
+  id-token: write
+  pull-requests: write
+  packages: write
+
 jobs:
   rspec:
     name: RSpec
@@ -58,6 +63,7 @@ jobs:
       DOCKER_REPOSITORY: ghcr.io/dfe-digital/teacher-training-entitlement
     outputs:
       docker-image-tag: ${{ steps.build-image.outputs.tag }}
+      docker-image: ${{ steps.build-image.outputs.image }}
     permissions:
       packages: write
       pull-requests: write
@@ -107,68 +113,38 @@ jobs:
         # db-seed: true
         # smoke-test: true
 
-  # deploy_review:
-  #   name: Deploy review
-  #   concurrency: deploy_review_${{ github.event.pull_request.number }}
-  #   if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deploy') }}
-  #   needs: [docker]
-  #   runs-on: ubuntu-24.04
-  #   environment:
-  #     name: review
-  #   steps:
-  #     - uses: actions/checkout@v6
+  deploy-staging:
+    name: Deploy staging
+    concurrency: deploy_app_staging
+    needs: [build, all-checks-passed]
+    runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+    outputs:
+      docker-image: ${{ needs.build.outputs.docker-image }}
+    steps:
+      - uses: actions/checkout@v6
 
-  #     - uses: ./.github/actions/deploy-environment-to-aks
-  #       id: deploy
-  #       with:
-  #         environment: review
-  #         docker-image: ${{ needs.docker.outputs.docker-image }}
-  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  #         pull-request-number: ${{ github.event.pull_request.number }}
-  #         deploy-commit-sha: ${{ github.event.pull_request.head.sha }}
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: staging
+          docker-image: ${{ needs.build.outputs.docker-image }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          deploy-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-  #     - name: Post sticky pull request comment
-  #       if: github.event_name == 'pull_request'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         message: |
-  #           Review app deployed to ${{ steps.deploy.outputs.url }}
-
-
-  # deploy-staging:
-  #   name: Deploy staging
-  #   concurrency: deploy_app_staging
-  #   needs: [deploy-development]
-  #   runs-on: ubuntu-24.04
-  #   if: github.ref == 'refs/heads/main'
-  #   environment:
-  #     name: staging
-  #   outputs:
-  #     docker-image: ${{ needs.docker.outputs.docker-image }}
-  #   steps:
-  #     - uses: actions/checkout@v6
-
-  #     - uses: ./.github/actions/deploy-environment-to-aks
-  #       id: deploy
-  #       with:
-  #         environment: staging
-  #         docker-image: ${{ needs.docker.outputs.docker-image }}
-  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  #         deploy-commit-sha: ${{ github.sha }}
-  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
-
-  #     - name: Notify on failure
-  #       if: failure()
-  #       uses: rtCamp/action-slack-notify@master
-  #       env:
-  #         SLACK_COLOR: failure
-  #         SLACK_TITLE: Failure deploying to staging
-  #         SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.deploy-development.outputs.docker-image }}
-  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_COLOR: failure
+          SLACK_TITLE: Failure deploying to staging
+          SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.build.outputs.docker-image }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   # deploy-production:
   #   name: Deploy production
