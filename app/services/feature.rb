@@ -6,7 +6,7 @@ class Feature
   CLOSED_REGISTRATION_ENABLED = "Closed registration enabled".freeze
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
   MAINTENANCE_BANNER = "Maintenance banner".freeze
-  LP_TRANSFERRED_DECLARATIONS_VISIBILITY = "Lead provider transferred declarations visibility".freeze
+  USE_SUFFIXED_COHORTS = "Use suffixed cohorts".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
   # not included in this array. This approach will make tracking feature flags much easier.
@@ -15,7 +15,7 @@ class Feature
     CLOSED_REGISTRATION_ENABLED,
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
-    LP_TRANSFERRED_DECLARATIONS_VISIBILITY,
+    USE_SUFFIXED_COHORTS,
   ].freeze
 
   class << self
@@ -66,8 +66,8 @@ class Feature
       Flipper.enabled?(DFE_ANALYTICS_ENABLED)
     end
 
-    def lp_transferred_declarations_visibility?
-      Flipper.enabled?(LP_TRANSFERRED_DECLARATIONS_VISIBILITY)
+    def suffixed_cohorts?
+      Flipper.enabled?(USE_SUFFIXED_COHORTS)
     end
 
   private
