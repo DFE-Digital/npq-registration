@@ -47,8 +47,10 @@ module Statements
             },
           ),
         ).distinct
-      else
+      when nil
         statement.milestone_declaration_types.map { |declaration_type| expected_applications(declaration_type) }.flatten
+      else
+        raise "Invalid declaration type"
       end
     end
 
