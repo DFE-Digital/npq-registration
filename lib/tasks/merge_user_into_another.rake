@@ -22,5 +22,7 @@ task :merge_user_into_another, %i[user_ecf_id_to_merge user_ecf_id_to_keep dry_r
     exit 1
   end
 
+  logger.info "------------------------------------------------------------------------------------------------"
+  logger.info "Merging user #{user_to_merge.ecf_id} into user #{user_to_keep.ecf_id}"
   Users::MergeAndArchive.new(user_to_merge:, user_to_keep:, set_uid: true, logger:).call(dry_run:)
 end
