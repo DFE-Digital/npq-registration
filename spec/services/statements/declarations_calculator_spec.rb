@@ -7,6 +7,7 @@ RSpec.describe Statements::DeclarationsCalculator do
   let(:other_cohort) { create(:cohort) }
 
   let(:lead_provider) { create :lead_provider }
+  let(:other_lead_provider) { create :lead_provider }
   let(:statement) { create(:statement, lead_provider:, cohort:, month: 1, year: 2026) }
 
   let(:leadership_schedule) { create(:schedule, :npq_leadership_autumn, cohort:) }
@@ -26,6 +27,7 @@ RSpec.describe Statements::DeclarationsCalculator do
   # applications
   let(:not_accepted_yet_application) { create(:application, :eligible_for_funding, course:, lead_provider:, cohort:) }
   let(:other_cohort_application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort: other_cohort) }
+  let(:application_for_another_lead_provider) { create(:application, :accepted, :eligible_for_funding, course:, cohort:, lead_provider: other_lead_provider) }
 
   # started applications
   let(:started_application) { create(:application, :accepted, course:, lead_provider:, cohort:, schedule: leadership_schedule) }
@@ -68,6 +70,7 @@ RSpec.describe Statements::DeclarationsCalculator do
   let(:eligible_declaration) { create(:declaration, :eligible, declaration_type: "started", application: application_with_eligible_declaration, course:, lead_provider:, cohort:, statement:) }
   let(:other_cohort_declaration) { create(:declaration, :eligible, declaration_type: "started", application: other_cohort_application, course:, lead_provider:, cohort: other_cohort, statement:) }
   let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", application: application_with_other_declaration_type_declaration, course:, lead_provider:, cohort:, statement:) }
+  let(:other_lead_provider_declaration) { create(:declaration, :eligible, declaration_type: "started", application: application_for_another_lead_provider, course:, lead_provider: other_lead_provider, cohort:, statement:) }
 
   # milestones
   let(:milestones_for_all_declaration_types) do
@@ -107,11 +110,13 @@ RSpec.describe Statements::DeclarationsCalculator do
     other_cohort_application
     not_accepted_yet_application
     accepted_applications
+    application_for_another_lead_provider
 
     # started declarations
     create(:declaration, declaration_type: "started", application: started_application, course:, lead_provider:, cohort:, statement:)
     create(:declaration, declaration_type: "started", application: withdrawn_started_application, lead_provider:, cohort:, statement:)
     create(:declaration, declaration_type: "started", application: deferred_started_application, lead_provider:, cohort:, statement:)
+    create(:declaration, declaration_type: "started", application: application_for_another_lead_provider, lead_provider: other_lead_provider, cohort:, statement:)
 
     # retained-1 declarations
     create(:declaration, declaration_type: "retained-1", application: leadership_retained_1_application, course:, lead_provider:, cohort:, statement:)
@@ -139,6 +144,7 @@ RSpec.describe Statements::DeclarationsCalculator do
       other_declaration_type_declaration
       create(:declaration, :voided, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:)
       create(:declaration, :ineligible, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:)
+      other_lead_provider_declaration
     end
   end
 
@@ -149,7 +155,7 @@ RSpec.describe Statements::DeclarationsCalculator do
       let(:declaration_type) { "started" }
 
       it "returns the accepted applications for the statement's cohort" do
-        expect(expected_applications).to match_array(Application.accepted.where(cohort: statement.cohort).all)
+        expect(expected_applications).to match_array(Application.accepted.where(cohort: statement.cohort, lead_provider:).all)
       end
     end
 

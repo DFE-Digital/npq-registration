@@ -15,11 +15,12 @@ module Statements
         .where(
           training_status: "active",
           cohort: statement.cohort,
+          lead_provider: statement.lead_provider,
         )
 
       case declaration_type
       when "started"
-        Application.where(cohort: statement.cohort).accepted.distinct
+        Application.where(cohort: statement.cohort, lead_provider: statement.lead_provider).accepted
       when "retained-1"
         scope.where(
           declarations: { declaration_type: Declaration.declaration_types[:started] },
@@ -52,10 +53,12 @@ module Statements
     end
 
     def received_declarations(declaration_type = nil)
+      scope = statement.declarations.billable.where(cohort: statement.cohort, lead_provider: statement.lead_provider)
+
       if declaration_type
-        statement.declarations.billable.where(declaration_type: declaration_type, cohort: statement.cohort)
+        scope.where(declaration_type: declaration_type)
       else
-        statement.declarations.billable.where(declaration_type: statement.milestone_declaration_types, cohort: statement.cohort)
+        scope.where(declaration_type: statement.milestone_declaration_types)
       end
     end
   end
