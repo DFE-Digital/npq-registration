@@ -196,30 +196,8 @@ RSpec.describe Statements::DeclarationsCalculator do
 
       before { milestones_for_all_declaration_types }
 
-      context "when there is a started milestone" do
-        before do
-          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
-          create(:milestone_statement, milestone: started_milestone, statement:)
-        end
-
-        it "returns the sum of all expected applications" do
-          expect(expected_applications).to match_array(
-            declarations_calculator.expected_applications("started") +
-            declarations_calculator.expected_applications("retained-1") +
-            declarations_calculator.expected_applications("retained-2") +
-            declarations_calculator.expected_applications("completed"),
-          )
-        end
-      end
-
-      context "when there is not a started milestone" do
-        it "returns the sum of all expected applications" do
-          expect(expected_applications).to match_array(
-            declarations_calculator.expected_applications("retained-1") +
-            declarations_calculator.expected_applications("retained-2") +
-            declarations_calculator.expected_applications("completed"),
-          )
-        end
+      it "raises an error" do
+        expect { expected_applications }.to raise_error(Statements::DeclarationsCalculator::InvalidDeclarationType, "Invalid declaration type: , class: NilClass")
       end
     end
 
@@ -227,7 +205,39 @@ RSpec.describe Statements::DeclarationsCalculator do
       let(:declaration_type) { :started } # using a symbol instead of a string
 
       it "raises an error" do
-        expect { expected_applications }.to raise_error("Invalid declaration type")
+        expect { expected_applications }.to raise_error(Statements::DeclarationsCalculator::InvalidDeclarationType, "Invalid declaration type: started, class: Symbol")
+      end
+    end
+  end
+
+  describe "#all_expected_applications" do
+    subject(:all_expected_applications) { declarations_calculator.all_expected_applications }
+
+    before { milestones_for_all_declaration_types }
+
+    context "when there is a started milestone" do
+      before do
+        started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
+        create(:milestone_statement, milestone: started_milestone, statement:)
+      end
+
+      it "returns the sum of all expected applications" do
+        expect(all_expected_applications).to match_array(
+          declarations_calculator.expected_applications("started") +
+          declarations_calculator.expected_applications("retained-1") +
+          declarations_calculator.expected_applications("retained-2") +
+          declarations_calculator.expected_applications("completed"),
+        )
+      end
+    end
+
+    context "when there is not a started milestone" do
+      it "returns the sum of all expected applications" do
+        expect(all_expected_applications).to match_array(
+          declarations_calculator.expected_applications("retained-1") +
+          declarations_calculator.expected_applications("retained-2") +
+          declarations_calculator.expected_applications("completed"),
+        )
       end
     end
   end
