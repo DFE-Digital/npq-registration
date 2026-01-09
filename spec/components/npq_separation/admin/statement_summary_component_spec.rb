@@ -33,6 +33,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
     instance_double(
       Statements::DeclarationsCalculator,
       expected_applications: [],
+      all_expected_applications: [],
       received_declarations: [],
     )
   end
