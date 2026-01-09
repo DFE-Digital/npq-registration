@@ -52,10 +52,7 @@ module API
     private
 
       def declarations_query(conditions: {})
-        conditions.merge!(
-          lead_provider: current_lead_provider,
-          include_transferred_applications: Feature.lp_transferred_declarations_visibility?,
-        )
+        conditions.merge!(lead_provider: current_lead_provider)
         Declarations::Query.new(**conditions.compact)
       end
 
