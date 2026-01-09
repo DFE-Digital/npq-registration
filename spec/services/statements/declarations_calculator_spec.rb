@@ -222,6 +222,14 @@ RSpec.describe Statements::DeclarationsCalculator do
         end
       end
     end
+
+    context "when the declaration type is invalid" do
+      let(:declaration_type) { :started } # using a symbol instead of a string
+
+      it "raises an error" do
+        expect { expected_applications }.to raise_error("Invalid declaration type")
+      end
+    end
   end
 
   describe "#received_declarations" do
