@@ -35,6 +35,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       expected_applications: [],
       all_expected_applications: [],
       received_declarations: [],
+      remaining_declarations_count: 0,
     )
   end
 
