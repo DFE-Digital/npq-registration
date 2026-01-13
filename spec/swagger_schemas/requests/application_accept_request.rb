@@ -33,11 +33,6 @@ APPLICATION_ACCEPT_REQUEST = {
     },
   },
 }.tap { |h|
-  unless Rails.configuration.x.disable_legacy_api
-    h[:v1] = h[:v3].deep_dup
-    h[:v2] = h[:v3].deep_dup
-  end
-
   h[:v3][:properties][:data][:properties][:attributes][:properties][:schedule_identifier] = {
     description: "The new schedule of the participant",
     nullable: false,

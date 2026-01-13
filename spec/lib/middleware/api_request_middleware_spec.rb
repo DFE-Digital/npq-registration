@@ -37,7 +37,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
 
     describe "#call on an API path" do
       it "does not fire StreamAPIRequestsToBigQueryJob" do
-        request.get "/api/v1/participants/npq", params: { foo: "bar" }
+        request.get "/api/v3/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
       end
@@ -55,21 +55,6 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
 
     describe "#call on an API path" do
       it "fires a StreamAPIRequestsToBigQueryJob" do
-        request.get "/api/v1/participants/npq", params: { foo: "bar" }
-
-        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v1/participants/npq",
-                         "params" => { "foo" => "bar" },
-                         "method" => "GET"),
-          { "body" => "", "headers" => { "HEADER" => "Yeah!" } },
-          200,
-          now,
-        )
-      end
-    end
-
-    describe "#call on a different version API path" do
-      it "fires a StreamAPIRequestsToBigQueryJob" do
         request.get "/api/v3/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
@@ -85,10 +70,10 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
 
     describe "#call on an API path with POST data" do
       it "fires a StreamAPIRequestsToBigQueryJob including post data" do
-        request.post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }.to_json
+        request.post "/api/v3/participant-declarations", as: :json, params: { foo: "bar" }.to_json
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v1/participant-declarations",
+          hash_including("path" => "/api/v3/participant-declarations",
                          "body" => '{"foo":"bar"}',
                          "method" => "POST"),
           { "body" => "", "headers" => { "HEADER" => "Yeah!" } },
@@ -103,7 +88,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
         allow(Rails.logger).to receive(:warn)
         allow(StreamAPIRequestsToBigQueryJob).to receive(:perform_later).and_raise(StandardError)
 
-        request.get "/api/v1/participants/npq"
+        request.get "/api/v3/participants/npq"
 
         expect(Rails.logger).to have_received(:warn)
       end
@@ -113,10 +98,10 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
       let(:status) { 404 }
 
       it "fires an StreamAPIRequestsToBigQueryJob with response body included" do
-        request.get "/api/v1/participants/npq", params: { foo: "bar" }
+        request.get "/api/v3/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v1/participants/npq",
+          hash_including("path" => "/api/v3/participants/npq",
                          "params" => { "foo" => "bar" },
                          "method" => "GET"),
           { "body" => "Hellowwworlds!", "headers" => { "HEADER" => "Yeah!" } },

@@ -73,7 +73,7 @@ module API
       end
 
       def to_json(obj)
-        ApplicationSerializer.render(obj, view: :v3, root: "data")
+        ApplicationSerializer.render(obj, root: "data")
       end
 
       def accept_permitted_params

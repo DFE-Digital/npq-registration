@@ -99,7 +99,7 @@ module API
       end
 
       def to_json(obj)
-        DeclarationSerializer.render(obj, view: :v3, root: "data")
+        DeclarationSerializer.render(obj, root: "data")
       end
 
       def delivery_partner_id
