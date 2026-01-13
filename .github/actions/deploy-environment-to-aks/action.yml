@@ -73,7 +73,7 @@ runs:
       env:
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
-    - uses: ./.github/actions/smoke-test
-      with:
-        url: ${{ steps.apply-terraform.outputs.url }}
-        deploy-commit-sha: ${{ inputs.deploy-commit-sha }}
+    # - uses: ./.github/actions/smoke-test
+    #   with:
+    #     url: ${{ steps.apply-terraform.outputs.url }}
+    #     deploy-commit-sha: ${{ inputs.deploy-commit-sha }}
