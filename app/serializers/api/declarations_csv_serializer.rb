@@ -4,13 +4,12 @@ require "csv"
 
 module API
   class DeclarationsCsvSerializer
-    attr_reader :declarations, :view
+    attr_reader :declarations
 
     ATTRIBUTES_TO_EXCLUDE = %w[type].freeze
 
-    def initialize(declarations, view:)
+    def initialize(declarations)
       @declarations = declarations
-      @view = view
     end
 
     def serialize
@@ -28,7 +27,7 @@ module API
   private
 
     def declarations_json
-      @declarations_json ||= JSON.parse(DeclarationSerializer.render(declarations, view:)).map(&method(:flatten_hash))
+      @declarations_json ||= JSON.parse(DeclarationSerializer.render(declarations)).map(&method(:flatten_hash))
     end
 
     def headers

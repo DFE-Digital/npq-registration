@@ -17,37 +17,23 @@ module API
           &.has_passed?
       end
 
-      view :v1 do
-        field(:voided_state?, name: :voided)
-        field(:eligible_for_payment?, name: :eligible_for_payment)
-      end
-
-      view :v2 do
-      end
-
-      view :v3 do
-        field(:delivery_partner_id) { |declaration| declaration.delivery_partner&.ecf_id }
-        field(:delivery_partner_name) { |declaration| declaration.delivery_partner&.name }
-        field(:secondary_delivery_partner_id) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
-        field(:secondary_delivery_partner_name) { |declaration| declaration.secondary_delivery_partner&.name }
-        field(:statement_id) { |declaration| declaration.billable_statement&.ecf_id }
-        field(:application_id) { |declaration| declaration.application.ecf_id }
-        field(:clawback_statement_id) { |declaration| declaration.refundable_statement&.ecf_id }
-        field(:uplift_paid?, name: :uplift_paid)
-        field(:lead_provider_name)
-        field(:ineligible_for_funding_reason)
-        field(:created_at)
-      end
+      field(:delivery_partner_id) { |declaration| declaration.delivery_partner&.ecf_id }
+      field(:delivery_partner_name) { |declaration| declaration.delivery_partner&.name }
+      field(:secondary_delivery_partner_id) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
+      field(:secondary_delivery_partner_name) { |declaration| declaration.secondary_delivery_partner&.name }
+      field(:statement_id) { |declaration| declaration.billable_statement&.ecf_id }
+      field(:application_id) { |declaration| declaration.application.ecf_id }
+      field(:clawback_statement_id) { |declaration| declaration.refundable_statement&.ecf_id }
+      field(:uplift_paid?, name: :uplift_paid)
+      field(:lead_provider_name)
+      field(:ineligible_for_funding_reason)
+      field(:created_at)
 
       field(:updated_at)
     end
 
-    %i[v1 v2 v3].each do |version|
-      view version do
-        association :attributes, blueprint: AttributesSerializer, view: version do |declaration|
-          declaration
-        end
-      end
+    association :attributes, blueprint: AttributesSerializer do |declaration|
+      declaration
     end
   end
 end

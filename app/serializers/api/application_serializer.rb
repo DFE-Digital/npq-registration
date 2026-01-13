@@ -40,22 +40,13 @@ module API
           a.updated_at,
         ].compact.max
       end
-
-      view :v3 do
-        field(:schedule_identifier) { |a| a.schedule&.identifier }
-        field(:senco_in_role, name: :works_as_senco)
-        field(:senco_start_date) { |application| application.senco_start_date&.as_json }
-      end
+      field(:schedule_identifier) { |a| a.schedule&.identifier }
+      field(:senco_in_role, name: :works_as_senco)
+      field(:senco_start_date) { |application| application.senco_start_date&.as_json }
     end
 
     association :attributes, blueprint: AttributesSerializer do |application|
       application
-    end
-
-    view :v3 do
-      association :attributes, blueprint: AttributesSerializer, view: :v3 do |application|
-        application
-      end
     end
   end
 end
