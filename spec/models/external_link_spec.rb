@@ -4,15 +4,16 @@ RSpec.describe ExternalLink, type: :model do
   let(:logger) { instance_double(Logger, info: nil, fatal: nil) }
   let(:good_url) { "https://example.org/200" }
   let(:bad_url) { "https://example.org/404" }
-  let(:good_instance) { described_class.new(good_url) }
+  let(:good_instance) { described_class.new(url: good_url) }
 
   before do
     described_class.logger = logger
     described_class.reset_cache
 
-    allow(YAML).to receive(:load_file).with(ExternalLink.config_path).and_return({
-      "good" => good_url,
-      "bad" => bad_url,
+    allow(YAML).to receive(:load_file).with(ExternalLink::CONFIG_PATH).and_return({
+      "good" => { "url" => good_url },
+      "bad" => { "url" => bad_url },
+      "skip" => { "url" => bad_url, "skip_check" => true },
     })
     stub_request(:get, good_url).to_return(status: 302, headers: { "Location" => "https://example.org/redirected/200" })
     stub_request(:get, "https://example.org/redirected/200").to_return(status: 200)
@@ -29,9 +30,10 @@ RSpec.describe ExternalLink, type: :model do
     subject { described_class.all }
 
     it "returns all external links" do
-      expect(subject.count).to eq(2)
+      expect(subject.count).to eq(3)
       expect(subject[0]).to be_a(described_class).and have_attributes(url: good_url)
       expect(subject[1]).to be_a(described_class).and have_attributes(url: bad_url)
+      expect(subject[2]).to be_a(described_class).and have_attributes(url: bad_url, skip_check: true)
     end
   end
 
@@ -58,6 +60,10 @@ RSpec.describe ExternalLink, type: :model do
     context "when the URL responds with a success status" do
       let(:instance) { good_instance }
 
+      it "returns true" do
+        expect(subject).to be true
+      end
+
       it "logs success" do
         subject
         expect(logger).to have_received(:info).with("External link #{good_url} verified successfully")
@@ -69,7 +75,7 @@ RSpec.describe ExternalLink, type: :model do
     end
 
     context "when the URL responds with a non-success status" do
-      let(:instance) { described_class.new(bad_url) }
+      let(:instance) { described_class.new(url: bad_url) }
 
       it "logs failure" do
         begin
@@ -84,9 +90,27 @@ RSpec.describe ExternalLink, type: :model do
       end
     end
 
+    context "when the URL is marked to skip checking" do
+      let(:instance) { described_class.new(url: bad_url, skip_check: true) }
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+
+      it "does not log anything" do
+        subject
+        expect(logger).not_to have_received(:info)
+        expect(logger).not_to have_received(:fatal)
+      end
+
+      it "does not raise an exception" do
+        expect { subject }.not_to raise_error
+      end
+    end
+
     context "when the URL is redirected too many times" do
       let(:loop_url) { "https://example.org/loop" }
-      let(:instance) { described_class.new(loop_url) }
+      let(:instance) { described_class.new(url: loop_url) }
 
       before { stub_request(:get, loop_url).to_return(status: 302, headers: { "Location" => loop_url }) }
 
@@ -104,7 +128,7 @@ RSpec.describe ExternalLink, type: :model do
     end
 
     context "when the URL is redirected with a cookie" do
-      let(:instance) { described_class.new("https://example.org/cookie") }
+      let(:instance) { described_class.new(url: "https://example.org/cookie") }
 
       before do
         redirect_url = "https://example.org/redirected/200"

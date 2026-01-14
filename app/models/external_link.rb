@@ -1,39 +1,42 @@
 class ExternalLink
   class VerificationError < StandardError; end
 
+  CONFIG_PATH = Rails.root.join("config/external_links.yml").freeze
+
   class << self
     attr_writer :logger
 
-    def config_path = Rails.root.join("config/external_links.yml")
+    def all = mapping.values.map { new(url: it["url"], skip_check: it["skip_check"]) }
 
-    def all = mapping.values.map { new(it) }
-
-    def fetch(key) = new(mapping.fetch(key.to_s))
+    def fetch(key) = new(url: mapping.fetch(key.to_s)["url"])
 
     def verify_all = all.each(&:verify)
 
     def reset_cache = @mapping = nil
 
     def logger
-      @logger ||= Logger.new($stdout)
+      @logger ||= Logger.new($stdout) # TODO: does this need to be a class method?
     end
 
   private
 
     def mapping
-      @mapping ||= YAML.load_file(config_path)
+      @mapping ||= YAML.load_file(CONFIG_PATH)
     end
   end
 
-  attr_reader :url
+  attr_reader :url, :skip_check
 
   delegate :logger, to: :class
 
-  def initialize(url)
+  def initialize(url:, skip_check: false)
     @url = url
+    @skip_check = skip_check
   end
 
   def verify
+    return false if skip_check
+
     response = request(url)
 
     unless response.is_a? Net::HTTPSuccess
