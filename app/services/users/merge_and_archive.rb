@@ -16,7 +16,7 @@ module Users
 
       ApplicationRecord.transaction do
         move_applications(from_user: user_to_merge, to_user: user_to_keep)
-        move_participant_id_changes(from_user: user_to_merge, to_user: user_to_keep)
+        move_or_delete_participant_id_changes(from_user: user_to_merge, to_user: user_to_keep)
         user_to_keep.participant_id_changes.find_or_create_by!(from_participant_id: user_to_merge.ecf_id, to_participant_id: user_to_keep.ecf_id)
         uid_to_keep = user_to_merge.uid if user_to_merge.uid.present? && user_to_keep.uid.blank?
 
@@ -41,10 +41,17 @@ module Users
       end
     end
 
-    def move_participant_id_changes(from_user:, to_user:)
+    def move_or_delete_participant_id_changes(from_user:, to_user:)
       if from_user.participant_id_changes.any?
-        logger.info("Moving participant ID changes IDs=#{from_user.participant_id_changes.pluck(:id)} from user ID=#{from_user.id} to user ID=#{to_user.id}")
-        from_user.participant_id_changes.update!(user: to_user)
+        from_user.participant_id_changes.each do |participant_id_change|
+          if participant_id_change.from_participant_id == to_user.ecf_id && participant_id_change.to_participant_id == from_user.ecf_id
+            logger.info("Deleting participant ID change ID=#{participant_id_change.id} to avoid circular reference")
+            participant_id_change.destroy!
+          else
+            logger.info("Moving participant ID change ID=#{participant_id_change.id} from user ID=#{from_user.id} to user ID=#{to_user.id}")
+            from_user.participant_id_changes.update!(user: to_user)
+          end
+        end
       end
     end
   end
