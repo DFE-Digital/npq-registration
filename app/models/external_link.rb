@@ -4,8 +4,6 @@ class ExternalLink
   CONFIG_PATH = Rails.root.join("config/external_links.yml").freeze
 
   class << self
-    attr_writer :logger
-
     def all = mapping.values.map { new(url: it["url"], skip_check: it["skip_check"]) }
 
     def fetch(key) = new(url: mapping.fetch(key.to_s)["url"])
@@ -13,10 +11,6 @@ class ExternalLink
     def verify_all = all.each(&:verify)
 
     def reset_cache = @mapping = nil
-
-    def logger
-      @logger ||= Logger.new($stdout) # TODO: does this need to be a class method?
-    end
 
   private
 
@@ -26,8 +20,6 @@ class ExternalLink
   end
 
   attr_reader :url, :skip_check
-
-  delegate :logger, to: :class
 
   def initialize(url:, skip_check: false)
     @url = url
@@ -74,5 +66,9 @@ private
   def fail(message)
     logger.fatal("External link #{url} failed verification: #{message}")
     raise VerificationError, message
+  end
+
+  def logger
+    @logger ||= Logger.new($stdout) # TODO: does this need to be a class method?
   end
 end

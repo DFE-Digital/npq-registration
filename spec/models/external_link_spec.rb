@@ -7,7 +7,6 @@ RSpec.describe ExternalLink, type: :model do
   let(:good_instance) { described_class.new(url: good_url) }
 
   before do
-    described_class.logger = logger
     described_class.reset_cache
 
     allow(YAML).to receive(:load_file).with(ExternalLink::CONFIG_PATH).and_return({
@@ -15,6 +14,7 @@ RSpec.describe ExternalLink, type: :model do
       "bad" => { "url" => bad_url },
       "skip" => { "url" => bad_url, "skip_check" => true },
     })
+    allow(Logger).to receive(:new).and_return(logger)
     stub_request(:get, good_url).to_return(status: 302, headers: { "Location" => "https://example.org/redirected/200" })
     stub_request(:get, "https://example.org/redirected/200").to_return(status: 200)
     stub_request(:get, bad_url).to_return(status: 302, headers: { "location" => "https://example.org/redirected/404" })
@@ -22,7 +22,6 @@ RSpec.describe ExternalLink, type: :model do
   end
 
   after do
-    described_class.logger = nil
     described_class.reset_cache
   end
 
