@@ -56,9 +56,14 @@ RSpec.describe ExternalLink, type: :model do
   describe "#verify" do
     subject(:verify) { instance.verify }
 
-    context "when the URL responds with a success status" do
-      let(:instance) { good_instance }
+    let(:instance) { good_instance }
 
+    it "sets a user agent header on requests" do
+      subject
+      expect(a_request(:get, good_url).with(headers: { "User-Agent" => ExternalLink::USER_AGENT })).to have_been_made
+    end
+
+    context "when the URL responds with a success status" do
       it "returns true" do
         expect(subject).to be true
       end
@@ -128,15 +133,20 @@ RSpec.describe ExternalLink, type: :model do
 
     context "when the URL is redirected with a cookie" do
       let(:instance) { described_class.new(url: "https://example.org/cookie") }
+      let(:cookie_value) { "cookie=value" }
+      let(:redirect_url) { "https://example.org/redirected/200" }
 
       before do
-        redirect_url = "https://example.org/redirected/200"
-        cookie_value = "cookie=value"
         stub_request(:get, instance.url).to_return(status: 302, headers: { "Location" => redirect_url, "Set-Cookie" => cookie_value })
         stub_request(:get, redirect_url).with(headers: { "Cookie" => cookie_value }).to_return(status: 200)
       end
 
       it "sends the cookie to the redirected URL" do
+        subject
+        expect(a_request(:get, redirect_url).with(headers: { "Cookie" => cookie_value })).to have_been_made
+      end
+
+      it "logs success" do
         subject
         expect(logger).to have_received(:info).with("External link #{instance.url} verified successfully")
       end

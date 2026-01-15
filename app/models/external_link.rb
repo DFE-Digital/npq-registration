@@ -2,6 +2,7 @@ class ExternalLink
   class VerificationError < StandardError; end
 
   CONFIG_PATH = Rails.root.join("config/external_links.yml").freeze
+  USER_AGENT = "Mozilla/5.0 Chrome/139.0.0.0".freeze
 
   class << self
     def all = mapping.values.map { new(url: it["url"], skip_check: it["skip_check"]) }
@@ -14,9 +15,7 @@ class ExternalLink
 
   private
 
-    def mapping
-      @mapping ||= YAML.load_file(CONFIG_PATH)
-    end
+    def mapping = @mapping ||= YAML.load_file(CONFIG_PATH)
   end
 
   attr_reader :url, :skip_check
@@ -31,9 +30,7 @@ class ExternalLink
 
     response = request(url)
 
-    unless response.is_a? Net::HTTPSuccess
-      fail "URL returned status #{response.code}"
-    end
+    fail "URL returned status #{response.code}" unless response.is_a? Net::HTTPSuccess
 
     logger.info("External link #{url} verified successfully")
     true
@@ -59,7 +56,7 @@ private
 
   def default_headers
     {
-      "user-agent" => "Mozilla/5.0 Chrome/139.0.0.0", # wrong/bad but GIAS 403s without spoofing user agent
+      "user-agent" => USER_AGENT, # wrong/bad but GIAS 403s without spoofing user agent
     }
   end
 
@@ -69,6 +66,6 @@ private
   end
 
   def logger
-    @logger ||= Logger.new($stdout) # TODO: does this need to be a class method?
+    @logger ||= Logger.new($stdout)
   end
 end
