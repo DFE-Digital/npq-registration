@@ -3,7 +3,6 @@ name: Delete review
 on:
   pull_request:
     types: [closed]
-    branches: [main]
   workflow_dispatch:
     inputs:
       pr_number:
