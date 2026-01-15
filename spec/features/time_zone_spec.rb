@@ -3,8 +3,9 @@ require "rails_helper"
 RSpec.feature "Showing Application timestamps in UK local time", type: :feature do
   include Helpers::AdminLogin
 
-  let(:winter_timestamp) { Time.utc(Time.zone.now.year + 1, 1, 1, 8, 15) }
-  let(:summer_timestamp) { Time.utc(Time.zone.now.year + 1, 7, 1, 11, 15) }
+  let(:next_year) { 1.year.from_now.year }
+  let(:winter_timestamp) { Time.utc(next_year, 1, 1, 8, 15) }
+  let(:summer_timestamp) { Time.utc(next_year, 7, 1, 11, 15) }
   let(:winter_application) { create(:application) }
   let(:summer_application) { create(:application) }
 
@@ -21,8 +22,8 @@ RSpec.feature "Showing Application timestamps in UK local time", type: :feature 
 
       expect(page).to have_css("h1", text: "Applications")
 
-      expect(page).to have_css("td", text: "1 Jan #{Time.zone.now.year} 8:15am")
-      expect(page).to have_css("td", text: "1 Jul #{Time.zone.now.year} 12:15pm")
+      expect(page).to have_css("td", text: "1 Jan #{next_year} 8:15am")
+      expect(page).to have_css("td", text: "1 Jul #{next_year} 12:15pm")
     end
   end
 
@@ -34,8 +35,8 @@ RSpec.feature "Showing Application timestamps in UK local time", type: :feature 
 
       expect(page).to have_css("h1", text: "Applications")
 
-      expect(page).to have_css("td", text: "1 Jan #{Time.zone.now.year} 8:15am")
-      expect(page).to have_css("td", text: "1 Jul #{Time.zone.now.year} 12:15pm")
+      expect(page).to have_css("td", text: "1 Jan #{next_year} 8:15am")
+      expect(page).to have_css("td", text: "1 Jul #{next_year} 12:15pm")
     end
   end
 end
