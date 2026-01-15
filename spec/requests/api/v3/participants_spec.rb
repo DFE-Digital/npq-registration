@@ -4,7 +4,6 @@ RSpec.describe "Participant endpoints", type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { Participants::Query }
   let(:serializer) { API::ParticipantSerializer }
-  let(:serializer_version) { :v3 }
   let(:serializer_lead_provider) { current_lead_provider }
 
   describe "GET /api/v3/participants/npq" do

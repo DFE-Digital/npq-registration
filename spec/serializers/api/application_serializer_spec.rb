@@ -26,10 +26,6 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
   describe "nested attributes" do
     subject(:attributes) { JSON.parse(described_class.render(application))["attributes"] }
 
-    it "does not serialize `schedule_identifier`" do
-      expect(attributes).not_to have_key("schedule_identifier")
-    end
-
     it "serializes the `employer_name`" do
       application.employer_name = "employer"
       expect(attributes["employer_name"]).to eq(application.employer_name)
@@ -245,18 +241,16 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
         end
       end
     end
-  end
 
-  context "when serializing the `v3` view" do
-    let(:application) { build(:application, :accepted, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
-
-    describe "nested attributes" do
-      subject(:attributes) { JSON.parse(described_class.render(application, view: :v3))["attributes"] }
+    describe "schedule serialization" do
+      let(:application) { build(:application, :accepted, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
 
       it "serializes the `schedule_identifier`" do
         expect(attributes["schedule_identifier"]).to eq(application.schedule.identifier)
       end
+    end
 
+    describe "senco serialization" do
       context "when application is senco application" do
         let(:application) { build(:application, :senco, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
 

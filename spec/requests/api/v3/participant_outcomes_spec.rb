@@ -4,7 +4,6 @@ RSpec.describe "Participant outcome endpoints", type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { ParticipantOutcomes::Query }
   let(:serializer) { API::ParticipantOutcomeSerializer }
-  let(:serializer_version) { :v3 }
 
   def create_resource(**attrs)
     if attrs[:lead_provider]
