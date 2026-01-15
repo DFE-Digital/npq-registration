@@ -31,6 +31,9 @@ class Schedule < ApplicationRecord
   validates :acceptance_window_end, presence: true, if: -> { new_record? || acceptance_window_end_was }
   validates :policy_descriptor, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: -> { new_record? || policy_descriptor_was }
 
+  scope :with_retained_2_milestone, -> { joins(:milestones).where(milestones: { declaration_type: "retained-2" }) }
+  scope :without_retained_2_milestone, -> { where.not(id: with_retained_2_milestone.select(:id)) }
+
   def self.allowed_declaration_types
     Declaration.declaration_types.keys
   end
