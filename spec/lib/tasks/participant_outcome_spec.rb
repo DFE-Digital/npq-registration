@@ -100,4 +100,43 @@ RSpec.describe "particpant_outcome" do
       end
     end
   end
+
+  describe "void_duplicate" do
+    subject(:run_task) { Rake::Task["participant_outcomes:void_duplicate"].invoke(participant_outcome_id) }
+
+    let(:participant_outcome) { create(:participant_outcome, :passed) }
+    let(:participant_outcome_id) { participant_outcome.id }
+
+    after { Rake::Task["participant_outcomes:void_duplicate"].reenable }
+
+    context "when there is a duplicate participant outcome on the same declaration" do
+      let(:duplicate_participant_outcome) { create(:participant_outcome, :passed, declaration: participant_outcome.declaration) }
+
+      before { duplicate_participant_outcome }
+
+      it "voids the participant outcome" do
+        expect { run_task }.to change { participant_outcome.reload.state }.from("passed").to("voided")
+      end
+    end
+
+    context "when there is a duplicate participant outcome on a different declaration for the same application" do
+      pending "to be implemented when it's confirmed it's required"
+    end
+
+    context "when the participant outcome does not exist" do
+      let(:participant_outcome_id) { "non-existent-id" }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Participant outcome not found: #{participant_outcome_id}")
+      end
+    end
+
+    context "when there is not a duplicate participant outcome" do
+      it "raises an error" do
+        expect { run_task }.to raise_error(
+          RuntimeError, "Duplicate participant outcome not found"
+        )
+      end
+    end
+  end
 end
