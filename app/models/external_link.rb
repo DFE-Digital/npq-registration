@@ -5,9 +5,9 @@ class ExternalLink
   USER_AGENT = "Mozilla/5.0 Chrome/139.0.0.0".freeze
 
   class << self
-    def all = mapping.values.map { new(url: it["url"], skip_check: it["skip_check"]) }
+    def all = mapping.values.map { new(**it.symbolize_keys) }
 
-    def fetch(key) = new(url: mapping.fetch(key.to_s)["url"])
+    def fetch(key) = new(**mapping.fetch(key).symbolize_keys)
 
     def verify_all = all.each(&:verify)
 
@@ -15,7 +15,7 @@ class ExternalLink
 
   private
 
-    def mapping = @mapping ||= YAML.load_file(CONFIG_PATH)
+    def mapping = @mapping ||= YAML.load_file(CONFIG_PATH).with_indifferent_access
   end
 
   attr_reader :url, :skip_check
@@ -30,7 +30,7 @@ class ExternalLink
 
     response = request(url)
 
-    fail "URL returned status #{response.code}" unless response.is_a? Net::HTTPSuccess
+    failed_check "URL returned status #{response.code}" unless response.is_a? Net::HTTPSuccess
 
     logger.info("External link #{url} verified successfully")
     true
@@ -39,7 +39,7 @@ class ExternalLink
 private
 
   def request(url, limit = 5, headers: default_headers)
-    fail "Too many redirects" if limit.zero?
+    failed_check "Too many redirects" if limit.zero?
 
     uri = URI.parse(url)
     response = Net::HTTP.get_response(uri, headers)
@@ -60,7 +60,7 @@ private
     }
   end
 
-  def fail(message)
+  def failed_check(message)
     logger.fatal("External link #{url} failed verification: #{message}")
     raise VerificationError, message
   end
