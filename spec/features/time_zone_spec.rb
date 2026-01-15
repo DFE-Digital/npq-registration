@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.feature "Showing Application timestamps in UK local time", type: :feature do
   include Helpers::AdminLogin
 
-  let(:winter_timestamp) { Time.utc(Time.zone.now.year, 1, 1, 8, 15) }
-  let(:summer_timestamp) { Time.utc(Time.zone.now.year, 7, 1, 11, 15) }
+  let(:winter_timestamp) { Time.utc(Time.zone.now.year + 1, 1, 1, 8, 15) }
+  let(:summer_timestamp) { Time.utc(Time.zone.now.year + 1, 7, 1, 11, 15) }
   let(:winter_application) { create(:application) }
   let(:summer_application) { create(:application) }
 
