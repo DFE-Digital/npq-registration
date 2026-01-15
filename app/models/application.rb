@@ -175,21 +175,6 @@ class Application < ApplicationRecord
     school&.urn
   end
 
-  def get_approval_status
-    case lead_provider_approval_status
-    when "accepted" then "rejected"
-    when "rejected" then "pending"
-    else "accepted"
-    end
-  end
-
-  def get_participant_outcome_state
-    case participant_outcome_state
-    when "passed" then "failed"
-    else "passed"
-    end
-  end
-
   def self.cut_off_date_for_expired_applications
     Time.zone.local(2024, 6, 30)
   end
