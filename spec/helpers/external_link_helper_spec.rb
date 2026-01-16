@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe ExternalLinkHelper, type: :helper do
   before do
     ExternalLink.reset_cache
-    allow(YAML).to receive(:load_file).with(ExternalLink.config_path).and_return({
-      "good" => "https://example.org",
+    allow(YAML).to receive(:load_file).with(ExternalLink::CONFIG_PATH).and_return({
+      "good" => { "url" => "https://example.org" },
     })
   end
 
