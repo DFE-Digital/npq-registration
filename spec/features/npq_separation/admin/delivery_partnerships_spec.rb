@@ -126,6 +126,27 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
       expect(DeliveryPartnership.find_by(id: partnership2.id)).to be_present
     end
 
+    scenario "updating partnerships when another delivery partner has a similar name" do
+      # Create a delivery partner with a similar name
+      create(:delivery_partner, name: "#{delivery_partner.name} Hub")
+
+      lead_provider = lead_providers.first
+      cohort = cohorts.first
+
+      visit edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner)
+
+      check lead_provider.name, visible: :all
+      within("#delivery-partner-lead-provider-id-#{lead_provider.id}-conditional") do
+        check cohort_label(cohort), visible: :all
+      end
+
+      click_button "Save"
+
+      expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
+      expect(page).to have_content("Delivery partner updated")
+      expect(DeliveryPartnership.where(delivery_partner:, lead_provider:, cohort:)).to exist
+    end
+
     scenario "cancel button redirects back to delivery partners index page" do
       visit edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner)
 
