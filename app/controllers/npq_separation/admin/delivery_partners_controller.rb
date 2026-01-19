@@ -36,7 +36,7 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   end
 
   def update
-    if @delivery_partner.name.present? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
+    if @delivery_partner.name.present? && @delivery_partner.name_changed? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
       render :similar
     elsif save_delivery_partner
       redirect_to action: :index
