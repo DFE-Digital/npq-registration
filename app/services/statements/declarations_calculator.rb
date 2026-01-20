@@ -11,39 +11,40 @@ module Statements
     end
 
     def expected_applications(declaration_type)
-      @expected_applications ||=
-        case declaration_type
-        when "started"
-          Application.where(cohort: statement.cohort, lead_provider: statement.lead_provider).accepted
-        when "retained-1"
-          applications_with_declarations_and_milestones(
-            declaration_type: :started,
-            milestone_declaration_type: :"retained-1",
-          )
-        when "retained-2"
-          applications_with_declarations_and_milestones(
-            declaration_type: :"retained-1",
-            milestone_declaration_type: :"retained-2",
-          )
-        when "completed"
+      case declaration_type
+      when "started"
+        Application.where(cohort: statement.cohort, lead_provider: statement.lead_provider).accepted
+      when "retained-1"
+        applications_with_declarations_and_milestones(
+          declaration_type: :started,
+          milestone_declaration_type: :"retained-1",
+        )
+      when "retained-2"
+        applications_with_declarations_and_milestones(
+          declaration_type: :"retained-1",
+          milestone_declaration_type: :"retained-2",
+        )
+      when "completed"
+        applications_in_schedules_with_declarations_and_milestones(
+          schedules: Schedule.with_retained_2_milestone,
+          declaration_type: :"retained-2",
+          milestone_declaration_type: :completed,
+        ).or(
           applications_in_schedules_with_declarations_and_milestones(
-            schedules: Schedule.with_retained_2_milestone,
-            declaration_type: :"retained-2",
+            schedules: Schedule.without_retained_2_milestone,
+            declaration_type: :"retained-1",
             milestone_declaration_type: :completed,
-          ).or(
-            applications_in_schedules_with_declarations_and_milestones(
-              schedules: Schedule.without_retained_2_milestone,
-              declaration_type: :"retained-1",
-              milestone_declaration_type: :completed,
-            ),
-          ).distinct
-        else
-          raise InvalidDeclarationType, "Invalid declaration type: #{declaration_type}, class: #{declaration_type.class}"
-        end
+          ),
+        ).distinct
+      else
+        raise InvalidDeclarationType, "Invalid declaration type: #{declaration_type}, class: #{declaration_type.class}"
+      end
     end
 
-    def all_expected_applications
-      @all_expected_applications ||= statement.milestone_declaration_types.map { |declaration_type| expected_applications(declaration_type) }.flatten
+    def total_expected_applications
+      statement.milestone_declaration_types
+        .map { |declaration_type| expected_applications(declaration_type).count }
+        .sum
     end
 
     def received_declarations(declaration_type = nil)

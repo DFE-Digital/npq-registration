@@ -192,10 +192,15 @@ RSpec.describe Statements::DeclarationsCalculator do
     end
   end
 
-  describe "#all_expected_applications" do
-    subject(:all_expected_applications) { declarations_calculator.all_expected_applications }
+  describe "#total_expected_applications" do
+    subject(:total_expected_applications) { declarations_calculator.total_expected_applications }
 
-    before { milestones_for_all_declaration_types }
+    before do
+      milestones_for_all_declaration_types
+      create(:declaration, declaration_type: "started", application: started_application, course:, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: leadership_retained_1_application, course:, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-2", application: leadership_retained_2_application, lead_provider:, cohort:, statement:)
+    end
 
     context "when there is a started milestone" do
       before do
@@ -204,22 +209,13 @@ RSpec.describe Statements::DeclarationsCalculator do
       end
 
       it "returns the sum of all expected applications" do
-        expect(all_expected_applications).to match_array(
-          declarations_calculator.expected_applications("started") +
-          declarations_calculator.expected_applications("retained-1") +
-          declarations_calculator.expected_applications("retained-2") +
-          declarations_calculator.expected_applications("completed"),
-        )
+        expect(total_expected_applications).to eq 7 # 4 started, and one each of the other three types
       end
     end
 
     context "when there is not a started milestone" do
       it "returns the sum of all expected applications" do
-        expect(all_expected_applications).to match_array(
-          declarations_calculator.expected_applications("retained-1") +
-          declarations_calculator.expected_applications("retained-2") +
-          declarations_calculator.expected_applications("completed"),
-        )
+        expect(total_expected_applications).to eq 3
       end
     end
   end
