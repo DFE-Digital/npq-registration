@@ -24,16 +24,12 @@
       helpers.govuk_table do |table|
         table.with_head do |head|
           head.with_row do |row|
-            row.with_cell(text: "Declaration type", html_attributes: { class: "no-border-bottom no-padding-bottom" })
-            row.with_cell(text: "Expected", html_attributes: { class: "no-border-bottom no-padding-bottom" })
-            row.with_cell(text: "Received", html_attributes: { class: "no-border-bottom no-padding-bottom" })
-            row.with_cell(text: "Remaining", html_attributes: { class: "no-border-bottom no-padding-bottom" })
-          end
-          head.with_row do |row|
-            row.with_cell(html_attributes: { class: "no-padding-top" })
-            row.with_cell(html_attributes: { class: "no-padding-top" })
-            row.with_cell(html_attributes: { class: "no-padding-top" })
-            row.with_cell(text: "(cumulative)", html_attributes: { class: "font-size-small no-padding-top" })
+            row.with_cell(text: "Declaration type")
+            row.with_cell(text: "Expected")
+            row.with_cell(text: "Received")
+            row.with_cell do
+              safe_join [ tag.div("Remaining"), tag.div("(cumulative)",  class: "govuk-body-s govuk-!-margin-bottom-0") ]
+            end
           end
         end
 

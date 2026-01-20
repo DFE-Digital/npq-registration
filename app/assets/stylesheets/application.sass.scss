@@ -71,19 +71,3 @@ $admin-template-max-width: 1200px;
     margin-bottom: govuk-spacing(1);
   }
 }
-
-.no-border-bottom {
-  border-bottom: none;
-}
-
-.font-size-small {
-  font-size: 0.8rem; // default is 1rem for govuk-!-font-size-16
-}
-
-.no-padding-bottom {
-  padding-bottom: 0;
-}
-
-.no-padding-top {
-  padding-top: 0;
-}
