@@ -865,10 +865,6 @@ en:
             <p class="govuk-body">When this feature is turned on, events will be sent to DfE Analytics.</p>
           lead_provider_transferred_declarations_visibility_html: |
             <p class="govuk-body">When this feature is turned on, lead providers can see transferred declarations.</p>
-          use_suffixed_cohorts_html: |
-            <p class="govuk-body">When turned on any new applications will be assigned to the latest suffixed cohort<p>
-            <p class="govuk-body">When turned off any new applications will be assigned to the latest cohort with a suffix of 1</p>
-            <p class"govuk-body">This enables the rollout of suffixed cohorts</p>
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment
