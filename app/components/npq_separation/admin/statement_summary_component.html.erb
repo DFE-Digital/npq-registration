@@ -40,7 +40,7 @@
           end
           body.with_row do |row|
             row.with_cell { tag.strong "Totals" }
-            row.with_cell { tag.strong declarations_calculator.all_expected_applications.count }
+            row.with_cell { tag.strong declarations_calculator.total_expected_applications }
             row.with_cell { tag.strong declarations_calculator.received_declarations.count }
           end
         end
