@@ -1,44 +1,36 @@
 class ExternalLink
   class VerificationError < StandardError; end
 
+  CONFIG_PATH = Rails.root.join("config/external_links.yml").freeze
+  USER_AGENT = "Mozilla/5.0 Chrome/139.0.0.0".freeze
+
   class << self
-    attr_writer :logger
+    def all = mapping.values.map { new(**it.symbolize_keys) }
 
-    def config_path = Rails.root.join("config/external_links.yml")
-
-    def all = mapping.values.map { new(it) }
-
-    def fetch(key) = new(mapping.fetch(key.to_s))
+    def fetch(key) = new(**mapping.fetch(key).symbolize_keys)
 
     def verify_all = all.each(&:verify)
 
     def reset_cache = @mapping = nil
 
-    def logger
-      @logger ||= Logger.new($stdout)
-    end
-
   private
 
-    def mapping
-      @mapping ||= YAML.load_file(config_path)
-    end
+    def mapping = @mapping ||= YAML.load_file(CONFIG_PATH).with_indifferent_access
   end
 
-  attr_reader :url
+  attr_reader :url, :skip_check
 
-  delegate :logger, to: :class
-
-  def initialize(url)
+  def initialize(url:, skip_check: false)
     @url = url
+    @skip_check = skip_check
   end
 
   def verify
+    return false if skip_check
+
     response = request(url)
 
-    unless response.is_a? Net::HTTPSuccess
-      fail "URL returned status #{response.code}"
-    end
+    failed_check "URL returned status #{response.code}" unless response.is_a? Net::HTTPSuccess
 
     logger.info("External link #{url} verified successfully")
     true
@@ -47,7 +39,7 @@ class ExternalLink
 private
 
   def request(url, limit = 5, headers: default_headers)
-    fail "Too many redirects" if limit.zero?
+    failed_check "Too many redirects" if limit.zero?
 
     uri = URI.parse(url)
     response = Net::HTTP.get_response(uri, headers)
@@ -64,12 +56,16 @@ private
 
   def default_headers
     {
-      "user-agent" => "Mozilla/5.0 Chrome/139.0.0.0", # wrong/bad but GIAS 403s without spoofing user agent
+      "user-agent" => USER_AGENT, # wrong/bad but GIAS 403s without spoofing user agent
     }
   end
 
-  def fail(message)
+  def failed_check(message)
     logger.fatal("External link #{url} failed verification: #{message}")
     raise VerificationError, message
+  end
+
+  def logger
+    @logger ||= Logger.new($stdout)
   end
 end
