@@ -28,7 +28,7 @@
             row.with_cell(text: "Expected")
             row.with_cell(text: "Received")
             row.with_cell do
-              safe_join [ tag.div("Remaining"), tag.div("(cumulative)",  class: "govuk-body-s govuk-!-margin-bottom-0") ]
+              tag.div("Remaining") + tag.div("(cumulative)",  class: "govuk-body-s govuk-!-margin-bottom-0")
             end
           end
         end
@@ -46,7 +46,7 @@
             row.with_cell { tag.strong "Totals" }
             row.with_cell { tag.strong declarations_calculator.total_expected_applications }
             row.with_cell { tag.strong declarations_calculator.received_declarations.count }
-            row.with_cell { tag.strong declarations_calculator.remaining_declarations_count }
+            row.with_cell { tag.strong declarations_calculator.total_remaining_declarations_count }
           end
         end
       end

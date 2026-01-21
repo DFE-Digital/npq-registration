@@ -57,6 +57,25 @@ module Statements
       scope.where(declaration_type: declaration_type)
     end
 
+    def remaining_declarations_count(declaration_type)
+      expected_applications_count = expected_applications(declaration_type).count
+
+      return 0 if expected_applications_count.zero?
+
+      expected_applications_count -
+        received_declarations(declaration_type).count +
+        previous_milestones_remaining_count(declaration_type)
+    end
+
+    def total_remaining_declarations_count
+      received_declarations_for_milestones_on_statement =
+        statement.milestone_declaration_types
+        .map { |declaration_type| received_declarations(declaration_type).count }
+        .sum
+
+      total_expected_applications - received_declarations_for_milestones_on_statement
+    end
+
   private
 
     def active_applications
@@ -86,17 +105,18 @@ module Statements
       )
     end
 
-    def remaining_declarations_count(declaration_type = nil)
-      current_declaration_type_index = Milestone::ALL_DECLARATION_TYPES.index(declaration_type)
-      previous_milestones_remaining_count = if current_declaration_type_index && current_declaration_type_index.positive?
-                                              previous_milestones = Milestone::ALL_DECLARATION_TYPES[..(current_declaration_type_index - 1)]
-                                              previous_milestones.sum do |previous_declaration_type|
-                                                expected_applications(previous_declaration_type).uniq.count - received_declarations(previous_declaration_type).count
-                                              end
-                                            else
-                                              0
-                                            end
-      expected_applications(declaration_type).count - received_declarations(declaration_type).count + previous_milestones_remaining_count
+    def previous_milestones_remaining_count(declaration_type)
+      previous_milestones(declaration_type).sum do |previous_declaration_type|
+        expected_applications(previous_declaration_type).uniq.count -
+          received_declarations(previous_declaration_type).count
+      end
+    end
+
+    def previous_milestones(declaration_type)
+      declaration_type_index = Milestone::ALL_DECLARATION_TYPES.index(declaration_type)
+      return [] unless declaration_type_index.positive?
+
+      Milestone::ALL_DECLARATION_TYPES[..(declaration_type_index - 1)]
     end
   end
 end
