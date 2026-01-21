@@ -49,36 +49,17 @@ RSpec.describe Declarations::Query do
           create(:declaration, lead_provider: other_lead_provider)
         end
 
-        it "only shows declarations made by the provider" do
-          query = described_class.new(lead_provider: current_lead_provider)
-          expect(query.declarations).to contain_exactly(declaration_after_transfer)
-
-          query = described_class.new(lead_provider: previous_lead_provider)
-          expect(query.declarations).to contain_exactly(declaration_before_transfer)
+        context "with the current lead provider" do
+          it "shows declarations made by the current and previous provider" do
+            query = described_class.new(lead_provider: current_lead_provider)
+            expect(query.declarations).to contain_exactly(declaration_before_transfer, declaration_after_transfer)
+          end
         end
 
-        context "when include_transferred_applications is true" do
-          subject do
-            described_class.new(
-              lead_provider:,
-              include_transferred_applications: true,
-            ).declarations
-          end
-
-          context "and the lead provider is the current provider" do
-            let(:lead_provider) { current_lead_provider }
-
-            it "shows all declarations" do
-              expect(subject).to contain_exactly(declaration_before_transfer, declaration_after_transfer)
-            end
-          end
-
-          context "and the lead provider is a previous provider" do
-            let(:lead_provider) { previous_lead_provider }
-
-            it "only shows declarations made by the provider" do
-              expect(subject).to contain_exactly(declaration_before_transfer)
-            end
+        context "with the previous lead provider" do
+          it "only shows declarations made by a previous provider" do
+            query = described_class.new(lead_provider: previous_lead_provider)
+            expect(query.declarations).to contain_exactly(declaration_before_transfer)
           end
         end
 

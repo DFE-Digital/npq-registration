@@ -5,11 +5,11 @@ module Declarations
 
     attr_reader :scope, :sort
 
-    def initialize(lead_provider: :ignore, updated_since: :ignore, participant_ids: :ignore, cohort_start_years: :ignore, include_transferred_applications: false)
+    def initialize(lead_provider: :ignore, updated_since: :ignore, participant_ids: :ignore, cohort_start_years: :ignore)
       @scope = all_declarations
       @sort = sort
 
-      where_lead_provider_is(lead_provider, include_transferred_applications)
+      where_lead_provider_is(lead_provider)
       where_updated_since(updated_since)
       where_participant_ids_in(participant_ids)
       where_cohort_start_year_in(cohort_start_years)
@@ -28,15 +28,12 @@ module Declarations
 
   private
 
-    def where_lead_provider_is(lead_provider, include_transferred_applications)
+    def where_lead_provider_is(lead_provider)
       return if ignore?(filter: lead_provider)
 
       relation = Declaration.joins(:application)
       lead_provider_scope = relation.where(lead_provider:)
-
-      if include_transferred_applications
-        lead_provider_scope = lead_provider_scope.or(relation.where(application: { lead_provider: }))
-      end
+                                    .or(relation.where(application: { lead_provider: }))
 
       scope.merge!(lead_provider_scope)
     end
