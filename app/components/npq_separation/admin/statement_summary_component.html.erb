@@ -10,10 +10,6 @@
     </div>
   </div>
   <div class="govuk-summary-card__content">
-    <div id="payment-deadline-warning">
-      <%= helpers.govuk_warning_text(text: "The output payment deadline is #{statement.deadline_date.to_fs(:govuk)}") %>
-    </div>
-
     <h2 class="govuk-heading-s">Declarations</h2>
     <p class="govuk-body">
       This table shows how many declarations are expected, how many have been received,
@@ -56,9 +52,8 @@
     <%=
       helpers.govuk_summary_list do |summary_list|
         summary_list.with_row do |row|
-          row.with_key { "Voids" }
-          row.with_value { calculator.total_voided.to_s }
-          row.with_action(text: "View Voids", href: npq_separation_admin_finance_voided_index_path(statement)) if link_to_voids
+          row.with_key { "Expected output payment" }
+          row.with_value { number_to_currency(calculator.expected_output_payment) }
         end
 
         summary_list.with_row do |row|
@@ -77,6 +72,12 @@
             row.with_key { "Targeted delivery funding" }
             row.with_value { number_to_currency(calculator.total_targeted_delivery_funding) }
           end
+        end
+
+        summary_list.with_row do |row|
+          row.with_key { "Voids" }
+          row.with_value { calculator.total_voided.to_s }
+          row.with_action(text: "View Voids", href: npq_separation_admin_finance_voided_index_path(statement)) if link_to_voids
         end
 
         summary_list.with_row do |row|

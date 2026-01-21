@@ -11,8 +11,8 @@ module Statements
     def call(total_participants:)
       {
         participants: total_participants,
-        per_participant: milestone_output_payments,
-        subtotal: total_participants * milestone_output_payments,
+        per_participant: per_participant_output_payments,
+        subtotal: total_participants * per_participant_output_payments,
       }
     end
 
@@ -26,7 +26,7 @@ module Statements
       @contract = contract
     end
 
-    def milestone_output_payments
+    def per_participant_output_payments
       return 0 if output_payment_percentage.zero?
 
       per_participant * output_payment_percentage / (100 * number_of_payment_periods)

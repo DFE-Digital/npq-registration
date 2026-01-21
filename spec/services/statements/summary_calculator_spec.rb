@@ -463,4 +463,16 @@ RSpec.describe Statements::SummaryCalculator do
       end
     end
   end
+
+  describe "#expected_output_payment" do
+    let(:declarations_calculator) { instance_double(Statements::DeclarationsCalculator, expected_output_payment: 1234.12) }
+
+    before do
+      allow(Statements::DeclarationsCalculator).to receive(:new).with(statement:).and_return(declarations_calculator)
+    end
+
+    it "returns the expected output payment from the Statements::DeclarationsCalculator" do
+      expect(subject.expected_output_payment).to eq(1234.12)
+    end
+  end
 end
