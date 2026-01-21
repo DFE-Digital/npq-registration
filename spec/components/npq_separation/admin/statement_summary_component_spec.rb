@@ -36,15 +36,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       total_expected_applications: 0,
       received_declarations: [],
       remaining_declarations_count: 0,
-    )
-  end
-
-  let(:declarations_calculator) do
-    instance_double(
-      Statements::DeclarationsCalculator,
-      expected_applications: [],
-      total_expected_applications: 0,
-      received_declarations: [],
+      total_remaining_declarations_count: 0,
     )
   end
 

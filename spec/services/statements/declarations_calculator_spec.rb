@@ -14,6 +14,7 @@ RSpec.describe Statements::DeclarationsCalculator do
   let(:specialist_schedule) { create(:schedule, :npq_specialist_autumn, cohort:) }
 
   # milestones
+  let(:started_milestone) { create(:milestone, schedule: started_application.schedule, declaration_type: "started") }
   let(:retained_1_milestone_leadership) { create(:milestone, schedule: leadership_schedule, declaration_type: "retained-1") }
   let(:retained_2_milestone_leadership) { create(:milestone, schedule: leadership_schedule, declaration_type: "retained-2") }
   let(:completed_milestone_specialist) { create(:milestone, schedule: specialist_schedule, declaration_type: "completed") }
@@ -31,7 +32,6 @@ RSpec.describe Statements::DeclarationsCalculator do
   let(:started_application) { create(:application, :accepted, course:, lead_provider:, cohort:, schedule: leadership_schedule) }
   let(:withdrawn_started_application) { create(:application, :withdrawn, course:, lead_provider:, cohort:, schedule: leadership_schedule) }
   let(:deferred_started_application) { create(:application, :deferred, course:, lead_provider:, cohort:, schedule: leadership_schedule) }
-  let(:application_with_eligible_declaration) { create(:application, :accepted, course:) }
   let(:application_with_other_declaration_type_declaration) { create(:application, :accepted, course:) }
 
   # retained-1 applications
@@ -53,9 +53,9 @@ RSpec.describe Statements::DeclarationsCalculator do
   end
 
   # declarations
-  let(:eligible_declaration) { create(:declaration, :eligible, declaration_type: "started", application: application_with_eligible_declaration, course:, lead_provider:, cohort:, statement:) }
+  let(:started_declaration) { create(:declaration, :eligible, declaration_type: "started", application: started_application, course:, lead_provider:, cohort:, statement:) }
   let(:other_cohort_declaration) { create(:declaration, :eligible, declaration_type: "started", application: other_cohort_application, course:, lead_provider:, cohort: other_cohort, statement:) }
-  let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", application: application_with_other_declaration_type_declaration, course:, lead_provider:, cohort:, statement:) }
+  let(:retained_1_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", application: application_with_other_declaration_type_declaration, course:, lead_provider:, cohort:, statement:) }
   let(:other_lead_provider_declaration) { create(:declaration, :eligible, declaration_type: "started", application: application_for_another_lead_provider, course:, lead_provider: other_lead_provider, cohort:, statement:) }
 
   # milestones
@@ -80,7 +80,6 @@ RSpec.describe Statements::DeclarationsCalculator do
   subject(:declarations_calculator) { described_class.new(statement:) }
 
   before do
-    # applications
     other_cohort_application
     not_accepted_yet_application
     accepted_applications
@@ -95,7 +94,6 @@ RSpec.describe Statements::DeclarationsCalculator do
 
       context "when the statement has a started milestone" do
         before do
-          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
           create(:milestone_statement, milestone: started_milestone, statement:)
         end
 
@@ -216,10 +214,7 @@ RSpec.describe Statements::DeclarationsCalculator do
     end
 
     context "when there is a started milestone" do
-      before do
-        started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
-        create(:milestone_statement, milestone: started_milestone, statement:)
-      end
+      before { create(:milestone_statement, milestone: started_milestone, statement:) }
 
       it "returns the sum of all expected applications" do
         expect(total_expected_applications).to eq 7 # 4 started, and one each of the other three types
@@ -238,22 +233,21 @@ RSpec.describe Statements::DeclarationsCalculator do
     let(:declaration_without_milestone) { create(:declaration, :eligible, declaration_type: "retained-2", application: leadership_retained_2_application, course:, lead_provider:, cohort:, statement:) }
 
     before do
-      eligible_declaration
+      started_declaration
       declaration_without_milestone
-      other_declaration_type_declaration
-      started_milestone = create(:milestone, declaration_type: "started", schedule: application_with_eligible_declaration.schedule)
+      retained_1_declaration
       create(:milestone_statement, milestone: started_milestone, statement:)
       retained_1_milestone = create(:milestone, declaration_type: "retained-1", schedule: application_with_other_declaration_type_declaration.schedule)
       create(:milestone_statement, milestone: retained_1_milestone, statement:)
     end
 
     it "returns the billable declarations for the statement of the given declaration type, in the given cohort" do
-      expect(declarations_calculator.received_declarations("started")).to contain_exactly(eligible_declaration)
+      expect(declarations_calculator.received_declarations("started")).to contain_exactly(started_declaration)
     end
 
     context "when the declaration type is nil" do
       it "returns all billable declarations for the statement, in the given cohort" do
-        expect(declarations_calculator.received_declarations).to contain_exactly(eligible_declaration, declaration_without_milestone, other_declaration_type_declaration)
+        expect(declarations_calculator.received_declarations).to contain_exactly(started_declaration, declaration_without_milestone, retained_1_declaration)
       end
     end
   end
@@ -261,69 +255,152 @@ RSpec.describe Statements::DeclarationsCalculator do
   describe "#remaining_declarations_count" do
     subject { declarations_calculator.remaining_declarations_count(declaration_type) }
 
+    let(:accepted_applications) { create_list(:application, 4, :accepted, course:, lead_provider:, cohort:) }
+
+    before { accepted_applications }
+
     context "when the milestone declaration type is: started" do
       let(:declaration_type) { "started" }
 
-      it "returns the expected applications minus received declarations count" do
-        expect(subject).to eq(declarations_calculator.expected_applications(declaration_type).count - declarations_calculator.received_declarations(declaration_type).count)
+      before { started_declaration }
+
+      context "when there is a started milestone, and hence an expected application" do
+        before { create(:milestone_statement, milestone: started_milestone, statement:) }
+
+        it "returns the expected applications minus received declarations count" do
+          expected_applications_count = 5
+          received_declarations_count = 1
+          expect(subject).to eq expected_applications_count - received_declarations_count
+        end
       end
+
+      context "when there is no started milestone, and hence no expected applications" do
+        it "returns zero" do
+          expect(subject).to eq 0
+        end
+      end
+    end
+
+    def create_applications_with_declaration_and_milestone(declaration_type:, milestone_declaration_type:)
+      application = create(:application, :accepted, course:, lead_provider:, cohort:, schedule: leadership_schedule)
+      milestone = create(:milestone, declaration_type: milestone_declaration_type, schedule: application.schedule)
+      create(:milestone_statement, milestone: milestone, statement:)
+      create(:declaration, :eligible, declaration_type:, application:, course:, lead_provider:, cohort:, statement:)
+      second_application = create(:application, :accepted, course:, lead_provider:, cohort:, schedule: leadership_schedule)
+      create(:declaration, :eligible, declaration_type:, application: second_application, course:, lead_provider:, cohort:, statement:)
     end
 
     context "when the milestone declaration type is: retained-1" do
       let(:declaration_type) { "retained-1" }
 
-      before { retained_1_milestone_leadership }
+      before do
+        create_applications_with_declaration_and_milestone(declaration_type: "started", milestone_declaration_type: "retained-1")
+        create(:declaration, :eligible, declaration_type:, course:, lead_provider:, cohort:, statement:)
+        create(:milestone_statement, milestone: started_milestone, statement:)
+      end
 
       it "returns the expected applications minus received declarations count plus the remaining started declarations count" do
-        expect(subject).to eq(
-          declarations_calculator.expected_applications(declaration_type).count -
-            declarations_calculator.received_declarations(declaration_type).count +
-            (declarations_calculator.expected_applications("started").uniq.count - declarations_calculator.received_declarations("started").count),
-        )
+        expected_applications_count = 2
+        received_declarations_count = 1
+        remaining_started_declarations_count = 5
+        expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_declarations_count)
       end
     end
 
     context "when the milestone declaration type is: retained-2" do
       let(:declaration_type) { "retained-2" }
 
-      before { retained_2_milestone_leadership }
+      before do
+        create(:milestone_statement, milestone: started_milestone, statement:)
+        create_applications_with_declaration_and_milestone(declaration_type: "started", milestone_declaration_type: "retained-1")
+        create_applications_with_declaration_and_milestone(declaration_type: "retained-1", milestone_declaration_type: "retained-2")
+        create(:declaration, :eligible, declaration_type:, course:, lead_provider:, cohort:, statement:)
+        create(:declaration, :eligible, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:)
+      end
 
       it "returns the expected applications minus received declarations count plus the remaining started and retained-1 declarations count" do
-        expect(subject).to eq(
-          declarations_calculator.expected_applications(declaration_type).count -
-            declarations_calculator.received_declarations(declaration_type).count +
-            (declarations_calculator.expected_applications("started").count - declarations_calculator.received_declarations("started").count) +
-            (declarations_calculator.expected_applications("retained-1").count - declarations_calculator.received_declarations("retained-1").count),
-        )
+        expected_applications_count = 2
+        received_declarations_count = 1
+        remaining_started_and_retained_1_declarations_count = 6
+
+        expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_and_retained_1_declarations_count)
       end
     end
 
     context "when the milestone declaration type is: completed" do
       let(:declaration_type) { "completed" }
 
-      before { milestones_for_completed_declaration_type }
+      before do
+        create(:milestone_statement, milestone: started_milestone, statement:)
+        create_applications_with_declaration_and_milestone(declaration_type: "started", milestone_declaration_type: "retained-1")
+        create_applications_with_declaration_and_milestone(declaration_type: "retained-1", milestone_declaration_type: "retained-2")
+        create(:declaration, :eligible, declaration_type:, course:, lead_provider:, cohort:, statement:)
+        create(:declaration, :eligible, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:)
+        create(:declaration, :eligible, declaration_type: "retained-2", course:, lead_provider:, cohort:, statement:)
+      end
 
-      it "returns the expected applications minus received declarations count plus the remaining started, retained-1 and retained-2 declarations count" do
-        expect(subject).to eq(
-          declarations_calculator.expected_applications(declaration_type).count -
-            declarations_calculator.received_declarations(declaration_type).count +
-            (declarations_calculator.expected_applications("started").count - declarations_calculator.received_declarations("started").count) +
-            (declarations_calculator.expected_applications("retained-1").count - declarations_calculator.received_declarations("retained-1").count) +
-            (declarations_calculator.expected_applications("retained-2").count - declarations_calculator.received_declarations("retained-2").count),
-        )
+      context "when there is an application with a schedule that has a retained-2 milestone" do
+        before do
+          create_applications_with_declaration_and_milestone(declaration_type: "retained-2", milestone_declaration_type: "completed")
+        end
+
+        it "returns the expected applications minus received declarations count plus the remaining started, retained-1 and retained-2 declarations count" do
+          expected_applications_count = 2
+          received_declarations_count = 1
+          remaining_started_retained_1_and_retained_2_declarations_count = 7
+          expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_retained_1_and_retained_2_declarations_count)
+        end
+      end
+
+      context "when there is an application with a schedule that does not have a retained-2 milestone" do
+        before do
+          application = create(:application, :accepted, course: specialist_course, lead_provider:, cohort:, schedule: specialist_schedule)
+          milestone = create(:milestone, declaration_type: "completed", schedule: application.schedule)
+          create(:milestone_statement, milestone: milestone, statement:)
+          create(:declaration, :eligible, declaration_type: "retained-1", application:, course:, lead_provider:, cohort:, statement:)
+          second_application = create(:application, :accepted, course: specialist_course, lead_provider:, cohort:, schedule: specialist_schedule)
+          create(:declaration, :eligible, declaration_type: "retained-1", application: second_application, course:, lead_provider:, cohort:, statement:)
+        end
+
+        it "returns the expected applications minus received declarations count plus the remaining started, retained-1 and retained-2 declarations count" do
+          expected_applications_count = 2
+          received_declarations_count = 1
+          remaining_started_retained_1_and_retained_2_declarations_count = 7
+          expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_retained_1_and_retained_2_declarations_count)
+        end
+      end
+    end
+  end
+
+  describe "#total_remaining_declarations_count" do
+    subject { declarations_calculator.total_remaining_declarations_count }
+
+    before do
+      create(:milestone_statement, milestone: started_milestone, statement:)
+      create(:milestone_statement, milestone: retained_2_milestone_leadership, statement:)
+      create(:milestone, schedule: specialist_schedule, declaration_type: "completed")
+    end
+
+    context "when there have been no received declarations" do
+      it "returns the total expected applications" do
+        expect(subject).to eq(4)
       end
     end
 
-    context "when the declaration type is nil" do
-      let(:declaration_type) { nil }
-
+    context "when there have been some received declarations" do
       before do
-        milestones_for_all_declaration_types
-        started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
-        create(:milestone_statement, milestone: started_milestone, statement:)
+        started_declaration
+        retained_1_declaration
+        create(:declaration, :eligible, declaration_type: "retained-2", lead_provider:, cohort:, statement:)
+        create(:declaration, :eligible, declaration_type: "completed", lead_provider:, cohort:, statement:)
       end
 
-      it { is_expected.to eq(declarations_calculator.expected_applications.count - declarations_calculator.received_declarations.count) }
+      it "returns the total expected applications minus the number of declarations received for milestones on this statement" do
+        expect(Declaration.count).to eq 4
+        total_expected_applications = 4
+        declarations_received_for_milestones_on_statement = 2 # i.e. declarations for "started" and "retained-2" milestones only
+        expect(subject).to eq(total_expected_applications - declarations_received_for_milestones_on_statement)
+      end
     end
   end
 end
