@@ -10,24 +10,28 @@ module Statements
       @statement = statement
     end
 
+    def expected_output_payment
+      declarations_calculator.expected_output_payment(course_calculators)
+    end
+
     def total_output_payment
-      course_calulators.sum(&:output_payment_subtotal)
+      course_calculators.sum(&:output_payment_subtotal)
     end
 
     def total_targeted_delivery_funding
-      course_calulators.sum(&:targeted_delivery_funding_subtotal)
+      course_calculators.sum(&:targeted_delivery_funding_subtotal)
     end
 
     def total_service_fees
-      course_calulators.sum(&:monthly_service_fees)
+      course_calculators.sum(&:monthly_service_fees)
     end
 
     def clawback_payments
-      course_calulators.sum(&:clawback_payment)
+      course_calculators.sum(&:clawback_payment)
     end
 
     def total_targeted_delivery_funding_refundable
-      course_calulators.sum(&:targeted_delivery_funding_refundable_subtotal)
+      course_calculators.sum(&:targeted_delivery_funding_refundable_subtotal)
     end
 
     def total_clawbacks
@@ -43,15 +47,15 @@ module Statements
     end
 
     def total_starts
-      course_calulators.sum { _1.billable_declarations_count_for_declaration_type("started") }
+      course_calculators.sum { _1.billable_declarations_count_for_declaration_type("started") }
     end
 
     def total_retained
-      course_calulators.sum { _1.billable_declarations_count_for_declaration_type("retained") }
+      course_calculators.sum { _1.billable_declarations_count_for_declaration_type("retained") }
     end
 
     def total_completed
-      course_calulators.sum { _1.billable_declarations_count_for_declaration_type("completed") }
+      course_calculators.sum { _1.billable_declarations_count_for_declaration_type("completed") }
     end
 
     def total_voided
@@ -60,8 +64,8 @@ module Statements
 
   private
 
-    def course_calulators
-      @course_calulators ||= contracts.map { CourseCalculator.new(contract: _1) }
+    def course_calculators
+      @course_calculators ||= contracts.map { CourseCalculator.new(contract: _1) }
     end
 
     def contracts
@@ -69,6 +73,10 @@ module Statements
         .includes(:contract_template, :course)
         .where(contract_template: { special_course: false })
         .order("courses.identifier")
+    end
+
+    def declarations_calculator
+      @declarations_calculator ||= DeclarationsCalculator.new(statement: statement)
     end
   end
 end

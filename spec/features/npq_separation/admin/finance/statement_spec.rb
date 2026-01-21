@@ -35,22 +35,19 @@ RSpec.feature "Statement", type: :feature do
 
     expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
 
-    find("span", text: "Statement ID").click
-    within("#statement-id") do
-      expect(page).to have_content(statement.ecf_id)
-    end
-
-    start_year = statement.cohort.start_year
-    expect(page).to have_content("Cohort: #{start_year} to #{start_year.next}")
-    expect(page).to have_content("Output payment date: #{statement.payment_date.to_fs(:govuk)}")
-    expect(page).to have_content("Status: #{statement.state.humanize}")
-    expect(page).to have_content("Payment run: Yes")
-    expect(page).to have_content("Milestones: started, completed")
-
     component = NpqSeparation::Admin::StatementSummaryComponent.new(statement:)
     expect(page).to have_component(component)
 
     expect(page).to have_link("Download declarations (CSV)", href: npq_separation_admin_finance_assurance_report_path(statement, format: :csv))
+
+    start_year = statement.cohort.start_year
+    within(".govuk-summary-card:nth-of-type(3) .govuk-summary-list") do |overview_summary_list|
+      expect(overview_summary_list).to have_summary_item("Cohort", "#{start_year} to #{start_year.next}")
+      expect(overview_summary_list).to have_summary_item("Output payment date", statement.payment_date.to_fs(:govuk))
+      expect(overview_summary_list).to have_summary_item("Status", statement.state.humanize)
+      expect(overview_summary_list).to have_summary_item("Statement ID", statement.ecf_id)
+      expect(overview_summary_list).to have_summary_item("Output statement", "Yes")
+    end
 
     contracts.each do |contract|
       component = NpqSeparation::Admin::CoursePaymentOverviewComponent.new(contract:)
