@@ -248,6 +248,15 @@ RSpec.describe "update_application" do
       it "raises an error" do
         expect { run_task }.to raise_error(RuntimeError, "Cannot change course for an application with declarations")
       end
+
+      context "when the override_declarations_check parameter is set" do
+        subject(:run_task) { Rake::Task["update_application:update_course"].invoke(application.ecf_id, new_course.identifier, "true") }
+
+        it "changes the course of the application" do
+          run_task
+          expect(application.reload.course).to eq(new_course)
+        end
+      end
     end
   end
 end
