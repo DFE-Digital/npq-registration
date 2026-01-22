@@ -6,10 +6,26 @@ Sentry.init do |config|
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
   config.release = ENV["GIT_COMMIT_SHA"]
 
+  # filtering code taken from https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.before_send = lambda do |event, _hint|
-    # use Rails' parameter filter to sanitize the event
-    filter.filter(event.to_hash)
+    # Sanitize extra data
+    if event.extra
+      event.extra = filter.filter(event.extra)
+    end
+
+    # Sanitize user data
+    if event.user
+      event.user = filter.filter(event.user)
+    end
+
+    # Sanitize context data (if present)
+    if event.contexts
+      event.contexts = filter.filter(event.contexts)
+    end
+
+    # Return the sanitized event object
+    event
   end
 
   config.excluded_exceptions += %w[
