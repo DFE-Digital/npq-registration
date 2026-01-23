@@ -53,11 +53,11 @@
       end
     end
     sl.with_row do |row|
-      row.with_key(text: "Created")
+      row.with_key(text: "Received")
       row.with_value(text: @application.created_at.to_fs(:govuk_short))
     end
     sl.with_row do |row|
-      row.with_key(text: "Updated")
+      row.with_key(text: "Last updated")
       row.with_value(text: @application.updated_at.to_fs(:govuk_short))
     end
   end

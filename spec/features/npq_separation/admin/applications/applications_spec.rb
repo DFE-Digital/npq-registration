@@ -168,8 +168,8 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("Provider", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Provider approval status", application.lead_provider_approval_status.humanize)
       expect(summary_list).to have_summary_item("Training status", application.training_status)
-      expect(summary_list).to have_summary_item("Created", application.created_at.to_fs(:govuk_short))
-      expect(summary_list).to have_summary_item("Updated", application.updated_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Received", application.created_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Last updated", application.updated_at.to_fs(:govuk_short))
     end
 
     expect(page).to have_css("h2", text: "Funding eligibility")

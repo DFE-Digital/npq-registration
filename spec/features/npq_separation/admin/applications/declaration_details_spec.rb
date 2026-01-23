@@ -45,8 +45,8 @@ RSpec.feature "Application declaration details", :versioning, type: :feature do
           expect(summary_list).to have_summary_item("Provider", started_declaration.lead_provider.name)
           expect(summary_list).to have_summary_item("Delivery partner", started_declaration.delivery_partner.name)
           expect(summary_list).to have_summary_item("Secondary delivery partner", started_declaration.secondary_delivery_partner.name)
-          expect(summary_list).to have_summary_item("Created at", started_declaration.created_at.to_fs(:govuk_short))
-          expect(summary_list).to have_summary_item("Updated at", started_declaration.updated_at.to_fs(:govuk_short))
+          expect(summary_list).to have_summary_item("Received", started_declaration.created_at.to_fs(:govuk_short))
+          expect(summary_list).to have_summary_item("Last updated", started_declaration.updated_at.to_fs(:govuk_short))
           expect(summary_list).to have_summary_item("Statements", "")
         end
       end
@@ -61,8 +61,8 @@ RSpec.feature "Application declaration details", :versioning, type: :feature do
           expect(summary_list).to have_summary_item("Provider", completed_declaration.lead_provider.name)
           expect(summary_list).to have_summary_item("Delivery partner", completed_declaration.delivery_partner.name)
           expect(summary_list).to have_summary_item("Secondary delivery partner", "")
-          expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
-          expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
+          expect(summary_list).to have_summary_item("Received", completed_declaration.created_at.to_fs(:govuk_short))
+          expect(summary_list).to have_summary_item("Last updated", completed_declaration.updated_at.to_fs(:govuk_short))
           expect(summary_list).to have_summary_item("Statements", "")
         end
 
