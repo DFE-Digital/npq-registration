@@ -10,9 +10,9 @@ class Workplace < ApplicationRecord
 
   class << self
     def unioned_table
-      Arel::Nodes::Union.new(
+      Arel::Nodes::UnionAll.new(
         school_scope,
-        Arel::Nodes::Union.new(
+        Arel::Nodes::UnionAll.new(
           local_authority_scope,
           private_childcare_provider_scope,
         ),
