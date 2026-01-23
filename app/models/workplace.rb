@@ -2,7 +2,11 @@ class Workplace < ApplicationRecord
   self.table_name = "schools"
   self.primary_key = %i[source_type source_id]
 
-  default_scope { from(Workplace.unioned_table).readonly.order(source_type: :desc) }
+  default_scope do
+    readonly.from(unioned_table)
+            .order(source_type: :desc, name: :asc, source_id: :asc)
+  end
+
   scope :search,
         ->(q) { q.present? ? where("name ILIKE ?", "%#{q}%").or(where(urn: q)) : all }
 
@@ -23,7 +27,6 @@ class Workplace < ApplicationRecord
 
     def school_scope
       School
-        .order(name: :asc, id: :asc)
         .select(:name, id: :source_id, urn: :urn)
         .select("'#{School.name}' AS source_type")
         .arel
@@ -31,7 +34,6 @@ class Workplace < ApplicationRecord
 
     def local_authority_scope
       LocalAuthority
-        .order(name: :asc, id: :asc)
         .select(:name, id: :source_id)
         .select("NULL AS urn")
         .select("'#{LocalAuthority.name}' AS source_type")
@@ -40,7 +42,6 @@ class Workplace < ApplicationRecord
 
     def private_childcare_provider_scope
       PrivateChildcareProvider
-        .order(provider_name: :asc, id: :asc)
         .select(provider_name: :name, id: :source_id, provider_urn: :urn)
         .select("'#{PrivateChildcareProvider.name}' as source_type")
         .arel
