@@ -37,4 +37,27 @@ namespace :participant_outcomes do
       raise participant_outcome_creator.errors.messages.values.flatten.to_sentence
     end
   end
+
+  desc "Void a duplicate participant outcome"
+  task :void_duplicate, %i[participant_outcome_id] => :environment do |_t, args|
+    logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
+
+    participant_outcome = ParticipantOutcome.find_by(id: args.participant_outcome_id)
+    raise "Participant outcome not found: #{args.participant_outcome_id}" unless participant_outcome
+
+    duplicate_participant_outcomes =
+      participant_outcome.declaration.participant_outcomes
+      .where.not(id: participant_outcome.id)
+      .where(state: ParticipantOutcome.states[:passed])
+
+    raise "Duplicate participant outcome not found" if duplicate_participant_outcomes.empty?
+
+    participant_outcome.update!(state: ParticipantOutcome.states[:voided])
+
+    logger.info(
+      "Participant outcome with ID #{participant_outcome.id} voided for user #{participant_outcome.user.ecf_id} " \
+      "for course #{participant_outcome.course.identifier} " \
+      "with completion date #{participant_outcome.completion_date}",
+    )
+  end
 end
