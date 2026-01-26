@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_28_113435) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_26_135434) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -697,4 +697,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_28_113435) do
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"
+
+  create_view "workplaces", sql_definition: <<-SQL
+      SELECT schools.name,
+      schools.id AS source_id,
+      schools.urn,
+      'School'::text AS source_type
+     FROM schools
+  UNION ALL
+   SELECT local_authorities.name,
+      local_authorities.id AS source_id,
+      NULL::text AS urn,
+      'LocalAuthority'::text AS source_type
+     FROM local_authorities
+  UNION ALL
+   SELECT private_childcare_providers.provider_name AS name,
+      private_childcare_providers.id AS source_id,
+      private_childcare_providers.provider_urn AS urn,
+      'PrivateChildcareProvider'::text AS source_type
+     FROM private_childcare_providers
+    WHERE (private_childcare_providers.disabled_at IS NULL);
+  SQL
 end
