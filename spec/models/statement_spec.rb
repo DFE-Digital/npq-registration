@@ -119,6 +119,22 @@ RSpec.describe Statement, type: :model do
         expect(statement).to have_error(:base, :statement_paid, "Statement cannot be changed once it is paid")
       end
     end
+
+    describe "changing deadline_date when the statement is payable" do
+      subject(:statement) { create(:statement, :payable) }
+
+      before { statement.deadline_date = 1.day.from_now }
+
+      it { is_expected.to be_valid }
+    end
+
+    describe "changing payment_date when the statement is payable" do
+      subject(:statement) { create(:statement, :payable) }
+
+      before { statement.payment_date = 1.day.from_now }
+
+      it { is_expected.to be_valid }
+    end
   end
 
   describe "scopes" do

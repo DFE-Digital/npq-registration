@@ -18,12 +18,12 @@
             <p class="govuk-body">
               <strong>Output payment deadline</strong>
               <br/>
-              <%= @statement.deadline_date.to_fs(:govuk_short) %>
+              <%= @statement.deadline_date&.to_fs(:govuk_short) %>
             </p>
             <p class="govuk-body">
               <strong>Output payment date</strong>
               <br/>
-              <%= @statement.payment_date.to_fs(:govuk_short) %>
+              <%= @statement.payment_date&.to_fs(:govuk_short) %>
             </p>
           </div>
         <% end %>

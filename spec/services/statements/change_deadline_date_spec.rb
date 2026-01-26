@@ -6,7 +6,7 @@ RSpec.describe Statements::ChangeDeadlineDate, type: :model do
   subject(:service) { described_class.new(statement:, deadline_date:) }
 
   let(:statement) { create(:statement) }
-  let(:deadline_date) { statement.payment_date }
+  let(:deadline_date) { statement.payment_date - 1 }
 
   describe "validations" do
     it "does not allow a blank deadline date" do
@@ -19,14 +19,14 @@ RSpec.describe Statements::ChangeDeadlineDate, type: :model do
   end
 
   describe "#change" do
-    subject { described_class.new(statement:, deadline_date:).change }
+    subject { service.change }
 
     it "returns true" do
       expect(subject).to be true
     end
 
     it "changes the deadline date of the statement" do
-      expect { subject }.to change { statement.reload.deadline_date }.to(statement.payment_date)
+      expect { subject }.to change { statement.reload.deadline_date }.to(statement.payment_date - 1)
     end
 
     context "when the deadline date is after the payment date" do
@@ -42,6 +42,19 @@ RSpec.describe Statements::ChangeDeadlineDate, type: :model do
 
       it "does not change the deadline date" do
         expect { subject }.not_to(change { statement.reload.deadline_date })
+      end
+    end
+
+    context "when the statement is paid" do
+      let(:statement) { create(:statement, :paid) }
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+
+      it "has an error" do
+        subject
+        expect(service).to have_error(:base, :statement_paid)
       end
     end
 

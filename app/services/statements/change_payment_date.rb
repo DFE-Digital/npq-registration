@@ -14,10 +14,14 @@ module Statements
 
     validate :payment_date_not_before_deadline_date
 
+    validate :statement_valid
+
     def change
+      statement.payment_date = payment_date
+
       return false if invalid?
 
-      statement.update(payment_date:) # rubocop:disable Rails/SaveBang - return value is used by caller
+      statement.save # rubocop:disable Rails/SaveBang - return value is used by caller
     end
 
   private
@@ -28,6 +32,13 @@ module Statements
       return unless payment_date < statement.deadline_date
 
       errors.add :payment_date, :invalid
+    end
+
+    def statement_valid
+      return if errors.any?
+      return unless statement
+
+      errors.merge!(statement.errors) unless statement.valid?
     end
   end
 end
