@@ -605,6 +605,9 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    scenic (1.9.0)
+      activerecord (>= 4.0.0)
+      railties (>= 4.0.0)
     scss_lint (0.60.0)
       sass (~> 3.5, >= 3.5.5)
     scss_lint-govuk (0.2.0)
@@ -787,6 +790,7 @@ DEPENDENCIES
   rspec-sonarqube-formatter
   rswag-specs
   rubocop-govuk
+  scenic
   scss_lint-govuk
   secure_headers
   sentry-delayed_job
