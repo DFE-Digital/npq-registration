@@ -93,8 +93,21 @@ RSpec.describe Statements::DeclarationsCalculator do
     context "when the milestone declaration type is: started" do
       let(:declaration_type) { "started" }
 
-      it "returns the accepted applications for the statement's cohort" do
-        expect(expected_applications).to match_array(Application.accepted.where(cohort: statement.cohort, lead_provider:).all)
+      context "when the statement has a started milestone" do
+        before do
+          started_milestone = create(:milestone, declaration_type: "started", schedule: started_application.schedule)
+          create(:milestone_statement, milestone: started_milestone, statement:)
+        end
+
+        it "returns the accepted applications for the statement's cohort" do
+          expect(expected_applications).to match_array(Application.accepted.where(cohort: statement.cohort, lead_provider:).all)
+        end
+      end
+
+      context "when the statement does not have a started milestone" do
+        it "returns zero" do
+          expect(expected_applications).to be_empty
+        end
       end
     end
 
@@ -225,7 +238,9 @@ RSpec.describe Statements::DeclarationsCalculator do
     let(:declaration_without_milestone) { create(:declaration, :eligible, declaration_type: "retained-2", application: leadership_retained_2_application, course:, lead_provider:, cohort:, statement:) }
 
     before do
+      eligible_declaration
       declaration_without_milestone
+      other_declaration_type_declaration
       started_milestone = create(:milestone, declaration_type: "started", schedule: application_with_eligible_declaration.schedule)
       create(:milestone_statement, milestone: started_milestone, statement:)
       retained_1_milestone = create(:milestone, declaration_type: "retained-1", schedule: application_with_other_declaration_type_declaration.schedule)
@@ -237,8 +252,8 @@ RSpec.describe Statements::DeclarationsCalculator do
     end
 
     context "when the declaration type is nil" do
-      it "returns all billable declarations for the statement of the milestone declaration types, in the given cohort" do
-        expect(declarations_calculator.received_declarations).to contain_exactly(eligible_declaration, other_declaration_type_declaration)
+      it "returns all billable declarations for the statement, in the given cohort" do
+        expect(declarations_calculator.received_declarations).to contain_exactly(eligible_declaration, declaration_without_milestone, other_declaration_type_declaration)
       end
     end
   end
