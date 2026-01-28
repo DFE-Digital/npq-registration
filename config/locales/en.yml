@@ -736,15 +736,15 @@ en:
         statements/change_deadline_date:
           attributes:
             deadline_date:
-              blank: Output payment deadline can't be blank
-              invalid: Output payment deadline cannot be after the Output payment date
+              blank: Declaration deadline can't be blank
+              invalid: Declaration deadline cannot be after the Output payment date
             statement:
               blank: Statement not found
         statements/change_payment_date:
           attributes:
             payment_date:
               blank: Output payment date can't be blank
-              invalid: Output payment date cannot be before the Output payment deadline
+              invalid: Output payment date cannot be before the Declaration deadline
             statement:
               blank: Statement not found
 

@@ -9,7 +9,7 @@ module NpqSeparation
 
           def create
             if @service.change
-              flash[:success] = "Output payment deadline changed"
+              flash[:success] = "Declaration deadline changed"
               redirect_to npq_separation_admin_finance_statement_path(@statement)
             else
               render :show, status: :unprocessable_entity

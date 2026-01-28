@@ -12,11 +12,11 @@
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_date_field :deadline_date,
-        legend: { text: "Change output payment deadline", tag: "h1", size: "l" },
+        legend: { text: "Change declaration deadline", tag: "h1", size: "l" },
         hint: { text: 'For example, 27 3 2023' } do %>
           <div class="govuk-inset-text">
             <p class="govuk-body">
-              <strong>Output payment deadline</strong>
+              <strong>Declaration deadline</strong>
               <br/>
               <%= @statement.deadline_date.to_fs(:govuk_short) %>
             </p>
