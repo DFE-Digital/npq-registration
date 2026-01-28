@@ -37,7 +37,7 @@ RSpec.describe Statements::ChangeDeadlineDate, type: :model do
       end
 
       it "has an error on deadline_date" do
-        expect(service).to have_error(:deadline_date, :invalid, "Output payment deadline cannot be after the Output payment date")
+        expect(service).to have_error(:deadline_date, :invalid, "Declaration deadline cannot be after the Output payment date")
       end
 
       it "does not change the deadline date" do

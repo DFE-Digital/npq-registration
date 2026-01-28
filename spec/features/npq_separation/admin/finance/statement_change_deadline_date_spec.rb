@@ -54,7 +54,7 @@ RSpec.feature "Statement - change deadline date", type: :feature do
 
     click_button "Change date"
 
-    expect(page).to have_content("Output payment deadline changed")
+    expect(page).to have_content("Declaration deadline changed")
     expect(page).to have_current_path(npq_separation_admin_finance_statement_path(statement))
   end
 end
