@@ -31,7 +31,7 @@
         end
 
         table.with_body do |body|
-          statement.milestone_declaration_types.each do |declaration_type|
+          Declaration.declaration_types.values.each do |declaration_type|
             body.with_row do |row|
               row.with_cell(text: declaration_type.humanize)
               row.with_cell(text: declarations_calculator.expected_applications(declaration_type).count)
@@ -46,12 +46,6 @@
         end
       end
     %>
-
-    <% if statement.milestone_declaration_types.empty? %>
-      <p class="govuk-body">
-        <em>No milestones found for this statement.</em>
-      </p>
-    <% end %>
 
     <h2 class="govuk-heading-s">Payment details</h2>
     <%=

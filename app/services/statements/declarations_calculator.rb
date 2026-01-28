@@ -13,6 +13,8 @@ module Statements
     def expected_applications(declaration_type)
       case declaration_type
       when "started"
+        return [] unless statement.milestone_declaration_types.include?("started")
+
         Application.where(cohort: statement.cohort, lead_provider: statement.lead_provider).accepted
       when "retained-1"
         applications_with_declarations_and_milestones(
@@ -50,11 +52,9 @@ module Statements
     def received_declarations(declaration_type = nil)
       scope = statement.declarations.billable.where(cohort: statement.cohort, lead_provider: statement.lead_provider)
 
-      if declaration_type
-        scope.where(declaration_type: declaration_type)
-      else
-        scope.where(declaration_type: statement.milestone_declaration_types)
-      end
+      return scope unless declaration_type
+
+      scope.where(declaration_type: declaration_type)
     end
 
   private

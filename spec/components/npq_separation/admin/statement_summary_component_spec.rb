@@ -93,32 +93,38 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
   end
 
   describe "milestone declarations" do
-    context "when there are no milestones" do
-      it { is_expected.to have_text "No milestones found for this statement." }
+    let(:declaration_types) { %w[started completed] }
+
+    before do
+      started_milestone = create(:milestone, declaration_type: "started")
+      completed_milestone = create(:milestone, declaration_type: "completed")
+      create(:milestone_statement, milestone: started_milestone, statement:)
+      create(:milestone_statement, milestone: completed_milestone, statement:)
+      allow(declarations_calculator).to receive(:expected_applications).with("started").and_return(Array.new(10) { :application })
+      allow(declarations_calculator).to receive(:expected_applications).with("completed").and_return(Array.new(20) { :application })
+      allow(declarations_calculator).to receive(:received_declarations).with("retained-1").and_return(Array.new(30) { :declaration })
+      subject
     end
 
-    context "when there are milestones" do
-      let(:declaration_types) { %w[started completed] }
+    it "shows a row for every declaration type" do
+      expect(rendered).to have_css "tr:nth-child(1) td:nth-child(1)", text: "Started"
+      expect(rendered).to have_css "tr:nth-child(2) td:nth-child(1)", text: "Retained-1"
+      expect(rendered).to have_css "tr:nth-child(3) td:nth-child(1)", text: "Retained-2"
+      expect(rendered).to have_css "tr:nth-child(4) td:nth-child(1)", text: "Completed"
+    end
 
-      before do
-        started_milestone = create(:milestone, declaration_type: "started")
-        completed_milestone = create(:milestone, declaration_type: "completed")
-        create(:milestone_statement, milestone: started_milestone, statement:)
-        create(:milestone_statement, milestone: completed_milestone, statement:)
-        allow(declarations_calculator).to receive(:expected_applications).with("started").and_return(Array.new(10) { :application })
-        allow(declarations_calculator).to receive(:expected_applications).with("completed").and_return(Array.new(20) { :application })
-        subject
-      end
+    it "shows expected declaration counts" do
+      expect(rendered).to have_css "tr:nth-child(1) td:nth-child(2)", text: "10"
+      expect(rendered).to have_css "tr:nth-child(2) td:nth-child(2)", text: "0"
+      expect(rendered).to have_css "tr:nth-child(3) td:nth-child(2)", text: "0"
+      expect(rendered).to have_css "tr:nth-child(4) td:nth-child(2)", text: "20"
+    end
 
-      it "shows expected declarations" do
-        expect(rendered).to have_css "tr:nth-child(1) td:nth-child(1)", text: "Started"
-        expect(rendered).to have_css "tr:nth-child(1) td:nth-child(2)", text: "10"
-      end
-
-      it "shows received declarations" do
-        expect(rendered).to have_css "tr:nth-child(2) td:nth-child(1)", text: "Completed"
-        expect(rendered).to have_css "tr:nth-child(2) td:nth-child(2)", text: "20"
-      end
+    it "shows received declaration counts" do
+      expect(rendered).to have_css "tr:nth-child(1) td:nth-child(3)", text: "0"
+      expect(rendered).to have_css "tr:nth-child(2) td:nth-child(3)", text: "30"
+      expect(rendered).to have_css "tr:nth-child(3) td:nth-child(3)", text: "0"
+      expect(rendered).to have_css "tr:nth-child(4) td:nth-child(3)", text: "0"
     end
   end
 end
