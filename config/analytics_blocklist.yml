@@ -182,3 +182,8 @@ shared:
   :participant_outcomes:
     - qualified_teachers_api_request_successful
     - sent_to_qualified_teachers_api_at
+  :workplaces:
+    - source_id
+    - source_type
+    - name
+    - urn
