@@ -7,6 +7,7 @@ RSpec.describe StreamVersionsToBigQueryJob, type: :job do
 
   let(:analytics_event) { instance_double(DfE::Analytics::Event) }
   let(:user_name) { "Admin 1" }
+  let(:analytics_enabled) { true }
 
   let(:data) do
     {
@@ -16,6 +17,7 @@ RSpec.describe StreamVersionsToBigQueryJob, type: :job do
   end
 
   before do
+    allow(Feature).to receive(:dfe_analytics_enabled?).and_return(analytics_enabled)
     allow(DfE::Analytics::Event).to receive(:new) { analytics_event }
     allow(analytics_event).to receive(:with_type).with(:version) { analytics_event }
     allow(analytics_event).to receive(:with_namespace).with("npq") { analytics_event }
@@ -27,5 +29,15 @@ RSpec.describe StreamVersionsToBigQueryJob, type: :job do
     expect(DfE::Analytics::SendEvents).to receive(:do).with([analytics_event])
 
     job
+  end
+
+  context "with analytics disabled" do
+    let(:analytics_enabled) { false }
+
+    it "does not send the custom event" do
+      expect(DfE::Analytics::SendEvents).not_to receive(:do)
+
+      job
+    end
   end
 end
