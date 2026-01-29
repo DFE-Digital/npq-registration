@@ -62,5 +62,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     it { is_expected.to have_summary_item "Unique reference number (URN)", "" }
     it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", "" }
     it { is_expected.to have_summary_item "Schedule identifier", "-" }
+    it { is_expected.to have_summary_item "Received", application.created_at.to_fs(:govuk_short) }
+    it { is_expected.to have_summary_item "Last updated", application.updated_at.to_fs(:govuk_short) }
   end
 end

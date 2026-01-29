@@ -11,8 +11,8 @@ RSpec.describe "npq_separation/admin/applications/declarations/_declaration.html
   it { is_expected.to have_summary_item("Provider", declaration.lead_provider.name) }
   it { is_expected.to have_summary_item("Delivery partner", "-") }
   it { is_expected.to have_summary_item("Secondary delivery partner", "-") }
-  it { is_expected.to have_summary_item("Created at", declaration.created_at.to_fs(:govuk_short)) }
-  it { is_expected.to have_summary_item("Updated at", declaration.updated_at.to_fs(:govuk_short)) }
+  it { is_expected.to have_summary_item("Received", declaration.created_at.to_fs(:govuk_short)) }
+  it { is_expected.to have_summary_item("Last updated", declaration.updated_at.to_fs(:govuk_short)) }
   it { is_expected.to have_summary_item("Statements", "") }
 
   context "with delivery partners" do
