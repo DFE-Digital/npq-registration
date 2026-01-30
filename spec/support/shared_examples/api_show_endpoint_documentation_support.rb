@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "an API show endpoint documentation", :exceptions_app do |url, tag, resource_description, response_schema_ref|
-  next if url =~ %r{/api/v[12]/} && Rails.configuration.x.disable_legacy_api
-
   path url do
     get "Retrieve a single #{resource_description}" do
       tags tag

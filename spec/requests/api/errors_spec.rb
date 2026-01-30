@@ -50,15 +50,6 @@ RSpec.describe "Error responses", type: :request do
       expect(response.body).to eq %({"error":"Internal server error"})
       expect(response.content_type).to match(/application\/json.*/)
     end
-
-    context "when the request is for a CSV", skip: Rails.configuration.x.disable_legacy_api do
-      it "returns a plain text response" do
-        api_get "/api/v2/npq-applications.csv"
-        expect(response).to have_http_status(:internal_server_error)
-        expect(response.body).to be_empty
-        expect(response.content_type).to match(/text\/plain.*/)
-      end
-    end
   end
 
   describe "unprocessable entity" do
@@ -71,15 +62,6 @@ RSpec.describe "Error responses", type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to eq %({"error":"Unprocessable entity"})
       expect(response.content_type).to match(/application\/json.*/)
-    end
-
-    context "when the request is for a CSV", skip: Rails.configuration.x.disable_legacy_api do
-      it "returns a plain text response" do
-        api_get "/api/v2/npq-applications.csv"
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.body).to be_empty
-        expect(response.content_type).to match(/text\/plain.*/)
-      end
     end
   end
 end

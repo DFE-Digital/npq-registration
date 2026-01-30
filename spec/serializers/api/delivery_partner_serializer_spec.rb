@@ -15,7 +15,7 @@ RSpec.describe API::DeliveryPartnerSerializer, type: :serializer do
   let(:cohort_22) { create :cohort, start_year: 2022 }
   let(:cohort_23) { create :cohort, start_year: 2023 }
 
-  subject(:response) { JSON.parse(described_class.render(delivery_partner)) }
+  subject(:response) { JSON.parse(described_class.render(delivery_partner, lead_provider: current_lead_provider)) }
 
   describe "core attributes" do
     it "serializes the `id`" do
@@ -23,43 +23,39 @@ RSpec.describe API::DeliveryPartnerSerializer, type: :serializer do
     end
 
     it "serializes the `type`" do
-      response = JSON.parse(described_class.render(delivery_partner))
-
       expect(response["type"]).to eq("delivery-partner")
     end
   end
 
-  context "when serializing the v3 view" do
-    describe "nested attributes" do
-      subject(:attributes) { JSON.parse(described_class.render(delivery_partner, view: :v3, lead_provider: current_lead_provider))["attributes"] }
+  describe "nested attributes" do
+    subject(:attributes) { JSON.parse(described_class.render(delivery_partner, lead_provider: current_lead_provider))["attributes"] }
 
-      it "serializes the `name`" do
-        expect(attributes["name"]).to eq(delivery_partner.name)
+    it "serializes the `name`" do
+      expect(attributes["name"]).to eq(delivery_partner.name)
+    end
+
+    it "serializes the cohorts" do
+      expect(attributes["cohort"]).to eq([cohort_21.start_year, cohort_22.start_year])
+    end
+
+    it "serializes the `created_at`" do
+      expect(attributes["created_at"]).to eq(delivery_partner.created_at.rfc3339)
+    end
+
+    it "serializes the `updated_at`" do
+      expect(attributes["updated_at"]).to eq(delivery_partner.updated_at.rfc3339)
+    end
+
+    context "with multiple cohorts for the same year" do
+      before do
+        create(:delivery_partnership,
+               cohort: create(:cohort, start_year: 2021, suffix: "b"),
+               lead_provider: current_lead_provider,
+               delivery_partner: delivery_partner)
       end
 
-      it "serializes the cohorts" do
+      it "serializes a unique list of cohort years" do
         expect(attributes["cohort"]).to eq([cohort_21.start_year, cohort_22.start_year])
-      end
-
-      it "serializes the `created_at`" do
-        expect(attributes["created_at"]).to eq(delivery_partner.created_at.rfc3339)
-      end
-
-      it "serializes the `updated_at`" do
-        expect(attributes["updated_at"]).to eq(delivery_partner.updated_at.rfc3339)
-      end
-
-      context "with multiple cohorts for the same year" do
-        before do
-          create(:delivery_partnership,
-                 cohort: create(:cohort, start_year: 2021, suffix: "b"),
-                 lead_provider: current_lead_provider,
-                 delivery_partner: delivery_partner)
-        end
-
-        it "serializes a unique list of cohort years" do
-          expect(attributes["cohort"]).to eq([cohort_21.start_year, cohort_22.start_year])
-        end
       end
     end
   end
