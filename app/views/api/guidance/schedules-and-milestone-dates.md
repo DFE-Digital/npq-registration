@@ -18,7 +18,7 @@ The API will automatically assign schedules to participants depending on when co
 
 The API does not apply milestone validation to those on NPQ schedules. The API will accept any declarations submitted after the first milestone period has started for a given schedule.
 
-For example, if a participant is on an `npq-leadership-autumn` schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) after the schedule start date.
+For example, if a participant is on an `npq-leadership-autumn` schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) on or after the schedule start date.
 
 <div class="govuk-inset-text">
   We advise providers to keep schedule data independent from any experience logic in their systems.
@@ -36,38 +36,34 @@ For example, if a participant is on an `npq-leadership-autumn` schedule, the API
   <tbody class="govuk-table__body">
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Schedule</th>
-      <td class="govuk-table__cell">The timeframe in which a participant starts a particular NPQ course, which determines milestone dates</td>
+      <td class="govuk-table__cell">The timeframe, in a given cohort, in which a participant starts a particular NPQ course, which determines milestone dates. Usually corresponds to a starting cohort or month</td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Milestone</th>
-      <td class="govuk-table__cell">Contractual retention periods during which providers must submit relevant declarations evidencing training delivery and participant retention</td>
+      <td class="govuk-table__cell">Particular points within an NPQ course period that a user has reached – e.g. starting their course, being retained, or completing their course. Declarations corresponding to these milestones are eligible for payment on funded courses </td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Milestone dates</th>
-      <td class="govuk-table__cell">The deadline date a valid declaration can be made for a given milestone in order for DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule</td>
+      <th scope="row" class="govuk-table__header">Output payment deadline</th>
+      <td class="govuk-table__cell">The deadline by which a declaration on a financial statement (of any milestone/ declaration type) needs to be submitted by in order for payment to be made on that particular statement on the payment date (see below)</td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Milestone period</th>
-      <td class="govuk-table__cell">The period of time between the milestone start date and deadline date</td>
+      <td class="govuk-table__cell">The period of time in which a milestone is expected to be reached by NPQ participants on given courses and schedules, and therefore when declarations of the associated milestone are expected to be submitted</td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Output payment</th>
       <td class="govuk-table__cell">The sum of money paid by DfE to providers per valid declaration</td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Payment date</th>
-      <td class="govuk-table__cell">The date DfE will make payment for valid declarations submitted by providers for a given milestone</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Milestone validation</th>
-      <td class="govuk-table__cell">The API’s process to validate declarations submitted by providers for participants in standard training schedules</td>
+      <th scope="row" class="govuk-table__header">Output payment date</th>
+      <td class="govuk-table__cell">The date on which DfE will make payment for valid declarations submitted by providers for a given milestone</td>
     </tr>
   </tbody>
 </table>
 
-## NPQ schedules 
+## NPQ schedules
 
-The API will automatically assign schedules to participants on specialist NPQ courses depending on when applications are accepted by providers.
+The API will automatically assign schedules to participants on specialist and leadership NPQ courses depending on when applications are accepted by providers.
 
 Specialist NPQs will be assigned to one of the following schedule identifiers:
 
@@ -79,7 +75,26 @@ Leadersip NPQs will be assigned to one of the following schedule identifiers:
 * `npq-leadership-autumn`
 * `npq-leadership-spring`
 
-## When the API will accept NPQ declarations 
+## When the API will accept NPQ declarations
+<table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--m">2025/26 academic year</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Training start date</th>
+      <th scope="col" class="govuk-table__header">Submit declarations from</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">From 1 February 2025 </th>
+      <td class="govuk-table__cell">1 February 2025</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Before 31 December 2025</th>
+      <td class="govuk-table__cell">1 August 2025</td>
+    </tr>
+  </tbody>
+</table>
 
 <table class="govuk-table">
   <caption class="govuk-table__caption govuk-table__caption--m">2024/25 academic year</caption>
@@ -93,10 +108,6 @@ Leadersip NPQs will be assigned to one of the following schedule identifiers:
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Before 31 December 2024</th>
       <td class="govuk-table__cell">1 October 2024</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">From 1 January 2025</th>
-      <td class="govuk-table__cell">1 January 2025</td>
     </tr>
   </tbody>
 </table>
