@@ -2,13 +2,13 @@ class Workplace < ApplicationRecord
   self.table_name = "schools"
   self.primary_key = %i[source_type source_id]
 
-  default_scope do
-    readonly.from(unioned_table)
-            .order(source_type: :desc, name: :asc, source_id: :asc)
-  end
+  default_scope { readonly.from(unioned_table).order(source_type: :desc) }
 
-  scope :search,
-        ->(q) { q.present? ? where("name ILIKE ?", "%#{q}%").or(where(urn: q)) : all }
+  scope :search, lambda { |q|
+    next all if q.blank?
+
+    where("name ILIKE ?", "%#{sanitize_sql_like(q)}%").or(where(urn: q))
+  }
 
   belongs_to :source, polymorphic: true
 
