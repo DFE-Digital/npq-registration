@@ -43,7 +43,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: "22.15.1"
+          node-version: "22.22.0"
           cache: yarn
 
       - name: Create screenshots directory
