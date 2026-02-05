@@ -53,6 +53,13 @@ V3_PARTICIPANT_DECLARATION_STARTED_REQUEST = {
       nullable: false,
       example: "f0de7abf-399b-4e68-83de-2c33b503810c",
     },
+    application_id: {
+      description: "ID of application for declaration",
+      type: :string,
+      required: false,
+      nullable: true,
+      example: "254af44c-b483-49b0-b628-0d3515e6eb29",
+    },
   },
   required: %i[
     participant_id
