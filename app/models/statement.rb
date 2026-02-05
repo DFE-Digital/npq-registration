@@ -70,6 +70,10 @@ class Statement < ApplicationRecord
     Date.new(year, month) < Date.current.beginning_of_month
   end
 
+  def milestone_declaration_types
+    milestones.distinct.pluck(:declaration_type)
+  end
+
 private
 
   def payment_date_on_or_after_deadline_date
