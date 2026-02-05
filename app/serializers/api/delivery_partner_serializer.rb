@@ -6,23 +6,19 @@ module API
     class AttributesSerializer < Blueprinter::Base
       exclude :id
 
-      view :v3 do
-        field(:name)
-        field(:cohort) do |object, options|
-          object.cohorts_for_lead_provider(options[:lead_provider])
-                .map(&:start_year)
-                .uniq
-                .sort
-        end
-        field(:created_at)
-        field(:updated_at)
+      field(:name)
+      field(:cohort) do |object, options|
+        object.cohorts_for_lead_provider(options[:lead_provider])
+              .map(&:start_year)
+              .uniq
+              .sort
       end
+      field(:created_at)
+      field(:updated_at)
     end
 
-    view :v3 do
-      association :attributes, blueprint: AttributesSerializer, view: :v3 do |delivery_partner|
-        delivery_partner
-      end
+    association :attributes, blueprint: AttributesSerializer do |delivery_partner|
+      delivery_partner
     end
   end
 end

@@ -6,93 +6,37 @@ module API
     class AttributesSerializer < Blueprinter::Base
       exclude :id
 
-      view :v1 do
-        field(:ecf_id, name: :participant_id)
-        field(:full_name)
-        field(:email)
+      field(:full_name)
+      field(:teacher_reference_number) do |object, _options|
+        object.trn if object.trn_verified
+      end
+      field(:updated_at) do |object, _options|
+        updated_at(object)
+      end
 
-        field(:npq_courses) do |object, options|
-          applications(object, options).map { |application| application.course.identifier }
-        end
-
-        field(:funded_places) do |object, options|
-          applications(object, options).map do |application|
-            {
-              npq_course: application.course.identifier,
-              funded_place: application.funded_place,
-              npq_application_id: application.ecf_id,
-            }
-          end
-        end
-
-        field(:teacher_reference_number) do |object, _options|
-          object.trn if object.trn_verified
-        end
-        field(:updated_at) do |object, _options|
-          updated_at(object)
+      field(:npq_enrolments) do |object, options|
+        applications(object, options).map do |application|
+          {
+            email: object.email,
+            course_identifier: application.course.identifier,
+            schedule_identifier: application&.schedule&.identifier,
+            cohort: application.cohort&.start_year&.to_s,
+            npq_application_id: application.ecf_id,
+            eligible_for_funding: application.eligible_for_funding,
+            training_status: application.training_status,
+            school_urn: application.school&.urn,
+            targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
+            withdrawal: withdrawal(application:, lead_provider: options[:lead_provider]),
+            deferral: deferral(application:, lead_provider: options[:lead_provider]),
+            created_at: application.accepted_at.rfc3339,
+            funded_place: application.funded_place,
+          }
         end
       end
 
-      view :v2 do
-        field(:email)
-        field(:full_name)
-        field(:teacher_reference_number) do |object, _options|
-          object.trn if object.trn_verified
-        end
-        field(:updated_at) do |object, _options|
-          updated_at(object)
-        end
-
-        field(:npq_enrolments) do |object, options|
-          applications(object, options).map do |application|
-            {
-              course_identifier: application.course.identifier,
-              schedule_identifier: application&.schedule&.identifier,
-              cohort: application.cohort&.start_year&.to_s,
-              npq_application_id: application.ecf_id,
-              eligible_for_funding: application.eligible_for_funding,
-              training_status: application.training_status,
-              school_urn: application.school&.urn,
-              targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-              funded_place: application.funded_place,
-            }
-          end
-        end
-      end
-
-      view :v3 do
-        field(:full_name)
-        field(:teacher_reference_number) do |object, _options|
-          object.trn if object.trn_verified
-        end
-        field(:updated_at) do |object, _options|
-          updated_at(object)
-        end
-
-        field(:npq_enrolments) do |object, options|
-          applications(object, options).map do |application|
-            {
-              email: object.email,
-              course_identifier: application.course.identifier,
-              schedule_identifier: application&.schedule&.identifier,
-              cohort: application.cohort&.start_year&.to_s,
-              npq_application_id: application.ecf_id,
-              eligible_for_funding: application.eligible_for_funding,
-              training_status: application.training_status,
-              school_urn: application.school&.urn,
-              targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-              withdrawal: withdrawal(application:, lead_provider: options[:lead_provider]),
-              deferral: deferral(application:, lead_provider: options[:lead_provider]),
-              created_at: application.accepted_at.rfc3339,
-              funded_place: application.funded_place,
-            }
-          end
-        end
-
-        field(:participant_id_changes) do |object, _options|
-          (object.participant_id_changes || []).map do |participant_id_change|
-            API::ParticipantIdChangeSerializer.render_as_hash(participant_id_change)
-          end
+      field(:participant_id_changes) do |object, _options|
+        (object.participant_id_changes || []).map do |participant_id_change|
+          API::ParticipantIdChangeSerializer.render_as_hash(participant_id_change)
         end
       end
 
@@ -149,14 +93,6 @@ module API
 
     association :attributes, blueprint: AttributesSerializer do |participant|
       participant
-    end
-
-    %i[v1 v2 v3].each do |version|
-      view version do
-        association :attributes, blueprint: AttributesSerializer, view: version do |participant|
-          participant
-        end
-      end
     end
   end
 end

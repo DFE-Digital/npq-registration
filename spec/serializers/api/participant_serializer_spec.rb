@@ -26,152 +26,90 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
   end
 
   describe "nested attributes" do
-    context "when serializing the `v1` view" do
-      subject(:attributes) { JSON.parse(described_class.render(participant, lead_provider:, view: :v1))["attributes"] }
+    subject(:attributes) { JSON.parse(described_class.render(participant, lead_provider:))["attributes"] }
 
-      it "serializes the `participant_id`" do
-        expect(attributes["participant_id"]).to eq(participant.ecf_id)
-      end
+    it "serializes the `full_name`" do
+      expect(attributes["full_name"]).to eq(participant.full_name)
+    end
 
-      it "serializes the `full_name`" do
-        expect(attributes["full_name"]).to eq(participant.full_name)
-      end
+    context "when serializing `teacher_reference_number`" do
+      context "when trn is verified" do
+        before { participant.update!(trn_verified: true) }
 
-      it "serializes the `email`" do
-        expect(attributes["email"]).to eq(participant.email)
-      end
-
-      it "serializes the `npq_courses`" do
-        expect(attributes["npq_courses"]).to eq([course.identifier])
-      end
-
-      it "serializes the `funded_places`" do
-        expect(attributes["funded_places"]).to eq([
-          {
-            npq_course: application.course.identifier,
-            funded_place: application.funded_place,
-            npq_application_id: application.ecf_id,
-          }.stringify_keys,
-        ])
-      end
-
-      context "when serializing `teacher_reference_number`" do
-        context "when trn is verified" do
-          before { participant.update!(trn_verified: true) }
-
-          it "serializes the `teacher_reference_number`" do
-            expect(attributes["teacher_reference_number"]).to eq(participant.trn)
-          end
-        end
-
-        context "when trn is not verified" do
-          it "serializes nil" do
-            expect(attributes["teacher_reference_number"]).to be_nil
-          end
+        it "serializes the `teacher_reference_number`" do
+          expect(attributes["teacher_reference_number"]).to eq(participant.trn)
         end
       end
 
-      context "when serializing `updated_at`" do
-        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
-
-        context "when participant is the latest" do
-          it "serializes the `updated_at`" do
-            application.update!(updated_at: old_datetime)
-            participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(significantly_updated_at: latest_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when application is the latest" do
-          it "returns application's `updated_at`" do
-            application.update!(updated_at: latest_datetime)
-            participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(significantly_updated_at: old_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when participant_id_change is the latest" do
-          it "returns participant_id_change's `updated_at`" do
-            application.update!(updated_at: old_datetime)
-            participant_id_change.update!(updated_at: latest_datetime)
-            participant.update!(significantly_updated_at: old_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
+      context "when trn is not verified" do
+        it "serializes nil" do
+          expect(attributes["teacher_reference_number"]).to be_nil
         end
       end
     end
 
-    context "when serializing the `v2` view" do
-      subject(:attributes) { JSON.parse(described_class.render(participant, lead_provider:, view: :v2))["attributes"] }
+    context "when serializing `updated_at`" do
+      let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+      let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
 
-      it "serializes the `email`" do
-        expect(attributes["email"]).to eq(participant.email)
-      end
+      context "when participant is the latest" do
+        it "serializes the `updated_at`" do
+          application.update!(updated_at: old_datetime)
+          participant_id_change.update!(updated_at: old_datetime)
+          participant.update!(significantly_updated_at: latest_datetime)
 
-      it "serializes the `full_name`" do
-        expect(attributes["full_name"]).to eq(participant.full_name)
-      end
-
-      context "when serializing `teacher_reference_number`" do
-        context "when trn is verified" do
-          before { participant.update!(trn_verified: true) }
-
-          it "serializes the `teacher_reference_number`" do
-            expect(attributes["teacher_reference_number"]).to eq(participant.trn)
-          end
-        end
-
-        context "when trn is not verified" do
-          it "serializes nil" do
-            expect(attributes["teacher_reference_number"]).to be_nil
-          end
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
         end
       end
 
-      context "when serializing `updated_at`" do
-        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+      context "when application is the latest" do
+        it "returns application's `updated_at`" do
+          application.update!(updated_at: latest_datetime)
+          participant_id_change.update!(updated_at: old_datetime)
+          participant.update!(significantly_updated_at: old_datetime)
 
-        context "when participant is the latest" do
-          it "serializes the `updated_at`" do
-            application.update!(updated_at: old_datetime)
-            participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(significantly_updated_at: latest_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when application is the latest" do
-          it "returns application's `updated_at`" do
-            application.update!(updated_at: latest_datetime)
-            participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(significantly_updated_at: old_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when participant_id_change is the latest" do
-          it "returns participant_id_change's `updated_at`" do
-            application.update!(updated_at: old_datetime)
-            participant_id_change.update!(updated_at: latest_datetime)
-            participant.update!(significantly_updated_at: old_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
         end
       end
+
+      context "when participant_id_change is the latest" do
+        it "returns participant_id_change's `updated_at`" do
+          application.update!(updated_at: old_datetime)
+          participant_id_change.update!(updated_at: latest_datetime)
+          participant.update!(significantly_updated_at: old_datetime)
+
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+        end
+      end
+    end
+
+    it "serializes the `npq_enrolments`" do
+      expect(attributes["npq_enrolments"]).to eq([
+        {
+          email: participant.email,
+          course_identifier: application.course.identifier,
+          schedule_identifier: application.schedule.identifier,
+          cohort: application.cohort.start_year.to_s,
+          npq_application_id: application.ecf_id,
+          eligible_for_funding: application.eligible_for_funding,
+          training_status: application.training_status,
+          school_urn: application.school.urn,
+          targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
+          withdrawal: nil,
+          deferral: nil,
+          created_at: application.accepted_at.rfc3339,
+          funded_place: application.funded_place,
+        }.stringify_keys,
+      ])
+    end
+
+    context "when application has been withdrawn" do
+      let(:application) { create(:application, :withdrawn, :eligible_for_funded_place, lead_provider:) }
 
       it "serializes the `npq_enrolments`" do
         expect(attributes["npq_enrolments"]).to eq([
           {
+            email: participant.email,
             course_identifier: application.course.identifier,
             schedule_identifier: application.schedule.identifier,
             cohort: application.cohort.start_year.to_s,
@@ -180,78 +118,20 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             training_status: application.training_status,
             school_urn: application.school.urn,
             targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
+            withdrawal: {
+              reason: application.application_states.last.reason,
+              date: application.application_states.last.created_at.rfc3339,
+            },
+            deferral: nil,
+            created_at: application.accepted_at.rfc3339,
             funded_place: application.funded_place,
-          }.stringify_keys,
+          }.deep_stringify_keys,
         ])
-      end
-
-      context "when there're multiple application with different lead provider approval states" do
-        before { create(:application, lead_provider:, user: participant) }
-
-        it "serializes only accepted `npq_enrolments`" do
-          expect(attributes["npq_enrolments"].size).to eq(1)
-          expect(attributes["npq_enrolments"][0]["npq_application_id"]).to eq(application.ecf_id)
-        end
       end
     end
 
-    context "when serializing the `v3` view" do
-      subject(:attributes) { JSON.parse(described_class.render(participant, lead_provider:, view: :v3))["attributes"] }
-
-      it "serializes the `full_name`" do
-        expect(attributes["full_name"]).to eq(participant.full_name)
-      end
-
-      context "when serializing `teacher_reference_number`" do
-        context "when trn is verified" do
-          before { participant.update!(trn_verified: true) }
-
-          it "serializes the `teacher_reference_number`" do
-            expect(attributes["teacher_reference_number"]).to eq(participant.trn)
-          end
-        end
-
-        context "when trn is not verified" do
-          it "serializes nil" do
-            expect(attributes["teacher_reference_number"]).to be_nil
-          end
-        end
-      end
-
-      context "when serializing `updated_at`" do
-        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
-
-        context "when participant is the latest" do
-          it "serializes the `updated_at`" do
-            application.update!(updated_at: old_datetime)
-            participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(significantly_updated_at: latest_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when application is the latest" do
-          it "returns application's `updated_at`" do
-            application.update!(updated_at: latest_datetime)
-            participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(significantly_updated_at: old_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when participant_id_change is the latest" do
-          it "returns participant_id_change's `updated_at`" do
-            application.update!(updated_at: old_datetime)
-            participant_id_change.update!(updated_at: latest_datetime)
-            participant.update!(significantly_updated_at: old_datetime)
-
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-      end
+    context "when application has been deferred" do
+      let(:application) { create(:application, :deferred, :eligible_for_funded_place, lead_provider:) }
 
       it "serializes the `npq_enrolments`" do
         expect(attributes["npq_enrolments"]).to eq([
@@ -266,84 +146,33 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             school_urn: application.school.urn,
             targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
             withdrawal: nil,
-            deferral: nil,
+            deferral: {
+              reason: application.application_states.last.reason,
+              date: application.application_states.last.created_at.rfc3339,
+            },
             created_at: application.accepted_at.rfc3339,
             funded_place: application.funded_place,
-          }.stringify_keys,
+          }.deep_stringify_keys,
         ])
       end
+    end
 
-      context "when application has been withdrawn" do
-        let(:application) { create(:application, :withdrawn, :eligible_for_funded_place, lead_provider:) }
+    it "serializes the `participant_id_changes`" do
+      expect(attributes["participant_id_changes"]).to eq([
+        {
+          from_participant_id: participant.participant_id_changes.last.from_participant_id,
+          to_participant_id: participant.participant_id_changes.last.to_participant_id,
+          changed_at: participant.participant_id_changes.last.created_at.rfc3339,
+        }.stringify_keys,
+      ])
+    end
 
-        it "serializes the `npq_enrolments`" do
-          expect(attributes["npq_enrolments"]).to eq([
-            {
-              email: participant.email,
-              course_identifier: application.course.identifier,
-              schedule_identifier: application.schedule.identifier,
-              cohort: application.cohort.start_year.to_s,
-              npq_application_id: application.ecf_id,
-              eligible_for_funding: application.eligible_for_funding,
-              training_status: application.training_status,
-              school_urn: application.school.urn,
-              targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-              withdrawal: {
-                reason: application.application_states.last.reason,
-                date: application.application_states.last.created_at.rfc3339,
-              },
-              deferral: nil,
-              created_at: application.accepted_at.rfc3339,
-              funded_place: application.funded_place,
-            }.deep_stringify_keys,
-          ])
-        end
-      end
+    context "when there're multiple application with different lead provider approval states" do
+      before { create(:application, lead_provider:, user: participant) }
 
-      context "when application has been deferred" do
-        let(:application) { create(:application, :deferred, :eligible_for_funded_place, lead_provider:) }
-
-        it "serializes the `npq_enrolments`" do
-          expect(attributes["npq_enrolments"]).to eq([
-            {
-              email: participant.email,
-              course_identifier: application.course.identifier,
-              schedule_identifier: application.schedule.identifier,
-              cohort: application.cohort.start_year.to_s,
-              npq_application_id: application.ecf_id,
-              eligible_for_funding: application.eligible_for_funding,
-              training_status: application.training_status,
-              school_urn: application.school.urn,
-              targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-              withdrawal: nil,
-              deferral: {
-                reason: application.application_states.last.reason,
-                date: application.application_states.last.created_at.rfc3339,
-              },
-              created_at: application.accepted_at.rfc3339,
-              funded_place: application.funded_place,
-            }.deep_stringify_keys,
-          ])
-        end
-      end
-
-      it "serializes the `participant_id_changes`" do
-        expect(attributes["participant_id_changes"]).to eq([
-          {
-            from_participant_id: participant.participant_id_changes.last.from_participant_id,
-            to_participant_id: participant.participant_id_changes.last.to_participant_id,
-            changed_at: participant.participant_id_changes.last.created_at.rfc3339,
-          }.stringify_keys,
-        ])
-      end
-
-      context "when there're multiple application with different lead provider approval states" do
-        before { create(:application, lead_provider:, user: participant) }
-
-        it "serializes only accepted `npq_enrolments`" do
-          expect(attributes["npq_enrolments"].size).to eq(1)
-          expect(attributes["npq_enrolments"][0]["npq_application_id"]).to eq(application.ecf_id)
-        end
+      it "serializes only accepted `npq_enrolments`" do
+        expect(attributes["npq_enrolments"].size).to eq(1)
+        expect(attributes["npq_enrolments"][0]["npq_application_id"]).to eq(application.ecf_id)
       end
     end
   end
