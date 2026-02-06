@@ -10,7 +10,11 @@ class User < ApplicationRecord
     email_updates_unsubscribe_key
   ].freeze
 
-  devise :omniauthable, omniauth_providers: [:tra_openid_connect]
+  OMNIAUTH_PROVIDERS = [:tra_openid_connect].tap { |providers|
+    providers << :teacher_auth if Rails.configuration.x.teacher_auth.enabled
+  }.freeze
+
+  devise :omniauthable, omniauth_providers: OMNIAUTH_PROVIDERS
 
   has_paper_trail meta: { note: :version_note }, ignore: %i[raw_tra_provider_data updated_at feature_flag_id]
 

@@ -1,5 +1,5 @@
 class OmniauthController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: %i[tra_openid_connect]
+  skip_before_action :verify_authenticity_token, only: %i[tra_openid_connect teacher_auth]
   skip_before_action :authenticate_user!
 
   def tra_openid_connect
@@ -50,6 +50,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
     Rails.logger.info("[GAI] #{e} raised, user_id=#{id} uid=#{try_to_extract_user_uid}")
 
     raise e
+  end
+
+  def teacher_auth
+    provider_data = request.env["omniauth.auth"]
+
+    flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
+    redirect_to registration_wizard_show_path(:start)
   end
 
   def failure
