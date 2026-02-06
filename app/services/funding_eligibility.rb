@@ -100,20 +100,112 @@ class FundingEligibility
       return NOT_IN_ENGLAND unless @inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 
-      if course.ehco?
-        return FUNDED_ELIGIBILITY_RESULT if new_headteacher?
+      eligible_echo_new_headteacher ||
+        eligible_itt_provider ||
+        review_eligibility_referred_by_return_to_teaching_adviser ||
+        eligible_rise ||
+        eligible_not_pp50_course ||
+        eligible_la_disadvantaged_nursery ||
+        eligible_childminder ||
+        eligible_disadvantaged_ey ||
+        not_eligible_nursery_not_eyl ||
+        eligible_pp50 ||
+        INELIGIBLE_ESTABLISHMENT_TYPE
+    end
+  end
 
-        return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
-      end
+  # 1
+  def eligible_echo_new_headteacher
+    if course.ehco?
+      return FUNDED_ELIGIBILITY_RESULT if new_headteacher?
 
-      case work_setting
-      when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
-      when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
-      when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
-      when *Questionnaires::WorkSetting::OTHER_SETTINGS then other_settings_policy
-      else INELIGIBLE_ESTABLISHMENT_TYPE
+      NOT_NEW_HEADTEACHER_REQUESTING_EHCO
+    end
+  end
+
+  def review_eligibility_referred_by_return_to_teaching_adviser
+    if work_setting.in?(Questionnaires::WorkSetting::OTHER_SETTINGS)
+      if referred_by_return_to_teaching_adviser?
+        REFERRED_BY_RETURN_TO_TEACHING_ADVISER
+      else
+        INELIGIBLE_ESTABLISHMENT_TYPE
       end
     end
+  end
+
+  # 8
+  def eligible_rise
+    if work_setting.in?(Questionnaires::WorkSetting::SCHOOL_SETTINGS) && mandatory_institution.rise?
+      FUNDED_ELIGIBILITY_RESULT
+    end
+  end
+
+  # 7
+  def eligible_not_pp50_course
+    if !course.only_pp50? && work_setting.in?(Questionnaires::WorkSetting::SCHOOL_SETTINGS)
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eligible_establishment?
+
+      INELIGIBLE_ESTABLISHMENT_TYPE
+    end
+  end
+
+  # 2
+  def eligible_la_disadvantaged_nursery
+    if institution.try(:local_authority_nursery_school?)
+      return EARLY_YEARS_INVALID_NPQ unless course.identifier.in?(%w[npq-senco npq-headship npq-early-years-leadership])
+
+      FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
+    end
+  end
+
+  # 3
+  def eligible_childminder
+    if course.eyl? &&
+        work_setting.in?(Questionnaires::WorkSetting::CHILDCARE_SETTINGS) &&
+        childminder?
+      if mandatory_institution.on_childminders_list?
+        FUNDED_ELIGIBILITY_RESULT
+      else
+        NOT_ENTITLED_CHILDMINDER
+      end
+    end
+  end
+
+  # 4
+  def eligible_disadvantaged_ey
+    if course.eyl? &&
+        work_setting.in?(Questionnaires::WorkSetting::CHILDCARE_SETTINGS) &&
+        !institution.try(:local_authority_nursery_school?)
+      return FUNDED_ELIGIBILITY_RESULT if !childminder? && mandatory_institution.eyl_disadvantaged?
+
+      NOT_ENTITLED_EY_INSTITUTION
+    end
+  end
+
+  def not_eligible_nursery_not_eyl
+    if work_setting.in?(Questionnaires::WorkSetting::CHILDCARE_SETTINGS) &&
+        !institution.try(:local_authority_nursery_school?) &&
+        !course.eyl?
+
+      EARLY_YEARS_INVALID_NPQ
+    end
+  end
+
+  # 5 & 6
+  def eligible_pp50
+    if course.only_pp50? &&
+        mandatory_institution.eligible_establishment? &&
+        work_setting.in?(Questionnaires::WorkSetting::SCHOOL_SETTINGS)
+
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
+
+      INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
+    end
+  end
+
+  # 9
+  def eligible_itt_provider
+    another_setting_policy if work_setting.in?(Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS)
   end
 
   def get_description_for_funding_status
@@ -128,47 +220,6 @@ class FundingEligibility
   end
 
 private
-
-  def childcare_policy
-    if institution.try(:local_authority_nursery_school?)
-      return EARLY_YEARS_INVALID_NPQ unless course.la_nursery_approved?
-      return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.la_disadvantaged_nursery?
-
-      return FUNDED_ELIGIBILITY_RESULT
-    end
-
-    if childminder?
-      if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
-
-        return NOT_ENTITLED_CHILDMINDER
-      end
-
-      return EARLY_YEARS_INVALID_NPQ
-    end
-
-    if course.eyl?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
-
-      return NOT_ENTITLED_EY_INSTITUTION
-    end
-
-    EARLY_YEARS_INVALID_NPQ
-  end
-
-  def school_policy
-    return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.rise?
-
-    return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
-
-    if course.only_pp50?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
-
-      return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
-    end
-
-    FUNDED_ELIGIBILITY_RESULT
-  end
 
   def another_setting_policy
     if lead_mentor_for_accredited_itt_provider?
@@ -195,14 +246,6 @@ private
 
     if employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
       SUBJECT_TO_REVIEW
-    else
-      INELIGIBLE_ESTABLISHMENT_TYPE
-    end
-  end
-
-  def other_settings_policy
-    if referred_by_return_to_teaching_adviser?
-      REFERRED_BY_RETURN_TO_TEACHING_ADVISER
     else
       INELIGIBLE_ESTABLISHMENT_TYPE
     end
