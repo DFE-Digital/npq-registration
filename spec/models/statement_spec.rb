@@ -389,4 +389,26 @@ RSpec.describe Statement, type: :model do
       end
     end
   end
+
+  describe "#milestone_declaration_types" do
+    let(:schedule_2) { create(:schedule) }
+    let(:schedule_1) { create(:schedule) }
+    let(:milestone_1_schedule_1) { create(:milestone, declaration_type: "started", schedule: schedule_1) }
+    let(:milestone_1_schedule_2) { create(:milestone, declaration_type: "started", schedule: schedule_2) }
+    let(:milestone_2_schedule_1) { create(:milestone, declaration_type: "retained-1", schedule: schedule_1) }
+    let(:milestone_2_schedule_2) { create(:milestone, declaration_type: "retained-1", schedule: schedule_2) }
+
+    subject { statement.milestone_declaration_types }
+
+    before do
+      create(:milestone_statement, milestone: milestone_1_schedule_1, statement:)
+      create(:milestone_statement, milestone: milestone_1_schedule_2, statement:)
+      create(:milestone_statement, milestone: milestone_2_schedule_1, statement:)
+      create(:milestone_statement, milestone: milestone_2_schedule_2, statement:)
+    end
+
+    it "returns milestone declaration types associated with the statement" do
+      expect(subject).to match_array(%w[started retained-1])
+    end
+  end
 end
