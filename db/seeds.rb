@@ -26,6 +26,28 @@ def with_versioning
   end
 end
 
+def load_csv(file, model_class)
+  CSV.read(Rails.root.join(file), headers: true).tap do |data|
+    import_count = 0
+    batch_size = 10_000
+    batch = []
+
+    data.each do |row|
+      batch << row.to_h
+      next unless batch.length >= batch_size
+
+      Rails.logger.info("Importing #{import_count += batch_size} #{model_class.to_s.pluralize}")
+      model_class.insert_all(batch)
+      batch = []
+    end
+
+    unless batch.empty?
+      Rails.logger.info("Importing #{import_count + batch.length} #{model_class.to_s.pluralize}")
+      model_class.insert_all(batch)
+    end
+  end
+end
+
 Rails.logger.info("Seeding database")
 
 # Due to migrations modifying the tables, we need to reset column informations before running seeds
@@ -52,6 +74,7 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_api_tokens.rb",
   "process_statements.rb",
   "add_delivery_partners.rb",
+  "add_eligibility_list_entries.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   ApplicationRecord.transaction do
