@@ -41,6 +41,9 @@ COPY . .
 
 # Precompile assets
 RUN RAILS_ENV=production SECRET_KEY_BASE=required-to-run-but-not-used \
+    TRA_OIDC_CLIENT_ID=npq \
+    HOSTING_DOMAIN=http://test.host \
+    TRA_OIDC_CLIENT_SECRET=randomsecret \
     bundle exec rails assets:precompile
 
 # Cleanup to save space in the production image
