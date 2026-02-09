@@ -17,14 +17,14 @@ Devise.setup do |config|
                   callback_path: "/users/auth/tra_openid_connect/callback",
                   client_options: {
                     host: oidc_domain ? URI(oidc_domain).host : nil,
-                    identifier: ENV["TRA_OIDC_CLIENT_ID"],
+                    identifier: ENV.fetch("TRA_OIDC_CLIENT_ID"),
                     redirect_uri:
-                      "#{ENV['HOSTING_DOMAIN']}/users/auth/tra_openid_connect/callback",
-                    secret: ENV["TRA_OIDC_CLIENT_SECRET"],
+                      "#{ENV.fetch('HOSTING_DOMAIN')}/users/auth/tra_openid_connect/callback",
+                    secret: ENV.fetch("TRA_OIDC_CLIENT_SECRET"),
                   },
                   issuer: oidc_domain,
                   post_logout_redirect_uri:
-                    "#{ENV['HOSTING_DOMAIN']}/sign-out",
+                    "#{ENV.fetch('HOSTING_DOMAIN')}/sign-out",
                   strategy_class: Omniauth::Strategies::TraOpenidConnect
 
   if Rails.configuration.x.teacher_auth.enabled
@@ -35,11 +35,11 @@ Devise.setup do |config|
                     client_options: {
                       host: teacher_auth_domain ? URI(teacher_auth_domain).host : nil,
                       identifier: Rails.configuration.x.teacher_auth.client_id,
-                      redirect_uri: "#{ENV['HOSTING_DOMAIN']}/users/auth/teacher_auth/callback",
+                      redirect_uri: "#{ENV.fetch('HOSTING_DOMAIN')}/users/auth/teacher_auth/callback",
                       secret: Rails.configuration.x.teacher_auth.client_secret,
                     },
                     issuer: teacher_auth_domain,
-                    post_logout_redirect_uri: "#{ENV['HOSTING_DOMAIN']}/sign-out",
+                    post_logout_redirect_uri: "#{ENV.fetch('HOSTING_DOMAIN')}/sign-out",
                     strategy_class: Omniauth::Strategies::TeacherAuth
   end
 end

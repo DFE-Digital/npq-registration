@@ -29,6 +29,9 @@ jobs:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432
       SECRET_KEY_BASE: abc123
       NODE_OPTIONS: --openssl-legacy-provider
+      TRA_OIDC_CLIENT_ID: npq
+      HOSTING_DOMAIN: "http://test.host"
+      TRA_OIDC_CLIENT_SECRET: randomsecret
 
     services:
       postgres:

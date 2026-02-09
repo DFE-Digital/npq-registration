@@ -43,6 +43,7 @@ jobs:
     name: "Lint SCSS"
     env:
       GOVUK_NOTIFY_API_KEY: Test
+      RAILS_ENV: test
     runs-on: ubuntu-24.04
 
     steps:
@@ -145,6 +146,8 @@ jobs:
     if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
     environment:
       name: staging
+    env:
+      RAILS_ENV: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
