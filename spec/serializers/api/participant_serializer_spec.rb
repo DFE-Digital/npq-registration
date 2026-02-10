@@ -2,11 +2,12 @@ require "rails_helper"
 
 RSpec.describe API::ParticipantSerializer, type: :serializer do
   let(:lead_provider) { create(:lead_provider) }
+  let(:user) { create(:user) }
+  let(:application) { create(:application, :eligible_for_funded_place, :with_participant_id_change, lead_provider:, funded_place: true, user:) }
   let(:course) { application.course }
   let(:school) { application.school }
   let(:participant_id_change) { application.participant_id_changes.last }
   let(:cohort) { application.cohort }
-  let(:application) { create(:application, :eligible_for_funded_place, :with_participant_id_change, lead_provider:, funded_place: true) }
   let(:participant) { application.user }
 
   describe "core attributes" do
@@ -32,9 +33,47 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
       expect(attributes["full_name"]).to eq(participant.full_name)
     end
 
+    context "when serializing `previous_names`" do
+      context "when the config flag is enabled" do
+        let(:user) { create(:user, previous_names: ["Ben Smith", "Ben Doe"]) }
+
+        before do
+          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(true)
+        end
+
+        it "serializes the `previous_names` array" do
+          expect(attributes["previous_names"]).to eq(["Ben Smith", "Ben Doe"])
+        end
+      end
+
+      context "when the config flag is disabled" do
+        let(:user) { create(:user, previous_names: ["Ben Smith", "Ben Doe"]) }
+
+        before do
+          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(false)
+        end
+
+        it "does not include the field" do
+          expect(attributes).not_to have_key("previous_names")
+        end
+      end
+
+      context "when the participant has no previous names" do
+        let(:user) { create(:user, previous_names: []) }
+
+        before do
+          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(true)
+        end
+
+        it "serializes an empty array" do
+          expect(attributes["previous_names"]).to eq([])
+        end
+      end
+    end
+
     context "when serializing `teacher_reference_number`" do
       context "when trn is verified" do
-        before { participant.update!(trn_verified: true) }
+        let(:user) { create(:user, trn_verified: true) }
 
         it "serializes the `teacher_reference_number`" do
           expect(attributes["teacher_reference_number"]).to eq(participant.trn)
@@ -104,7 +143,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
     end
 
     context "when application has been withdrawn" do
-      let(:application) { create(:application, :withdrawn, :eligible_for_funded_place, lead_provider:) }
+      let(:application) { create(:application, :withdrawn, :eligible_for_funded_place, lead_provider:, user:) }
 
       it "serializes the `npq_enrolments`" do
         expect(attributes["npq_enrolments"]).to eq([
@@ -131,7 +170,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
     end
 
     context "when application has been deferred" do
-      let(:application) { create(:application, :deferred, :eligible_for_funded_place, lead_provider:) }
+      let(:application) { create(:application, :deferred, :eligible_for_funded_place, lead_provider:, user:) }
 
       it "serializes the `npq_enrolments`" do
         expect(attributes["npq_enrolments"]).to eq([

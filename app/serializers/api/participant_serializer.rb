@@ -7,6 +7,7 @@ module API
       exclude :id
 
       field(:full_name)
+      field(:previous_names, if: ->(_field_name, _object, _options) { Rails.configuration.x.api.previous_names })
       field(:teacher_reference_number) do |object, _options|
         object.trn if object.trn_verified
       end

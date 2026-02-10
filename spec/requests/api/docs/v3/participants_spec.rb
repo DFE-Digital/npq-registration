@@ -24,6 +24,8 @@ RSpec.describe "NPQ Participants endpoint", openapi_spec: "v3/swagger.yaml", typ
   let!(:participant) { application.user }
 
   before do
+    allow(Rails.configuration.x.api).to receive(:previous_names).and_return(false)
+
     statement = create(:statement, cohort:, lead_provider:)
     create(:contract, statement:, course:)
   end
