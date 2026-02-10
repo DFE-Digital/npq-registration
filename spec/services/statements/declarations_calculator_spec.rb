@@ -229,7 +229,6 @@ RSpec.describe Statements::DeclarationsCalculator do
   end
 
   describe "#received_declarations" do
-    let(:other_declaration_type_declaration) { create(:declaration, :eligible, declaration_type: "retained-1", application: application_with_other_declaration_type_declaration, course:, lead_provider:, cohort:, statement:) }
     let(:declaration_without_milestone) { create(:declaration, :eligible, declaration_type: "retained-2", application: leadership_retained_2_application, course:, lead_provider:, cohort:, statement:) }
 
     before do
@@ -400,6 +399,39 @@ RSpec.describe Statements::DeclarationsCalculator do
         total_expected_applications = 4
         declarations_received_for_milestones_on_statement = 2 # i.e. declarations for "started" and "retained-2" milestones only
         expect(subject).to eq(total_expected_applications - declarations_received_for_milestones_on_statement)
+      end
+    end
+  end
+
+  describe "#expected_output_payment" do
+    let(:course_calculators) { statement.contracts.map { Statements::CourseCalculator.new(contract: _1) } }
+    let(:leadership_contract_template) { create(:contract_template, per_participant: 123) }
+    let(:specialist_contract_template) { create(:contract_template, per_participant: 234) }
+
+    before do
+      milestones_for_all_declaration_types
+      create(:declaration, declaration_type: "started", application: started_application, course:, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-1", application: leadership_retained_1_application, course:, lead_provider:, cohort:, statement:)
+      create(:declaration, declaration_type: "retained-2", application: leadership_retained_2_application, lead_provider:, cohort:, statement:)
+      create(:milestone_statement, milestone: started_milestone, statement:)
+      create(:contract, course: leadership_course, statement:, contract_template: leadership_contract_template)
+      create(:contract, course: specialist_course, statement:, contract_template: specialist_contract_template)
+    end
+
+    it "returns the expected output payment based on the expected applications and the OutputPaymentCalculator" do
+      leadership_output_payment = leadership_contract_template.per_participant * leadership_contract_template.output_payment_percentage / (100 * leadership_contract_template.number_of_payment_periods)
+      specialist_output_payment = specialist_contract_template.per_participant * specialist_contract_template.output_payment_percentage / (100 * specialist_contract_template.number_of_payment_periods)
+      expect(declarations_calculator.expected_output_payment(course_calculators)).to eq((3 * leadership_output_payment) + specialist_output_payment)
+    end
+
+    context "when there are no eligble applications for one of the courses" do
+      before do
+        aso_course = create(:course, :additional_support_offer)
+        create(:contract, course: aso_course, statement:)
+      end
+
+      it "ignores that course" do
+        expect(declarations_calculator.expected_output_payment(course_calculators)).to eq(120.6)
       end
     end
   end

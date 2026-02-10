@@ -1,43 +1,56 @@
-<%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l") %>
+<%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l govuk-!-margin-bottom-1") %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-    <p class="govuk-body govuk-!-margin-bottom-2">
-      <strong>Cohort:</strong>
-      <%= @statement.cohort.description %>
-    </p>
-    <p class="govuk-body govuk-!-margin-bottom-2">
-      <strong>Output payment date:</strong>
-      <%= @statement.payment_date.to_fs(:govuk) %>
-      &nbsp;<%= govuk_link_to "Change", npq_separation_admin_finance_statements_change_payment_date_path(@statement) %>
-    </p>
-    <p class="govuk-body govuk-!-margin-bottom-2">
-      <strong>Status:</strong>
-      <%= @statement.state.humanize %>
-    </p>
-    <p class="govuk-body govuk-!-margin-bottom-2">
-      <strong>Payment run:</strong>
-      <%= boolean_red_green_tag(@statement.output_fee) %>
-    </p>
-    <p class="govuk-body govuk-!-margin-bottom-2">
-      <strong>Milestones:</strong>
-      <%= @statement.milestones.distinct.pluck(:declaration_type).join(", ") %>
-    </p>
-    <%= govuk_details(summary_text: "Statement ID", id: "statement-id") do
-          @statement.ecf_id
-        end %>
-
-    <% if @statement.marked_as_paid_with_date? %>
-      <p class="govuk-!-margin-bottom-2">
-        <strong class="govuk-tag govuk-tag--green">Authorised for payment at <%= @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y") %></strong>
-      </p>
-    <% end %>
-
     <div class="govuk-inset-text">
       Calculations may have minor rounding discrepancies. Contact your contract manager for clarification.
     </div>
 
     <%= render NpqSeparation::Admin::StatementSummaryComponent.new(statement: @statement) %>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Overview</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <%=
+          govuk_summary_list do |summary_list|
+            summary_list.with_row do |row|
+              row.with_key { "Cohort" }
+              row.with_value { @statement.cohort.description }
+            end
+
+            summary_list.with_row do |row|
+              row.with_key { "Output payment date" }
+              row.with_value { @statement.payment_date.to_fs(:govuk) }
+              row.with_action(text: "Change", href: npq_separation_admin_finance_statements_change_payment_date_path(@statement))
+            end
+
+            summary_list.with_row do |row|
+              row.with_key { "Status" }
+              row.with_value { @statement.state.humanize }
+            end
+
+            summary_list.with_row do |row|
+              row.with_key { "Statement ID" }
+              row.with_value { @statement.ecf_id }
+            end
+
+            summary_list.with_row do |row|
+              row.with_key { "Output statement" }
+              row.with_value { boolean_red_green_tag(@statement.output_fee) }
+            end
+
+            if @statement.marked_as_paid_with_date?
+              summary_list.with_row do |row|
+                row.with_key { "Payment status" }
+                row.with_value { "Authorised for payment at #{@statement.marked_as_paid_at.in_time_zone('London').strftime('%-I:%M%P on %-e %b %Y')}" }
+              end
+            end
+          end
+        %>
+      </div>
+    </div>
 
     <div class="govuk-inset-text noprint">
       <p> Save a copy of this statement for: </p>

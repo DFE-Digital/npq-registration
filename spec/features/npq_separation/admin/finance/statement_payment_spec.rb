@@ -31,7 +31,7 @@ RSpec.feature "Statement payment", type: :feature do
     end
 
     expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
-    expect(page).to have_css(".govuk-tag", text: /Authorised for payment at 1?\d:\d\d[ap]m on \d?\d [A-Z][a-z]{2} 20\d\d/)
+    expect(page).to have_css(".govuk-summary-list__value", text: /Authorised for payment at 1?\d:\d\d[ap]m on \d?\d [A-Z][a-z]{2} 20\d\d/)
   end
 
   scenario "marking a statement as paid before job has run" do

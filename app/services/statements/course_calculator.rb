@@ -60,6 +60,10 @@ module Statements
       )[:subtotal]
     end
 
+    def expected_output_payment_subtotal(expected_declarations_count)
+      output_payment(total_participants: expected_declarations_count)[:subtotal]
+    end
+
     def output_payment_subtotal
       output_payment[:subtotal]
     end
@@ -75,10 +79,10 @@ module Statements
       declaration_count_by_type.fetch(declaration_type, 0)
     end
 
-    def output_payment
-      @output_payment ||= Statements::OutputPaymentCalculator.call(
+    def output_payment(total_participants: billable_declarations_count)
+      Statements::OutputPaymentCalculator.call(
         contract:,
-        total_participants: billable_declarations_count,
+        total_participants:,
       )
     end
 

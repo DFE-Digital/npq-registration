@@ -356,8 +356,20 @@ RSpec.describe Statements::CourseCalculator do
   end
 
   describe "#output_payment" do
+    let(:application) { create(:application, :with_declaration, course:) }
+
+    before do
+      create(:statement_item, declaration: application.declarations.first, statement:)
+    end
+
     it "is a hash" do
-      expect(subject.output_payment).to be_a(Hash)
+      expect(subject.output_payment).to eq(
+        {
+          participants: 1,
+          per_participant: 160,
+          subtotal: 160,
+        },
+      )
     end
   end
 
@@ -385,6 +397,14 @@ RSpec.describe Statements::CourseCalculator do
           allow(calculator).to receive(method).and_return(stubbed_value)
         }.to change(subject, :course_total).by(10)
       end
+    end
+  end
+
+  describe "#expected_output_payment_subtotal" do
+    let(:expected_declarations_count) { 5 }
+
+    it "returns the expected output payment subtotal for a given expected declarations count" do
+      expect(subject.expected_output_payment_subtotal(expected_declarations_count)).to eq(expected_declarations_count * 160)
     end
   end
 end

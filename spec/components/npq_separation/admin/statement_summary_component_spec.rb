@@ -18,6 +18,7 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       use_targeted_delivery_funding?: false,
       total_targeted_delivery_funding: 99,
       total_service_fees: 0,
+      expected_output_payment: 0,
       total_output_payment: 100.12,
       total_clawbacks: 50.34,
       total_adjustments: -10,
@@ -46,7 +47,6 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
   end
 
   it { is_expected.to have_text "Statement summary" }
-  it { is_expected.to have_text "The output payment deadline is #{statement.deadline_date.to_fs(:govuk)}" }
 
   it "shows totals" do
     subject
