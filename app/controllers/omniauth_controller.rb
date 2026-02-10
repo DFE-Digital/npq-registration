@@ -54,8 +54,27 @@ class OmniauthController < Devise::OmniauthCallbacksController
 
   def teacher_auth
     provider_data = request.env["omniauth.auth"]
+    access_token = provider_data.credentials.token
 
-    flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
+    result = TeacherRecordService::RecordRetrieval.new(access_token:).call
+
+    if result.success?
+      flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
+      flash[:success] += ", Full name: #{result.full_name}"
+      flash[:success] += ", Previous names: #{result.previous_names.join(', ')}" if result.previous_names.any?
+    else
+      error_message = case result.error_type
+                      when :timeout
+                        "Unable to retrieve teaching record (timeout). Please try again."
+                      when :api_error
+                        "Unable to retrieve teaching record from the service."
+                      else
+                        "An unexpected error occurred while retrieving your teaching record."
+                      end
+
+      flash[:error] = error_message
+    end
+
     redirect_to registration_wizard_show_path(:start)
   end
 
