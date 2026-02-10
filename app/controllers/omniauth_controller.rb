@@ -60,8 +60,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
 
     if result.success?
       flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
-      flash[:success] += ", Full name: #{result.full_name}"
-      flash[:success] += ", Previous names: #{result.previous_names.join(', ')}" if result.previous_names.any?
+      
+      Users::FindOrCreateFromTeacherAuth.new(
+        email: provider_data.info.email,
+        full_name: result.full_name,
+        previous_names: result.previous_names,
+        trn: provider_data.extra.raw_info.trn,
+      ).call
     else
       error_message = case result.error_type
                       when :timeout

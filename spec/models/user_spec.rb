@@ -80,6 +80,33 @@ RSpec.describe User do
     }
   end
 
+  describe "previous_names" do
+    it "defaults to an empty array" do
+      user = create(:user)
+      expect(user.previous_names).to eq([])
+    end
+
+    it "stores and retrieves previous names" do
+      user = create(:user, :with_previous_names)
+      expect(user.reload.previous_names).to eq(["Sarah Johnson", "Sarah Ann Williams"])
+    end
+
+    it "handles case-insensitive CITEXT" do
+      user = create(:user, previous_names: ["Sarah JOHNSON"])
+      expect(user.reload.previous_names).to eq(["Sarah JOHNSON"])
+    end
+
+    it "tracks changes with paper_trail" do
+      with_versioning do
+        user = create(:user, previous_names: [])
+        user.update!(previous_names: ["Sarah Johnson"])
+
+        version = user.versions.last
+        expect(version.object_changes["previous_names"]).to eq([[], ["Sarah Johnson"]])
+      end
+    end
+  end
+
   describe "touch_significantly_updated_at" do
     let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
     let(:significant_change) { { full_name: "New Name" } }

@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_28_113435) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
-  enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
@@ -636,6 +636,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_28_113435) do
     t.datetime "archived_at"
     t.datetime "significantly_updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "preferred_name"
+    t.citext "previous_names", default: [], null: false, array: true
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
