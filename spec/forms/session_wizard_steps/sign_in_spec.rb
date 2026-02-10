@@ -8,8 +8,6 @@ RSpec.describe SessionWizardSteps::SignIn, type: :model do
   describe "#after_save" do
     subject { described_class.new(email:, wizard:).after_save }
 
-    before { freeze_time }
-
     let(:session) { {} }
     let(:store) { {} }
     let(:admin) { create(:admin) }
@@ -17,6 +15,12 @@ RSpec.describe SessionWizardSteps::SignIn, type: :model do
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
     let(:wizard) { SessionWizard.new(current_step: :sign_in, store:, session:) }
     let(:otp_generator) { instance_double(OtpCodeGenerator, call: String) }
+    let(:mailer_double) { instance_double(ActionMailer::MessageDelivery, deliver_now: true) }
+
+    before do
+      freeze_time
+      allow(ConfirmEmailMailer).to receive(:confirmation_code_mail) { mailer_double }
+    end
 
     it "generates an OTP code" do
       expect { subject }.to change { Admin.find(admin.id).otp_hash }.from(nil).to(otp_generator.call)
@@ -27,7 +31,8 @@ RSpec.describe SessionWizardSteps::SignIn, type: :model do
     end
 
     it "sends an email with the OTP code" do
-      expect(ConfirmEmailMailer).to receive(:confirmation_code_mail).with(to: email, code: otp_generator.call).and_call_original
+      expect(ConfirmEmailMailer).to receive(:confirmation_code_mail).with(to: email, code: otp_generator.call)
+      expect(mailer_double).to receive(:deliver_now)
       subject
     end
   end
