@@ -1,6 +1,6 @@
 class Statements::SendOutputStatementNotifications
   def call
-    contracts_team_email_address = ENV["CONTRACTS_TEAM_EMAIL_ADDRESS"]
+    contracts_team_email_address = ENV["CONTRACTS_TEAM_EMAIL_ADDRESS"].presence
 
     return unless contracts_team_email_address
 
@@ -18,7 +18,7 @@ private
   end
 
   def next_months_statements
-    statements_bullet_points(Time.zone.today + 1.month)
+    statements_bullet_points(1.month.from_now)
   end
 
   def statements_bullet_points(date)
@@ -31,10 +31,12 @@ private
 
     return "none" if statements.empty?
 
-    statements.map { |statement|
-      "* deadline date: #{statement.deadline_date.to_fs(:govuk)}, " \
-        "cohort: #{statement.cohort.identifier}, " \
-        "statement: #{Date.new(statement.year, statement.month).to_fs(:govuk_approx)}"
-    }.join("\n")
+    statements.map { |statement| format_statement_bullet(statement) }.join("\n")
+  end
+
+  def format_statement_bullet(statement)
+    "* deadline date: #{statement.deadline_date.to_fs(:govuk)}, " \
+      "cohort: #{statement.cohort.identifier}, " \
+      "statement: #{Date.new(statement.year, statement.month).to_fs(:govuk_approx)}"
   end
 end

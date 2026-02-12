@@ -8,7 +8,7 @@ class Crons::OutputStatementNotificationsJob < CronJob
 
   def perform
     today = Time.zone.today
-    if Statement.with_output_fee.where(deadline_date: today.beginning_of_month..(today + 1.month).end_of_month).any?
+    if Statement.with_output_fee.where(deadline_date: today.beginning_of_month..1.month.from_now.end_of_month.end_of_month).any?
       Statements::SendOutputStatementNotifications.new.call
     end
   end

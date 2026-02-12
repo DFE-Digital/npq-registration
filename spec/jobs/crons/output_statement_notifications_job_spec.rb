@@ -1,10 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Crons::OutputStatementNotificationsJob, type: :job do
-  before do
-    ActiveJob::Base.queue_adapter.enqueued_jobs.clear
-  end
-
   describe "#perform" do
     let(:date) { Time.zone.local(2026, 1, 1) }
     let(:send_notifications_service) { instance_double(Statements::SendOutputStatementNotifications, call: true) }
