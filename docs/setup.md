@@ -10,7 +10,7 @@
 
 1. Install the prerequisites (see `.tool-versions` for versions):
    - Ruby
-   - PostgreSQL 14
+   - PostgreSQL 14 or higher (v14 is [deprecated on homebrew](https://formulae.brew.sh/formula/postgresql@14), so v15 or later is recommended)
    - NodeJS
    - Yarn
    - Graphviz
