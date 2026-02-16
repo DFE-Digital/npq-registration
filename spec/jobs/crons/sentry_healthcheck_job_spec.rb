@@ -1,10 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Crons::SentryHealthcheckJob, type: :job do
-  before do
-    ActiveJob::Base.queue_adapter.enqueued_jobs.clear
-  end
-
   describe "#perform" do
     context "when there are no more than batch_size records" do
       it "enqueues the job" do
