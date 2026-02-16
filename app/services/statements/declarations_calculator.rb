@@ -97,6 +97,8 @@ module Statements
     end
 
     def applications_with_declarations_and_milestones(declaration_type:, milestone_declaration_type:)
+      return Application.none unless statement.milestone_declaration_types.include?(milestone_declaration_type.to_s)
+
       active_applications.where(
         declarations: { declaration_type: Declaration.declaration_types[declaration_type] },
         schedule: { milestones: { declaration_type: Declaration.declaration_types[milestone_declaration_type] } },
@@ -104,6 +106,8 @@ module Statements
     end
 
     def applications_in_schedules_with_declarations_and_milestones(schedules:, declaration_type:, milestone_declaration_type:)
+      return Application.none unless statement.milestone_declaration_types.include?(milestone_declaration_type.to_s)
+
       active_applications.where(
         declarations: { declaration_type: Declaration.declaration_types[declaration_type] },
         schedule: {
@@ -115,8 +119,9 @@ module Statements
 
     def previous_milestones_remaining_count(declaration_type)
       previous_milestones(declaration_type).sum do |previous_declaration_type|
-        expected_applications(previous_declaration_type).uniq.count -
+        previous_remaining_count = expected_applications(previous_declaration_type).uniq.count -
           received_declarations(previous_declaration_type).count
+        previous_remaining_count.positive? ? previous_remaining_count : 0
       end
     end
 
