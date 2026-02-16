@@ -177,6 +177,19 @@ RSpec.describe User do
     end
   end
 
+  describe ".find_or_create_from_teacher_auth" do
+    let(:provider_data) { :provider_data }
+    let(:feature_flag_id) { "456" }
+    let(:service) { instance_double(Users::FindOrCreateFromTeacherAuth) }
+
+    before { allow(Users::FindOrCreateFromTeacherAuth).to receive(:new).with(provider_data:, feature_flag_id: feature_flag_id) { service } }
+
+    it "calls Users::FindOrCreateFromTrn service" do
+      expect(service).to receive(:call)
+      described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id: feature_flag_id)
+    end
+  end
+
   describe "#update_email_updates_status" do
     let(:user) { create(:user) }
     let(:form) { EmailUpdates.new(email_updates_status: :senco) }
