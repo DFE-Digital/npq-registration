@@ -272,6 +272,7 @@ shared:
     - archived_at
     - significantly_updated_at
     - preferred_name
+    - previous_names
   :eligibility_list_entries:
     - id
     - type

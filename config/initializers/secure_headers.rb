@@ -13,6 +13,7 @@ SecureHeaders::Configuration.default do |config|
   google_analytics = %w[*.google-analytics.com *.analytics.google.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
   tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
   identity_domain = [ENV["TRA_OIDC_DOMAIN"]]
+  teacher_auth_domain = [ENV["TEACHER_AUTH_DOMAIN"]].compact
   sentry = %w[*.sentry-cdn.com *.ingest.us.sentry.io]
 
   if ENV["SENTRY_CSP_REPORT_URI"]
@@ -62,7 +63,7 @@ SecureHeaders::Configuration.default do |config|
     child_src: %w['self'],
     connect_src: %w['self'] + google_analytics + sentry,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
-    form_action: %w['self'] + identity_domain, # needed because the POST to /users/auth/tra_openid_connect' redirects to the identity domain
+    form_action: %w['self'] + identity_domain + teacher_auth_domain, # needed because the POST to /users/auth/tra_openid_connect' redirects to the identity domain
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
     img_src: %w['self' *.gov.uk] + google_analytics + tracking_pixels + %w[data:],
