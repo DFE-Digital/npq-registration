@@ -6,8 +6,6 @@ class OmniauthController < Devise::OmniauthCallbacksController
     # Let user continue using current TRA login
     session.delete("clear_tra_login")
 
-    provider_data = request.env["omniauth.auth"]
-
     @user = User.find_or_create_from_provider_data(
       provider_data,
       feature_flag_id: session["feature_flag_id"],
@@ -57,6 +55,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
     access_token = provider_data.credentials.token
 
     result = TeachingRecordSystem::FetchPerson.fetch(access_token:)
+    @user = User.find_or_create_from_teacher_auth(
+      provider_data:,
+      feature_flag_id: session["feature_flag_id"],
+    )
 
     flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
     flash[:success] += ", Full name: #{result.full_name}"
@@ -67,6 +69,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
     flash[:error] = "Unable to retrieve teaching record from the service."
   ensure
     redirect_to registration_wizard_show_path(:start)
+    if @user
+      session["user_id"] = @user.id
+      @user.set_closed_registration_feature_flag
+      sign_in_and_redirect @user
+    else
+      redirect_to failed_sign_in_path
+    end
   end
 
   def failure
@@ -86,6 +95,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
   end
 
 private
+
+  def provider_data
+    @provider_data ||= request.env["omniauth.auth"]
+  end
 
   def multibyte_email_characters(email)
     email.each_char.filter_map.with_index do |c, i|
@@ -138,7 +151,7 @@ private
   end
 
   def try_to_extract_user_uid
-    request.env["omniauth.auth"].uid
+    provider_data.uid
   rescue StandardError
     "unknown-provider-uid"
   end
