@@ -10,7 +10,7 @@
 
 1. Install the prerequisites (see `.tool-versions` for versions):
    - Ruby
-   - PostgreSQL 14
+   - PostgreSQL 14 or higher (v14 is [deprecated on homebrew](https://formulae.brew.sh/formula/postgresql@14), so v15 or later is recommended)
    - NodeJS
    - Yarn
    - Graphviz
@@ -23,7 +23,7 @@
 ## Codespaces
 
 1. Click the green 'Code' button on the repository home page and click 'Create a Codespace'
-2. Run `bundle exec rails server` in the terminal window at the bottom of VS Code
+1. The server should automatically run - check the 'Ports' tab at the bottom of the window, the application runs under port 3000.
 
 If you're unfamiliar with what Codespaces are or how they work [read the official guiude](https://docs.github.com/en/codespaces/overview). If you
 don't have access to them you can request it in `#digital-tools-support` on DfE Slack.
