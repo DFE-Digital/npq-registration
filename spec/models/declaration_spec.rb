@@ -782,6 +782,20 @@ RSpec.describe Declaration, type: :model do
         expect(declarations.first.state).to eq("payable")
       end
     end
+
+    describe ".not_voided" do
+      let(:not_voided_declarations) { Declaration.states.values.excluding("voided").map { |state| create(:declaration, state:) } }
+      let(:voided_declaration) { create(:declaration, :voided) }
+
+      before do
+        not_voided_declarations
+        voided_declaration
+      end
+
+      it "returns declarations that are not voided" do
+        expect(described_class.not_voided).to match_array(not_voided_declarations)
+      end
+    end
   end
 
   describe "#duplicate_declarations" do

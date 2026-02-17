@@ -42,6 +42,17 @@ RSpec.describe Applications::ChangeCohort, type: :model do
       end
     end
 
+    context "when the application has voided declarations" do
+      let(:application) { create(:application, cohort: cohort_2021, schedule: create(:schedule, :npq_leadership_autumn, cohort: cohort_2021)) }
+
+      before do
+        create(:declaration, :voided, application:)
+        create(:schedule, :npq_leadership_autumn, cohort: new_cohort)
+      end
+
+      it { is_expected.to be_valid }
+    end
+
     context "when the application has a schedule" do
       let(:application) { create(:application, cohort: cohort_2021, schedule: create(:schedule, :npq_leadership_autumn, cohort: cohort_2021)) }
 
