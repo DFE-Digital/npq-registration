@@ -92,10 +92,10 @@ RSpec.describe Statements::DeclarationsCalculator do
     context "when the milestone declaration type is: started" do
       let(:declaration_type) { "started" }
 
+      before { started_milestone }
+
       context "when the statement has a started milestone" do
-        before do
-          create(:milestone_statement, milestone: started_milestone, statement:)
-        end
+        before { create(:milestone_statement, milestone: started_milestone, statement:) }
 
         it "returns the accepted applications for the statement's cohort" do
           expect(expected_applications).to match_array(Application.accepted.where(cohort: statement.cohort, lead_provider:).all)
@@ -120,8 +120,18 @@ RSpec.describe Statements::DeclarationsCalculator do
         create(:declaration, declaration_type: "started", application: application_for_another_lead_provider, lead_provider: other_lead_provider, cohort:, statement:)
       end
 
-      it "returns the started active applications in the statement's cohort" do
-        expect(expected_applications).to contain_exactly(started_application)
+      context "when the statement has a retained-1 milestone" do
+        before { create(:milestone_statement, milestone: retained_1_milestone_leadership, statement:) }
+
+        it "returns the started active applications in the statement's cohort" do
+          expect(expected_applications).to contain_exactly(started_application)
+        end
+      end
+
+      context "when the statement does not have a retained-1 milestone" do
+        it "returns zero" do
+          expect(expected_applications).to be_empty
+        end
       end
     end
 
@@ -135,13 +145,25 @@ RSpec.describe Statements::DeclarationsCalculator do
         create(:declaration, declaration_type: "retained-1", application: deferred_leadership_retained_1_application, lead_provider:, cohort:, statement:)
       end
 
-      it "returns the retained-1 active applications in the statement's cohort" do
-        expect(expected_applications).to contain_exactly(leadership_retained_1_application)
+      context "when the statement has a retained-2 milestone" do
+        before { create(:milestone_statement, milestone: retained_2_milestone_leadership, statement:) }
+
+        it "returns the retained-1 active applications in the statement's cohort" do
+          expect(expected_applications).to contain_exactly(leadership_retained_1_application)
+        end
+      end
+
+      context "when the statement does not have a retained-2 milestone" do
+        it "returns zero" do
+          expect(expected_applications).to be_empty
+        end
       end
     end
 
     context "when the milestone declaration type is: completed" do
       let(:declaration_type) { "completed" }
+
+      before { completed_milestone_specialist }
 
       context "when there is an application with a schedule that has a retained-2 milestone" do
         let(:completed_leadership_application) do
@@ -154,8 +176,18 @@ RSpec.describe Statements::DeclarationsCalculator do
         context "and a retained-2 declaration" do
           before { create(:declaration, declaration_type: "retained-2", application: completed_leadership_application, lead_provider:, cohort:, statement:) }
 
-          it "the application is included in the expected applications" do
-            expect(expected_applications).to contain_exactly(completed_leadership_application)
+          context "when the statement has a completed milestone" do
+            before { create(:milestone_statement, milestone: completed_milestone_specialist, statement:) }
+
+            it "the application is included in the expected applications" do
+              expect(expected_applications).to contain_exactly(completed_leadership_application)
+            end
+          end
+
+          context "when the statement does not have a completed milestone" do
+            it "returns zero" do
+              expect(expected_applications).to be_empty
+            end
           end
         end
 
@@ -178,8 +210,18 @@ RSpec.describe Statements::DeclarationsCalculator do
 
         before { create(:declaration, declaration_type: "retained-1", application: completed_specialist_application, lead_provider:, cohort:, statement:) }
 
-        it "the application is included in the expected applications" do
-          expect(expected_applications).to contain_exactly(completed_specialist_application)
+        context "when the statement has a completed milestone" do
+          before { create(:milestone_statement, milestone: completed_milestone_specialist, statement:) }
+
+          it "the application is included in the expected applications" do
+            expect(expected_applications).to contain_exactly(completed_specialist_application)
+          end
+        end
+
+        context "when the statement does not have a completed milestone" do
+          it "returns zero" do
+            expect(expected_applications).to be_empty
+          end
         end
       end
     end
@@ -320,7 +362,7 @@ RSpec.describe Statements::DeclarationsCalculator do
       it "returns the expected applications minus received declarations count plus the remaining started and retained-1 declarations count" do
         expected_applications_count = 2
         received_declarations_count = 1
-        remaining_started_and_retained_1_declarations_count = 6
+        remaining_started_and_retained_1_declarations_count = 7
 
         expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_and_retained_1_declarations_count)
       end
@@ -346,7 +388,7 @@ RSpec.describe Statements::DeclarationsCalculator do
         it "returns the expected applications minus received declarations count plus the remaining started, retained-1 and retained-2 declarations count" do
           expected_applications_count = 2
           received_declarations_count = 1
-          remaining_started_retained_1_and_retained_2_declarations_count = 7
+          remaining_started_retained_1_and_retained_2_declarations_count = 9
           expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_retained_1_and_retained_2_declarations_count)
         end
       end
@@ -364,7 +406,7 @@ RSpec.describe Statements::DeclarationsCalculator do
         it "returns the expected applications minus received declarations count plus the remaining started, retained-1 and retained-2 declarations count" do
           expected_applications_count = 2
           received_declarations_count = 1
-          remaining_started_retained_1_and_retained_2_declarations_count = 7
+          remaining_started_retained_1_and_retained_2_declarations_count = 10
           expect(subject).to eq(expected_applications_count - received_declarations_count + remaining_started_retained_1_and_retained_2_declarations_count)
         end
       end
@@ -399,6 +441,19 @@ RSpec.describe Statements::DeclarationsCalculator do
         total_expected_applications = 4
         declarations_received_for_milestones_on_statement = 2 # i.e. declarations for "started" and "retained-2" milestones only
         expect(subject).to eq(total_expected_applications - declarations_received_for_milestones_on_statement)
+      end
+
+      context "when there have been received declarations for milestones that are not on this statement" do
+        before do
+          create(:declaration, :eligible, declaration_type: "retained-1", lead_provider:, cohort:, statement:)
+        end
+
+        it "ignores those declarations and still returns the total expected applications minus the number of declarations received for milestones on this statement" do
+          expect(Declaration.count).to eq 5
+          total_expected_applications = 4
+          declarations_received_for_milestones_on_statement = 2 # i.e. declarations for "started" and "retained-2" milestones only
+          expect(subject).to eq(total_expected_applications - declarations_received_for_milestones_on_statement)
+        end
       end
     end
   end
