@@ -26,7 +26,7 @@ module FundingHelper
 private
 
   def funding_eligibility_calculator(application)
-    FundingEligibility.new(
+    FundingEligibility.new_from_query_store(
       course: application.course,
       institution: institution(source: application.raw_application_data["institution_identifier"], application:),
       approved_itt_provider: application.itt_provider.present?,

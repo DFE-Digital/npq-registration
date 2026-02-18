@@ -48,7 +48,7 @@ module Questionnaires
   private
 
     def funding_eligibility
-      FundingEligibility.new(
+      FundingEligibility.new_from_query_store(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,

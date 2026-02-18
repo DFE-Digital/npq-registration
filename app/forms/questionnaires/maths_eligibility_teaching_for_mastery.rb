@@ -53,7 +53,7 @@ module Questionnaires
   private
 
     def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new(
+      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,

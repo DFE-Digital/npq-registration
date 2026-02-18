@@ -61,16 +61,40 @@ class FundingEligibility
            :work_setting,
            to: :query_store
 
+  class << self
+    def new_from_query_store(institution:,
+                             course:,
+                             inside_catchment:,
+                             trn:,
+                             get_an_identity_id:,
+                             lead_mentor_for_accredited_itt_provider: false,
+                             approved_itt_provider: false,
+                             lead_mentor: false,
+                             new_headteacher: false,
+                             query_store: nil)
+      new(institution:,
+          course:,
+          inside_catchment:,
+          trn:,
+          get_an_identity_id:,
+          lead_mentor_for_accredited_itt_provider:,
+          approved_itt_provider:,
+          lead_mentor:,
+          new_headteacher:,
+          query_store:)
+    end
+  end
+
   def initialize(institution:,
                  course:,
                  inside_catchment:,
                  trn:,
                  get_an_identity_id:,
-                 lead_mentor_for_accredited_itt_provider: false,
-                 approved_itt_provider: false,
-                 lead_mentor: false,
-                 new_headteacher: false,
-                 query_store: nil)
+                 lead_mentor_for_accredited_itt_provider:,
+                 approved_itt_provider:,
+                 lead_mentor:,
+                 new_headteacher:,
+                 query_store:)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
