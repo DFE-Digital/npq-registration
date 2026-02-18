@@ -56,7 +56,6 @@ class FundingEligibility
   delegate :childminder?,
            :employment_type,
            :lead_mentor_for_accredited_itt_provider?,
-           :new_headteacher?,
            :referred_by_return_to_teaching_adviser?,
            :work_setting,
            to: :query_store
@@ -70,7 +69,7 @@ class FundingEligibility
                              lead_mentor_for_accredited_itt_provider: false,
                              approved_itt_provider: false,
                              lead_mentor: false,
-                             new_headteacher: false,
+                             new_headteacher: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
                              query_store: nil)
       new(institution:,
           course:,
@@ -80,7 +79,7 @@ class FundingEligibility
           lead_mentor_for_accredited_itt_provider:,
           approved_itt_provider:,
           lead_mentor:,
-          new_headteacher:,
+          new_headteacher: query_store.new_headteacher?,
           query_store:)
     end
   end
@@ -125,7 +124,7 @@ class FundingEligibility
       return PREVIOUSLY_FUNDED if previously_funded?
 
       if course.ehco?
-        return FUNDED_ELIGIBILITY_RESULT if new_headteacher?
+        return FUNDED_ELIGIBILITY_RESULT if @new_headteacher
 
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
       end
