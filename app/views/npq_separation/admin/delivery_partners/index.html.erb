@@ -13,7 +13,14 @@
         :q,
         value: params[:q],
         label: { text: "Find a delivery partner", size: "m" },
-        hint: { text: "Enter part or all of the delivery partner’s name, or the entire ID with or without hyphens.", size: "s" },
+        hint: -> {
+          tag.div(class: "govuk-hint") do
+            concat "Enter part or all of the delivery partner’s name, or the entire ID with or without hyphens."
+            concat tag.br
+            concat "Similarly named delivery partners will be shown."
+          end
+        }
+        # hint: { text: "Enter part or all of the delivery partner’s name, or the entire ID with or without hyphens. Similarly named delivery partners will be shown.", size: "s" },
       )
     %>
     <%= f.govuk_submit "Search" %>

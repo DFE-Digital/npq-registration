@@ -1,5 +1,6 @@
 require "pagy/extras/countless"
 require "pagy/extras/overflow"
+require "pagy/extras/array"
 
 Pagy::DEFAULT[:size] = [1, 1, 1, 1]
 Pagy::DEFAULT[:limit] = 25

@@ -1,5 +1,7 @@
 class School < ApplicationRecord
   include PgSearch::Model
+  include SynonymSearchable
+
   PRIMARY_PHASE = "Primary".freeze
   MIDDLE_DEEMED_PRIMARY_PHASE = "Middle deemed primary".freeze
 
@@ -36,11 +38,6 @@ class School < ApplicationRecord
     "46" => "Academy 16 to 19 sponsor led",
   }.freeze
 
-  NAME_SYNONYMS = {
-    "saint" => "st",
-    "st" => "saint",
-  }.freeze
-
   NAME_SEARCH_LIMIT = 100
 
   pg_search_scope :search_by_fields,
@@ -68,14 +65,7 @@ class School < ApplicationRecord
   end
 
   def self.search_by_name(name)
-    scope = search_by_fields(name).limit(NAME_SEARCH_LIMIT)
-    NAME_SYNONYMS.find do |key, value|
-      if name&.downcase&.match?(%r{\b#{key}\b}i)
-        synonym_name = name.downcase.gsub(key, value)
-        return scope + search_by_fields(synonym_name).limit(NAME_SEARCH_LIMIT)
-      end
-    end
-    scope
+    search_with_synonyms(name, :search_by_fields)
   end
 
   def display_name

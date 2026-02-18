@@ -1,5 +1,8 @@
 class DeliveryPartner < ApplicationRecord
-  scope :name_similar_to, ->(name) { wildcard_search(name).or(levenshtein_name_search(name)).where.not(name:) }
+  include SynonymSearchable
+
+  scope :name_similar_to, ->(name) { name_equal_or_similar_to(name).where.not(name:) }
+  scope :name_equal_or_similar_to, ->(name) { wildcard_search(name).or(levenshtein_name_search(name)) }
   scope :levenshtein_name_search, ->(name) { where("levenshtein(name, ?) <= 4", name) }
   scope :contains, ->(name) { where("name ILIKE ?", "%#{name}%") }
   scope :begins_with, ->(name) { where("name ILIKE ?", "#{name}%") }

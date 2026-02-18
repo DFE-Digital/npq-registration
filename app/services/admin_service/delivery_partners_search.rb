@@ -6,7 +6,9 @@ class AdminService::DeliveryPartnersSearch
   end
 
   def call
-    default_scope.contains(q).or(default_scope.where(ecf_id: q))
+    return default_scope if q.blank?
+
+    default_scope.search_with_synonyms(q, :name_equal_or_similar_to) + default_scope.where(ecf_id: q)
   end
 
 private
