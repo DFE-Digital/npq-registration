@@ -48,13 +48,8 @@ class FundingEligibility
               :course,
               :trn,
               :approved_itt_provider,
-              :lead_mentor,
               :get_an_identity_id,
-              :lead_mentor_for_accredited_itt_provider,
-              :query_store
-
-  delegate :lead_mentor_for_accredited_itt_provider?,
-           to: :query_store
+              :lead_mentor_for_accredited_itt_provider
 
   class << self
     def new_from_query_store(institution:,
@@ -62,9 +57,9 @@ class FundingEligibility
                              inside_catchment:,
                              trn:,
                              get_an_identity_id:,
-                             lead_mentor_for_accredited_itt_provider: false,
+                             lead_mentor_for_accredited_itt_provider: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
                              approved_itt_provider: false,
-                             lead_mentor: false,
+                             lead_mentor: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
                              new_headteacher: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
                              query_store: nil)
       new(institution:,
@@ -72,15 +67,13 @@ class FundingEligibility
           inside_catchment:,
           trn:,
           get_an_identity_id:,
-          lead_mentor_for_accredited_itt_provider:,
+          lead_mentor_for_accredited_itt_provider: query_store.lead_mentor_for_accredited_itt_provider?,
           approved_itt_provider:,
-          lead_mentor:,
           new_headteacher: query_store.new_headteacher?,
           employment_type: query_store.employment_type,
           childminder: query_store.childminder?,
           referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
-          work_setting: query_store.work_setting,
-          query_store:)
+          work_setting: query_store.work_setting)
     end
   end
 
@@ -91,19 +84,16 @@ class FundingEligibility
                  get_an_identity_id:,
                  lead_mentor_for_accredited_itt_provider:,
                  approved_itt_provider:,
-                 lead_mentor:,
                  new_headteacher:,
                  employment_type:,
                  childminder:,
                  referred_by_return_to_teaching_adviser:,
-                 work_setting:,
-                 query_store:)
+                 work_setting:)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
     @new_headteacher = new_headteacher
     @approved_itt_provider = approved_itt_provider
-    @lead_mentor = lead_mentor
     @get_an_identity_id = get_an_identity_id
     @trn = trn
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
@@ -111,7 +101,6 @@ class FundingEligibility
     @childminder = childminder
     @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
     @work_setting = work_setting
-    @query_store = query_store
   end
 
   def funded?
@@ -202,7 +191,7 @@ private
   end
 
   def another_setting_policy
-    if lead_mentor_for_accredited_itt_provider?
+    if @lead_mentor_for_accredited_itt_provider
       if course.npqltd?
         return FUNDED_ELIGIBILITY_RESULT if approved_itt_provider
 
