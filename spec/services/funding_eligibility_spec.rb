@@ -2,15 +2,18 @@ require "rails_helper"
 
 RSpec.describe FundingEligibility do
   subject(:funding_eligibility) do
-    described_class.new_from_query_store(institution:,
-                                         course:,
-                                         inside_catchment:,
-                                         trn: "1234567",
-                                         get_an_identity_id: SecureRandom.uuid,
-                                         approved_itt_provider:,
-                                         lead_mentor: nil,
-                                         new_headteacher: nil,
-                                         query_store:)
+    described_class.new(institution:,
+                        course:,
+                        inside_catchment:,
+                        trn: "1234567",
+                        get_an_identity_id: SecureRandom.uuid,
+                        lead_mentor_for_accredited_itt_provider: (employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]),
+                        approved_itt_provider:,
+                        new_headteacher: (new_headteacher == "yes"),
+                        employment_type:,
+                        childminder: (kind_of_nursery == "childminder"),
+                        referred_by_return_to_teaching_adviser: (referred_by_return_to_teaching_adviser == "yes"),
+                        work_setting:)
   end
 
   let(:store) do
