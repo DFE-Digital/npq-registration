@@ -54,7 +54,6 @@ class FundingEligibility
               :query_store
 
   delegate :lead_mentor_for_accredited_itt_provider?,
-           :work_setting,
            to: :query_store
 
   class << self
@@ -80,6 +79,7 @@ class FundingEligibility
           employment_type: query_store.employment_type,
           childminder: query_store.childminder?,
           referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
+          work_setting: query_store.work_setting,
           query_store:)
     end
   end
@@ -96,6 +96,7 @@ class FundingEligibility
                  employment_type:,
                  childminder:,
                  referred_by_return_to_teaching_adviser:,
+                 work_setting:,
                  query_store:)
     @institution = institution
     @course = course
@@ -109,6 +110,7 @@ class FundingEligibility
     @employment_type = employment_type
     @childminder = childminder
     @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
+    @work_setting = work_setting
     @query_store = query_store
   end
 
@@ -135,7 +137,7 @@ class FundingEligibility
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
       end
 
-      case work_setting
+      case @work_setting
       when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
       when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
       when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
@@ -191,7 +193,7 @@ private
     return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
 
     if course.only_pp50?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(@work_setting)
 
       return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
     end
