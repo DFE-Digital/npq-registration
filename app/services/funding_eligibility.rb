@@ -54,7 +54,6 @@ class FundingEligibility
               :query_store
 
   delegate :lead_mentor_for_accredited_itt_provider?,
-           :referred_by_return_to_teaching_adviser?,
            :work_setting,
            to: :query_store
 
@@ -80,6 +79,7 @@ class FundingEligibility
           new_headteacher: query_store.new_headteacher?,
           employment_type: query_store.employment_type,
           childminder: query_store.childminder?,
+          referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
           query_store:)
     end
   end
@@ -95,6 +95,7 @@ class FundingEligibility
                  new_headteacher:,
                  employment_type:,
                  childminder:,
+                 referred_by_return_to_teaching_adviser:,
                  query_store:)
     @institution = institution
     @course = course
@@ -107,6 +108,7 @@ class FundingEligibility
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
     @employment_type = employment_type
     @childminder = childminder
+    @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
     @query_store = query_store
   end
 
@@ -236,7 +238,7 @@ private
   end
 
   def other_settings_policy
-    if referred_by_return_to_teaching_adviser?
+    if @referred_by_return_to_teaching_adviser
       REFERRED_BY_RETURN_TO_TEACHING_ADVISER
     else
       INELIGIBLE_ESTABLISHMENT_TYPE
