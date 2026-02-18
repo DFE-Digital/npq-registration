@@ -54,7 +54,6 @@ class FundingEligibility
               :query_store
 
   delegate :childminder?,
-           :employment_type,
            :lead_mentor_for_accredited_itt_provider?,
            :referred_by_return_to_teaching_adviser?,
            :work_setting,
@@ -80,6 +79,7 @@ class FundingEligibility
           approved_itt_provider:,
           lead_mentor:,
           new_headteacher: query_store.new_headteacher?,
+          employment_type: query_store.employment_type,
           query_store:)
     end
   end
@@ -93,6 +93,7 @@ class FundingEligibility
                  approved_itt_provider:,
                  lead_mentor:,
                  new_headteacher:,
+                 employment_type:,
                  query_store:)
     @institution = institution
     @course = course
@@ -103,6 +104,7 @@ class FundingEligibility
     @get_an_identity_id = get_an_identity_id
     @trn = trn
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
+    @employment_type = employment_type
     @query_store = query_store
   end
 
@@ -204,6 +206,14 @@ private
       return NOT_LEAD_MENTOR_COURSE
     end
 
+    if eligible_employment_type? && eligible_course?
+      SUBJECT_TO_REVIEW
+    else
+      INELIGIBLE_ESTABLISHMENT_TYPE
+    end
+  end
+
+  def eligible_employment_type?
     eligible_employment_types = [
       Application.employment_types[:local_authority_virtual_school],
       Application.employment_types[:hospital_school],
@@ -211,16 +221,16 @@ private
       Application.employment_types[:local_authority_supply_teacher],
     ]
 
+    @employment_type.in?(eligible_employment_types)
+  end
+
+  def eligible_course?
     eligible_course_identifiers = %w[
       npq-senco
       npq-headship
     ]
 
-    if employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
-      SUBJECT_TO_REVIEW
-    else
-      INELIGIBLE_ESTABLISHMENT_TYPE
-    end
+    course.identifier.in?(eligible_course_identifiers)
   end
 
   def other_settings_policy
