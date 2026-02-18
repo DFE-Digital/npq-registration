@@ -53,8 +53,7 @@ class FundingEligibility
               :lead_mentor_for_accredited_itt_provider,
               :query_store
 
-  delegate :childminder?,
-           :lead_mentor_for_accredited_itt_provider?,
+  delegate :lead_mentor_for_accredited_itt_provider?,
            :referred_by_return_to_teaching_adviser?,
            :work_setting,
            to: :query_store
@@ -80,6 +79,7 @@ class FundingEligibility
           lead_mentor:,
           new_headteacher: query_store.new_headteacher?,
           employment_type: query_store.employment_type,
+          childminder: query_store.childminder?,
           query_store:)
     end
   end
@@ -94,6 +94,7 @@ class FundingEligibility
                  lead_mentor:,
                  new_headteacher:,
                  employment_type:,
+                 childminder:,
                  query_store:)
     @institution = institution
     @course = course
@@ -105,6 +106,7 @@ class FundingEligibility
     @trn = trn
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
     @employment_type = employment_type
+    @childminder = childminder
     @query_store = query_store
   end
 
@@ -162,7 +164,7 @@ private
       return FUNDED_ELIGIBILITY_RESULT
     end
 
-    if childminder?
+    if @childminder
       if course.eyl?
         return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
 
