@@ -49,7 +49,7 @@ module Applications
     end
 
     def declarations_present
-      errors.add(:cohort_id, :declarations_present) if application.declarations.any?
+      errors.add(:cohort_id, :declarations_present) if application.declarations.not_voided.any?
     end
 
     def new_schedule
