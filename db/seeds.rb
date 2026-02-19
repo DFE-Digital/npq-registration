@@ -69,6 +69,7 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_users.rb",
   "add_applications.rb",
   "add_statements.rb",
+  "add_milestones.rb",
   "add_contracts.rb",
   "add_declarations.rb",
   "add_api_tokens.rb",
