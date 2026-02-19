@@ -12,7 +12,9 @@ class AdminService::DeliveryPartnersSearch
 
     return search_by_id if search_by_id.any?
 
-    default_scope.search_with_synonyms(q, :name_equal_or_similar_to)
+    default_scope.search_with_synonyms(q) do |name|
+      default_scope.name_equal_or_similar_to(name)
+    end
   end
 
 private

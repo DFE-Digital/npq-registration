@@ -114,17 +114,17 @@ RSpec.describe DeliveryPartner, type: :model do
       end
 
       it "can find 'saint' when searching for 'st'" do
-        expect(described_class.search_with_synonyms("st mary", :name_similar_to))
+        expect(described_class.search_with_synonyms("st mary") { |name| described_class.name_similar_to(name) })
           .to include(st_delivery_partner, saint_delivery_partner)
       end
 
       it "can find 'st' when searching for 'saint'" do
-        expect(described_class.search_with_synonyms("saint mary", :name_similar_to))
+        expect(described_class.search_with_synonyms("saint mary") { |name| described_class.name_similar_to(name) })
           .to include(st_delivery_partner, saint_delivery_partner)
       end
 
       it "does not return matches where 'st' is not a whole word" do
-        expect(described_class.search_with_synonyms("some first", :name_similar_to))
+        expect(described_class.search_with_synonyms("some first") { |name| described_class.name_similar_to(name) })
           .not_to include(delivery_partner_containing_st)
       end
     end

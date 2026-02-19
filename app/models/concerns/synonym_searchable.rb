@@ -7,17 +7,21 @@ module SynonymSearchable
   }.freeze
 
   included do
-    def self.search_with_synonyms(name, search_method_name)
-      search_method = method(search_method_name)
-      scope = search_method.call(name)
-      NAME_SYNONYMS.find do |key, value|
+    def self.search_with_synonyms(name)
+      scope = yield(name)
+
+      synonym_scopes = NAME_SYNONYMS.map { |key, value|
         next unless name&.downcase&.match?(%r{\b#{key}\b}i)
 
-        synonym_name = name.downcase.gsub(key, value)
-        union = Arel::Nodes::Union.new(scope.arel, search_method.call(synonym_name).arel)
-        return from(Arel::Nodes::TableAlias.new(union, table_name))
+        name_synonym = name.downcase.gsub(key, value)
+        yield(name_synonym)
+      }.compact
+
+      union = synonym_scopes.reduce(scope.arel) do |combined_scope, synonym_scope|
+        Arel::Nodes::Union.new(combined_scope, synonym_scope.arel)
       end
-      scope
+
+      from(Arel::Nodes::TableAlias.new(union, table_name))
     end
   end
 end

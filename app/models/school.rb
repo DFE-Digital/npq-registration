@@ -65,7 +65,9 @@ class School < ApplicationRecord
   end
 
   def self.search_by_name(name)
-    search_with_synonyms(name, :search_by_fields)
+    search_with_synonyms(name) do |name|
+      search_by_fields(name).limit(NAME_SEARCH_LIMIT)
+    end
   end
 
   def display_name
