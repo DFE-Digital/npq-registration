@@ -1,7 +1,8 @@
 module Omniauth
   module Strategies
     class TraOpenidConnect < OmniAuth::Strategies::OpenIDConnect
-      option :name, :tra_openid_connect
+      NAME = :tra_openid_connect
+      option :name, NAME
       option :pkce, true
       option :discovery, true
 

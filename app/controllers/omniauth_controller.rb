@@ -1,5 +1,7 @@
 class OmniauthController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: %i[tra_openid_connect teacher_auth]
+  skip_before_action :verify_authenticity_token, only: [
+    Omniauth::Strategies::TraOpenidConnect::NAME, Omniauth::Strategies::TeacherAuth::NAME
+  ]
   skip_before_action :authenticate_user!
 
   def tra_openid_connect
