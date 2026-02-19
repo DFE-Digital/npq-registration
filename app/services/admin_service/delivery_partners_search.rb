@@ -8,7 +8,11 @@ class AdminService::DeliveryPartnersSearch
   def call
     return default_scope if q.blank?
 
-    default_scope.search_with_synonyms(q, :name_equal_or_similar_to) + default_scope.where(ecf_id: q)
+    search_by_id = default_scope.where(ecf_id: q)
+
+    return search_by_id if search_by_id.any?
+
+    default_scope.search_with_synonyms(q, :name_equal_or_similar_to)
   end
 
 private

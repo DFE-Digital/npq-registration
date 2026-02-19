@@ -5,7 +5,7 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   before_action :set_continue_form, only: %i[create continue update]
 
   def index
-    @pagy, @delivery_partners = pagy_array(scope, limit: 10)
+    @pagy, @delivery_partners = pagy(scope, limit: 10)
   end
 
   def new
