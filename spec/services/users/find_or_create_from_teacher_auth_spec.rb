@@ -42,7 +42,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
 
     context "when user's details have updated" do
-      it "udpates the user" do
+      it "updates the user" do
         subject
         expect(user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
       end
@@ -84,7 +84,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
 
     context "when user's details have updated" do
-      it "udpates the user" do
+      it "updates the user" do
         subject
         expect(most_recently_updated_user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
       end
@@ -98,7 +98,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       before { existing_user }
 
       context "when users details have updated" do
-        it "udpates the user" do
+        it "updates the user" do
           subject
           expect(existing_user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
         end

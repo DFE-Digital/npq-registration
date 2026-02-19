@@ -12,7 +12,7 @@ module AdminService
 
     def get_an_identity_applications_created
       @get_an_identity_applications_created ||= applications_since_start_time.joins(:user)
-                  .where(users: { provider: :tra_openid_connect })
+                  .where(users: { provider: Omniauth::Strategies::TraOpenidConnect::NAME })
                   .count
     end
 
@@ -27,7 +27,7 @@ module AdminService
     end
 
     def get_an_identity_users_count
-      @get_an_identity_users_count ||= users_since_start_time.where(provider: :tra_openid_connect).count
+      @get_an_identity_users_count ||= users_since_start_time.where(provider: Omniauth::Strategies::TraOpenidConnect::NAME).count
     end
 
     def get_an_identity_applications_created_percentage
