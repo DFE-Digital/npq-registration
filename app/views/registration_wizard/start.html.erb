@@ -74,5 +74,14 @@
       %>
     <% end %>
 
+    <% if Rails.configuration.x.teacher_auth.enabled %>
+      <%=
+        render(
+          'shared/teacher_auth/redirect_button',
+          button_text: "Sign in with Teacher Auth"
+        )
+      %>
+    <% end %>
+
   </div>
 </div>
