@@ -49,7 +49,13 @@ class FundingEligibility
               :trn,
               :approved_itt_provider,
               :get_an_identity_id,
-              :lead_mentor_for_accredited_itt_provider
+              :lead_mentor_for_accredited_itt_provider,
+              :inside_catchment,
+              :new_headteacher,
+              :employment_type,
+              :childminder,
+              :work_setting,
+              :referred_by_return_to_teaching_adviser
 
   class << self
     def new_from_query_store(institution:,
