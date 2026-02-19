@@ -9,15 +9,17 @@ module Statements
     attribute :statement
     attribute :deadline_date
 
-    validates :statement, presence: true
+    validates :statement, presence: true, valid: true
     validates :deadline_date, presence: true
 
     validate :deadline_date_not_after_payment_date
 
     def change
+      statement.deadline_date = deadline_date
+
       return false if invalid?
 
-      statement.update(deadline_date:) # rubocop:disable Rails/SaveBang - return value is used by caller
+      statement.save # rubocop:disable Rails/SaveBang - return value is used by caller
     end
 
   private
