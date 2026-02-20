@@ -20,6 +20,15 @@ FactoryBot.define do
       provider { "tra_openid_connect" }
     end
 
+    trait :with_teacher_auth do
+      transient do
+        teacher_auth_uid { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
+      end
+
+      uid { teacher_auth_uid }
+      provider { "teacher_auth" }
+    end
+
     trait :with_random_name do
       full_name { Faker::Name.name }
     end

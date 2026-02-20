@@ -1,7 +1,9 @@
 module Omniauth
   module Strategies
     class TeacherAuth < OmniAuth::Strategies::OpenIDConnect
-      option :name, :teacher_auth
+      NAME = :teacher_auth
+
+      option :name, NAME
       option :pkce, true
       option :discovery, true
       option :send_scope_to_token_endpoint, false
