@@ -5,6 +5,7 @@ module Statements
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
+    include ModelAttributeUpdatable
 
     attribute :statement
     attribute :deadline_date
@@ -15,11 +16,7 @@ module Statements
     validate :deadline_date_not_after_payment_date
 
     def change
-      statement.deadline_date = deadline_date
-
-      return false if invalid?
-
-      statement.save # rubocop:disable Rails/SaveBang - return value is used by caller
+      update_and_validate_attributes(statement, deadline_date: deadline_date)
     end
 
   private
