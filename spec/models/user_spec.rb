@@ -80,6 +80,33 @@ RSpec.describe User do
     }
   end
 
+  describe "previous_names" do
+    it "defaults to an empty array" do
+      user = create(:user)
+      expect(user.previous_names).to eq([])
+    end
+
+    it "stores and retrieves previous names" do
+      user = create(:user, :with_previous_names)
+      expect(user.reload.previous_names).to eq(["Sarah Johnson", "Sarah Ann Williams"])
+    end
+
+    it "handles case-insensitive CITEXT" do
+      user = create(:user, previous_names: ["Sarah JOHNSON"])
+      expect(user.reload.previous_names).to eq(["Sarah JOHNSON"])
+    end
+
+    it "tracks changes with paper_trail" do
+      with_versioning do
+        user = create(:user, previous_names: [])
+        user.update!(previous_names: ["Sarah Johnson"])
+
+        version = user.versions.last
+        expect(version.object_changes["previous_names"]).to eq([[], ["Sarah Johnson"]])
+      end
+    end
+  end
+
   describe "touch_significantly_updated_at" do
     let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
     let(:significant_change) { { full_name: "New Name" } }
@@ -174,6 +201,21 @@ RSpec.describe User do
     it "calls Users::FindOrCreateFromProviderData service" do
       expect(service).to receive(:call)
       described_class.find_or_create_from_provider_data(provider_data, feature_flag_id: feature_flag_id)
+    end
+  end
+
+  describe ".find_or_create_from_teacher_auth" do
+    let(:email) { "test@example.com" }
+    let(:full_name) { "John Doe" }
+    let(:previous_names) { ["Jane Doe"] }
+    let(:trn) { "1234567" }
+    let(:service) { instance_double(Users::FindOrCreateFromTeacherAuth) }
+
+    before { allow(Users::FindOrCreateFromTeacherAuth).to receive(:new).with(email:, full_name:, previous_names:, trn:) { service } }
+
+    it "calls Users::FindOrCreateFromTeacherAuth service" do
+      expect(service).to receive(:call)
+      described_class.find_or_create_from_teacher_auth(email:, full_name:, previous_names:, trn:)
     end
   end
 

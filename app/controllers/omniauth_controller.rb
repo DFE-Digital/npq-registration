@@ -58,6 +58,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
 
     result = TeacherRecordSystem::FetchPerson.fetch(access_token:)
 
+    User.find_or_create_from_teacher_auth(
+      email: provider_data.info.email,
+      full_name: result.full_name,
+      previous_names: result.previous_names,
+      trn: provider_data.extra.raw_info.trn,
+    )
+
     flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
     flash[:success] += ", Full name: #{result.full_name}"
     flash[:success] += ", Previous names: #{result.previous_names.join(', ')}" if result.previous_names.any?
