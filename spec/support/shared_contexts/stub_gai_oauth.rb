@@ -2,6 +2,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
   let(:user_first_name) { "John" }
   let(:user_last_name) { "Doe" }
   let(:user_preferred_name) { "#{user_first_name} #{user_last_name}" }
+  let(:user_previous_names) { [] }
   let(:user_full_name) { user_preferred_name || "#{user_first_name} #{user_last_name}" }
   let(:user_email) { "user@example.com" }
   let(:user_uid) { SecureRandom.uuid }
@@ -57,6 +58,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
       "email" => user_email,
       "full_name" => user_full_name,
       "preferred_name" => user_preferred_name,
+      "previous_names" => user_previous_names,
       "provider" => "tra_openid_connect",
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => user_trn,
