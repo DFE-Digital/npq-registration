@@ -64,6 +64,10 @@ class User < ApplicationRecord
     Users::FindOrCreateFromProviderData.new(provider_data: provider_data, feature_flag_id: feature_flag_id).call
   end
 
+  def self.find_or_create_from_teacher_auth(email:, full_name:, previous_names:, trn:)
+    Users::FindOrCreateFromTeacherAuth.new(email:, full_name:, previous_names:, trn:).call
+  end
+
   def get_an_identity_provider?
     provider == "tra_openid_connect"
   end

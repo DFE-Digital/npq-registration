@@ -161,7 +161,6 @@
   - national_insurance_number
   - raw_tra_provider_data
   - archived_email
-  - previous_names
   :flipper_gates:
   - id
   - feature_key

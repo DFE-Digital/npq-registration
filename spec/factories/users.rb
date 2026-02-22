@@ -29,6 +29,10 @@ FactoryBot.define do
       trn_lookup_status { "Found" }
     end
 
+    trait :with_previous_names do
+      previous_names { ["Sarah Johnson", "Sarah Ann Williams"] }
+    end
+
     trait :with_application do
       transient do
         lead_provider { LeadProvider.first }
