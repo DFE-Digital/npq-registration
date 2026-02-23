@@ -105,12 +105,12 @@ RSpec.describe DeliveryPartner, type: :model do
     describe ".search_with_synonyms" do
       let(:st_delivery_partner) { create(:delivery_partner, name: "St Matthew's Research School") }
       let(:saint_delivery_partner) { create(:delivery_partner, name: "Saint Matthew's Research School") }
-      let(:delivery_partner_containing_st) { create(:school, name: "All Saints RC College") }
+      let(:delivery_partner_containing_saint_not_as_a_whole_word) { create(:delivery_partner, name: "Saint Saintanley") }
 
       before do
         st_delivery_partner
         saint_delivery_partner
-        delivery_partner_containing_st
+        delivery_partner_containing_saint_not_as_a_whole_word
       end
 
       it "can find 'saint' when searching for 'st'" do
@@ -123,9 +123,14 @@ RSpec.describe DeliveryPartner, type: :model do
           .to include(st_delivery_partner, saint_delivery_partner)
       end
 
-      it "does not return matches where 'st' is not a whole word" do
+      it "does not return matches where 'st' in the search term is not a whole word" do
         expect(described_class.search_with_synonyms("some first") { |name| described_class.name_similar_to(name) })
-          .not_to include(delivery_partner_containing_st)
+          .not_to include(saint_delivery_partner)
+      end
+
+      it "does not overmatch by replacing 'st' for 'saint' where 'st' in the delivery partner name is not a whole word" do
+        expect(described_class.search_with_synonyms("St Stanley") { |name| described_class.contains(name) })
+          .not_to include(delivery_partner_containing_saint_not_as_a_whole_word)
       end
     end
   end

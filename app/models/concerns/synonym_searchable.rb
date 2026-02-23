@@ -11,9 +11,10 @@ module SynonymSearchable
       scope = yield(name)
 
       synonym_scopes = NAME_SYNONYMS.map { |key, value|
-        next unless name&.downcase&.match?(%r{\b#{key}\b}i)
+        regex = %r{\b#{key}\b}i
+        next unless name&.downcase&.match?(regex)
 
-        name_synonym = name.downcase.gsub(key, value)
+        name_synonym = name.downcase.gsub(regex, value)
         yield(name_synonym)
       }.compact
 
