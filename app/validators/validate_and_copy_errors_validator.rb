@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ValidValidator < ActiveModel::EachValidator
+class ValidateAndCopyErrorsValidator < ActiveModel::EachValidator
   def validate_each(record, _attribute, value)
     return unless value
 

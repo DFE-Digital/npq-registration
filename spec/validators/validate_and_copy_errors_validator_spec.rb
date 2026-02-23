@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe ValidValidator do
+RSpec.describe ValidateAndCopyErrorsValidator do
   before do
     stub_const("TestModel", Class.new).class_eval do
       include ActiveModel::Validations
       attr_accessor :model_attribute
 
-      validates :model_attribute, valid: true
+      validates :model_attribute, validate_and_copy_errors: true
 
       def initialize(model_attribute:)
         @model_attribute = model_attribute

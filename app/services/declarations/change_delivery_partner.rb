@@ -9,7 +9,7 @@ module Declarations
     validate :delivery_partner_existence
     validate :secondary_delivery_partner_existence
 
-    validates :declaration, presence: true, valid: true
+    validates :declaration, presence: true, validate_and_copy_errors: true
     validates :delivery_partner_id, presence: true
 
     def change_delivery_partner

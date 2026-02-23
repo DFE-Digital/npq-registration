@@ -5,18 +5,18 @@ module Statements
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
-    include ModelAttributeUpdatable
+    include UpdatingAttributesIfAlreadyValid
 
     attribute :statement
     attribute :payment_date
 
-    validates :statement, presence: true, valid: true
+    validates :statement, presence: true, validate_and_copy_errors: true
     validates :payment_date, presence: true
 
     validate :payment_date_not_before_deadline_date
 
     def change
-      update_and_validate_attributes(statement, payment_date: payment_date)
+      update_attributes_if_already_valid(statement, payment_date: payment_date)
     end
 
   private
