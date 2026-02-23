@@ -15,8 +15,10 @@ RSpec.describe Declarations::Create, type: :model do
   let(:declaration_date) { schedule.applies_from + 1.hour }
   let(:course_identifier) { course.identifier }
   let(:has_passed) { true }
-  let(:delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
-  let(:secondary_delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
+  let(:delivery_partner) { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
+  let(:secondary_delivery_partner) { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
+  let(:delivery_partner_id) { delivery_partner.ecf_id }
+  let(:secondary_delivery_partner_id) { secondary_delivery_partner.ecf_id }
   let(:params) do
     {
       lead_provider:,
@@ -119,7 +121,7 @@ RSpec.describe Declarations::Create, type: :model do
       end
     end
 
-    context "when an existing declaration already exists" do
+    context "when a declaration already exists" do
       before { service.create_declaration }
 
       it { is_expected.to have_error(:base, :declaration_already_exists, "A declaration has already been submitted that will be, or has been, paid for this event") }
@@ -265,20 +267,28 @@ RSpec.describe Declarations::Create, type: :model do
     context "when there are no available output fee statements" do
       before { lead_provider.next_output_fee_statement(cohort).update!(output_fee: false) }
 
-      context "when the declarations is submitted" do
-        it { is_expected.to be_valid }
-      end
-
-      context "when the declaration is eligible" do
+      context "when the application is eligible" do
         let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
 
         it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
-      end
 
-      context "when there is an existing billable declaration" do
-        before { create(:declaration, :paid, application:, declaration_date:) }
+        context "when the application is not eligible" do
+          let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:, schedule:) }
 
-        it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
+          it { is_expected.to be_valid }
+
+          context "when there is an existing submitted declaration" do
+            before { create(:declaration, application:, declaration_date:) }
+
+            it { is_expected.to have_error(:base, :declaration_already_exists, "A declaration has already been submitted that will be, or has been, paid for this event") }
+          end
+        end
+
+        context "when there is an existing billable declaration" do
+          before { create(:declaration, :paid, application:, declaration_date:) }
+
+          it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
+        end
       end
     end
 
@@ -376,12 +386,18 @@ RSpec.describe Declarations::Create, type: :model do
       end
     end
 
-    context "when declaration is not fundable" do
-      before do
-        application.update(eligible_for_funding: true, funded_place: false)
-      end
+    context "when the application is not fundable" do
+      let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:, schedule:, eligible_for_funding: true, funded_place: false) }
 
       it "sets the declaration to submitted" do
+        subject
+
+        expect(declaration).to be_submitted_state
+      end
+    end
+
+    context "when the application is fundable" do
+      it "sets the declaration to eligible" do
         subject
 
         expect(declaration).to be_submitted_state
@@ -413,6 +429,13 @@ RSpec.describe Declarations::Create, type: :model do
 
         expect(declaration).to be_ineligible_state
         expect(declaration.superseded_by).to eq(original_declaration)
+      end
+    end
+
+    context "when concurrent requests are attempting to create duplicate declarations" do
+      it "uses an advisory lock" do
+        expect(Declaration).to receive(:with_advisory_lock).with("lock-declaration-#{application.id}-#{course_identifier}-#{declaration_type}").and_yield
+        subject
       end
     end
 

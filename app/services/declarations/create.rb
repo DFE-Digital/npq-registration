@@ -40,7 +40,7 @@ module Declarations
       return false unless valid?
 
       ApplicationRecord.transaction do
-        find_or_create_declaration!
+        @declaration = Declaration.create!(declaration_parameters_for_create)
 
         # CPDNPQ-2808: this reload is here to stop bullet complaining about an unoptimized query
         # the issue could not be replicated locally or in a review app
@@ -88,7 +88,7 @@ module Declarations
       {
         declaration_date:,
         declaration_type:,
-        lead_provider:,
+        lead_provider_id: lead_provider.id,
       }
     end
 
@@ -105,18 +105,9 @@ module Declarations
       @existing_declaration ||= participant
         .declarations
         .joins(application: :course)
-        .submitted_state
-        .or(
-          participant
-            .declarations
-            .joins(application: :course)
-            .billable,
-        )
-        .find_by(declaration_parameters_for_find.merge(application: { courses: { identifier: course_identifier } }))
-    end
-
-    def find_or_create_declaration!
-      @declaration = existing_declaration || Declaration.create!(declaration_parameters_for_create)
+        .where(application: { courses: { identifier: course_identifier } })
+        .billable_or_submitted
+        .find_by(declaration_parameters_for_find)
     end
 
     def statement_attacher
@@ -164,7 +155,10 @@ module Declarations
       return if errors.any?
       return unless participant
 
-      return unless application.declarations.billable_or_changeable.where(declaration_type:).exists?
+      # advisory lock to prevent concurrent requests creating duplicate declarations (NPQ-3513)
+      Declaration.with_advisory_lock("lock-declaration-#{application.id}-#{course_identifier}-#{declaration_type}") do
+        return unless application.declarations.billable_or_changeable.where(declaration_type:).exists?
+      end
 
       errors.add(:base, :declaration_already_exists)
     end
