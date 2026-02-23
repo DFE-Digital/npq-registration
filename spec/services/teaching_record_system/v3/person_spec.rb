@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe TeacherRecordSystem::V3::Person do
+RSpec.describe TeachingRecordSystem::V3::Person do
   let(:access_token) { "test-oauth-token" }
   let(:trn) { "1234567" }
   let(:base_url) { ENV["TRS_API_URL"] }
@@ -75,7 +75,7 @@ RSpec.describe TeacherRecordSystem::V3::Person do
       it "raises Timeout::Error" do
         expect {
           described_class.find_with_token(access_token:)
-        }.to raise_error(TeacherRecordSystem::TimeoutError)
+        }.to raise_error(TeachingRecordSystem::TimeoutError)
       end
     end
 

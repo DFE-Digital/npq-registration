@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe TeacherRecordSystem::FetchPerson do
+RSpec.describe TeachingRecordSystem::FetchPerson do
   let(:access_token) { "test-token" }
   let(:trn) { "1234567" }
   let(:teaching_record) do
@@ -15,7 +15,7 @@ RSpec.describe TeacherRecordSystem::FetchPerson do
     }
   end
 
-  let(:person_service) { TeacherRecordSystem::V3::Person }
+  let(:person_service) { TeachingRecordSystem::V3::Person }
 
   describe ".fetch" do
     context "when OAuth endpoint succeeds" do
@@ -43,17 +43,17 @@ RSpec.describe TeacherRecordSystem::FetchPerson do
       end
 
       it "raises ApiError" do
-        expect { described_class.fetch(access_token:) }.to raise_error(TeacherRecordSystem::ApiError, "Teaching record not found")
+        expect { described_class.fetch(access_token:) }.to raise_error(TeachingRecordSystem::ApiError, "Teaching record not found")
       end
     end
 
     context "when timeout occurs" do
       before do
-        allow(person_service).to receive(:find_with_token).and_raise(TeacherRecordSystem::TimeoutError)
+        allow(person_service).to receive(:find_with_token).and_raise(TeachingRecordSystem::TimeoutError)
       end
 
       it "raises TimeoutError" do
-        expect { described_class.fetch(access_token:) }.to raise_error(TeacherRecordSystem::TimeoutError)
+        expect { described_class.fetch(access_token:) }.to raise_error(TeachingRecordSystem::TimeoutError)
       end
     end
 

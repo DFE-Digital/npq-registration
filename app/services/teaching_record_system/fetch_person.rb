@@ -1,4 +1,4 @@
-module TeacherRecordSystem
+module TeachingRecordSystem
   class FetchPerson
     attr_reader :teaching_record, :full_name, :previous_names
 

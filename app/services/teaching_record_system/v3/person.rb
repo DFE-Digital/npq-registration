@@ -1,4 +1,4 @@
-module TeacherRecordSystem
+module TeachingRecordSystem
   module V3
     class Person
       include HTTParty

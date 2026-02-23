@@ -56,14 +56,14 @@ class OmniauthController < Devise::OmniauthCallbacksController
     provider_data = request.env["omniauth.auth"]
     access_token = provider_data.credentials.token
 
-    result = TeacherRecordSystem::FetchPerson.fetch(access_token:)
+    result = TeachingRecordSystem::FetchPerson.fetch(access_token:)
 
     flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
     flash[:success] += ", Full name: #{result.full_name}"
     flash[:success] += ", Previous names: #{result.previous_names.join(', ')}" if result.previous_names.any?
-  rescue TeacherRecordSystem::TimeoutError
+  rescue TeachingRecordSystem::TimeoutError
     flash[:error] = "Unable to retrieve teaching record (timeout). Please try again."
-  rescue TeacherRecordSystem::ApiError
+  rescue TeachingRecordSystem::ApiError
     flash[:error] = "Unable to retrieve teaching record from the service."
   rescue StandardError
     flash[:error] = "An unexpected error occurred while retrieving your teaching record."
