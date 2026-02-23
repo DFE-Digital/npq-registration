@@ -3,11 +3,6 @@ class AdminController < ApplicationController
   before_action :require_admin
   skip_before_action :authenticate_user!
 
-  def show
-    @last_seven_days = AdminService::DashboardStats.new(start_time: 7.days.ago)
-    @all_time = AdminService::DashboardStats.new
-  end
-
 private
 
   def require_admin
