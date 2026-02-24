@@ -74,7 +74,6 @@ module Questionnaires
         institution: institution(source: institution_identifier),
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
         query_store: wizard.query_store,

@@ -62,10 +62,7 @@ class FundingEligibility
                              inside_catchment:,
                              trn:,
                              get_an_identity_id:,
-                             lead_mentor_for_accredited_itt_provider: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
                              approved_itt_provider: false,
-                             lead_mentor: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
-                             new_headteacher: false, # rubocop:disable Lint/UnusedMethodArgument # FIXME: needed for method prototype compatibility
                              query_store: nil)
       new(institution:,
           course:,

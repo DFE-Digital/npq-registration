@@ -44,8 +44,6 @@ RSpec.describe FundingEligibility do
                                            trn: "1234567",
                                            get_an_identity_id:,
                                            approved_itt_provider:,
-                                           lead_mentor: nil,
-                                           new_headteacher: nil,
                                            query_store:)
     end
 
