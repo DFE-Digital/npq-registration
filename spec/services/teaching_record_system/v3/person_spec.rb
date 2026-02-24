@@ -56,7 +56,7 @@ RSpec.describe TeachingRecordSystem::V3::Person do
       it "raises ApiError with 401" do
         expect {
           described_class.find_with_token(access_token:)
-        }.to raise_error(TeachingRecordSystem::ApiError, "Unauthorized: Access token is invalid or expired (HTTP 401)")
+        }.to raise_error(TeachingRecordSystem::ApiError, "API request failed (HTTP 401)")
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe TeachingRecordSystem::V3::Person do
       it "raises ApiError with 500" do
         expect {
           described_class.find_with_token(access_token:)
-        }.to raise_error(TeachingRecordSystem::ApiError, "Teaching Record System server error (HTTP 500)")
+        }.to raise_error(TeachingRecordSystem::ApiError, "API request failed (HTTP 500)")
       end
     end
   end
