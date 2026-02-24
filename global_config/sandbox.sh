@@ -5,4 +5,4 @@ AZURE_SUBSCRIPTION=s189-teacher-services-cloud-production
 AZURE_RESOURCE_PREFIX=s189p01
 CONFIG_LONG=sandbox
 NAMESPACE=cpd-production
-TERRAFORM_MODULES_TAG=testing
+TERRAFORM_MODULES_TAG=testing-azurerm-v4

@@ -38,7 +38,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.5.4
+          terraform_version: 1.14.5
           terraform_wrapper: false
 
       - name: Set environment variables
@@ -75,4 +75,3 @@ jobs:
           resource-group-name: "s189t01-cpdnpq-rv-rg"
           storage-account-name: "s189t01cpdnpqrvtfsa"
           tf-state-file: "${{ github.event.pull_request.number || github.event.inputs.pr_number }}.tfstate"
-
