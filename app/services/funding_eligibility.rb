@@ -49,7 +49,6 @@ class FundingEligibility
               :trn,
               :approved_itt_provider,
               :get_an_identity_id,
-              :lead_mentor_for_accredited_itt_provider,
               :inside_catchment,
               :new_headteacher,
               :employment_type,
@@ -73,7 +72,6 @@ class FundingEligibility
           inside_catchment:,
           trn:,
           get_an_identity_id:,
-          lead_mentor_for_accredited_itt_provider: query_store.lead_mentor_for_accredited_itt_provider?,
           approved_itt_provider:,
           new_headteacher: query_store.new_headteacher?,
           employment_type: query_store.employment_type,
@@ -88,7 +86,6 @@ class FundingEligibility
                  inside_catchment:,
                  trn:,
                  get_an_identity_id:,
-                 lead_mentor_for_accredited_itt_provider:,
                  approved_itt_provider:,
                  new_headteacher:,
                  employment_type:,
@@ -102,7 +99,6 @@ class FundingEligibility
     @approved_itt_provider = approved_itt_provider
     @get_an_identity_id = get_an_identity_id
     @trn = trn
-    @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
     @employment_type = employment_type
     @childminder = childminder
     @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
@@ -123,16 +119,16 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      return NOT_IN_ENGLAND unless @inside_catchment
+      return NOT_IN_ENGLAND unless inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 
       if course.ehco?
-        return FUNDED_ELIGIBILITY_RESULT if @new_headteacher
+        return FUNDED_ELIGIBILITY_RESULT if new_headteacher
 
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
       end
 
-      case @work_setting
+      case work_setting
       when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
       when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
       when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
@@ -163,7 +159,7 @@ private
       return FUNDED_ELIGIBILITY_RESULT
     end
 
-    if @childminder
+    if childminder
       if course.eyl?
         return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
 
@@ -188,7 +184,7 @@ private
     return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
 
     if course.only_pp50?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(@work_setting)
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
 
       return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
     end
@@ -197,7 +193,7 @@ private
   end
 
   def another_setting_policy
-    if @lead_mentor_for_accredited_itt_provider
+    if lead_mentor_for_accredited_itt_provider?
       if course.npqltd?
         return FUNDED_ELIGIBILITY_RESULT if approved_itt_provider
 
@@ -222,7 +218,11 @@ private
       Application.employment_types[:local_authority_supply_teacher],
     ]
 
-    @employment_type.in?(eligible_employment_types)
+    employment_type.in?(eligible_employment_types)
+  end
+
+  def lead_mentor_for_accredited_itt_provider?
+    employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]
   end
 
   def eligible_course?
@@ -235,7 +235,7 @@ private
   end
 
   def other_settings_policy
-    if @referred_by_return_to_teaching_adviser
+    if referred_by_return_to_teaching_adviser
       REFERRED_BY_RETURN_TO_TEACHING_ADVISER
     else
       INELIGIBLE_ESTABLISHMENT_TYPE

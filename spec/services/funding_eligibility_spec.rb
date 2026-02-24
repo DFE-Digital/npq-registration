@@ -7,7 +7,6 @@ RSpec.describe FundingEligibility do
                         inside_catchment:,
                         trn: "1234567",
                         get_an_identity_id: SecureRandom.uuid,
-                        lead_mentor_for_accredited_itt_provider: (employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]),
                         approved_itt_provider:,
                         new_headteacher: (new_headteacher == "yes"),
                         employment_type:,
@@ -60,12 +59,12 @@ RSpec.describe FundingEligibility do
     it { is_expected.to have_attributes get_an_identity_id: }
     it { is_expected.to have_attributes approved_itt_provider: }
     it { is_expected.to have_attributes new_headteacher: false }
-    it { is_expected.to have_attributes lead_mentor_for_accredited_itt_provider: false }
     it { is_expected.to have_attributes employment_type: }
     it { is_expected.to have_attributes childminder: false }
     it { is_expected.to have_attributes work_setting: }
     it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: false }
     it { is_expected.not_to respond_to :lead_mentor }
+    it { is_expected.not_to respond_to :lead_mentor_for_accredited_itt_provider }
     it { is_expected.not_to respond_to :query_store }
 
     context "with childminder" do
@@ -78,12 +77,6 @@ RSpec.describe FundingEligibility do
       let(:new_headteacher) { "yes" }
 
       it { is_expected.to have_attributes new_headteacher: true }
-    end
-
-    context "with lead mentor for accredited itt provider" do
-      before { store["employment_type"] = "lead_mentor_for_accredited_itt_provider" }
-
-      it { is_expected.to have_attributes lead_mentor_for_accredited_itt_provider: true }
     end
 
     context "with referred by rtta" do
