@@ -7,7 +7,11 @@ end
 LeadProvider.excluding(LeadProvider.first).find_each do |lead_provider|
   DeliveryPartner.limit(10).find_each do |delivery_partner|
     Cohort.all.sample(3).each do |cohort|
-      FactoryBot.create(:delivery_partnership, delivery_partner: delivery_partner, lead_provider: lead_provider, cohort: cohort)
+      DeliveryPartnership.find_or_create_by!(
+        delivery_partner: delivery_partner,
+        lead_provider: lead_provider,
+        cohort: cohort,
+      )
     end
   end
 end

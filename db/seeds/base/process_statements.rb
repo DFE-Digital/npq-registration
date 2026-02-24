@@ -8,7 +8,7 @@ Cohort.all.find_each do |cohort|
     next unless latest_statement
 
     # Mark past statements (up to latest output fee statement) as payable
-    statement_scope.where("deadline_date < ?", latest_statement.deadline_date).find_each do |statement|
+    statement_scope.where("deadline_date < ?", latest_statement.deadline_date).where(state: "open").find_each do |statement|
       Statements::MarkAsPayable.new(statement:).mark
     end
     # Set mark_as_paid_at for payable statements from 2023, and mark them as paid - to match production
@@ -22,13 +22,14 @@ Cohort.all.find_each do |cohort|
     # Void some declarations on the previous paid output fee statement to create clawbacks on the latest statement
     helpers.travel_to latest_statement.deadline_date - 1.day do
       claw_back_from_statement = statement_scope.with_output_fee.where("deadline_date < ?", latest_statement.deadline_date).first
+      next unless claw_back_from_statement
+
       claw_back_from_statement.declarations.where.not(state: "voided").limit(2).each do |declaration|
         errors = Declarations::Void.new(declaration:).tap(&:void).errors
         fail(errors.full_messages.join(", ")) if errors.any?
       end
     end
 
-    # Now that it has clawbacks, mark the latest output fee statement open -> payable
     errors = Statements::MarkAsPayable.new(statement: latest_statement).tap(&:mark).errors
     fail(errors.full_messages.join(", ")) if errors.any?
   end

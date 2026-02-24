@@ -77,9 +77,14 @@ FactoryBot.define do
     trait :with_sometimes_nil_delivery_partner do
       delivery_partner do
         if cohort.start_year.between?(2021, 2023)
-          [nil, create(:delivery_partner, lead_providers: { cohort => lead_provider })].sample
+          existing = DeliveryPartner.joins(:delivery_partnerships)
+                                    .where(delivery_partnerships: { cohort: cohort, lead_provider: lead_provider })
+                                    .first || create(:delivery_partner, lead_providers: { cohort => lead_provider })
+          [nil, existing].sample
         else
-          create(:delivery_partner, lead_providers: { cohort => lead_provider })
+          DeliveryPartner.joins(:delivery_partnerships)
+                        .where(delivery_partnerships: { cohort: cohort, lead_provider: lead_provider })
+                        .first || create(:delivery_partner, lead_providers: { cohort => lead_provider })
         end
       end
     end
