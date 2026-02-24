@@ -65,8 +65,6 @@ class OmniauthController < Devise::OmniauthCallbacksController
     flash[:error] = "Unable to retrieve teaching record (timeout). Please try again."
   rescue TeachingRecordSystem::ApiError
     flash[:error] = "Unable to retrieve teaching record from the service."
-  rescue StandardError
-    flash[:error] = "An unexpected error occurred while retrieving your teaching record."
   ensure
     redirect_to registration_wizard_show_path(:start)
   end
