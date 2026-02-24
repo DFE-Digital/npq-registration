@@ -37,13 +37,19 @@ RSpec.describe TeachingRecordSystem::FetchPerson do
       end
     end
 
-    context "when OAuth endpoint returns nil" do
+    context "when API raises ApiError" do
       before do
-        allow(person_service).to receive(:find_with_token).and_return(nil)
+        allow(person_service).to receive(:find_with_token).and_raise(
+          TeachingRecordSystem::ApiError,
+          "Teaching record not found (HTTP 404)",
+        )
       end
 
-      it "raises ApiError" do
-        expect { described_class.fetch(access_token:) }.to raise_error(TeachingRecordSystem::ApiError, "Teaching record not found")
+      it "allows ApiError to propagate" do
+        expect { described_class.fetch(access_token:) }.to raise_error(
+          TeachingRecordSystem::ApiError,
+          "Teaching record not found (HTTP 404)",
+        )
       end
     end
 

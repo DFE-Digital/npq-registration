@@ -53,9 +53,10 @@ RSpec.describe TeachingRecordSystem::V3::Person do
           .to_return(status: 401)
       end
 
-      it "returns nil" do
-        record = described_class.find_with_token(access_token:)
-        expect(record).to be_nil
+      it "raises ApiError with 401" do
+        expect {
+          described_class.find_with_token(access_token:)
+        }.to raise_error(TeachingRecordSystem::ApiError, "Unauthorized: Access token is invalid or expired (HTTP 401)")
       end
     end
 
@@ -92,9 +93,10 @@ RSpec.describe TeachingRecordSystem::V3::Person do
           .to_return(status: 500, body: "Internal Server Error")
       end
 
-      it "returns nil" do
-        record = described_class.find_with_token(access_token:)
-        expect(record).to be_nil
+      it "raises ApiError with 500" do
+        expect {
+          described_class.find_with_token(access_token:)
+        }.to raise_error(TeachingRecordSystem::ApiError, "Teaching Record System server error (HTTP 500)")
       end
     end
   end

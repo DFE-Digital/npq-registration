@@ -4,9 +4,6 @@ module TeachingRecordSystem
 
     def self.fetch(access_token:)
       person_data = V3::Person.find_with_token(access_token:)
-
-      raise ApiError, "Teaching record not found" unless person_data
-
       new(person_data)
     end
 
