@@ -7,6 +7,10 @@ module UpdatingAttributesIfAlreadyValid
 
       model_attribute.assign_attributes(attributes)
 
+      # this second `invalid?` check needs to be here so that the
+      #  `validate_and_copy_errors` validator can add any errors from the model_attribute
+      return false if invalid?
+
       model_attribute.save # rubocop:disable Rails/SaveBang - return value is used by caller
     end
   end
