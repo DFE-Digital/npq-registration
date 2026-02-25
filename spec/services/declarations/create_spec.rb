@@ -404,12 +404,12 @@ RSpec.describe Declarations::Create, type: :model do
       end
     end
 
-    context "when posting for next cohort" do
+    context "when posting for the next cohort" do
       let(:cohort) { create(:cohort, :next) }
       let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
       let!(:statement) { create(:statement, cohort:, lead_provider:, deadline_date: declaration_date + 6.weeks) }
 
-      it "creates declaration to next cohort statement" do
+      it "creates an eligible declaration on the next cohort statement" do
         travel_to declaration_date + 1.day do
           expect { subject }.to change(Declaration, :count).by(1)
 
@@ -419,7 +419,7 @@ RSpec.describe Declarations::Create, type: :model do
       end
     end
 
-    context "when duplicate declaration exists" do
+    context "when a duplicate declaration exists" do
       let(:original_user) { create(:user, trn: participant.trn) }
       let(:original_application) { create(:application, :accepted, cohort:, course:, user: original_user) }
       let!(:original_declaration) { create(:declaration, application: original_application) }
@@ -433,9 +433,31 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "when concurrent requests are attempting to create duplicate declarations" do
+      let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
+
       it "uses an advisory lock" do
-        expect(Declaration).to receive(:with_advisory_lock).with("lock-declaration-#{application.id}-#{course_identifier}-#{declaration_type}").and_yield
+        expect(Declaration).to receive(:with_advisory_lock!)
+          .with("lock-declaration-#{participant.id}-#{course_identifier}-#{declaration_type}", blocking: true, transaction: true)
+          .and_yield
         subject
+      end
+
+      it "uses `uncached` when checking for existing declarations" do
+        expect(Declaration).to receive(:uncached).at_least(:once).and_yield
+        subject
+      end
+
+      context "when the first request creates a declaration and marks it as eligible" do
+        before do
+          allow(Declaration).to receive(:create!).and_wrap_original do |original_method, *args|
+            original_method.call(*args).tap(&:mark_eligible!)
+          end
+        end
+
+        it "the second request does not try and mark it as eligible again" do
+          expect(declaration).not_to receive(:mark_eligible!)
+          subject
+        end
       end
     end
 

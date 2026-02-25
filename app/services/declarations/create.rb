@@ -40,16 +40,19 @@ module Declarations
       return false unless valid?
 
       ApplicationRecord.transaction do
-        @declaration = Declaration.create!(declaration_parameters_for_create)
+        # advisory lock to prevent concurrent requests creating duplicate declarations (NPQ-3513)
+        Declaration.with_advisory_lock!("lock-declaration-#{participant.id}-#{course_identifier}-#{declaration_type}", blocking: true, transaction: true) do
+          find_or_create_declaration!
 
-        # CPDNPQ-2808: this reload is here to stop bullet complaining about an unoptimized query
-        # the issue could not be replicated locally or in a review app
-        declaration.reload
+          # CPDNPQ-2808: this reload is here to stop bullet complaining about an unoptimized query
+          # the issue could not be replicated locally or in a review app
+          declaration.reload
 
-        set_eligibility!
+          set_eligibility!
 
-        statement_attacher.attach unless declaration.submitted_state?
-        create_participant_outcome!
+          statement_attacher.attach unless declaration.submitted_state?
+          create_participant_outcome!
+        end
       end
 
       true
@@ -88,7 +91,7 @@ module Declarations
       {
         declaration_date:,
         declaration_type:,
-        lead_provider_id: lead_provider.id,
+        lead_provider:,
       }
     end
 
@@ -102,12 +105,22 @@ module Declarations
     end
 
     def existing_declaration
-      @existing_declaration ||= participant
-        .declarations
-        .joins(application: :course)
-        .where(application: { courses: { identifier: course_identifier } })
-        .billable_or_submitted
-        .find_by(declaration_parameters_for_find)
+      # when there are requests milliseconds apart,
+      # and for the first query there are genuinely no declarations, but for the second query a declaration exists,
+      # without using `uncached`, the second query still returns nil
+      @existing_declaration ||=
+        Declaration.uncached do
+          participant
+            .declarations
+            .joins(application: :course)
+            .where(application: { courses: { identifier: course_identifier } })
+            .billable_or_submitted
+            .find_by(declaration_parameters_for_find)
+        end
+    end
+
+    def find_or_create_declaration!
+      @declaration = existing_declaration || Declaration.create!(declaration_parameters_for_create)
     end
 
     def statement_attacher
@@ -128,7 +141,7 @@ module Declarations
       if declaration.duplicate_declarations.any?
         declaration.update!(superseded_by: original_declaration)
         declaration.mark_ineligible!
-      elsif application.fundable?
+      elsif application.fundable? && !declaration.eligible?
         declaration.mark_eligible!
       end
     end
@@ -155,10 +168,7 @@ module Declarations
       return if errors.any?
       return unless participant
 
-      # advisory lock to prevent concurrent requests creating duplicate declarations (NPQ-3513)
-      Declaration.with_advisory_lock("lock-declaration-#{application.id}-#{course_identifier}-#{declaration_type}") do
-        return unless application.declarations.billable_or_changeable.where(declaration_type:).exists?
-      end
+      return unless application.declarations.billable_or_changeable.where(declaration_type:).exists?
 
       errors.add(:base, :declaration_already_exists)
     end
