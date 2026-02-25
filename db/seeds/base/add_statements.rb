@@ -10,7 +10,17 @@ LeadProvider.find_each do |lead_provider|
       payment_date     = deadline_date + 1.month
       reconcile_amount = 0 # random manual adjustment is confusing outside of tests
 
-      FactoryBot.create(:statement, lead_provider:, cohort:, year:, month:, output_fee:, deadline_date:, payment_date:, reconcile_amount:)
+      Statement.find_or_create_by!(
+        lead_provider: lead_provider,
+        cohort: cohort,
+        year: year,
+        month: month,
+      ) do |statement|
+        statement.output_fee = output_fee
+        statement.deadline_date = deadline_date
+        statement.payment_date = payment_date
+        statement.reconcile_amount = reconcile_amount
+      end
     end
   end
 end
