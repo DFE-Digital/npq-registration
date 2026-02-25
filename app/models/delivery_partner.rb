@@ -28,6 +28,6 @@ class DeliveryPartner < ApplicationRecord
   end
 
   def cohorts_for_lead_provider(lead_provider)
-    delivery_partnerships.select { |delivery_partnership| delivery_partnership.lead_provider_id == lead_provider.id }.map(&:cohort)
+    Cohort.includes(:delivery_partnerships).where(delivery_partnerships: { lead_provider:, delivery_partner: self })
   end
 end

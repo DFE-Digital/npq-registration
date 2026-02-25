@@ -1,5 +1,5 @@
 class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminController
-  before_action :set_existing_delivery_partner, only: %i[edit]
+  before_action :set_existing_delivery_partner, only: %i[edit show]
   before_action :set_delivery_partner, only: %i[create continue update]
   before_action :set_similarly_named_delivery_partners, only: %i[create continue update]
   before_action :set_continue_form, only: %i[create continue update]
@@ -29,6 +29,10 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
     else
       render :new
     end
+  end
+
+  def show
+    # empty method, because rubocop will complain in the before_action otherwise
   end
 
   def edit

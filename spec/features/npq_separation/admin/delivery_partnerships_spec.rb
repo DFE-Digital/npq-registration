@@ -20,7 +20,8 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
 
     scenario "viewing the edit page for a delivery partner's partnerships" do
       visit npq_separation_admin_delivery_partners_path
-      click_link "Assign to provider", match: :first
+      click_link "View"
+      click_link "Assign provider"
 
       expect(page).to have_current_path(edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner))
 
@@ -151,7 +152,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
       visit edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner)
 
       click_link "Cancel"
-      expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
+      expect(page).to have_current_path(npq_separation_admin_delivery_partner_path(delivery_partner))
     end
   end
 
