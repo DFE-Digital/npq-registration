@@ -11,6 +11,7 @@ en:
   invalid_data_structure: correct json data structure required. See API docs for reference
   schedule_invalid_for_course: "The selected schedule is not valid for the course"
   cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
+  invalid_filter: "The filter '#/filter is invalid"
 
   errors:
     email:

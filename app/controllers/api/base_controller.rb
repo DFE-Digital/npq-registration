@@ -2,6 +2,7 @@ module API
   class BaseController < ActionController::API
     before_action :set_cache_headers
     before_action :remove_charset
+    before_action :check_filter_is_valid, if: -> { params[:filter].present? }
 
     include API::TokenAuthenticatable
     include ActionController::MimeResponds
@@ -51,6 +52,10 @@ module API
       }]
 
       render json: { errors: }, status: :gone
+    end
+
+    def check_filter_is_valid
+      raise ActionController::BadRequest, I18n.t(:invalid_filter) unless params[:filter].is_a?(ActionController::Parameters)
     end
   end
 end
