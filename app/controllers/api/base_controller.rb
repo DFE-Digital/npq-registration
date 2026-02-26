@@ -2,7 +2,7 @@ module API
   class BaseController < ActionController::API
     before_action :set_cache_headers
     before_action :remove_charset
-    before_action :check_filter_is_valid, if: -> { params[:filter].present? }
+    before_action :check_filter_is_valid, if: -> { params[:filter] }
 
     include API::TokenAuthenticatable
     include ActionController::MimeResponds
