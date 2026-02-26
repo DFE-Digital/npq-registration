@@ -53,24 +53,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
   end
 
   def teacher_auth
-    provider_data = request.env["omniauth.auth"]
-    access_token = provider_data.credentials.token
-
-    result = TeachingRecordSystem::FetchPerson.fetch(access_token:)
     @user = User.find_or_create_from_teacher_auth(
       provider_data:,
       feature_flag_id: session["feature_flag_id"],
     )
-
-    flash[:success] = "Teacher Auth connected successfully! Email: #{provider_data.info.email}, TRN: #{provider_data.extra.raw_info.trn}"
-    flash[:success] += ", Full name: #{result.full_name}"
-    flash[:success] += ", Previous names: #{result.previous_names.join(', ')}" if result.previous_names.any?
-  rescue TeachingRecordSystem::TimeoutError
-    flash[:error] = "Unable to retrieve teaching record (timeout). Please try again."
-  rescue TeachingRecordSystem::ApiError
-    flash[:error] = "Unable to retrieve teaching record from the service."
-  ensure
-    redirect_to registration_wizard_show_path(:start)
     if @user
       session["user_id"] = @user.id
       @user.set_closed_registration_feature_flag
