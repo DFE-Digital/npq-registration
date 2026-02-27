@@ -24,6 +24,7 @@ class Declaration < ApplicationRecord
   delegate :name, to: :lead_provider, prefix: true
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
+  scope :billable_or_submitted, -> { where(state: BILLABLE_STATES + %w[submitted]) }
   scope :changeable, -> { where(state: CHANGEABLE_STATES) }
   scope :billable_or_changeable, -> { billable.or(changeable) }
   scope :voidable, -> { where(state: VOIDABLE_STATES) }
