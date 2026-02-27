@@ -2,34 +2,22 @@ require "rails_helper"
 
 RSpec.describe DeliveryPartner, type: :model do
   describe "search scopes" do
-    describe ".name_similar_to" do
-      subject { described_class.name_similar_to(name) }
+    shared_examples "matching a delivery partner using" do |name:, existing_delivery_partner_name:|
+      let(:matching_delivery_partner) { create :delivery_partner, name: existing_delivery_partner_name }
+      let(:name) { name }
 
-      shared_examples "matching a delivery partner using" do |name:, existing_delivery_partner_name:|
-        let(:matching_delivery_partner) { create :delivery_partner, name: existing_delivery_partner_name }
-        let(:name) { name }
+      before { matching_delivery_partner }
 
-        before { matching_delivery_partner }
-
-        it "matches '#{name}' to the delivery partner with name '#{existing_delivery_partner_name}'" do
-          expect(subject).to include matching_delivery_partner
-        end
-
-        it "doesn't have duplicates" do
-          expect(subject.uniq.count).to eq subject.count
-        end
+      it "matches '#{name}' to the delivery partner with name '#{existing_delivery_partner_name}'" do
+        expect(subject).to include matching_delivery_partner
       end
 
-      context "when a delivery partner name matches exactly" do
-        let(:name) { "The Example TSH" }
-
-        before { create :delivery_partner, name: }
-
-        it "doesn't return anything" do
-          expect(subject).to be_empty
-        end
+      it "doesn't have duplicates" do
+        expect(subject.uniq.count).to eq subject.count
       end
+    end
 
+    shared_examples "similarity matching" do
       context "when a delivery partner name has typos" do
         it_behaves_like "matching a delivery partner using", name: "The Julain TSH", existing_delivery_partner_name: "The Julian TSH" # one typo
         it_behaves_like "matching a delivery partner using", name: "The Julain THS", existing_delivery_partner_name: "The Julian TSH" # two typos
@@ -79,6 +67,70 @@ RSpec.describe DeliveryPartner, type: :model do
         it "doesn't return all the Delivery Patners beginning with 'The'" do
           expect(subject.count).to be < 20
         end
+      end
+    end
+
+    describe ".name_similar_to" do
+      subject { described_class.name_similar_to(name) }
+
+      context "when a delivery partner name matches exactly" do
+        let(:name) { "The Example TSH" }
+
+        before { create :delivery_partner, name: }
+
+        it "doesn't return anything" do
+          expect(subject).to be_empty
+        end
+      end
+
+      it_behaves_like "similarity matching"
+    end
+
+    describe ".name_equal_or_similar_to" do
+      subject { described_class.name_equal_or_similar_to(name) }
+
+      context "when a delivery partner name matches exactly" do
+        let(:name) { "The Example TSH" }
+
+        before { create :delivery_partner, name: }
+
+        it "returns the match" do
+          expect(subject).to contain_exactly(an_object_having_attributes(name:))
+        end
+      end
+
+      it_behaves_like "similarity matching"
+    end
+
+    describe ".search_with_synonyms" do
+      let(:st_delivery_partner) { create(:delivery_partner, name: "St Matthew's Research School") }
+      let(:saint_delivery_partner) { create(:delivery_partner, name: "Saint Matthew's Research School") }
+      let(:delivery_partner_containing_saint_not_as_a_whole_word) { create(:delivery_partner, name: "Saint Saintanley") }
+
+      before do
+        st_delivery_partner
+        saint_delivery_partner
+        delivery_partner_containing_saint_not_as_a_whole_word
+      end
+
+      it "can find 'saint' when searching for 'st'" do
+        expect(described_class.search_with_synonyms("st mary") { |name| described_class.name_similar_to(name) })
+          .to include(st_delivery_partner, saint_delivery_partner)
+      end
+
+      it "can find 'st' when searching for 'saint'" do
+        expect(described_class.search_with_synonyms("saint mary") { |name| described_class.name_similar_to(name) })
+          .to include(st_delivery_partner, saint_delivery_partner)
+      end
+
+      it "does not return matches where 'st' in the search term is not a whole word" do
+        expect(described_class.search_with_synonyms("some first") { |name| described_class.name_similar_to(name) })
+          .not_to include(saint_delivery_partner)
+      end
+
+      it "does not overmatch by replacing 'st' for 'saint' where 'st' in the delivery partner name is not a whole word" do
+        expect(described_class.search_with_synonyms("St Stanley") { |name| described_class.contains(name) })
+          .not_to include(delivery_partner_containing_saint_not_as_a_whole_word)
       end
     end
   end
