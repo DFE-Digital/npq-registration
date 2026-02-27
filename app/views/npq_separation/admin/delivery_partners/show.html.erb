@@ -43,9 +43,9 @@
         body.with_row do |row|
           row.with_cell(text: govuk_link_to(lead_provider.name, npq_separation_admin_lead_provider_path(lead_provider)))
           row.with_cell do
-            safe_join(@delivery_partner.cohorts_for_lead_provider(lead_provider).distinct.order(identifier: :desc).map do |cohort|
-              tag.div(cohort.description)
-            end)
+            @delivery_partnerships_by_lead_provider[lead_provider].map do |delivery_partnership|
+              concat tag.div(delivery_partnership.cohort.description)
+            end
           end
         end
       end

@@ -22,7 +22,9 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   end
 
   def create
-    if @delivery_partner.name.present? && @delivery_partner.name_changed? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
+    if @delivery_partner.name.present? &&
+        @delivery_partner.name_changed? &&
+        DeliveryPartner.name_similar_to(@delivery_partner.name).any?
       render :similar
     elsif save_delivery_partner
       redirect_to action: :index
@@ -32,7 +34,11 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   end
 
   def show
-    # empty method, because rubocop will complain in the before_action otherwise
+    @delivery_partnerships_by_lead_provider =
+      @delivery_partner.delivery_partnerships
+      .includes(:lead_provider, :cohort)
+      .order("cohorts.start_year DESC")
+      .group_by(&:lead_provider)
   end
 
   def edit
@@ -40,7 +46,9 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
   end
 
   def update
-    if @delivery_partner.name.present? && @delivery_partner.name_changed? && DeliveryPartner.name_similar_to(@delivery_partner.name).any?
+    if @delivery_partner.name.present? &&
+        @delivery_partner.name_changed? &&
+        DeliveryPartner.name_similar_to(@delivery_partner.name).any?
       render :similar
     elsif save_delivery_partner
       redirect_to action: :index
