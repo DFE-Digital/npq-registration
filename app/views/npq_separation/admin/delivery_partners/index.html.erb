@@ -5,7 +5,8 @@
 
 <h2 class="govuk-heading-m">Add a delivery partner</h2>
 
-<p class="govuk-body">You can <a href="/npq-separation/admin/delivery-partners/new" class="govuk-link">add a delivery partner</a> and assign them to providers.</p>
+<p class="govuk-body">You can add a new delivery partner and assign them to a provider.</p>
+<%= govuk_button_link_to "Add a delivery partner", new_npq_separation_admin_delivery_partner_path %>
 
 <div class="admin-search-box">
   <%= form_with method: :get do |f| %>
@@ -33,10 +34,7 @@
       @delivery_partners.each do |delivery_partner|
         body.with_row do |row|
           row.with_cell(text: delivery_partner.name)
-          row.with_cell do
-              safe_join [tag.div { govuk_link_to("Change name", edit_npq_separation_admin_delivery_partner_path(delivery_partner), class: "govuk-!-margin-bottom-0") },
-                tag.div { govuk_link_to("Assign to provider", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") }]
-          end
+          row.with_cell(text: govuk_link_to("View", npq_separation_admin_delivery_partner_path(delivery_partner)))
         end
       end
     end

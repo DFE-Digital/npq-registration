@@ -184,7 +184,8 @@ Rails.application.routes.draw do
         member { get :download_contracts, path: "download-contracts" }
       end
 
-      resources :delivery_partners, path: "delivery-partners", except: %i[show destroy] do
+      resources :delivery_partners, path: "delivery-partners", except: %i[destroy] do
+        resources :cohorts, only: %i[show]
         resource :delivery_partnerships, path: "delivery-partnerships", only: :edit
         collection do
           post :continue
