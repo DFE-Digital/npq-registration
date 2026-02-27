@@ -5,9 +5,9 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
   let(:participant_id) { completed_declaration.user.ecf_id }
   let(:lead_provider) { completed_declaration.lead_provider }
   let(:completion_date) { 1.week.ago.strftime(date_format) }
-  let(:course_identifier) { described_class::PERMITTED_COURSES.sample }
+  let(:course_identifier) { described_class::PERMITTED_COURSES.first }
   let(:course) { Course.find_by(identifier: course_identifier) }
-  let(:state) { described_class::STATES.sample }
+  let(:state) { ParticipantOutcome.states[:passed] }
   let!(:completed_declaration) do
     travel_to(2.days.ago) do
       create(:declaration, :completed, :payable, course:)
@@ -54,7 +54,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
       end
 
       context "when the participant has completed declarations with a different course identifier" do
-        let(:other_course) { Course.find_by(identifier: described_class::PERMITTED_COURSES.excluding(course_identifier).sample) }
+        let(:other_course) { Course.find_by(identifier: described_class::PERMITTED_COURSES.excluding(course_identifier).first) }
 
         before do
           other_course.update!(course_group: course.course_group)
@@ -84,74 +84,67 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
         let!(:existing_outcome) { create(:participant_outcome, state:, completion_date:, declaration: completed_declaration) }
 
         it { is_expected.to be(true) }
-        it { expect { create_outcome }.not_to change(ParticipantOutcome, :count) }
+
+        it "does not create a new outcome" do
+          expect { create_outcome }.not_to change(ParticipantOutcome, :count)
+        end
 
         it "sets the created_outcome to the existing outcome" do
           create_outcome
           expect(created_outcome).to eq(existing_outcome)
+        end
+
+        it "does not update the completed declaration `updated_at`" do
+          expect { create_outcome }.not_to(change { completed_declaration.reload.updated_at })
         end
       end
 
       context "when it matches the state but not the completion_date passed into the service" do
         let!(:existing_outcome) { create(:participant_outcome, state:, completion_date: 1.month.ago, declaration: completed_declaration) }
 
-        it { is_expected.to be(true) }
-        it { expect { create_outcome }.to change(ParticipantOutcome, :count) }
+        context "and the state is 'passed'" do
+          let(:state) { ParticipantOutcome.states[:passed] }
 
-        it "sets the created_outcome to the newly created outcome" do
-          create_outcome
-          expect(created_outcome).not_to eq(existing_outcome)
-          expect(created_outcome).to have_attributes({
-            declaration: completed_declaration,
-            state:,
-            completion_date: completion_date.to_date,
-          })
-        end
-      end
-
-      context "when it matches the completion_date but not the state passed into the service" do
-        let(:other_state) { described_class::STATES.excluding(state).sample }
-        let!(:existing_outcome) { create(:participant_outcome, state: other_state, completion_date:, declaration: completed_declaration) }
-
-        it { is_expected.to be(true) }
-        it { expect { create_outcome }.to change(ParticipantOutcome, :count) }
-
-        it "sets the created_outcome to the newly created outcome" do
-          create_outcome
-          expect(created_outcome).not_to eq(existing_outcome)
-          expect(created_outcome).to have_attributes({
-            declaration: completed_declaration,
-            state:,
-            completion_date: completion_date.to_date,
-          })
-        end
-      end
-
-      context "when there are multiple existing participant outcomes that both match and do not match the state and completion_date passed into the service" do
-        let!(:matching_outcome) { create(:participant_outcome, state:, completion_date:, declaration: completed_declaration) }
-        let!(:not_matching_outcome) { create(:participant_outcome, completion_date: 1.month.ago, declaration: completed_declaration) }
-
-        context "when the matching outcome is the latest" do
-          before { matching_outcome.update!(created_at: not_matching_outcome.created_at + 1.day) }
-
-          it { is_expected.to be(true) }
-          it { expect { create_outcome }.not_to change(ParticipantOutcome, :count) }
-
-          it "sets the created_outcome to the latest existing outcome" do
+          it "sets the created_outcome to the existing outcome" do
             create_outcome
-            expect(created_outcome).to eq(matching_outcome)
+            expect(created_outcome).to eq(existing_outcome)
+          end
+
+          it "does not update the completed declaration `updated_at`" do
+            expect { create_outcome }.not_to(change { completed_declaration.reload.updated_at })
+          end
+
+          context "when there is an existing passed outcome but the latest outcome is voided" do
+            before { create(:participant_outcome, state: :voided, completion_date: existing_outcome.completion_date, declaration: completed_declaration) }
+
+            it "creates a new outcome" do
+              expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+            end
+
+            it "sets the created_outcome to the newly created outcome" do
+              create_outcome
+              expect(created_outcome).not_to eq(existing_outcome)
+              expect(created_outcome).to have_attributes({
+                declaration: completed_declaration,
+                state:,
+                completion_date: completion_date.to_date,
+              })
+            end
           end
         end
 
-        context "when the matching outcome is not the latest" do
-          before { matching_outcome.update!(created_at: not_matching_outcome.created_at - 1.day) }
+        context "when the state is 'failed'" do
+          let(:state) { ParticipantOutcome.states[:failed] }
 
           it { is_expected.to be(true) }
-          it { expect { create_outcome }.to change(ParticipantOutcome, :count) }
+
+          it "creates a new outcome" do
+            expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+          end
 
           it "sets the created_outcome to the newly created outcome" do
             create_outcome
-            expect(created_outcome).not_to eq(matching_outcome)
+            expect(created_outcome).not_to eq(existing_outcome)
             expect(created_outcome).to have_attributes({
               declaration: completed_declaration,
               state:,
@@ -161,13 +154,102 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
         end
       end
 
-      it "does not update the completed declaration `updated_at`" do
-        freeze_time do
-          expect(completed_declaration.updated_at).to be_within(1.second).of(2.days.ago)
+      context "when it matches the completion_date but not the state passed into the service" do
+        let(:other_state) { described_class::STATES.excluding(state).first }
+        let!(:existing_outcome) { create(:participant_outcome, state: other_state, completion_date:, declaration: completed_declaration) }
 
+        it { is_expected.to be(true) }
+
+        it "creates a new outcome" do
+          expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+        end
+
+        it "sets the created_outcome to the newly created outcome" do
           create_outcome
+          expect(created_outcome).not_to eq(existing_outcome)
+          expect(created_outcome).to have_attributes({
+            declaration: completed_declaration,
+            state:,
+            completion_date: completion_date.to_date,
+          })
+        end
+      end
 
-          expect(completed_declaration.updated_at).to be_within(1.second).of(2.days.ago)
+      context "when there are multiple existing participant outcomes that both match and do not match the completion_date passed into the service" do
+        let!(:matching_outcome) { create(:participant_outcome, state:, completion_date:, declaration: completed_declaration) }
+        let!(:not_matching_outcome) { create(:participant_outcome, state:, completion_date: 1.month.ago, declaration: completed_declaration) }
+
+        context "when the state is 'passed'" do
+          let(:state) { ParticipantOutcome.states[:passed] }
+
+          context "when the matching outcome is the latest" do
+            before { matching_outcome.update!(created_at: not_matching_outcome.created_at + 1.day) }
+
+            it { is_expected.to be(true) }
+
+            it "does not create a new outcome" do
+              expect { create_outcome }.not_to change(ParticipantOutcome, :count)
+            end
+
+            it "sets the created_outcome to the latest existing outcome" do
+              create_outcome
+              expect(created_outcome).to eq(matching_outcome)
+            end
+          end
+
+          context "when the matching outcome is not the latest" do
+            before { matching_outcome.update!(created_at: not_matching_outcome.created_at - 1.day) }
+
+            it { is_expected.to be(true) }
+
+            it "does not create a new outcome" do
+              expect { create_outcome }.not_to change(ParticipantOutcome, :count)
+            end
+
+            it "sets the created_outcome to the latest existing outcome" do
+              create_outcome
+              expect(created_outcome).to eq(not_matching_outcome)
+            end
+          end
+        end
+
+        context "when the state is 'failed'" do
+          let(:state) { ParticipantOutcome.states[:failed] }
+
+          context "when the matching outcome is the latest" do
+            before { matching_outcome.update!(created_at: not_matching_outcome.created_at + 1.day) }
+
+            it { is_expected.to be(true) }
+
+            it "does not create a new outcome" do
+              expect { create_outcome }.not_to change(ParticipantOutcome, :count)
+            end
+
+            it "sets the created_outcome to the latest existing outcome" do
+              create_outcome
+              expect(created_outcome).to eq(matching_outcome)
+            end
+          end
+
+          context "when the matching outcome is not the latest" do
+            before { matching_outcome.update!(created_at: not_matching_outcome.created_at - 1.day) }
+
+            it { is_expected.to be(true) }
+
+            it "creates a new outcome" do
+              expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+            end
+
+            it "sets the created_outcome to the newly created outcome" do
+              create_outcome
+              expect(created_outcome).not_to eq(matching_outcome)
+              expect(created_outcome).to have_attributes({
+                declaration: completed_declaration,
+                state:,
+                completion_date: completion_date.to_date,
+              })
+            end
+          end
         end
       end
     end
@@ -181,9 +263,12 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
 
       it { is_expected.to be(true) }
 
-      it "creates a new participant outcome, assigning it to created_outcome" do
+      it "creates a new outcome" do
         expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+      end
 
+      it "sets the created_outcome to the newly created outcome" do
+        create_outcome
         expect(created_outcome).to have_attributes({
           declaration: completed_declaration,
           state:,
@@ -195,9 +280,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
 
       it "updates the completed declaration `updated_at`" do
         freeze_time do
-          create_outcome
-
-          expect(completed_declaration.reload.updated_at).to eq(Time.zone.now)
+          expect { create_outcome }.to(change { completed_declaration.reload.updated_at }.to(Time.zone.now))
         end
       end
     end
@@ -206,7 +289,10 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
       let(:state) { "invalid" }
 
       it { is_expected.to be(false) }
-      it { expect { create_outcome }.not_to change(ParticipantOutcome, :count) }
+
+      it "does not create a new outcome" do
+        expect { create_outcome }.not_to change(ParticipantOutcome, :count)
+      end
     end
   end
 end

@@ -5,7 +5,7 @@ module ParticipantOutcomes
     include ActiveModel::Model
     include ActiveModel::Attributes
 
-    STATES = %w[passed failed].freeze
+    STATES = [ParticipantOutcome.states[:passed], ParticipantOutcome.states[:failed]].freeze
     UNSUPPORTED_COURSES = %w[npq-early-headship-coaching-offer npq-additional-support-offer].freeze
     PERMITTED_COURSES = Course::IDENTIFIERS.excluding(UNSUPPORTED_COURSES).freeze
     COMPLETION_DATE_FORMAT = /\d{4}-\d{2}-\d{2}/
@@ -34,9 +34,10 @@ module ParticipantOutcomes
         @created_outcome = if outcome_already_exists?
                              latest_existing_outcome
                            else
-                             new_outcome = build_outcome.tap(&:save!)
-                             new_outcome.declaration.touch(time: new_outcome.updated_at)
-                             new_outcome
+                             build_outcome.tap do |new_outcome|
+                               new_outcome.save!
+                               new_outcome.declaration.touch(time: new_outcome.updated_at)
+                             end
                            end
       end
 
@@ -53,6 +54,8 @@ module ParticipantOutcomes
 
     def outcome_already_exists?
       return unless latest_existing_outcome
+      return true if state == ParticipantOutcome.states[:passed] &&
+        latest_existing_outcome.state == ParticipantOutcome.states[:passed]
 
       latest_existing_outcome.slice(:state, :completion_date) == build_outcome.slice(:state, :completion_date)
     end
