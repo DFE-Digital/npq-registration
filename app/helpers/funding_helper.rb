@@ -26,13 +26,11 @@ module FundingHelper
 private
 
   def funding_eligibility_calculator(application)
-    FundingEligibility.new(
+    FundingEligibility.new_from_query_store(
       course: application.course,
       institution: institution(source: application.raw_application_data["institution_identifier"], application:),
       approved_itt_provider: application.itt_provider.present?,
-      lead_mentor: application.lead_mentor.present?,
       inside_catchment: application.teacher_catchment == "england",
-      new_headteacher: new_headteacher?(application),
       trn: application.user.trn,
       get_an_identity_id: application.user.get_an_identity_id,
       query_store: query_store(application),
@@ -41,9 +39,5 @@ private
 
   def query_store(application)
     RegistrationQueryStore.new(store: application.raw_application_data)
-  end
-
-  def new_headteacher?(application)
-    %w[yes_in_first_two_years yes_in_first_five_years yes_when_course_starts].include?(application.headteacher_status)
   end
 end

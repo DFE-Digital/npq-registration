@@ -166,13 +166,11 @@ private
   end
 
   def funding_eligibility_service
-    @funding_eligibility_service ||= FundingEligibility.new(
+    @funding_eligibility_service ||= FundingEligibility.new_from_query_store(
       course:,
       institution: institution_from_store,
       approved_itt_provider:,
-      lead_mentor: lead_mentor?,
       inside_catchment: inside_catchment?,
-      new_headteacher: new_headteacher?,
       trn: query_store.trn,
       get_an_identity_id: query_store.get_an_identity_id,
       query_store:,

@@ -134,10 +134,6 @@ module Questionnaires
       LeadProvider.for(course:)
     end
 
-    def lead_mentor?
-      wizard.query_store.lead_mentor_for_accredited_itt_provider?
-    end
-
     def courses
       Course.where(display: true).order(:position)
     end
@@ -147,13 +143,11 @@ module Questionnaires
     end
 
     def previously_eligible_for_funding?
-      FundingEligibility.new(
+      FundingEligibility.new_from_query_store(
         course: previous_course,
         institution:,
         approved_itt_provider: approved_itt_provider?,
-        lead_mentor: lead_mentor?,
         inside_catchment: inside_catchment?,
-        new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
         query_store: wizard.query_store,
@@ -161,13 +155,11 @@ module Questionnaires
     end
 
     def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new(
+      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
-        lead_mentor: lead_mentor?,
         inside_catchment: inside_catchment?,
-        new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
         query_store: wizard.query_store,

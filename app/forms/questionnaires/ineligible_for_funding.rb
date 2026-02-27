@@ -78,15 +78,13 @@ module Questionnaires
     end
 
     def funding_eligibility
-      @funding_eligibility ||= FundingEligibility.new(
+      @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
-        lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
         query_store: wizard.query_store,
       )
     end

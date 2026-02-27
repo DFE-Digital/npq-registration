@@ -48,39 +48,58 @@ class FundingEligibility
               :course,
               :trn,
               :approved_itt_provider,
-              :lead_mentor,
               :get_an_identity_id,
-              :lead_mentor_for_accredited_itt_provider,
-              :query_store
+              :inside_catchment,
+              :new_headteacher,
+              :employment_type,
+              :childminder,
+              :work_setting,
+              :referred_by_return_to_teaching_adviser
 
-  delegate :childminder?,
-           :employment_type,
-           :lead_mentor_for_accredited_itt_provider?,
-           :new_headteacher?,
-           :referred_by_return_to_teaching_adviser?,
-           :work_setting,
-           to: :query_store
+  class << self
+    def new_from_query_store(institution:,
+                             course:,
+                             inside_catchment:,
+                             trn:,
+                             get_an_identity_id:,
+                             approved_itt_provider: false,
+                             query_store: nil)
+      new(institution:,
+          course:,
+          inside_catchment:,
+          trn:,
+          get_an_identity_id:,
+          approved_itt_provider:,
+          new_headteacher: query_store.new_headteacher?,
+          employment_type: query_store.employment_type,
+          childminder: query_store.childminder?,
+          referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
+          work_setting: query_store.work_setting)
+    end
+  end
 
   def initialize(institution:,
                  course:,
                  inside_catchment:,
                  trn:,
                  get_an_identity_id:,
-                 lead_mentor_for_accredited_itt_provider: false,
-                 approved_itt_provider: false,
-                 lead_mentor: false,
-                 new_headteacher: false,
-                 query_store: nil)
+                 approved_itt_provider:,
+                 new_headteacher:,
+                 employment_type:,
+                 childminder:,
+                 referred_by_return_to_teaching_adviser:,
+                 work_setting:)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
     @new_headteacher = new_headteacher
     @approved_itt_provider = approved_itt_provider
-    @lead_mentor = lead_mentor
     @get_an_identity_id = get_an_identity_id
     @trn = trn
-    @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
-    @query_store = query_store
+    @employment_type = employment_type
+    @childminder = childminder
+    @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
+    @work_setting = work_setting
   end
 
   def funded?
@@ -97,11 +116,11 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      return NOT_IN_ENGLAND unless @inside_catchment
+      return NOT_IN_ENGLAND unless inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 
       if course.ehco?
-        return FUNDED_ELIGIBILITY_RESULT if new_headteacher?
+        return FUNDED_ELIGIBILITY_RESULT if new_headteacher
 
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
       end
@@ -137,7 +156,7 @@ private
       return FUNDED_ELIGIBILITY_RESULT
     end
 
-    if childminder?
+    if childminder
       if course.eyl?
         return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
 
@@ -181,6 +200,14 @@ private
       return NOT_LEAD_MENTOR_COURSE
     end
 
+    if eligible_employment_type? && eligible_course?
+      SUBJECT_TO_REVIEW
+    else
+      INELIGIBLE_ESTABLISHMENT_TYPE
+    end
+  end
+
+  def eligible_employment_type?
     eligible_employment_types = [
       Application.employment_types[:local_authority_virtual_school],
       Application.employment_types[:hospital_school],
@@ -188,20 +215,24 @@ private
       Application.employment_types[:local_authority_supply_teacher],
     ]
 
+    employment_type.in?(eligible_employment_types)
+  end
+
+  def lead_mentor_for_accredited_itt_provider?
+    employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]
+  end
+
+  def eligible_course?
     eligible_course_identifiers = %w[
       npq-senco
       npq-headship
     ]
 
-    if employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
-      SUBJECT_TO_REVIEW
-    else
-      INELIGIBLE_ESTABLISHMENT_TYPE
-    end
+    course.identifier.in?(eligible_course_identifiers)
   end
 
   def other_settings_policy
-    if referred_by_return_to_teaching_adviser?
+    if referred_by_return_to_teaching_adviser
       REFERRED_BY_RETURN_TO_TEACHING_ADVISER
     else
       INELIGIBLE_ESTABLISHMENT_TYPE

@@ -8,9 +8,11 @@ RSpec.describe FundingEligibility do
                         trn: "1234567",
                         get_an_identity_id: SecureRandom.uuid,
                         approved_itt_provider:,
-                        lead_mentor: nil,
-                        new_headteacher: nil,
-                        query_store:)
+                        new_headteacher: (new_headteacher == "yes"),
+                        employment_type:,
+                        childminder: (kind_of_nursery == "childminder"),
+                        referred_by_return_to_teaching_adviser: (referred_by_return_to_teaching_adviser == "yes"),
+                        work_setting:)
   end
 
   let(:store) do
@@ -33,6 +35,54 @@ RSpec.describe FundingEligibility do
   let(:referred_by_return_to_teaching_adviser) { nil }
   let(:new_headteacher) { "no" }
   let(:query_store) { RegistrationQueryStore.new(store:) }
+
+  describe ".new_from_query_store" do
+    subject do
+      described_class.new_from_query_store(institution:,
+                                           course:,
+                                           inside_catchment:,
+                                           trn: "1234567",
+                                           get_an_identity_id:,
+                                           approved_itt_provider:,
+                                           query_store:)
+    end
+
+    let(:course) { build(:course, :headship) }
+    let(:get_an_identity_id) { SecureRandom.uuid }
+
+    it { is_expected.to have_attributes institution: }
+    it { is_expected.to have_attributes course: }
+    it { is_expected.to have_attributes inside_catchment: }
+    it { is_expected.to have_attributes trn: "1234567" }
+    it { is_expected.to have_attributes get_an_identity_id: }
+    it { is_expected.to have_attributes approved_itt_provider: }
+    it { is_expected.to have_attributes new_headteacher: false }
+    it { is_expected.to have_attributes employment_type: }
+    it { is_expected.to have_attributes childminder: false }
+    it { is_expected.to have_attributes work_setting: }
+    it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: false }
+    it { is_expected.not_to respond_to :lead_mentor }
+    it { is_expected.not_to respond_to :lead_mentor_for_accredited_itt_provider }
+    it { is_expected.not_to respond_to :query_store }
+
+    context "with childminder" do
+      before { store["kind_of_nursery"] = "childminder" }
+
+      it { is_expected.to have_attributes childminder: true }
+    end
+
+    context "with new headteacher" do
+      let(:new_headteacher) { "yes" }
+
+      it { is_expected.to have_attributes new_headteacher: true }
+    end
+
+    context "with referred by rtta" do
+      before { store["referred_by_return_to_teaching_adviser"] = "yes" }
+
+      it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: true }
+    end
+  end
 
   RSpec.shared_examples "funding eligibility" do |result|
     it "returns the funding eligibility status code #{result}" do
