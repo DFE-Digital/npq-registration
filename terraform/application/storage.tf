@@ -30,6 +30,6 @@ resource "azurerm_storage_encryption_scope" "uploads" {
 
 resource "azurerm_storage_container" "uploads" {
   name                  = "uploads"
-  storage_account_name  = azurerm_storage_account.uploads.name
+  storage_account_id  = azurerm_storage_account.uploads.id
   container_access_type = "private"
 }

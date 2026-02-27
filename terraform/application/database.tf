@@ -1,5 +1,5 @@
 module "redis-cache" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing"
+  source = "./vendor/modules/aks//aks/redis"
 
   namespace                 = var.namespace
   environment               = local.environment
