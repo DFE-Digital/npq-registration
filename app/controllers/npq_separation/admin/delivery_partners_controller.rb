@@ -35,10 +35,11 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
 
   def show
     @delivery_partnerships_by_lead_provider =
-      @delivery_partner.delivery_partnerships
-      .includes(:lead_provider, :cohort)
-      .order("cohorts.start_year DESC")
-      .group_by(&:lead_provider)
+      @delivery_partner
+        .delivery_partnerships
+        .includes(:lead_provider, :cohort)
+        .order("cohorts.start_year DESC")
+        .group_by(&:lead_provider)
   end
 
   def edit
