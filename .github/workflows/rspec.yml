@@ -124,7 +124,7 @@ jobs:
 
       - name:  Keep Code Coverage Report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.code-coverage-artifact-name }}_${{ matrix.ci_node_index }}
           path: ./coverage
@@ -132,7 +132,7 @@ jobs:
 
       - name:  Keep Unit Tests Results
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.unit-tests-artifact-name }}_${{ matrix.ci_node_index }}
           path: ./test-report/*
