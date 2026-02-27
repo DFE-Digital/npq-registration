@@ -64,4 +64,26 @@ RSpec.describe "Error responses", type: :request do
       expect(response.content_type).to match(/application\/json.*/)
     end
   end
+
+  describe "bad request" do
+    context "when an invalid filter is specified" do
+      let(:uuid) { SecureRandom.uuid }
+
+      it "returns a Bad Request response" do
+        api_get "/api/v3/participant-declarations?filter=#{uuid}"
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq %({"errors":[{"title":"Bad request","detail":"'#/filter' is not a valid field"}]})
+        expect(response.content_type).to match(/application\/json.*/)
+      end
+    end
+
+    context "when an empty invalid filter is specified" do
+      it "returns a Bad Request response" do
+        api_get "/api/v3/participant-declarations?filter="
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq %({"errors":[{"title":"Bad request","detail":"'#/filter' is not a valid field"}]})
+        expect(response.content_type).to match(/application\/json.*/)
+      end
+    end
+  end
 end
