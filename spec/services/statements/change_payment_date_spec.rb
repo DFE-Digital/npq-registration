@@ -57,5 +57,18 @@ RSpec.describe Statements::ChangePaymentDate, type: :model do
         expect { subject }.to change { statement.reload.payment_date }.to(payment_date)
       end
     end
+
+    context "when the statement is payable" do
+      let(:statement) { create(:statement, :payable) }
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+
+      it "has an error" do
+        subject
+        expect(service).to have_error(:base, :statement_payable, "Statement cannot be changed once it is payable")
+      end
+    end
   end
 end
