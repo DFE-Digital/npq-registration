@@ -137,23 +137,17 @@ private
       return FUNDED_ELIGIBILITY_RESULT
     end
 
+    return EARLY_YEARS_INVALID_NPQ unless course.eyl?
+
     if childminder?
-      if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
 
-        return NOT_ENTITLED_CHILDMINDER
-      end
-
-      return EARLY_YEARS_INVALID_NPQ
+      return NOT_ENTITLED_CHILDMINDER
     end
 
-    if course.eyl?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
+    return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
 
-      return NOT_ENTITLED_EY_INSTITUTION
-    end
-
-    EARLY_YEARS_INVALID_NPQ
+    NOT_ENTITLED_EY_INSTITUTION
   end
 
   def school_policy
