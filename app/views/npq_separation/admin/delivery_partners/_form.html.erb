@@ -1,15 +1,15 @@
 <%= form_with model: [:npq_separation, :admin, @delivery_partner] do |form| %>
   <%=
     form.govuk_text_field :name,
-                          width: 'two-thirds',
+                          width: "two-thirds",
                           label: {
-                            text: "Enter delivery partner name",
+                            text: "Enter the delivery partner's name",
                             size: "m",
                           }
   %>
 
   <div class="govuk-button-group">
-    <%= form.govuk_submit 'Save' %>
-    <%= govuk_link_to 'Cancel', npq_separation_admin_delivery_partners_path %>
+    <%= form.govuk_submit "Save" %>
+    <%= govuk_link_to "Cancel", cancel_path %>
   </div>
 <% end %>

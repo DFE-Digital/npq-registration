@@ -1,4 +1,4 @@
-<%= govuk_back_link(href: npq_separation_admin_delivery_partners_path) %>
+<%= govuk_back_link(href: npq_separation_admin_delivery_partner_path(@delivery_partner)) %>
 
 <h1 class="govuk-heading-l">Assign <%= @delivery_partner.name %> to provider</h1>
 <p class="govuk-caption-m">Select all providers and cohorts that apply</p>
@@ -25,7 +25,7 @@
 
   <div class="govuk-button-group">
     <%= form.govuk_submit "Save" %>
-    <%= govuk_link_to "Cancel", npq_separation_admin_delivery_partners_path %>
+    <%= govuk_link_to "Cancel", npq_separation_admin_delivery_partner_path(@delivery_partner) %>
   </div>
 <% end %>
 

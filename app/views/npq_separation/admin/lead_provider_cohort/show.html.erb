@@ -1,5 +1,6 @@
-<% content_for :side_navigation do %>
+<%= govuk_back_link(href: url_for(:back)) %>
 
+<% content_for :side_navigation do %>
   <%=
     render NpqSeparation::SubNavigationComponent.new(
       request.path,

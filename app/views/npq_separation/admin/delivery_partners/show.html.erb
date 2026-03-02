@@ -1,0 +1,54 @@
+<%= govuk_back_link href: npq_separation_admin_delivery_partners_path %>
+
+<h1 class="govuk-heading-l"><%= @delivery_partner.name %></h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Name")
+      row.with_value(text: @delivery_partner.name)
+      row.with_action(text: "Change name", href: edit_npq_separation_admin_delivery_partner_path(@delivery_partner))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Delivery partner ID")
+      row.with_value(text: @delivery_partner.ecf_id)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Number of providers assigned")
+      row.with_value(text: @delivery_partner.lead_providers.distinct.count)
+      row.with_action(text: "Assign provider", href: edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(@delivery_partner))
+    end
+  end
+%>
+
+<h1 class="govuk-heading-m">Provider partnerships</h1>
+
+<p class="govuk-body">Use the table below to check which providers this delivery partner has worked with, and for which cohorts.</p>
+
+<p class="govuk-body">Select a provider to review all delivery partners they have worked with.</p>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |head|
+      head.with_row do |row|
+        row.with_cell(text: "Provider")
+        row.with_cell(text: "Cohorts")
+      end
+    end
+
+    table.with_body do |body|
+      @delivery_partner.lead_providers.distinct.each do |lead_provider|
+        body.with_row do |row|
+          row.with_cell(text: govuk_link_to(lead_provider.name, npq_separation_admin_lead_provider_path(lead_provider)))
+          row.with_cell do
+            @delivery_partnerships_by_lead_provider[lead_provider].map do |delivery_partnership|
+              concat tag.div(delivery_partnership.cohort.description)
+            end
+          end
+        end
+      end
+    end
+  end
+%>

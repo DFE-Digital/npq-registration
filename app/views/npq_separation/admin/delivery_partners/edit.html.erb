@@ -1,18 +1,18 @@
-<%= govuk_back_link href: npq_separation_admin_delivery_partners_path %>
+<%= govuk_back_link href: npq_separation_admin_delivery_partner_path(@delivery_partner) %>
 
-<h1 class="govuk-heading-l govuk-!-margin-top-6">Update delivery partner name</h1>
+<h1 class="govuk-heading-l govuk-!-margin-top-6">Change delivery partner name</h1>
 
 <%=
   govuk_summary_list do |summary_list|
     summary_list.with_row do |row|
-      row.with_key { 'ID' }
+      row.with_key { "Delivery partner ID" }
       row.with_value { @delivery_partner.ecf_id }
     end
     summary_list.with_row do |row|
-      row.with_key { 'Delivery partner' }
+      row.with_key { "Current name" }
       row.with_value { @delivery_partner.name }
     end
   end
 %>
 
-<%= render 'form' %>
+<%= render "form", cancel_path: npq_separation_admin_delivery_partner_path(@delivery_partner) %>

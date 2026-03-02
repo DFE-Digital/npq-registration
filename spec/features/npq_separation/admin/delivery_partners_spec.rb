@@ -25,24 +25,42 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
       # Test delivery partner pagination
       delivery_partners[0..9].each do |delivery_partner|
         expect(page).to have_content(delivery_partner.name)
-        expect(page).to have_link("Change", href: edit_npq_separation_admin_delivery_partner_path(delivery_partner))
+        expect(page).to have_link("View", href: npq_separation_admin_delivery_partner_path(delivery_partner))
       end
 
       page.find("[rel=next]").click
 
       delivery_partners[10..].each do |delivery_partner|
         expect(page).to have_content(delivery_partner.name)
+        expect(page).to have_link("View", href: npq_separation_admin_delivery_partner_path(delivery_partner))
       end
+    end
+
+    scenario "it allows viewing a delivery partner's details" do
+      delivery_partner = create(:delivery_partner)
+      cohort = create(:cohort)
+      create(:delivery_partnership, delivery_partner:, lead_provider: LeadProvider.first, cohort:)
+
+      visit npq_separation_admin_delivery_partners_path
+      click_link "View"
+
+      within(".govuk-summary-list") do |summary_list|
+        expect(summary_list).to have_summary_item("Name", delivery_partner.name)
+        expect(summary_list).to have_summary_item("Delivery partner ID", delivery_partner.ecf_id)
+        expect(summary_list).to have_summary_item("Number of providers assigned", 1)
+      end
+
+      expect(page).to have_table(with_rows: ["Provider" => LeadProvider.first.name, "Cohort" => cohort.description])
     end
 
     scenario "it allows creating a new delivery partner" do
       visit npq_separation_admin_delivery_partners_path
-      click_link "add a delivery partner"
+      click_link "Add a delivery partner"
 
       expect(page).to have_css("h1", text: "Add a delivery partner")
 
       expect {
-        fill_in "Enter delivery partner name", with: "New Test Partner"
+        fill_in "Enter the delivery partner's name", with: "New Test Partner"
         click_button "Save"
       }.to change(DeliveryPartner, :count).by(1)
 
@@ -58,7 +76,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
 
       scenario "it shows similarly named delivery partners" do
         visit new_npq_separation_admin_delivery_partner_path
-        fill_in "Enter delivery partner name", with: "Acme TSH"
+        fill_in "Enter the delivery partner's name", with: "Acme TSH"
         click_button "Save"
 
         expect(page).to have_css("h1", text: "We found similar delivery partners")
@@ -71,8 +89,8 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
         click_button "Continue"
         expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
 
-        click_link "add a delivery partner"
-        fill_in "Enter delivery partner name", with: "Acme TSH"
+        click_link "Add a delivery partner"
+        fill_in "Enter the delivery partner's name", with: "Acme TSH"
         click_button "Save"
         choose "Yes", visible: :all
         click_button "Continue"
@@ -84,9 +102,9 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
 
     scenario "when creating a delivery partner with invalid data, it shows validation errors" do
       visit npq_separation_admin_delivery_partners_path
-      click_link(href: "/npq-separation/admin/delivery-partners/new")
+      click_link(href: new_npq_separation_admin_delivery_partner_path)
 
-      fill_in "Enter delivery partner name", with: ""
+      fill_in "Enter the delivery partner's name", with: ""
       click_button "Save"
 
       expect(page).to have_content("Add a delivery partner")
@@ -97,12 +115,13 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
       create(:delivery_partner, name: "Original Partner Name")
 
       visit npq_separation_admin_delivery_partners_path
-      click_link "Change"
+      click_link "View"
+      click_link "Change name"
 
-      expect(page).to have_content("Update delivery partner name")
+      expect(page).to have_content("Change delivery partner name")
       expect(page).to have_content("Original Partner Name")
 
-      fill_in "Enter delivery partner name", with: "Updated Partner Name"
+      fill_in "Enter the delivery partner's name", with: "Updated Partner Name"
       click_button "Save"
 
       expect(page).to have_content("Delivery partners")
@@ -120,9 +139,10 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
       scenario "it shows similarly named delivery partners" do
         visit npq_separation_admin_delivery_partners_path
         within("tr", text: "Learning") do
-          click_link "Change"
+          click_link "View"
         end
-        fill_in "Enter delivery partner name", with: "Teaching TSH"
+        click_link "Change name"
+        fill_in "Enter the delivery partner's name", with: "Teaching TSH"
         click_button "Save"
 
         expect(page).to have_css("h1", text: "We found similar delivery partners")
@@ -136,9 +156,10 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
         expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
 
         within("tr", text: "Learning") do
-          click_link "Change"
+          click_link "View"
         end
-        fill_in "Enter delivery partner name", with: "Teaching TSH"
+        click_link "Change name"
+        fill_in "Enter the delivery partner's name", with: "Teaching TSH"
         click_button "Save"
         choose "Yes", visible: :all
         click_button "Continue"
@@ -152,12 +173,13 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
       create(:delivery_partner, name: "Original Partner Name")
 
       visit npq_separation_admin_delivery_partners_path
-      click_link "Change"
+      click_link "View"
+      click_link "Change name"
 
-      fill_in "Enter delivery partner name", with: ""
+      fill_in "Enter the delivery partner's name", with: ""
       click_button "Save"
 
-      expect(page).to have_content("Update delivery partner name")
+      expect(page).to have_content("Change delivery partner name")
       expect(page).to have_content("can't be blank")
     end
 
@@ -168,13 +190,13 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
       expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
     end
 
-    scenario "cancel button on edit form redirects back to index page" do
+    scenario "cancel button on edit form redirects back to delivery partner page" do
       delivery_partner = create(:delivery_partner)
 
       visit edit_npq_separation_admin_delivery_partner_path(delivery_partner)
 
       click_link "Cancel"
-      expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
+      expect(page).to have_current_path(npq_separation_admin_delivery_partner_path(delivery_partner))
     end
 
     scenario "searching for a delivery partner" do
