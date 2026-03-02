@@ -6,11 +6,10 @@ module Declarations
     attribute :declaration
     attribute :delivery_partner_id
     attribute :secondary_delivery_partner_id
-    validate :declaration_valid
     validate :delivery_partner_existence
     validate :secondary_delivery_partner_existence
 
-    validates :declaration, presence: true
+    validates :declaration, presence: true, validate_and_copy_errors: true
     validates :delivery_partner_id, presence: true
 
     def change_delivery_partner
@@ -24,12 +23,6 @@ module Declarations
     end
 
   private
-
-    def declaration_valid
-      return unless declaration
-
-      errors.merge!(declaration.errors) unless declaration.valid?
-    end
 
     def delivery_partner_existence
       if delivery_partner.nil?

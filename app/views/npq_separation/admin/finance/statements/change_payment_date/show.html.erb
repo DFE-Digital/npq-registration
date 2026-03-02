@@ -9,6 +9,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @service,
                  url: npq_separation_admin_finance_statements_change_payment_date_path(@statement) do |f| %>
+
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_date_field :payment_date,
