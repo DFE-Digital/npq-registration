@@ -36,7 +36,7 @@ RSpec.describe School do
       before { create(:school, name: "a school") }
 
       it "returns schools matching the name" do
-        expect(described_class.search_by_name("a school").count).to be(1)
+        expect(described_class.search_by_name("a school").count).to eq 1
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe School do
       before { create(:school, la_name: "Swindon") }
 
       it "returns schools matching the la_name" do
-        expect(described_class.search_by_name("Swindon").count).to be(1)
+        expect(described_class.search_by_name("Swindon").count).to eq 1
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe School do
       before { create(:school, address_1: "someplace") }
 
       it "returns schools matching the address_1" do
-        expect(described_class.search_by_name("someplace").count).to be(1)
+        expect(described_class.search_by_name("someplace").count).to eq 1
       end
     end
 
@@ -60,7 +60,7 @@ RSpec.describe School do
       before { create(:school, address_2: "someplace") }
 
       it "returns schools matching the address_2" do
-        expect(described_class.search_by_name("someplace").count).to be(1)
+        expect(described_class.search_by_name("someplace").count).to eq 1
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe School do
       before { create(:school, address_3: "someplace") }
 
       it "returns schools matching the address_3" do
-        expect(described_class.search_by_name("someplace").count).to be(1)
+        expect(described_class.search_by_name("someplace").count).to eq 1
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe School do
       before { create(:school, town: "someplace") }
 
       it "returns schools matching the town" do
-        expect(described_class.search_by_name("someplace").count).to be(1)
+        expect(described_class.search_by_name("someplace").count).to eq 1
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe School do
       before { create(:school, county: "someplace") }
 
       it "returns schools matching the county" do
-        expect(described_class.search_by_name("someplace").count).to be(1)
+        expect(described_class.search_by_name("someplace").count).to eq 1
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe School do
       before { create(:school, postcode: "AB12 3CD") }
 
       it "returns schools matching the postcode" do
-        expect(described_class.search_by_name("AB12 3CD").count).to be(1)
+        expect(described_class.search_by_name("AB12 3CD").count).to eq 1
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe School do
       before { create(:school, postcode_without_spaces: "AB123CD") }
 
       it "returns schools matching the postcode without spaces" do
-        expect(described_class.search_by_name("AB123CD").count).to be(1)
+        expect(described_class.search_by_name("AB123CD").count).to eq 1
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe School do
       before { create(:school, region: "someplace") }
 
       it "returns schools matching the region" do
-        expect(described_class.search_by_name("someplace").count).to be(1)
+        expect(described_class.search_by_name("someplace").count).to eq 1
       end
     end
 
@@ -116,7 +116,7 @@ RSpec.describe School do
       before { create(:school, urn: "123456") }
 
       it "returns schools matching the URN" do
-        expect(described_class.search_by_name("123456").count).to be(1)
+        expect(described_class.search_by_name("123456").count).to eq 1
       end
     end
 
@@ -126,19 +126,19 @@ RSpec.describe School do
       end
 
       it "can find with apostrophe" do
-        expect(described_class.search_by_name("andrew's").count).to be(1)
+        expect(described_class.search_by_name("andrew's").count).to eq 1
       end
 
       it "can find without apostrophe" do
-        expect(described_class.search_by_name("andrews").count).to be(1)
+        expect(described_class.search_by_name("andrews").count).to eq 1
       end
 
       it "can find partial match" do
-        expect(described_class.search_by_name("andrew").count).to be(1)
+        expect(described_class.search_by_name("andrew").count).to eq 1
       end
 
       it "can return no matches" do
-        expect(described_class.search_by_name("bob").open.count).to be(0)
+        expect(described_class.search_by_name("bob").open.count).to eq 0
       end
     end
 
@@ -148,15 +148,15 @@ RSpec.describe School do
       end
 
       it "can find with hyphen" do
-        expect(described_class.search_by_name("mary-anne").count).to be(1)
+        expect(described_class.search_by_name("mary-anne").count).to eq 1
       end
 
       it "can find without hyphen" do
-        expect(described_class.search_by_name("mary anne").count).to be(1)
+        expect(described_class.search_by_name("mary anne").count).to eq 1
       end
 
       it "can find partial match" do
-        expect(described_class.search_by_name("mary").count).to be(1)
+        expect(described_class.search_by_name("mary").count).to eq 1
       end
     end
 
