@@ -663,6 +663,14 @@ RSpec.describe Declaration, type: :model do
         end
       end
 
+      describe ".billable_or_submitted" do
+        it "returns declarations with billable or submitted states" do
+          billable_or_submitted = declarations.select { |d| %w[submitted eligible payable paid].include?(d.state) }
+
+          expect(described_class.billable_or_submitted).to match_array(billable_or_submitted)
+        end
+      end
+
       describe ".voidable" do
         it "returns declarations with voidable states" do
           voidable_declarations = declarations.select { |d| %w[submitted eligible payable ineligible].include?(d.state) }
