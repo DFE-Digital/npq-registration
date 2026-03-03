@@ -12,7 +12,7 @@ on:
         description: Node version
         type: string
         required: false
-        default: "22.22.0"
+        default: "24.13.0"
 
 env:
   code-coverage-artifact-name: code_coverage_${{github.run_number}}
