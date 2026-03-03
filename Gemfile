@@ -33,7 +33,7 @@ gem "omniauth"
 gem "omniauth_openid_connect"
 gem "omniauth-rails_csrf_protection"
 gem "pagy"
-gem "paper_trail", "~> 17.0"
+gem "paper_trail"
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
 gem "puma", "~> 7.1"
@@ -46,7 +46,7 @@ gem "secure_headers"
 gem "sentry-delayed_job"
 gem "sentry-rails"
 gem "sentry-ruby"
-gem "simpleidn", "~> 0.2.3"
+gem "simpleidn"
 gem "skylight", "~> 7.0"
 gem "sprockets", "~> 4.2.2"
 gem "sprockets-rails", require: "sprockets/railtie"
@@ -95,7 +95,7 @@ end
 
 group :development, :test, :review, :sandbox do
   gem "factory_bot_rails"
-  gem "faker", "~> 3.5"
+  gem "faker"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
