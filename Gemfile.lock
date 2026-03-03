@@ -632,8 +632,8 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
-    shoulda-matchers (6.5.0)
-      activesupport (>= 5.2.0)
+    shoulda-matchers (7.0.1)
+      activesupport (>= 7.1)
     signet (0.21.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -764,7 +764,7 @@ DEPENDENCIES
   faker (~> 3.5)
   flipper
   flipper-active_record
-  foreman (~> 0.90.0)
+  foreman
   google-cloud-bigquery
   govuk-components (~> 5.11)
   govuk_design_system_formbuilder (~> 5.8)
@@ -782,7 +782,7 @@ DEPENDENCIES
   omniauth_openid_connect
   pagy
   paper_trail (~> 17.0)
-  parallel_tests (~> 5.4)
+  parallel_tests
   pg (>= 0.18, < 2.0)
   pg_search
   puma (~> 7.1)
@@ -793,7 +793,7 @@ DEPENDENCIES
   redis
   rouge
   rspec-default_http_header
-  rspec-rails (~> 8.0)
+  rspec-rails
   rspec-sonarqube-formatter
   rswag-specs
   rubocop-govuk
@@ -802,7 +802,7 @@ DEPENDENCIES
   sentry-delayed_job
   sentry-rails
   sentry-ruby
-  shoulda-matchers (~> 6.5)
+  shoulda-matchers
   simplecov
   simpleidn (~> 0.2.3)
   site_prism (~> 5.1)

@@ -65,8 +65,8 @@ group :development, :test do
   gem "debug"
   gem "dotenv-rails"
   gem "knapsack"
-  gem "parallel_tests", "~> 5.4"
-  gem "rspec-rails", "~> 8.0"
+  gem "parallel_tests"
+  gem "rspec-rails"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
@@ -76,7 +76,7 @@ end
 
 group :development do
   gem "brakeman"
-  gem "foreman", "~> 0.90.0"
+  gem "foreman"
   gem "i18n-debug"
   gem "listen", ">= 3.0.5"
   gem "rails-erd"
@@ -88,7 +88,7 @@ group :test do
   gem "axe-core-rspec", "~> 4.11"
   gem "cuprite"
   gem "rspec-default_http_header"
-  gem "shoulda-matchers", "~> 6.5"
+  gem "shoulda-matchers"
   gem "site_prism", "~> 5.1"
   gem "webmock", "~> 3.26"
 end
