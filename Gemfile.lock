@@ -364,7 +364,7 @@ GEM
     mutex_m (0.3.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
-    net-imap (0.5.13)
+    net-imap (0.6.3)
       date
       net-protocol
     net-pop (0.1.2)
@@ -776,9 +776,6 @@ DEPENDENCIES
   listen (>= 3.0.5)
   mail-notify
   method_source
-  net-imap (~> 0.5.12)
-  net-pop
-  net-smtp (~> 0.5.1)
   oj
   omniauth
   omniauth-rails_csrf_protection
