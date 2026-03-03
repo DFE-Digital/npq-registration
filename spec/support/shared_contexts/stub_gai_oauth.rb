@@ -58,7 +58,6 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
       "email" => user_email,
       "full_name" => user_full_name,
       "preferred_name" => user_preferred_name,
-      "previous_names" => user_previous_names,
       "provider" => "tra_openid_connect",
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => user_trn,

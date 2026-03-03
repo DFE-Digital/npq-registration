@@ -9,4 +9,5 @@ Rails.application.configure do
   end
 
   config.x.teacher_auth.enabled = false
+  config.x.api.previous_names = true
 end

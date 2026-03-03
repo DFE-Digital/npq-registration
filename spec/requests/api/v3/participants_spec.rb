@@ -34,6 +34,33 @@ RSpec.describe "Participant endpoints", type: :request do
     it_behaves_like "an API endpoint that checks participant_id change" do
       let(:path) { api_v3_participant_path(participant_id_change.from_participant_id) }
     end
+
+    context "when the previous_names config is enabled" do
+      before do
+        resource.update!(previous_names: ["Ben Smith"])
+      end
+
+      it "includes the previous_names in the response" do
+        api_get(path(resource_id))
+
+        expect(response.status).to eq(200)
+        expect(parsed_response.dig("data", "attributes", "previous_names")).to eq(["Ben Smith"])
+      end
+    end
+
+    context "when the previous_names config is disabled" do
+      before do
+        allow(Rails.configuration.x.api).to receive(:previous_names).and_return(false)
+        resource.update!(previous_names: ["Ben Smith"])
+      end
+
+      it "does not include the previous_names in the response" do
+        api_get(path(resource_id))
+
+        expect(response.status).to eq(200)
+        expect(parsed_response.dig("data", "attributes")).not_to have_key("previous_names")
+      end
+    end
   end
 
   describe "PUT /api/v3/participants/:ecf_id/resume" do

@@ -164,6 +164,15 @@ PARTICIPANT = {
   }
 
   h[:v3] = h[:v2].deep_dup
+  h[:v3][:properties][:attributes][:properties][:previous_names] = {
+    description: "The previous names of this NPQ participant",
+    type: :array,
+    nullable: true,
+    items: {
+      type: :string,
+      example: "Ben Smith",
+    },
+  }
   h[:v3][:properties][:attributes][:properties].except!(:email)
   h[:v3][:properties][:attributes][:properties][:npq_enrolments][:items][:required] << :email
   h[:v3][:properties][:attributes][:properties][:npq_enrolments][:items][:properties].merge!({
