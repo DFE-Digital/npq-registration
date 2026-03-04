@@ -2,7 +2,7 @@ module Questionnaires
   class YourEmployment < Base
     QUESTION_NAME = :employment_type
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true
 

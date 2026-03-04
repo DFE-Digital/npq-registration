@@ -4,7 +4,7 @@ module Questionnaires
 
     QUESTION_NAME = :course_identifier
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true
     validate :validate_course_exists

@@ -1,6 +1,6 @@
 module Questionnaires
   class ReferredByReturnToTeachingAdviser < Base
-    attr_accessor :referred_by_return_to_teaching_adviser
+    attribute :referred_by_return_to_teaching_adviser
 
     validates :referred_by_return_to_teaching_adviser, presence: true, inclusion: { in: %w[yes no] }
 

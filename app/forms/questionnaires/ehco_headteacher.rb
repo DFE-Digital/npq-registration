@@ -4,7 +4,7 @@ module Questionnaires
 
     include Helpers::Institution
 
-    attr_accessor :ehco_headteacher
+    attribute :ehco_headteacher
 
     validates :ehco_headteacher, presence: true, inclusion: { in: VALID_EHCO_HEADTEACHER_OPTIONS }
 

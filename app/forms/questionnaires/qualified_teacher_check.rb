@@ -2,14 +2,15 @@ module Questionnaires
   class QualifiedTeacherCheck < Base
     include ActiveRecord::AttributeAssignment
 
-    attr_accessor :trn, :full_name, :national_insurance_number
+    attribute :trn
+    attribute :full_name
+    attribute :national_insurance_number
+    attribute :date_of_birth, :date
 
-    attr_reader :date_of_birth
-
-    def date_of_birth=(value)
+    def date_of_birth=(...)
       @date_of_birth_invalid = false
-      @date_of_birth = ActiveRecord::Type::Date.new.cast(value)
-    rescue StandardError => _e
+      super
+    rescue ArgumentError => _e
       @date_of_birth_invalid = true
     end
 

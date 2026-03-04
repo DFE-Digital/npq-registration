@@ -2,7 +2,7 @@ module Questionnaires
   class FundingYourNpq < Base
     VALID_FUNDING_OPTIONS = %w[school trust self another employer].freeze
 
-    attr_accessor :funding
+    attribute :funding
 
     validates :funding, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
 
