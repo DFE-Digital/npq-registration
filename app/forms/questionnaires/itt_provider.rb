@@ -2,7 +2,7 @@ module Questionnaires
   class IttProvider < Base
     QUESTION_NAME = :itt_provider
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true
     validate :validate_itt_provider

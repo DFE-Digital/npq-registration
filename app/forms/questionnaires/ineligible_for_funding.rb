@@ -14,7 +14,7 @@ module Questionnaires
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
 
-    attr_accessor :version
+    attribute :version
 
     def next_step
       :funding_your_npq

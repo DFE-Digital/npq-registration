@@ -2,7 +2,7 @@ module Questionnaires
   class FindChildcareProvider < Base
     QUESTION_NAME = :institution_location
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true, length: { maximum: 64 }
 

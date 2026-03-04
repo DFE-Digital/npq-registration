@@ -2,7 +2,8 @@ module Questionnaires
   class ChoosePrivateChildcareProvider < Base
     include Helpers::Institution
 
-    attr_accessor :institution_name, :institution_identifier
+    attribute :institution_name
+    attribute :institution_identifier
 
     validates :institution_name, length: { maximum: 64 }
 

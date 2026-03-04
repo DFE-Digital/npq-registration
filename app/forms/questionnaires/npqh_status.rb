@@ -4,7 +4,7 @@ module Questionnaires
 
     include Helpers::Institution
 
-    attr_accessor :npqh_status
+    attribute :npqh_status
 
     validates :npqh_status, presence: true, inclusion: { in: VALID_NPQH_STATUS_OPTIONS }
 

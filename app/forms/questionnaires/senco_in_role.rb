@@ -4,7 +4,7 @@ module Questionnaires
 
     QUESTION_NAME = :senco_in_role
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true
 

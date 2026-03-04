@@ -4,7 +4,8 @@ module Questionnaires
   class ChooseChildcareProvider < Base
     include Helpers::Institution
 
-    attr_accessor :institution_name, :institution_identifier
+    attribute :institution_name
+    attribute :institution_identifier
 
     validates :institution_identifier, format: { with: /\ASchool-\d{6,7}\z|\ALocalAuthority-\d+\z/, unless: -> { institution_identifier.blank? || institution_identifier == "other" } }
     validates :institution_name, length: { maximum: 64 }
