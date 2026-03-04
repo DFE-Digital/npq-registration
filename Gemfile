@@ -8,6 +8,7 @@ gem "azure-blob"
 gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
+gem "connection_pool", "~> 2.5" # v3 swaps to kwargs, we'll upgrade as part of Rails 8.1
 gem "countries"
 gem "cssbundling-rails", "~> 1.4"
 gem "daemons"
@@ -32,10 +33,10 @@ gem "omniauth"
 gem "omniauth_openid_connect"
 gem "omniauth-rails_csrf_protection"
 gem "pagy"
-gem "paper_trail", "~> 17.0"
+gem "paper_trail"
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
-gem "puma", "~> 7.1.0"
+gem "puma", "~> 7.1"
 gem "rack-attack"
 gem "rails", "~> 8.0.4"
 gem "rails_semantic_logger"
@@ -45,17 +46,13 @@ gem "secure_headers"
 gem "sentry-delayed_job"
 gem "sentry-rails"
 gem "sentry-ruby"
-gem "simpleidn", "~> 0.2.3"
+gem "simpleidn"
 gem "skylight", "~> 7.0"
 gem "sprockets", "~> 4.2.2"
 gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "strong_migrations"
 gem "with_advisory_lock"
-
-gem "net-imap", "~> 0.5.12", require: false
-gem "net-pop", require: false
-gem "net-smtp", "~> 0.5.1", require: false
 
 group :development, :test, :review do
   gem "bullet"
@@ -68,8 +65,8 @@ group :development, :test do
   gem "debug"
   gem "dotenv-rails"
   gem "knapsack"
-  gem "parallel_tests", "~> 5.4"
-  gem "rspec-rails", "~> 8.0"
+  gem "parallel_tests"
+  gem "rspec-rails"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
@@ -79,9 +76,9 @@ end
 
 group :development do
   gem "brakeman"
-  gem "foreman", "~> 0.90.0"
+  gem "foreman"
   gem "i18n-debug"
-  gem "listen", ">= 3.0.5", "< 3.10"
+  gem "listen", ">= 3.0.5"
   gem "rails-erd"
   gem "web-console", ">= 3.3.0"
 end
@@ -91,14 +88,14 @@ group :test do
   gem "axe-core-rspec", "~> 4.11"
   gem "cuprite"
   gem "rspec-default_http_header"
-  gem "shoulda-matchers", "~> 6.5"
+  gem "shoulda-matchers"
   gem "site_prism", "~> 5.1"
   gem "webmock", "~> 3.26"
 end
 
 group :development, :test, :review, :sandbox do
   gem "factory_bot_rails"
-  gem "faker", "~> 3.5"
+  gem "faker"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

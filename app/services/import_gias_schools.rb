@@ -42,7 +42,7 @@ private
       when "CloseDate", "LastChangedDate"
         Date.parse(value) if value.present?
       else
-        value.to_s if value.present?
+        value.presence&.to_s
       end
     end
   end

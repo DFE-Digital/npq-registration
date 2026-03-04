@@ -7,7 +7,6 @@ module IdentityAccountHelper
     IdentityAccountLink.new(redirect_uri).build
   end
 
-  # rubocop:disable Rails/HelperInstanceVariable
   class IdentityAccountLink
     def initialize(redirect_uri)
       @redirect_uri = redirect_uri
@@ -42,5 +41,4 @@ module IdentityAccountHelper
       "#{base_url}/sign-out"
     end
   end
-  # rubocop:enable Rails/HelperInstanceVariable
 end

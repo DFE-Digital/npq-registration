@@ -6,14 +6,13 @@ RSpec.describe "npq_separation/admin/applications/declarations/index.html.erb", 
   let(:application) { build_stubbed(:application) }
 
   before do
-    stub_template "_declaration.html.erb" => "declaration partial\n"
     assign(:application, application)
     assign(:declarations, [])
   end
 
   context "with no declarations" do
     it { is_expected.to have_text("No declarations.") }
-    it { is_expected.not_to have_text("declaration partial") }
+    it { is_expected.not_to have_css ".govuk-summary-card" }
   end
 
   context "with declarations" do
@@ -25,6 +24,6 @@ RSpec.describe "npq_separation/admin/applications/declarations/index.html.erb", 
     end
 
     it { is_expected.not_to have_text("No declarations.") }
-    it { is_expected.to have_text("declaration partial\ndeclaration partial\n") }
+    it { is_expected.to have_css ".govuk-summary-card", count: 2 }
   end
 end

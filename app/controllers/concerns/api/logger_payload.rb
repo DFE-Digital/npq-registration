@@ -25,7 +25,7 @@ module API
 
       params.transform_values! do |val|
         if val.is_a?(Hash)
-          val = val.present? ? val.to_json : nil
+          val = val.presence&.to_json
         end
 
         val.presence

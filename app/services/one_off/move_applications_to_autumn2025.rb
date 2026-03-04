@@ -118,9 +118,7 @@ module OneOff
                            declarations: { statement_items: :statement,
                                            cohort: [] })
                  .find(ids)
-                 .each do |application|
-        move_application_to_autumn(application)
-      end
+                 .each { |application| move_application_to_autumn(application) }
     end
 
     def move_application_to_autumn(application)
