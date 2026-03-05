@@ -2,6 +2,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
   let(:user_first_name) { "John" }
   let(:user_last_name) { "Doe" }
   let(:user_preferred_name) { "#{user_first_name} #{user_last_name}" }
+  let(:user_previous_names) { [] }
   let(:user_full_name) { user_preferred_name || "#{user_first_name} #{user_last_name}" }
   let(:user_email) { "user@example.com" }
   let(:user_uid) { SecureRandom.uuid }

@@ -80,5 +80,8 @@ module NpqRegistration
     config.x.teacher_auth.domain = ENV["TEACHER_AUTH_DOMAIN"]
     config.x.teacher_auth.client_id = ENV["TEACHER_AUTH_CLIENT_ID"]
     config.x.teacher_auth.client_secret = ENV["TEACHER_AUTH_CLIENT_SECRET"]
+
+    # API configuration
+    config.x.api.previous_names = Rails.env.local?
   end
 end

@@ -32,6 +32,41 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
       expect(attributes["full_name"]).to eq(participant.full_name)
     end
 
+    context "when serializing `previous_names`" do
+      context "when the config flag is enabled" do
+        before do
+          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(true)
+          participant.update!(previous_names: ["Ben Smith", "Ben Doe"])
+        end
+
+        it "serializes the `previous_names` array" do
+          expect(attributes["previous_names"]).to eq(["Ben Smith", "Ben Doe"])
+        end
+      end
+
+      context "when the config flag is disabled" do
+        before do
+          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(false)
+          participant.update!(previous_names: ["Ben Smith", "Ben Doe"])
+        end
+
+        it "does not include the field" do
+          expect(attributes).not_to have_key("previous_names")
+        end
+      end
+
+      context "when the participant has no previous names" do
+        before do
+          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(true)
+          participant.update!(previous_names: [])
+        end
+
+        it "serializes an empty array" do
+          expect(attributes["previous_names"]).to eq([])
+        end
+      end
+    end
+
     context "when serializing `teacher_reference_number`" do
       context "when trn is verified" do
         before { participant.update!(trn_verified: true) }
