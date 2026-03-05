@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_03_110835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -608,6 +608,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
     t.index ["ecf_id"], name: "index_statements_on_ecf_id", unique: true
     t.index ["lead_provider_id", "cohort_id", "year", "month"], name: "idx_on_lead_provider_id_cohort_id_year_month_2dece26c47", unique: true
     t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
+  end
+
+  create_table "teaching_record_system_webhook_messages", force: :cascade do |t|
+    t.string "cloud_event_type"
+    t.string "cloud_event_id"
+    t.string "status", default: "pending"
+    t.string "status_comment"
+    t.jsonb "raw"
+    t.datetime "sent_at"
+    t.datetime "processed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
