@@ -8,10 +8,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   let(:email) { "user@example.com" }
   let(:trn) { "1234567" }
   let(:verified_name) { %w[Test User] }
+  let(:api_previous_names) { [] }
 
   let(:provider_data) do
     OpenStruct.new({
       uid:,
+      credentials: OpenStruct.new({
+        token: "123456",
+      }),
       info: OpenStruct.new({
         email:,
       }),
@@ -25,7 +29,19 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     })
   end
 
-  before { create(:user, trn:, trn_verified: true, archived_at: 1.day.ago) }
+  before do
+    create(:user, trn:, trn_verified: true, archived_at: 1.day.ago)
+
+    stub_request(:get, "#{ENV['TRS_API_URL']}/v3/person")
+      .with(
+        headers: {
+          "Authorization" => "Bearer 123456",
+          "X-Api-Version" => "Next",
+        },
+        query: { "include" => "PreviousNames" },
+      )
+      .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
+  end
 
   context "when the TRN matches a verified TRN on one user" do
     let(:user) { create(:user, trn:, trn_verified: true) }
@@ -45,6 +61,57 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       it "updates the user" do
         subject
         expect(user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
+      end
+    end
+
+    describe "previous names handling" do
+      context "when the API returns no previous names" do
+        let(:api_previous_names) { [] }
+
+        it "stores an empty array for previous_names on the user" do
+          subject
+          expect(user.reload.previous_names).to eq([])
+        end
+      end
+
+      context "when the API returns one previous name" do
+        let(:api_previous_names) do
+          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
+        end
+
+        it "stores the previous name on the user" do
+          subject
+          expect(user.reload.previous_names).to eq(["Sarah Johnson"])
+        end
+      end
+
+      context "when the API returns multiple previous names" do
+        let(:api_previous_names) do
+          [
+            { "firstName" => "Sarah", "lastName" => "Johnson" },
+            { "firstName" => "Sarah", "middleName" => "Ann", "lastName" => "Williams" },
+          ]
+        end
+
+        it "stores all previous names on the user" do
+          subject
+          expect(user.reload.previous_names).to eq([
+            "Sarah Johnson",
+            "Sarah Ann Williams",
+          ])
+        end
+      end
+
+      context "when the user already has previous_names" do
+        let(:user) { create(:user, trn:, trn_verified: true, previous_names: ["Old Name"]) }
+        let(:api_previous_names) do
+          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
+        end
+
+        it "replaces old previous_names with new data from API" do
+          subject
+          expect(user.reload.previous_names).to eq(["Sarah Johnson"])
+        end
       end
     end
   end
@@ -89,6 +156,17 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         expect(most_recently_updated_user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
       end
     end
+
+    context "when the API returns previous names" do
+      let(:api_previous_names) do
+        [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
+      end
+
+      it "stores previous_names on the kept user" do
+        subject
+        expect(most_recently_updated_user.reload.previous_names).to eq(["Sarah Johnson"])
+      end
+    end
   end
 
   shared_examples "logging in using provider and UID" do
@@ -120,6 +198,32 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
         end
       end
+
+      context "when the API returns previous names" do
+        let(:api_previous_names) do
+          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
+        end
+
+        it "updates previous_names on the user" do
+          subject
+          expect(existing_user.reload.previous_names).to eq(["Sarah Johnson"])
+        end
+      end
+
+      context "when the user already has different previous_names" do
+        let(:existing_user) do
+          create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:,
+                                            previous_names: ["Old Previous Name"])
+        end
+        let(:api_previous_names) do
+          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
+        end
+
+        it "replaces old previous_names with new API data" do
+          subject
+          expect(existing_user.reload.previous_names).to eq(["Sarah Johnson"])
+        end
+      end
     end
 
     context "when no user exists with the same provider and UID" do
@@ -141,6 +245,34 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
         it "raises an error" do
           expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
+        end
+      end
+
+      context "when the API returns no previous names" do
+        let(:api_previous_names) { [] }
+
+        it "creates the user with an empty previous_names array" do
+          subject
+          created_user = User.find_by(provider: "teacher_auth", uid:)
+          expect(created_user.previous_names).to eq([])
+        end
+      end
+
+      context "when the API returns previous names" do
+        let(:api_previous_names) do
+          [
+            { "firstName" => "Sarah", "lastName" => "Johnson" },
+            { "firstName" => "Sarah", "middleName" => "Ann", "lastName" => "Williams" },
+          ]
+        end
+
+        it "creates the user with previous_names from API" do
+          subject
+          created_user = User.find_by(provider: "teacher_auth", uid:)
+          expect(created_user.previous_names).to eq([
+            "Sarah Johnson",
+            "Sarah Ann Williams",
+          ])
         end
       end
     end

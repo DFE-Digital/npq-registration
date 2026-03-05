@@ -3,6 +3,7 @@
 module Users
   class FindOrCreateFromTeacherAuth
     def initialize(provider_data:, feature_flag_id:)
+      @access_token = provider_data.credentials.token
       @uid = provider_data.uid
       @trn = provider_data.extra.raw_info.trn
       @email = provider_data.info.email
@@ -11,13 +12,13 @@ module Users
       @date_of_birth = Date.parse(provider_data.extra.raw_info.verified_date_of_birth, "%Y-%m-%d")
     end
 
-    attr_reader :uid, :trn, :email, :full_name, :date_of_birth, :feature_flag_id
+    attr_reader :access_token, :uid, :trn, :email, :full_name, :date_of_birth, :feature_flag_id
 
     def call
       user_matched_using_trn = matching_users.first
 
       if user_matched_using_trn
-        user_matched_using_trn.update!(uid:, provider: Omniauth::Strategies::TeacherAuth::NAME, email:, full_name:, feature_flag_id:)
+        user_matched_using_trn.update!(uid:, provider: Omniauth::Strategies::TeacherAuth::NAME, email:, full_name:, feature_flag_id:, previous_names:)
         merge_and_archive_other_users(user_matched_using_trn, matching_users[1..])
         return user_matched_using_trn
       end
@@ -25,7 +26,7 @@ module Users
       user_matched_using_uid = User.find_by(provider: Omniauth::Strategies::TeacherAuth::NAME, uid:)
 
       if user_matched_using_uid
-        user_matched_using_uid.update!(email: email, trn:, trn_verified: true, trn_auto_verified: true, full_name:, feature_flag_id:)
+        user_matched_using_uid.update!(email: email, trn:, trn_verified: true, trn_auto_verified: true, full_name:, feature_flag_id:, previous_names:)
         return user_matched_using_uid
       end
 
@@ -44,6 +45,10 @@ module Users
       end
     end
 
+    def previous_names
+      @previous_names ||= TeachingRecordSystem::FetchPerson.fetch(access_token:).previous_names
+    end
+
     def create_user_with_provider_data
       User.create!(
         uid:,
@@ -55,6 +60,7 @@ module Users
         full_name:,
         date_of_birth:,
         feature_flag_id:,
+        previous_names:,
       )
     end
   end
