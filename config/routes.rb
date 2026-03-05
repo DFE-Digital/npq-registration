@@ -69,6 +69,9 @@ Rails.application.routes.draw do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]
       end
+      namespace :teaching_record_system do
+        resource :webhook_messages, only: %i[create]
+      end
     end
 
     namespace :v3, defaults: { format: :json } do
