@@ -5,6 +5,10 @@ require "rails_helper"
 RSpec.describe ParticipantIdChange, type: :model do
   subject { build(:participant_id_change) }
 
+  it "enables paper trail" do
+    expect(subject).to be_versioned
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:user) }
     it { is_expected.to validate_presence_of(:from_participant_id) }

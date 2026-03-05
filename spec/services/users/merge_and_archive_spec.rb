@@ -67,6 +67,15 @@ RSpec.describe Users::MergeAndArchive do
         end
       end
 
+      context "when moving the existing participant id changes would cause a circular reference" do
+        let!(:existing_participant_id_change) { create(:participant_id_change, user: user_to_merge, from_participant_id: user_to_keep.ecf_id, to_participant_id: user_to_merge.ecf_id) }
+
+        it "deletes the participant id changes instead of moving them" do
+          subject
+          expect(ParticipantIdChange.exists?(existing_participant_id_change.id)).to be false
+        end
+      end
+
       context "when only the user to merge has a uid" do
         context "when set_uid is false" do
           it "does not update the user to keep uid" do
