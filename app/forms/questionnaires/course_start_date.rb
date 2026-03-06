@@ -16,7 +16,7 @@ module Questionnaires
 
     QUESTION_NAME = :course_start_date
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true
 

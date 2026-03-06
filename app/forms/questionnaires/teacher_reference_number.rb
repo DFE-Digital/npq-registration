@@ -2,7 +2,7 @@ module Questionnaires
   class TeacherReferenceNumber < Base
     VALID_TRN_KNOWLEDGE_OPTIONS = %w[yes no-dont-have].freeze
 
-    attr_accessor :trn_knowledge
+    attribute :trn_knowledge
 
     validates :trn_knowledge, presence: true, inclusion: { in: VALID_TRN_KNOWLEDGE_OPTIONS }
 

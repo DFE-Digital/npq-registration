@@ -2,7 +2,7 @@ module Questionnaires
   class FundingYourEhco < Base
     VALID_FUNDING_OPTIONS = %w[school trust self another].freeze
 
-    attr_accessor :ehco_funding_choice
+    attribute :ehco_funding_choice
 
     validates :ehco_funding_choice, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
 

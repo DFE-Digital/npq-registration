@@ -2,7 +2,7 @@ module Questionnaires
   class HaveOfstedUrn < Base
     QUESTION_NAME = :has_ofsted_urn
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true, inclusion: { in: %w[yes no] }
 

@@ -24,7 +24,7 @@ module Questionnaires
 
     ALL_SETTINGS = [SCHOOL_SETTINGS, CHILDCARE_SETTINGS, ANOTHER_SETTING_SETTINGS, OTHER_SETTINGS].flatten
 
-    attr_accessor :work_setting
+    attribute :work_setting
 
     validates :work_setting, presence: true, inclusion: { in: ALL_SETTINGS }
 

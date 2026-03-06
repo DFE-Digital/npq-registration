@@ -1,6 +1,7 @@
 module Questionnaires
   class TeacherCatchment < Base
-    attr_accessor :teacher_catchment, :teacher_catchment_country
+    attribute :teacher_catchment
+    attribute :teacher_catchment_country
 
     validates :teacher_catchment, presence: true, inclusion: { in: %w[england another] }
 

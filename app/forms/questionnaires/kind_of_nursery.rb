@@ -12,7 +12,7 @@ module Questionnaires
     ].freeze
     KIND_OF_NURSERY_OPTIONS = KIND_OF_NURSERY_PUBLIC_OPTIONS + KIND_OF_NURSERY_PRIVATE_OPTIONS
 
-    attr_accessor :kind_of_nursery
+    attribute :kind_of_nursery
 
     validates :kind_of_nursery, presence: true, inclusion: { in: KIND_OF_NURSERY_OPTIONS }
 

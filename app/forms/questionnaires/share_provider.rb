@@ -1,6 +1,6 @@
 module Questionnaires
   class ShareProvider < Base
-    attr_accessor :can_share_choices
+    attribute :can_share_choices
 
     validates :can_share_choices, acceptance: true
 
