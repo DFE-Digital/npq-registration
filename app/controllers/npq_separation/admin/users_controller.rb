@@ -1,6 +1,11 @@
 class NpqSeparation::Admin::UsersController < NpqSeparation::AdminController
+  MIN_SEARCH_LENGTH = 2
+
   def index
-    @pagy, @users = pagy(scope)
+    search_term = params[:q]
+    @valid_search = search_term.present? && search_term.length >= MIN_SEARCH_LENGTH
+
+    @pagy, @users = pagy(scope) if @valid_search
   end
 
   def show
