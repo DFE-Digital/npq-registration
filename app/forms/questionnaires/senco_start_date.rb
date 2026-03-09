@@ -7,12 +7,12 @@ module Questionnaires
     QUESTION_NAME = :senco_start_date
     EARLIEST_SENCO_START_DATE = Date.new(1960, 1, 1)
 
-    attr_reader QUESTION_NAME
+    attribute QUESTION_NAME, :date
 
-    def senco_start_date=(value)
+    def senco_start_date=(...)
       @senco_start_date_invalid = false
-      @senco_start_date = ActiveRecord::Type::Date.new.cast(value)
-    rescue StandardError => _e
+      super
+    rescue ArgumentError => _e
       @senco_start_date_invalid = true
     end
 

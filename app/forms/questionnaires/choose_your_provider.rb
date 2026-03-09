@@ -2,7 +2,7 @@ module Questionnaires
   class ChooseYourProvider < Base
     include Helpers::Institution
 
-    attr_accessor :lead_provider_id
+    attribute :lead_provider_id
 
     validates :lead_provider_id, presence: true
     validate :validate_lead_provider_exists

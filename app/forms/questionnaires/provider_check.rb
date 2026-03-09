@@ -4,7 +4,7 @@ module Questionnaires
 
     QUESTION_NAME = :chosen_provider
 
-    attr_accessor QUESTION_NAME
+    attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true, inclusion: { in: VALID_CHOSEN_PROVIDER_OPTIONS }
 
