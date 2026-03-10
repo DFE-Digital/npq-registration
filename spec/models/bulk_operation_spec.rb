@@ -53,6 +53,25 @@ RSpec.describe BulkOperation, type: :model do
       bulk_operation.file.attach(malformed_csv_file.open)
       expect(bulk_operation).not_to be_valid
     end
+
+    context "when the file is ISO-8859-1 encoded" do
+      before do
+        stub_const("BulkOperation::HEADERS", true)
+        stub_const("BulkOperation::FILE_HEADERS", ["Disadvantaged EY School URN"])
+      end
+
+      it "allows a valid file" do
+        file = File.open(Rails.root.join("spec/fixtures/files/disadvantaged_ey_eligibility_list_iso_8859_1_encoding.csv"))
+        bulk_operation.file.attach(file)
+        expect(bulk_operation).to be_valid
+      end
+
+      it "allows whitespace in headers" do
+        file = File.open(Rails.root.join("spec/fixtures/files/disadvantaged_ey_eligibility_list_iso_8859_1_encoding_whitespace_in_header.csv"))
+        bulk_operation.file.attach(file)
+        expect(bulk_operation).to be_valid
+      end
+    end
   end
 
   describe "callbacks" do
@@ -61,6 +80,19 @@ RSpec.describe BulkOperation, type: :model do
     describe "before_save" do
       context "when file is attached" do
         before { bulk_operation.file.attach(valid_file.open) }
+
+        it "updates the row_count" do
+          expect { bulk_operation.save }.to change(bulk_operation, :row_count).from(nil).to(1)
+        end
+      end
+
+      context "when ISO-8859-1 encoded file is attached" do
+        before do
+          file = File.open(Rails.root.join("spec/fixtures/files/disadvantaged_ey_eligibility_list_iso_8859_1_encoding.csv"))
+          bulk_operation.file.attach(file)
+          stub_const("BulkOperation::HEADERS", true)
+          stub_const("BulkOperation::FILE_HEADERS", ["Disadvantaged EY School URN"])
+        end
 
         it "updates the row_count" do
           expect { bulk_operation.save }.to change(bulk_operation, :row_count).from(nil).to(1)
