@@ -183,10 +183,11 @@ shared:
   :participant_outcomes:
     - qualified_teachers_api_request_successful
     - sent_to_qualified_teachers_api_at
-  :teaching_record_system_webhook_messages:
+  :cloud_event_webhook_messages:
     - id
     - cloud_event_type
     - cloud_event_id
+    - cloud_event_source
     - status
     - status_comment
     - raw

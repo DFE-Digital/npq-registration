@@ -30,6 +30,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
         request["content-length"] = request.body.length.to_s
         request["ce-id"] = SecureRandom.uuid
         request["ce-type"] = "one_login_user.updated"
+        request["ce-source"] = "https://preprod.teacher-qualifications-api.education.gov.uk"
         request["ce-time"] = Time.zone.now.iso8601
         request.content_type = "application/json"
         Linzer.sign!(request, key:, components:, label: "whsig")
@@ -37,10 +38,23 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
     end
 
     context "when a valid signed request is made" do
+      let(:headers_to_include) do
+        %w[
+          ce-id
+          ce-source
+          ce-time
+          ce-type
+          content-digest
+          content-length
+          signature
+          signature-input
+        ]
+      end
+
       let(:headers) do
         example_signed_request
           .to_hash
-          .select { |key, _value| key.start_with?("signature") || components.include?(key) }
+          .select { |key, _value| headers_to_include.include?(key) }
           .transform_values(&:first)
       end
 
@@ -52,8 +66,17 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       before { stub_request(:get, "#{ENV.fetch('TRS_API_URL')}/webhook-jwks").to_return_json(body: trs_jwks) }
 
       it "creates a webhook message record" do
-        expect { subject }.to change(TeachingRecordSystem::WebhookMessage, :count).by(1)
-        webhook_message = TeachingRecordSystem::WebhookMessage.last
+        expect { subject }.to change(CloudEvent::WebhookMessage, :count).by(1)
+        webhook_message = CloudEvent::WebhookMessage.last
+        expect(webhook_message).to have_attributes(
+          cloud_event_id: example_signed_request["ce-id"],
+          cloud_event_type: example_signed_request["ce-type"],
+          cloud_event_source: example_signed_request["ce-source"],
+          status_comment: nil,
+          status: "pending",
+          raw: body,
+        )
+
         expect(webhook_message.status_comment).to be_nil
         expect(webhook_message.status).to eq("pending")
         expect(webhook_message.raw).to eq(body)
@@ -75,7 +98,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
 
       it "does not create a webhook message record" do
         subject
-        expect(TeachingRecordSystem::WebhookMessage.count).to eq 0
+        expect(CloudEvent::WebhookMessage.count).to eq 0
       end
     end
 
@@ -94,7 +117,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
 
       it "does not create a webhook message record" do
         subject
-        expect(TeachingRecordSystem::WebhookMessage.count).to eq 0
+        expect(CloudEvent::WebhookMessage.count).to eq 0
       end
     end
   end

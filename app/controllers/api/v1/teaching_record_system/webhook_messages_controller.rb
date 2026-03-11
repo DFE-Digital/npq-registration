@@ -9,7 +9,11 @@ module API
             # TODO: cache this key for a day
             key(key_id)
           end
-          ::TeachingRecordSystem::WebhookMessage.create!(status: :pending, raw: request.raw_post)
+          ::CloudEvent::WebhookMessage.create!(status: :pending,
+                                               cloud_event_id: request.headers["ce-id"],
+                                               cloud_event_source: request.headers["ce-source"],
+                                               cloud_event_type: request.headers["ce-type"],
+                                               raw: request.raw_post)
           head :ok
         rescue Linzer::Error => e
           Rails.logger.error("Failed to verify webhook message: #{e.message}")
