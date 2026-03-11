@@ -66,7 +66,7 @@ RSpec.describe "Omniauth callbacks", type: :request do
         get "/users/auth/tra_openid_connect"
 
         expect(response).to have_http_status(:not_found)
-        expect(response.body).to include("Not found. Authentication passthru.")
+        expect(response.body).to include("No route matches")
       end
     end
   end
