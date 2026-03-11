@@ -10,6 +10,8 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
     let(:public_key) { Linzer.new_ecdsa_p384_sha384_key(key.material.public_to_pem) }
     let(:content_digest) { "sha-256=:#{Base64.strict_encode64(Digest::SHA256.digest(body))}" }
     let(:components) { %w[@target-uri content-digest content-length ce-id ce-type ce-time] }
+    let(:jwks_stub) { stub_request(:get, "#{ENV.fetch('TRS_API_URL')}/webhook-jwks").to_return_json(body: trs_jwks) }
+    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
     let(:body) do
       {
@@ -63,7 +65,10 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
         JWT::JWK::Set.new(jwk).export.to_json
       end
 
-      before { stub_request(:get, "#{ENV.fetch('TRS_API_URL')}/webhook-jwks").to_return_json(body: trs_jwks) }
+      before do
+        jwks_stub
+        allow(Rails).to receive(:cache).and_return(memory_store)
+      end
 
       it "creates a webhook message record" do
         expect { subject }.to change(CloudEvent::WebhookMessage, :count).by(1)
@@ -80,6 +85,33 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
         expect(webhook_message.status_comment).to be_nil
         expect(webhook_message.status).to eq("pending")
         expect(webhook_message.raw).to eq(body)
+      end
+
+      it "caches the JWKS response for a day" do
+        post(path, headers:, params: body)
+        post(path, headers:, params: body)
+        expect(jwks_stub).to have_been_requested.once
+        travel 25.hours
+        post(path, headers:, params: body)
+        expect(jwks_stub).to have_been_requested.twice
+      end
+
+      context "when the JWKS endpoint is not working" do
+        let(:jwks_stub) { stub_request(:get, "#{ENV.fetch('TRS_API_URL')}/webhook-jwks").to_return(status: 500) }
+
+        it "does something"
+      end
+
+      context "when the JWKS response does not contain the expected key" do
+        let(:trs_jwks) do
+          jwk = JWT::JWK.import(public_key.material, alg: "ES384", kid: "key2", use: "sig")
+          JWT::JWK::Set.new(jwk).export.to_json
+        end
+
+        it "returns a 401 response" do
+          subject
+          expect(response.status).to eq 401
+        end
       end
     end
 
