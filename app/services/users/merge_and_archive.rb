@@ -49,7 +49,7 @@ module Users
             participant_id_change.destroy!
           else
             logger.info("Moving participant ID change ID=#{participant_id_change.id} from user ID=#{from_user.id} to user ID=#{to_user.id}")
-            from_user.participant_id_changes.update!(user: to_user)
+            participant_id_change.update!(user: to_user)
           end
         end
       end
