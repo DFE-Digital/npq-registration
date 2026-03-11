@@ -18,7 +18,7 @@ module Questionnaires
 
     attribute QUESTION_NAME
 
-    validates QUESTION_NAME, presence: true
+    validates QUESTION_NAME, presence: true, inclusion: { in: %w[yes no] }
 
     def self.permitted_params
       [QUESTION_NAME]
