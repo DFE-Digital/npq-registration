@@ -26,7 +26,7 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
     }
   }
 
-  configurationOptions.minLength = 2
+  configurationOptions.minLength = 3
   configurationOptions.defaultValue = ""
   configurationOptions.displayMenu = "overlay"
 
@@ -52,7 +52,7 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
   configurationOptions.source = debounce( async ( query, populateResults ) => {
     const res = await fetchSource(configurationOptions.lookupPath, query, location);
     populateResults(res);
-  }, 300 )
+  }, 500 )
 
   if (configurationOptions.name === undefined) configurationOptions.name = ''
 
