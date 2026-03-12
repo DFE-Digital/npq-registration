@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_18_154426) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -567,7 +567,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
     t.boolean "eyl_funding_eligible", default: false
     t.integer "phase_type", default: 0
     t.string "phase_name", default: "Not applicable"
+    t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, ((((((((((((((((((((COALESCE(name, ''::text) || ' '::text) || COALESCE(la_name, ''::text)) || ' '::text) || COALESCE(address_1, ''::text)) || ' '::text) || COALESCE(address_2, ''::text)) || ' '::text) || COALESCE(address_3, ''::text)) || ' '::text) || COALESCE(town, ''::text)) || ' '::text) || COALESCE(county, ''::text)) || ' '::text) || COALESCE(postcode, ''::text)) || ' '::text) || COALESCE(postcode_without_spaces, ''::text)) || ' '::text) || COALESCE(region, ''::text)) || ' '::text) || COALESCE(urn, ''::text)))", stored: true
     t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
+    t.index ["search_vector"], name: "index_schools_on_search_vector", using: :gin
     t.index ["urn"], name: "index_schools_on_urn"
   end
 

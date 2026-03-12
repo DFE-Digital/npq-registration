@@ -129,6 +129,7 @@ shared:
     - number_of_pupils
     - phase_type
     - phase_name
+    - search_vector
   :financial_change_logs:
     - id
     - operation_description
