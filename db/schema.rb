@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_11_153717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -565,7 +565,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
     t.boolean "eyl_funding_eligible", default: false
     t.integer "phase_type", default: 0
     t.string "phase_name", default: "Not applicable"
+    t.index "to_tsvector('english'::regconfig, COALESCE(address_1, ''::text))", name: "school_address_1_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(address_2, ''::text))", name: "school_address_2_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(address_3, ''::text))", name: "school_address_3_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(county, ''::text))", name: "school_county_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(la_name, ''::text))", name: "school_la_name_search_idx", using: :gin
     t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(postcode, ''::text))", name: "school_postcode_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(postcode_without_spaces, ''::text))", name: "school_postcode_without_spaces_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(region, ''::text))", name: "school_region_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(town, ''::text))", name: "school_town_search_idx", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(urn, ''::text))", name: "school_urn_search_idx", using: :gin
     t.index ["urn"], name: "index_schools_on_urn"
   end
 
