@@ -1,5 +1,4 @@
 class BulkOperation::SubmitDeclarations < BulkOperation
-  HEADERS = true
   FILE_HEADERS = %w[participant_id declaration_type declaration_date course_identifier delivery_partner_id lead_provider_name has_passed].freeze
 
   def run!

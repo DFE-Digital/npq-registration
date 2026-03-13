@@ -1,5 +1,4 @@
 class BulkOperation::UpdateAndVerifyTrns < BulkOperation
-  HEADERS = true
   FILE_HEADER_USER_ID = "User ID".freeze
   FILE_HEADER_UPDATED_TRN = "Updated TRN".freeze
   FILE_HEADERS = [FILE_HEADER_USER_ID, FILE_HEADER_UPDATED_TRN].freeze

@@ -168,10 +168,6 @@ en:
               empty: Uploaded file is empty
               invalid: Uploaded file is wrong format
               malformed: Uploaded file is not a valid CSV
-        bulk_operation/upload_eligibility_list:
-          attributes:
-            file:
-              invalid_headers: Uploaded file has incorrect header
         admin:
           attributes:
             full_name:

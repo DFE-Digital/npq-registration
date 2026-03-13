@@ -22,14 +22,8 @@ private
     true
   end
 
-  def check_format
-    errors.add(:file, :empty) if csv_from_file_upload.count.zero?
-
-    all_headers_present = (eligibility_list_type_class::IDENTIFIER_CSV_HEADERS - csv_from_file_upload.headers).empty?
-    errors.add(:file, :invalid_headers) unless all_headers_present
-  rescue CSV::MalformedCSVError => e
-    errors.add(:file, :invalid)
-    errors.add(:file, e.message)
+  def file_headers
+    eligibility_list_type_class::IDENTIFIER_CSV_HEADERS
   end
 
   def eligibility_list_type_class
@@ -37,10 +31,6 @@ private
   end
 
   def identifier(row)
-    if eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.count > 1
-      row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.last].presence || row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.first]
-    else
-      row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.first]
-    end
+    row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.last].presence || row[eligibility_list_type_class::IDENTIFIER_CSV_HEADERS.first]
   end
 end

@@ -9,8 +9,6 @@ class BulkOperation < ApplicationRecord
 
   scope :not_started, -> { where(started_at: nil) }
 
-  HEADERS = false
-
   def started?
     started_at.present?
   end
@@ -40,13 +38,17 @@ private
   end
 
   def headers?
-    self.class::HEADERS
+    defined?(self.class::FILE_HEADERS) && file_headers.any?
+  end
+
+  def file_headers
+    self.class::FILE_HEADERS
   end
 
   def check_format
     if headers?
       errors.add(:file, :empty) if csv_from_file_upload.count.zero?
-      errors.add(:file, :invalid) if (self.class::FILE_HEADERS - csv_from_file_upload.headers).any?
+      errors.add(:file, :invalid) if (file_headers - csv_from_file_upload.headers).any?
     elsif csv_from_file_upload.first.many?
       errors.add(:file, :invalid)
     end

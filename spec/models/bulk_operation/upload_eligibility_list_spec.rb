@@ -73,7 +73,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
 
     it "does not allow file with no header" do
       bulk_operation.file.attach(no_header_file.open)
-      expect(bulk_operation).to have_error(:file, :invalid_headers, "Uploaded file has incorrect header")
+      expect(bulk_operation).to have_error(:file, :invalid, "Uploaded file is wrong format")
     end
 
     it "does not allow malformed CSV" do
@@ -83,7 +83,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
 
     it "does not allow a file with invalid headers" do
       bulk_operation.file.attach(invalid_header_file.open)
-      expect(bulk_operation).to have_error(:file, :invalid_headers, "Uploaded file has incorrect header")
+      expect(bulk_operation).to have_error(:file, :invalid, "Uploaded file is wrong format")
     end
 
     it "allows a file with extra columns" do

@@ -1,5 +1,4 @@
 class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
-  HEADERS = true
   FILE_HEADER_DECLARATION_ID = "Declaration ID".freeze
   FILE_HEADER_DELIVERY_PARTNER_ID = "Primary Delivery Partner ID".freeze
   FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID = "Secondary Delivery Partner ID".freeze
