@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
+  let(:admin) { create(:admin) }
+
   let(:valid_file) do
     tempfile <<~CSV
       PP50 School URN
@@ -9,9 +11,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
   end
 
   describe "validations" do
-    let(:admin) { create(:admin) }
     let(:empty_file) { Tempfile.new }
-    let(:eligibility_list_type) { "EligibilityList::Pp50School" }
 
     let(:no_header_file) do
       tempfile <<~CSV
@@ -52,7 +52,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
       CSV
     end
 
-    subject(:bulk_operation) { described_class.new(admin:, eligibility_list_type:) }
+    subject(:bulk_operation) { BulkOperation::UploadEligibilityList::Pp50School.new(admin:) }
 
     it { is_expected.to validate_presence_of(:file).with_message("Please choose a file") }
 
@@ -97,7 +97,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
     end
 
     context "when the file contains characters with ISO-8859-1 encoding" do
-      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      subject(:bulk_operation) { BulkOperation::UploadEligibilityList::DisadvantagedEarlyYearsSchool.new(admin:) }
 
       it "allows a valid file" do
         file = File.open(Rails.root.join("spec/fixtures/files/disadvantaged_ey_eligibility_list_iso_8859_1_encoding.csv"))
@@ -108,7 +108,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
   end
 
   describe "#run!" do
-    subject { bulk_operation.run!(eligibility_list_type:) }
+    subject { bulk_operation.run! }
 
     before do
       bulk_operation.file.attach(file)
@@ -117,10 +117,9 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
       create(:eligibility_list_entry, :pp50_school, identifier: "300000")
     end
 
-    let(:eligibility_list_type) { "EligibilityList::Pp50School" }
     let(:urn) { "100001" }
     let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_CSV_HEADERS.first},other\n #{urn} ,whatever\n").open }
-    let(:bulk_operation) { build(:upload_eligibility_list_bulk_operation, eligibility_list_type:) }
+    let(:bulk_operation) { build(:upload_eligibility_list_bulk_operation) }
 
     it "deletes existing records for that eligibility list type" do
       expect { subject }.to change(EligibilityList::Pp50School, :count).from(2).to(1)
@@ -133,7 +132,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
     end
 
     context "when there are characters with ISO-8859-1 encoding" do
-      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      let(:bulk_operation) { BulkOperation::UploadEligibilityList::DisadvantagedEarlyYearsSchool.new(admin:) }
       let(:file) { File.open(Rails.root.join("spec/fixtures/files/disadvantaged_ey_eligibility_list_iso_8859_1_encoding.csv")) }
       let(:urn) { "107747" } # value from the fixture file
 
@@ -145,7 +144,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
     end
 
     context "when there are rows in the CSV with the same identifier" do
-      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      let(:bulk_operation) { BulkOperation::UploadEligibilityList::DisadvantagedEarlyYearsSchool.new(admin:) }
       let(:file) { tempfile_with_bom("#{EligibilityList::DisadvantagedEarlyYearsSchool::IDENTIFIER_CSV_HEADERS.join(',')}\n#{urn} , \n900001 ,#{urn} ").open }
 
       it "ignores duplicates" do
@@ -155,7 +154,7 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
     end
 
     context "when the eligibility list type has multiple identifier columns (DisadvantagedEarlyYearsSchool)" do
-      let(:eligibility_list_type) { "EligibilityList::DisadvantagedEarlyYearsSchool" }
+      let(:bulk_operation) { BulkOperation::UploadEligibilityList::DisadvantagedEarlyYearsSchool.new(admin:) }
       let(:file) { tempfile_with_bom("#{EligibilityList::DisadvantagedEarlyYearsSchool::IDENTIFIER_CSV_HEADERS.join(',')},other\n#{urn} , ,whatever\n100001 ,#{ofsted_urn} ,whatever").open }
       let(:urn) { "100001" }
       let(:ofsted_urn) { "200002" }

@@ -1,10 +1,7 @@
 class BulkOperation::UploadEligibilityList < BulkOperation
-  attr_accessor :eligibility_list_type
-
   validates :file, presence: true
 
-  def run!(eligibility_list_type:)
-    @eligibility_list_type = eligibility_list_type
+  def run!
     ActiveRecord::Base.transaction do
       eligibility_list_type_class.delete_all
       csv_from_active_storage.each do |row|
@@ -12,8 +9,6 @@ class BulkOperation::UploadEligibilityList < BulkOperation
       end
       update!(finished_at: Time.zone.now)
     end
-  rescue StandardError => e
-    update!(finished_at: Time.zone.now, result: "#{e.class}: #{e.message}")
   end
 
 private
@@ -24,10 +19,6 @@ private
 
   def file_headers
     eligibility_list_type_class::IDENTIFIER_CSV_HEADERS
-  end
-
-  def eligibility_list_type_class
-    @eligibility_list_type_class ||= eligibility_list_type.constantize
   end
 
   def identifier(row)

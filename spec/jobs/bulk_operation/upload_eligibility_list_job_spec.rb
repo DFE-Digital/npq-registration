@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe BulkOperation::UploadEligibilityListJob do
   describe "#perform" do
-    subject { described_class.new.perform(bulk_operation_id:, eligibility_list_type:) }
+    subject { described_class.new.perform(bulk_operation_id:) }
 
     let(:bulk_operation) { instance_double(BulkOperation::UploadEligibilityList, run!: {}) }
     let(:bulk_operation_id) { 1 }

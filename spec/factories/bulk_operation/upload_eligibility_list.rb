@@ -1,7 +1,6 @@
 FactoryBot.define do
-  factory :upload_eligibility_list_bulk_operation, class: BulkOperation::UploadEligibilityList do
+  factory :upload_eligibility_list_bulk_operation, class: BulkOperation::UploadEligibilityList::Pp50School do
     admin { create(:admin) }
-    eligibility_list_type { "EligibilityList::Pp50School" }
 
     after(:build) do |bulk_operation|
       content = <<~CSV

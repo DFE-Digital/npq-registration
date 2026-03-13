@@ -1,29 +1,30 @@
-<% if @bulk_operation.persisted? %>
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Last Updated")
+      row.with_value(text: eligibility_list_type.last_updated_at&.to_formatted_s(:govuk_short))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Number of entries")
+      row.with_value(text: eligibility_list_type.count)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Last file upload")
+      row.with_value(text: last_bulk_operation_status(@last_bulk_operations[bulk_operation_class]))
+    end
+  end
+%>
+<% if @bulk_operations[bulk_operation_class].persisted? %>
   <%= govuk_warning_text do %>
     <p class="govuk-body">
-      File <%=@bulk_operation.file.filename %> is being processed
-      (started at <%= @bulk_operation.started_at.to_formatted_s(:govuk_short) %>).
+      File <%=@bulk_operations[bulk_operation_class].file.filename %> is being processed.
     </p>
     <p class="govuk-body">
-      Refresh this page for the latest status.
+      <%= govuk_link_to "Refresh", npq_separation_admin_eligibility_lists_path(anchor: fragment), no_visited_state: true, method: :get %> this page for the latest status.
     </p>
-    <%= govuk_button_link_to "Refresh", npq_separation_admin_eligibility_lists_path(anchor: fragment), secondary: true, method: :get %>
   <% end %>
 <% else %>
-  <%=
-    govuk_summary_list do |sl|
-      sl.with_row do |row|
-        row.with_key(text: "Last Updated")
-        row.with_value(text: eligibility_list_type.last_updated_at&.to_formatted_s(:govuk_short))
-      end
-      sl.with_row do |row|
-        row.with_key(text: "Number of entries")
-        row.with_value(text: eligibility_list_type.count)
-      end
-    end
-  %>
-
-  <%= form_for @bulk_operation, url: npq_separation_admin_eligibility_lists_path(anchor: fragment) do |f| %>
+  <%= form_for @bulk_operations[bulk_operation_class], url: npq_separation_admin_eligibility_lists_path(anchor: fragment) do |f| %>
     <%= f.govuk_error_summary %>
     <div class="govuk-form-group">
       <%= f.govuk_file_field :file,
