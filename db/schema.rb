@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_03_110835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -187,6 +187,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
 
   create_table "closed_registration_users", force: :cascade do |t|
     t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cloud_event_webhook_messages", force: :cascade do |t|
+    t.string "cloud_event_type"
+    t.string "cloud_event_id"
+    t.string "cloud_event_source"
+    t.string "status", default: "pending"
+    t.string "status_comment"
+    t.jsonb "raw"
+    t.datetime "sent_at"
+    t.datetime "processed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
