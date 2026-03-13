@@ -164,9 +164,14 @@ en:
         bulk_operation:
           attributes:
             file:
+              blank: Please choose a file
               empty: Uploaded file is empty
               invalid: Uploaded file is wrong format
               malformed: Uploaded file is not a valid CSV
+        bulk_operation/upload_eligibility_list:
+          attributes:
+            file:
+              invalid_headers: Uploaded file has incorrect header
         admin:
           attributes:
             full_name:
@@ -388,13 +393,6 @@ en:
             lead_provider_id:
               blank: "Choose a provider"
               unchanged: "You cannot change to the same course provider"
-        eligibility_lists/update:
-          attributes:
-            file:
-              blank: Please choose a file
-              empty: Uploaded file is empty
-              invalid_headers: Uploaded file has incorrect header
-              invalid: Uploaded file is not a valid CSV
         milestones/create:
           attributes:
             declaration_type:

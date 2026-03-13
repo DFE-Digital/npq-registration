@@ -5,7 +5,7 @@ class BulkOperation::SubmitDeclarations < BulkOperation
   def run!
     result = {}
     ActiveRecord::Base.transaction do
-      result = csv_rows.each_with_index.to_h do |row, index|
+      result = csv_from_active_storage.each_with_index.to_h do |row, index|
         row_number = index + 1
         [row_number, process_csv_row(row)]
       end
@@ -16,10 +16,6 @@ class BulkOperation::SubmitDeclarations < BulkOperation
   end
 
 private
-
-  def csv_rows
-    file.open { CSV.read(_1, headers: true) }
-  end
 
   def process_csv_row(row)
     participant = User.find_by(ecf_id: row["participant_id"])
