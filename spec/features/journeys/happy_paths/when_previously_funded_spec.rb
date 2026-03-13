@@ -34,7 +34,12 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.click_link("Register for another NPQ")
     end
 
-    expect_page_to_have(path: "/registration/provider_check", submit_form: true) do
+    expect_page_to_have(path: "/registration/course_start_date", submit_form: true) do
+      expect(page).to have_text("Do you want to start a course in autumn 2025?")
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
@@ -118,7 +123,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "",
+          "Course start" => "In autumn 2025",
           "Course" => "Early headship coaching offer",
           "Course funding" => "I am paying",
           "Headship NPQ stage" => "I’ve completed it",
@@ -196,6 +201,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "course_start_date" => "yes",
+        "course_start" => "In autumn 2025",
         "email_template" => "already_funded_not_elgible_ehco_funding",
         "ehco_funding_choice" => "self",
         "ehco_headteacher" => "yes",
