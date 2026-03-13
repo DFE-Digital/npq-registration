@@ -17,46 +17,25 @@ Our objectives are centered around how we can make it easier for applicants to r
   <div class="govuk-grid-column-one-third">
     <h2 id="now" class="govuk-heading-m">Now</h2>
     <p class="govuk-body-m">We are:</p>
-    <p class="govuk-body-m"><strong>Helping providers identify records more easily</strong></p>
+    <p class="govuk-body-m"><strong>Improving the registration sign-in process</strong></p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>Include the Application ID within the API response body for the Participant Declarations endpoint.</li>
-      <li>Show SENCO specific fields within the API response for Application endpoints.</li>
-      <li>Ability to see why an application was rejected, including if another provider has accepted or the DfE has rejected the application.</li>
-      <li>Ability to have visibility of declarations if an applicant was transferred.</li>
-    </ul>
-    <p class="govuk-body-m"><strong>Making other technical changes to optimise the service</strong></p>
+      <li>Introducing GOV.UK One Login to make signing into the NPQ registration service simpler and more secure.</li>
+    <p class="govuk-body-m"><strong>Allowing users to check their funding eligiblity without making a registration</strong></p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>Restrict access to the API based on the provider's IP range (to be commissioned).</li>
-      <li>Drop the maximum page size to 1000 for API requests.</li>
-    </ul>
-    <p class="govuk-body-m"><strong>Processing applications more efficiently</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Ability to reject a previously accepted application with no declarations.</li>
-    </ul>
-        <p class="govuk-body-m"><strong>Managing technical debt</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Deprecate the legacy versions of the API (v1 & v2), now that providers have migrated to v3 since separating from ECF.</li>
-    </ul>
+      <li>Exploring and testing ways to clearly show a user whether they'll be eligible for scholarship funding, without making a registration.</li>
   </div>
 
   <div class="govuk-grid-column-one-third">
     <h2 id="next" class="govuk-heading-m">Next</h2>
     <p class="govuk-body-m">We will:</p>
-            <p class="govuk-body-m"><strong>Improve the registration sign-in process</strong></p>
+    <p class="govuk-body-m"><strong>Validate sequencing of declarations</strong></p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>Introduce the GOV.UK One Login system to make signing into the NPQ registration service simpler and more secure.</li>
-
-
+      <li>Explore and implement rules which stop invalid or out‑of‑sequence declarations from being submitted.</li>
   </div>
 
   <div class="govuk-grid-column-one-third">
     <h2 id="later" class="govuk-heading-m">Later</h2>
-    <p class="govuk-body-m">We plan to:</p>
-        <p class="govuk-body-m"><strong> Allow users to check their funding eligiblity without making a registration</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Explore ways to clearly show a user whether they'll be eligible for scholarship funding without making a registration.</li>
-
-
+    <p class="govuk-body-m">No further plans.</p>
   </div>
 
 </div>
