@@ -85,5 +85,17 @@ RSpec.describe AdminService::UsersSearch do
         expect(subject.call.count).to eq(1)
       end
     end
+
+    context "when ordering results" do
+      let!(:oldest_user) { create(:user, email: "oldest@example.com", created_at: 3.days.ago) }
+      let!(:middle_user) { create(:user, email: "middle@example.com", created_at: 2.days.ago) }
+      let!(:newest_user) { create(:user, email: "newest@example.com", created_at: 1.day.ago) }
+      let(:q) { "example.com" }
+
+      it "orders results by created_at DESC (newest first)" do
+        results = subject.call
+        expect(results.to_a).to eq([newest_user, middle_user, oldest_user])
+      end
+    end
   end
 end

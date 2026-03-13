@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -637,7 +637,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_10_164307) do
     t.datetime "significantly_updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "preferred_name"
     t.citext "previous_names", default: [], null: false, array: true
-    t.index ["created_at"], name: "index_users_on_created_at"
+    t.index ["created_at"], name: "index_users_on_created_at_desc", order: :desc
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"

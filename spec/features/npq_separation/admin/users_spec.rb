@@ -18,6 +18,9 @@ RSpec.feature "User administration", type: :feature do
 
       expect(page).to have_css("h1", text: "Users")
 
+      fill_in("Find a user", with: "Jo")
+      click_on("Search")
+
       User.all.find_each do |user|
         expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
         expect(page).to have_css("td", text: user.trn)
@@ -29,6 +32,9 @@ RSpec.feature "User administration", type: :feature do
       create :user, :with_get_an_identity_id # exceed pagination threshold
 
       visit(npq_separation_admin_users_path)
+
+      fill_in("Find a user", with: "John")
+      click_on("Search")
 
       click_on("Next")
 
@@ -44,6 +50,25 @@ RSpec.feature "User administration", type: :feature do
 
       expect(page).to have_css("tbody tr", count: 1)
       expect(page).to have_css("tbody tr", text: user.full_name)
+    end
+
+    scenario "searching with no input shows a message" do
+      visit(npq_separation_admin_users_path)
+
+      click_on("Search")
+
+      expect(page).to have_css(".govuk-inset-text", text: "Please enter at least 2 characters to search and see results.")
+      expect(page).not_to have_css("table.govuk-table")
+    end
+
+    scenario "searching with 1 character shows a message" do
+      visit(npq_separation_admin_users_path)
+
+      fill_in("Find a user", with: "a")
+      click_on("Search")
+
+      expect(page).to have_css(".govuk-inset-text", text: "Please enter at least 2 characters to search and see results.")
+      expect(page).not_to have_css("table.govuk-table")
     end
   end
 

@@ -6,7 +6,7 @@
         :q,
         value: params[:q],
         label: { text: "Find a user", size: "s" },
-        hint: { text: 'Search by the user’s name, email address, teacher reference number (TRN) or application ID', size: "m"}
+        hint: { text: "Search by the user's name, email address, teacher reference number (TRN) or application ID", size: "m"}
       )
     %>
 
@@ -14,26 +14,30 @@
   <% end %>
 </div>
 
-<%=
-  govuk_table do |table|
-    table.with_head do |header|
-      header.with_row do |row|
-        row.with_cell(text: "Name")
-        row.with_cell(text: "TRN")
-        row.with_cell(text: "Date added")
+<% if @valid_search %>
+  <%=
+    govuk_table do |table|
+      table.with_head do |header|
+        header.with_row do |row|
+          row.with_cell(text: "Name")
+          row.with_cell(text: "TRN")
+          row.with_cell(text: "Date added")
+        end
       end
-    end
 
-    table.with_body do |body|
-      @users.each do |user|
-        body.with_row do |row|
-          row.with_cell(text: govuk_link_to(user.full_name, npq_separation_admin_user_path(user)))
-          row.with_cell(text: user.trn)
-          row.with_cell(text: user.created_at.to_date.to_formatted_s(:govuk))
+      table.with_body do |body|
+        @users.each do |user|
+          body.with_row do |row|
+            row.with_cell(text: govuk_link_to(user.full_name, npq_separation_admin_user_path(user)))
+            row.with_cell(text: user.trn)
+            row.with_cell(text: user.created_at.to_date.to_formatted_s(:govuk))
+          end
         end
       end
     end
-  end
-%>
+  %>
+<% else %>
+  <p class="govuk-inset-text">Please enter at least 2 characters to search and see results.</p>
+<% end %>
 
 <%= govuk_pagination(pagy: @pagy) %>
