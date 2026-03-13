@@ -163,6 +163,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
     t.enum "reason_for_rejection", enum_type: "reasons_for_rejection"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
+    t.index ["created_at"], name: "index_applications_on_created_at"
     t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_approval_status", "lead_provider_id"], name: "idx_on_lead_provider_approval_status_lead_provider__299e5bac06"

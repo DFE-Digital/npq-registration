@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Listing and viewing applications", type: :feature do
+RSpec.feature "Listing and viewing applications", :no_js, type: :feature do
   include Helpers::AdminLogin
   include Helpers::MailHelper
 
@@ -13,7 +13,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   end
 
   let(:applications_per_page) { Pagy::DEFAULT[:limit] }
-  let(:applications_in_order) { Application.order(created_at: :asc, id: :asc) }
+  let(:applications_in_order) { Application.order(created_at: :desc, id: :desc) }
 
   before do
     create_list(:application, applications_per_page + 1)
