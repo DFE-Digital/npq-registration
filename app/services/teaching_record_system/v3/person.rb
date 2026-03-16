@@ -4,7 +4,7 @@ module TeachingRecordSystem
       include HTTParty
 
       format :json
-      base_uri ENV["TRS_API_URL"]
+      base_uri Rails.configuration.x.teaching_record_system.api_url
       default_timeout 5.seconds
       raise_on 400..599
 

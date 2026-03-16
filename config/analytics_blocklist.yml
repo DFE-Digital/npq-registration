@@ -42,6 +42,7 @@ shared:
     - processed_at
     - created_at
     - updated_at
+    - message_source
   :reports:
     - id
     - identifier
@@ -183,15 +184,3 @@ shared:
   :participant_outcomes:
     - qualified_teachers_api_request_successful
     - sent_to_qualified_teachers_api_at
-  :cloud_event_webhook_messages:
-    - id
-    - cloud_event_type
-    - cloud_event_id
-    - cloud_event_source
-    - status
-    - status_comment
-    - raw
-    - sent_at
-    - processed_at
-    - created_at
-    - updated_at
