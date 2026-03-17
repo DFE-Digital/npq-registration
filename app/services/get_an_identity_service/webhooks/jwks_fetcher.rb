@@ -16,7 +16,7 @@ module GetAnIdentityService::Webhooks
 
     def connection
       @connection ||= Faraday.new(
-        url: Rails.configuration.x.teaching_record_system.api_webhook_jwks_uri,
+        url: jwks_uri,
       ) do |faraday|
         retry_options = {
           max: RETRY_MAX,
@@ -26,6 +26,10 @@ module GetAnIdentityService::Webhooks
         faraday.request :retry, retry_options
         faraday.response :raise_error
       end
+    end
+
+    def jwks_uri
+      "#{ENV.fetch("TRS_API_URL")}/webhook-jwks"
     end
   end
 end
