@@ -60,7 +60,10 @@ jobs:
         run: RAILS_ENV=production SECRET_KEY_BASE=required-to-run-but-not-used bundle exec rails assets:precompile
 
       - name: Set up test database
-        run: bin/rails db:setup
+        run: |
+          bin/rails db:create
+          bin/rails db:migrate
+          bin/rails db:seed
 
       - name: Generate API doc checksums (original)
         run: |

@@ -52,7 +52,7 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
   configurationOptions.source = debounce( async ( query, populateResults ) => {
     const res = await fetchSource(configurationOptions.lookupPath, query, location);
     populateResults(res);
-  }, 500 )
+  }, 300 )
 
   if (configurationOptions.name === undefined) configurationOptions.name = ''
 

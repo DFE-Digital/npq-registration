@@ -16,7 +16,9 @@
    - Graphviz
 1. Run `bundle install` to install the gem dependencies
 1. Run `yarn` to install node dependencies
-1. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
+1. Run `bin/rails db:create` to create the database
+1. Run `bin/rails db:migrate` to run all migrations and set up the database schema
+1. Run `bin/rails db:seed` to seed with test data
 1. Copy `.env.example` to `.env` and fill in the values (ask a team member for `TRA_OIDC_*` values)
 1. Run `./bin/dev` to launch the app on http://localhost:3000 and auto-compile assets
 
@@ -34,6 +36,14 @@ You only need Docker on your machine. Start the stack (database and application)
 
 ```bash
 docker compose up -d
+```
+
+Set up the database (first time only):
+
+```bash
+docker compose run web bundle exec rails db:create
+docker compose run web bundle exec rails db:migrate
+docker compose run web bundle exec rails db:seed
 ```
 
 Open http://localhost:3000 to browse the app. Edit code as normal (the project directory is mounted as a volume.)

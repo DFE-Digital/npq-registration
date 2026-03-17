@@ -50,7 +50,10 @@ jobs:
         run: mkdir -p tmp/capybara
 
       - name: Set up test database
-        run: bin/rails db:setup
+        run: |
+          bin/rails db:create
+          bin/rails db:migrate
+          bin/rails db:seed
 
       - name: Precompile assets
         run: bundle exec rake assets:precompile
