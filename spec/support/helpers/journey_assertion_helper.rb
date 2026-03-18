@@ -38,7 +38,7 @@ module Helpers
       expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.reload.id}?success=true", submit_form: false) do
         expect(page).to have_text("Registration successfully submitted")
         expect(page).to have_text("Application ID: #{latest_application.ecf_id}")
-        expect(page).to have_link("Register for another NPQ", href: /\/registration\/provider_check/)
+        expect(page).to have_link("Register for another NPQ", href: /\/registration\/course_start_date/)
       end
 
       expect(User.count).to be(1)

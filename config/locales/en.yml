@@ -467,6 +467,7 @@ en:
           attributes:
             course_start_date:
               blank: Choose your course start date.
+              inclusion: Choose your course start date.
         questionnaires/choose_your_provider:
           attributes:
             lead_provider_id:
