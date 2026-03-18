@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe GetAnIdentityService::Webhooks::JwksFetcher do
+RSpec.describe GetAnIdentityService::Webhooks::SigningKeyFetcher do
   subject(:jwks_fetch) { described_class.new.call(request_key_id) }
 
   let(:key_id) { "key1" }

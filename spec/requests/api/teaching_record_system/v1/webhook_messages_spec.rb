@@ -11,6 +11,19 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
     let(:content_digest) { "sha-256=:#{Base64.strict_encode64(Digest::SHA256.digest(body))}" }
     let(:components) { %w[@target-uri content-digest content-length ce-id ce-type ce-time] }
 
+    let(:headers_to_include) do
+      %w[
+        ce-id
+        ce-source
+        ce-time
+        ce-type
+        content-digest
+        content-length
+        signature
+        signature-input
+      ]
+    end
+
     let(:body) do
       {
         "oneLoginUser": {
@@ -37,22 +50,9 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       end
     end
 
-    before { allow(GetAnIdentityService::Webhooks::JwksFetcher).to receive(:new).and_return(double(call: public_key)) }
+    before { allow(GetAnIdentityService::Webhooks::SigningKeyFetcher).to receive(:new).and_return(double(call: public_key)) }
 
     context "when a valid signed request is made" do
-      let(:headers_to_include) do
-        %w[
-          ce-id
-          ce-source
-          ce-time
-          ce-type
-          content-digest
-          content-length
-          signature
-          signature-input
-        ]
-      end
-
       let(:headers) do
         example_signed_request
           .to_hash
@@ -79,7 +79,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       end
 
       context "when the JWKS response does not contain the expected key" do
-        before { allow(GetAnIdentityService::Webhooks::JwksFetcher).to receive(:new).and_return(double(call: nil)) }
+        before { allow(GetAnIdentityService::Webhooks::SigningKeyFetcher).to receive(:new).and_return(double(call: nil)) }
 
         it "returns a 401 response" do
           subject
@@ -92,8 +92,9 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       let(:headers) do
         example_signed_request
           .to_hash
-          .select { |key, _value| key == "signature-input" || components.include?(key) }
-          .transform_values(&:first).merge({ "signature" => "invalidsignature" })
+          .select { |key, _value| headers_to_include.include?(key) }
+          .transform_values(&:first)
+          .merge({ "ce-time" => Time.zone.tomorrow.iso8601 })
       end
 
       it "returns a 401 response" do
