@@ -13,29 +13,49 @@ By sharing this publicly, we hope to:
 Our objectives are centered around how we can make it easier for applicants to register for NPQs, and make it more efficient for lead providers to process NPQ applicants.
 
 <div class="govuk-grid-row">
-
-  <div class="govuk-grid-column-one-third">
-    <h2 id="now" class="govuk-heading-m">Now</h2>
-    <p class="govuk-body-m">We are:</p>
-    <p class="govuk-body-m"><strong>Improving the registration sign-in process</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Introducing GOV.UK One Login to make signing into the NPQ registration service simpler and more secure.</li>
-    <p class="govuk-body-m"><strong>Allowing users to check their funding eligiblity without making a registration</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Exploring and testing ways to clearly show a user whether they'll be eligible for scholarship funding, without making a registration.</li>
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Roadmap</h2>
+    <dl class="govuk-summary-list" data-module="govuk-summary-list">
+      <!-- NOW -->
+      <div class="govuk-summary-list__row">
+        <dt id="now" class="govuk-summary-list__key">Now</dt>
+        <dd class="govuk-summary-list__value">
+          <p class="govuk-body">We are:</p>
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
+            Improving the registration sign‑in process
+          </h3>
+          <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-3">
+            <li>Introducing GOV.UK One Login to make signing into the NPQ registration service simpler, faster and more secure.</li>
+          </ul>
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
+            Helping users check their funding eligibility without registering
+          </h3>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>Exploring and testing ways to show users clearly whether they are eligible for scholarship funding before they start a registration.</li>
+          </ul>
+        </dd>
+      </div>
+      <!-- NEXT -->
+      <div class="govuk-summary-list__row">
+        <dt id="next" class="govuk-summary-list__key">Next</dt>
+        <dd class="govuk-summary-list__value">
+          <p class="govuk-body">We will:</p>
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
+            Validate sequencing of declarations
+          </h3>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>Exploring and implementing rules that prevent invalid or out‑of‑sequence declarations from being submitted.</li>
+          </ul>
+        </dd>
+      </div>
+      <!-- LATER -->
+      <div class="govuk-summary-list__row">
+        <dt id="later" class="govuk-summary-list__key">Later</dt>
+        <dd class="govuk-summary-list__value">
+          <p class="govuk-body">No further planned work.</p>
+        </dd>
+      </div>
+    </dl>
   </div>
-
-  <div class="govuk-grid-column-one-third">
-    <h2 id="next" class="govuk-heading-m">Next</h2>
-    <p class="govuk-body-m">We will:</p>
-    <p class="govuk-body-m"><strong>Validate sequencing of declarations</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Explore and implement rules which stop invalid or out‑of‑sequence declarations from being submitted.</li>
-  </div>
-
-  <div class="govuk-grid-column-one-third">
-    <h2 id="later" class="govuk-heading-m">Later</h2>
-    <p class="govuk-body-m">No further plans.</p>
-  </div>
-
 </div>
+
