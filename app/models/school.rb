@@ -48,6 +48,7 @@ class School < ApplicationRecord
                     tsearch: {
                       prefix: true,
                       dictionary: "english",
+                      tsvector_column: "search_vector",
                     },
                   }
 
