@@ -53,7 +53,7 @@ module Dqt
 
       trn_matches = dqt_record.trn == padded_trn
       name_matches = name_matches?(dqt_name: dqt_record.name)
-      dob_matches = dqt_record.dob == date_of_birth
+      dob_matches = date_of_birth_matches?(dqt_dob: dqt_record.dob)
       nino_matches = nino.present? && nino.downcase == dqt_record.ni_number&.downcase
 
       matches = [trn_matches, name_matches, dob_matches, nino_matches].count(true)
@@ -81,6 +81,14 @@ module Dqt
       return false if dqt_name.blank?
 
       NameMatcher.new(full_name, dqt_name, check_first_name_only:).matches?
+    end
+
+    def date_of_birth_matches?(dqt_dob:)
+      return false if dqt_dob.blank?
+
+      Date.parse(dqt_dob) == Date.parse(date_of_birth)
+    rescue Date::Error
+      false
     end
 
     def check_failure(reason)
