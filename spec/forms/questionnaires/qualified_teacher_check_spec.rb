@@ -132,25 +132,25 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
 
-      it "denies trns over 7 characters" do
+      it "denies TRNs over 7 characters" do
         subject.trn = "99123456"
         subject.valid?
         expect(subject.errors[:trn]).to eq ["Teacher reference number is 7 digits long"]
       end
 
-      it "denies trns under 7 characters" do
+      it "denies TRNs under 7 characters" do
         subject.trn = "1234"
         subject.valid?
         expect(subject.errors[:trn]).to eq ["Teacher reference number is 7 digits long"]
       end
 
-      it "denies trns with other letters" do
+      it "denies TRNs with other letters" do
         subject.trn = "AA99/12345"
         subject.valid?
         expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
 
-      it "denies fake trn 0000000" do
+      it "denies fake TRN 0000000" do
         subject.trn = "0000000"
         subject.valid?
         expect(subject.errors[:trn]).to eq ["You must enter a valid teacher reference number (TRN)"]
@@ -299,7 +299,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
       )
     end
 
-    context "trn has been verified" do
+    context "TRN has been verified" do
       before do
         stub_api_request(
           trn: dqt_check_trn,
@@ -435,7 +435,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
       end
     end
 
-    context "when different trn found" do
+    context "when different TRN found" do
       before do
         stub_api_request(
           trn: "1234567",
@@ -488,7 +488,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
       end
     end
 
-    context "trn has not been verified" do
+    context "TRN has not been verified" do
       before do
         stub_api_request(
           trn: dqt_check_trn,
