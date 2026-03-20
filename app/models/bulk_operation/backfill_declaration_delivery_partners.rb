@@ -1,5 +1,4 @@
 class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
-  HEADERS = true
   FILE_HEADER_DECLARATION_ID = "Declaration ID".freeze
   FILE_HEADER_DELIVERY_PARTNER_ID = "Primary Delivery Partner ID".freeze
   FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID = "Secondary Delivery Partner ID".freeze
@@ -9,10 +8,6 @@ class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
     FILE_HEADER_SECONDARY_DELIVERY_PARTNER_ID,
   ].freeze
 
-  def csv
-    file.open { CSV.read(_1, headers: true) }
-  end
-
   def run!
     result = {}
 
@@ -20,7 +15,7 @@ class BulkOperation::BackfillDeclarationDeliveryPartners < BulkOperation
 
     ActiveRecord::Base.transaction do
       processed_ids = []
-      csv.each_slice(1000) do |csv_rows|
+      csv_from_active_storage.each_slice(1000) do |csv_rows|
         ids_to_process = csv_rows.map { |row| row[FILE_HEADER_DECLARATION_ID] }
 
         Declaration

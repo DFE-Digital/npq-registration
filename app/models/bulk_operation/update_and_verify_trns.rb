@@ -1,5 +1,4 @@
 class BulkOperation::UpdateAndVerifyTrns < BulkOperation
-  HEADERS = true
   FILE_HEADER_USER_ID = "User ID".freeze
   FILE_HEADER_UPDATED_TRN = "Updated TRN".freeze
   FILE_HEADERS = [FILE_HEADER_USER_ID, FILE_HEADER_UPDATED_TRN].freeze
@@ -7,7 +6,7 @@ class BulkOperation::UpdateAndVerifyTrns < BulkOperation
   def run!
     result = {}
     ActiveRecord::Base.transaction do
-      result = file.open { CSV.read(_1, headers: true) }.each_with_object({}) do |csv_row, outcomes_hash|
+      result = csv_from_active_storage.each_with_object({}) do |csv_row, outcomes_hash|
         outcomes_hash[user_ecf_id(csv_row)] = process_csv_row(csv_row)
       end
       update!(result: result.to_json, finished_at: Time.zone.now)

@@ -9,8 +9,6 @@ class BulkOperation < ApplicationRecord
 
   scope :not_started, -> { where(started_at: nil) }
 
-  HEADERS = false
-
   def started?
     started_at.present?
   end
@@ -40,25 +38,39 @@ private
   end
 
   def headers?
-    self.class::HEADERS
+    defined?(self.class::FILE_HEADERS) && file_headers.any?
+  end
+
+  def file_headers
+    self.class::FILE_HEADERS
   end
 
   def check_format
-    csv = CSV.read(attached_file, headers: headers?)
-
     if headers?
-      errors.add(:file, :empty) if csv.count.zero?
-      errors.add(:file, :invalid) if (self.class::FILE_HEADERS - csv.headers).any?
-    elsif csv.first.many?
+      errors.add(:file, :empty) if csv_from_file_upload.count.zero?
+      errors.add(:file, :invalid) if (file_headers - csv_from_file_upload.headers).any?
+    elsif csv_from_file_upload.first.many?
       errors.add(:file, :invalid)
     end
   rescue CSV::MalformedCSVError => e
     errors.add(:file, e.message)
   end
 
+  def csv_from_file_upload
+    @csv_from_file_upload ||= CSV.read(attached_file, headers: headers?, header_converters: ->(header) { header&.strip })
+  rescue CSV::InvalidEncodingError
+    @csv_from_file_upload ||= CSV.read(attached_file, encoding: "ISO-8859-1", headers: headers?, header_converters: ->(header) { header&.strip })
+  end
+
+  def csv_from_active_storage
+    @csv_from_active_storage ||= file.open { CSV.read(_1, headers: headers?, header_converters: ->(header) { header&.strip }) }
+  rescue CSV::InvalidEncodingError
+    @csv_from_active_storage ||= file.open { CSV.read(_1, encoding: "ISO-8859-1", headers: headers?, header_converters: ->(header) { header&.strip }) }
+  end
+
   def update_row_count
     return unless attachment_changes["file"]
 
-    self.row_count = CSV.read(attached_file, headers: headers?).count
+    self.row_count = csv_from_file_upload.count
   end
 end

@@ -8,24 +8,38 @@
       row.with_key(text: "Number of entries")
       row.with_value(text: eligibility_list_type.count)
     end
+    sl.with_row do |row|
+      row.with_key(text: "Last file upload")
+      row.with_value(text: last_bulk_operation_status(@last_bulk_operations[bulk_operation_class]))
+    end
   end
 %>
-
-<%= form_for @service, url: npq_separation_admin_eligibility_lists_path(anchor: fragment) do |f| %>
-  <%= f.govuk_error_summary %>
-  <div class="govuk-form-group">
-    <%= f.govuk_file_field :file,
-      label: { text: "Upload new eligibility list", tag: "h2", size: "m" },
-      hint: { text: "File must be in CSV format." },
-      javascript: true
-    %>
-    <%= govuk_details(summary_text: "Example CSV", classes: 'govuk-!-margin-top-3') do %>
-      <pre class="govuk-!-padding-5 govuk-!-font-size-16 csv-example">
+<% if @bulk_operations[bulk_operation_class].persisted? %>
+  <%= govuk_warning_text do %>
+    <p class="govuk-body">
+      File <%=@bulk_operations[bulk_operation_class].file.filename %> is being processed.
+    </p>
+    <p class="govuk-body">
+      <%= govuk_link_to "Refresh", npq_separation_admin_eligibility_lists_path(anchor: fragment), no_visited_state: true, method: :get %> this page for the latest status.
+    </p>
+  <% end %>
+<% else %>
+  <%= form_for @bulk_operations[bulk_operation_class], url: npq_separation_admin_eligibility_lists_path(anchor: fragment) do |f| %>
+    <%= f.govuk_error_summary %>
+    <div class="govuk-form-group">
+      <%= f.govuk_file_field :file,
+        label: { text: "Upload new eligibility list", tag: "h2", size: "m" },
+        hint: { text: "File must be in CSV format." },
+        javascript: true
+      %>
+      <%= govuk_details(summary_text: "Example CSV", classes: 'govuk-!-margin-top-3') do %>
+        <pre class="govuk-!-padding-5 govuk-!-font-size-16 csv-example">
 <%= eligibility_list_type::IDENTIFIER_CSV_HEADERS.join(",") %>
 <%= eligibility_list_type::IDENTIFIER_CSV_EXAMPLE %></pre>
-      <p class="govuk-body"><%= local_assigns.fetch :csv_note, nil %></p>
-    <% end %>
-  </div>
-  <%= f.hidden_field :eligibility_list_type, value: eligibility_list_type %>
-  <%= f.govuk_submit "Update eligibility list" %>
+        <p class="govuk-body"><%= local_assigns.fetch :csv_note, nil %></p>
+      <% end %>
+    </div>
+    <%= f.hidden_field :eligibility_list_type, value: eligibility_list_type %>
+    <%= f.govuk_submit "Update eligibility list" %>
+  <% end %>
 <% end %>
