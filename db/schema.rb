@@ -365,6 +365,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
     t.datetime "processed_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "message_source"
   end
 
   create_table "itt_providers", force: :cascade do |t|

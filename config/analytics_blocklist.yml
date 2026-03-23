@@ -42,6 +42,7 @@ shared:
     - processed_at
     - created_at
     - updated_at
+    - message_source
   :reports:
     - id
     - identifier

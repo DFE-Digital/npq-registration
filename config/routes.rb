@@ -110,6 +110,13 @@ Rails.application.routes.draw do
     namespace :teacher_record_service, path: "teacher-record-service", defaults: { format: :json } do
       namespace :v1 do
         resources :qualifications, only: %i[show], param: :trn
+        resource :webhook_messages, only: %i[create]
+      end
+    end
+    namespace :teaching_record_system, path: "teaching-record-system", defaults: { format: :json } do
+      namespace :v1 do
+        resources :qualifications, only: %i[show], controller: "/api/teacher_record_service/v1/qualifications", param: :trn
+        resources :webhook_messages, only: %i[create]
       end
     end
   end
