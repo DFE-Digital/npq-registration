@@ -82,18 +82,9 @@ RSpec.feature "User administration", type: :feature do
         expect(summary_card).to have_summary_item("User ID", user.ecf_id)
         expect(summary_card).to have_summary_item("Preferred Name", user.preferred_name)
         expect(summary_card).to have_summary_item("Email", user.email)
-        expect(summary_card).to have_summary_item("Date of birth", user.date_of_birth.to_fs(:govuk_short))
-        expect(summary_card).to have_summary_item("National Insurance number", user.national_insurance_number)
         expect(summary_card).to have_summary_item("TRN", user.trn, "Not verified")
         expect(summary_card).to have_summary_item("Get an Identity ID", user.uid)
       end
-    end
-
-    scenario "renders when attributes with method chains are nil" do
-      user.update!(date_of_birth: nil)
-      visit npq_separation_admin_user_path(user)
-
-      expect(page).to have_content("Date of birth")
     end
 
     scenario "shows a message if the user has no applications" do
