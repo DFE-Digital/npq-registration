@@ -455,7 +455,7 @@ RSpec.describe Declarations::Create, type: :model do
         end
 
         it "the second request does not try and mark it as eligible again" do
-          expect(declaration).not_to receive(:mark_eligible!)
+          expect_any_instance_of(Declaration).to receive(:mark_eligible!).once.and_call_original
           subject
         end
       end
