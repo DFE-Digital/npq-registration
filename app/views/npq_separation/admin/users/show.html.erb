@@ -42,7 +42,9 @@
           <%= @user.trn %>
           <%= trn_verified_badge(@user) %>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="<%= npq_separation_admin_users_change_trn_path(@user) %>">Change<span class="govuk-visually-hidden"> age (Lead tenant)</span></a>
+          <%= govuk_link_to "Change", npq_separation_admin_users_change_trn_path(@user) %>
+          <br>
+          <%= govuk_link_to "View teaching record", "#{ENV['TRS_URL']}/persons?Search=#{@user.trn}", new_tab: "" %>
         </dd>
         </dd>
       </div>
