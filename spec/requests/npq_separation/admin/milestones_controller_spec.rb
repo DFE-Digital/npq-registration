@@ -35,7 +35,7 @@ RSpec.describe NpqSeparation::Admin::MilestonesController, type: :request do
 
         before { post npq_separation_admin_cohort_schedule_milestones_path(cohort, schedule), params: }
 
-        it { is_expected.to have_http_status :unprocessable_entity }
+        it { is_expected.to have_http_status :unprocessable_content }
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe NpqSeparation::Admin::MilestonesController, type: :request do
 
         before { put npq_separation_admin_cohort_schedule_milestone_path(cohort, schedule, milestone), params: }
 
-        it { is_expected.to have_http_status :unprocessable_entity }
+        it { is_expected.to have_http_status :unprocessable_content }
       end
     end
 

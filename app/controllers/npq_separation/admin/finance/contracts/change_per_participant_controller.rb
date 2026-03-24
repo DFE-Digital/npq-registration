@@ -12,7 +12,7 @@ module NpqSeparation
             if @service.valid?
               render :confirm
             else
-              render :show, status: :unprocessable_entity
+              render :show, status: :unprocessable_content
             end
           end
 
@@ -23,7 +23,7 @@ module NpqSeparation
                 " in the #{@service.contract.statement.cohort.name} cohort from #{@service.start_date.to_fs(:govuk_approx)} onwards"
               redirect_to npq_separation_admin_finance_statement_path(@statement)
             else
-              render :show, status: :unprocessable_entity
+              render :show, status: :unprocessable_content
             end
           end
 

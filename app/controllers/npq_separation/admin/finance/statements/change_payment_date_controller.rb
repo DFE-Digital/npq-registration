@@ -12,7 +12,7 @@ module NpqSeparation
               flash[:success] = "Output payment date changed"
               redirect_to npq_separation_admin_finance_statement_path(@statement)
             else
-              render :show, status: :unprocessable_entity
+              render :show, status: :unprocessable_content
             end
           end
 

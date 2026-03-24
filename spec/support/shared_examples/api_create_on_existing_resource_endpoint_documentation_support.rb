@@ -76,7 +76,7 @@ RSpec.shared_examples "an API create on existing resource endpoint documentation
           run_test!
         end
 
-        response "422", "Unprocessable entity" do
+        response "422", "Unprocessable content" do
           let(:id) { resource.ecf_id }
           let(:attributes) { invalid_attributes }
 

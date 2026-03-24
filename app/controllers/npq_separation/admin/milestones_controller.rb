@@ -17,7 +17,7 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
       flash[:success] = "Milestone created"
       redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -32,7 +32,7 @@ class NpqSeparation::Admin::MilestonesController < NpqSeparation::AdminControlle
       flash[:success] = "Milestone updated"
       redirect_to npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

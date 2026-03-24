@@ -16,7 +16,7 @@ module NpqSeparation
             flash[:success] = "Review status updated from '#{@application.review_status_before_last_save}' to '#{@application.review_status}'."
             redirect_to npq_separation_admin_application_review_path(@application)
           else
-            render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_content
           end
         end
 

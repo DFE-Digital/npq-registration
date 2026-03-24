@@ -17,7 +17,7 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
       save_delivery_partner if @continue_form.continue?
       redirect_to action: :index
     else
-      render :similar, status: :unprocessable_entity
+      render :similar, status: :unprocessable_content
     end
   end
 

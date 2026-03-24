@@ -59,8 +59,8 @@ RSpec.describe "Error responses", type: :request do
 
     it "returns a JSON error response" do
       api_get "/api/v3/npq-applications"
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.body).to eq %({"error":"Unprocessable entity"})
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to eq %({"error":"Unprocessable content"})
       expect(response.content_type).to match(/application\/json.*/)
     end
   end

@@ -295,7 +295,7 @@ RSpec.shared_examples "an API index endpoint with filter by training_status" do
       it "returns an error" do
         api_get(path, params: { filter: { training_status: "not_valid_status" } })
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.content_type).to match(/application\/json.*/)
         expect(parsed_response.dig("errors", 0, "detail")).to include(%(The filter '#/training_status' must be ["active", "deferred", "withdrawn"]))
       end

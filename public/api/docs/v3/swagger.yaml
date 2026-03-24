@@ -151,7 +151,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -314,7 +314,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -391,7 +391,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -523,7 +523,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -681,7 +681,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -828,7 +828,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -908,7 +908,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -988,7 +988,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:
@@ -1070,7 +1070,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
-          description: Unprocessable entity
+          description: Unprocessable content
           content:
             application/json:
               schema:

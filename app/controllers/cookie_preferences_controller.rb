@@ -23,7 +23,7 @@ class CookiePreferencesController < PublicPagesController
       end
 
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

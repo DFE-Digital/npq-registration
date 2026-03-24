@@ -21,7 +21,7 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
       flash[:success] = "Cohort created"
       redirect_to action: :index
     else
-      render :form, status: :unprocessable_entity
+      render :form, status: :unprocessable_content
     end
   end
 
@@ -34,7 +34,7 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
       flash[:success] = "Cohort updated"
       redirect_to npq_separation_admin_cohort_path(@cohort)
     else
-      render :form, status: :unprocessable_entity
+      render :form, status: :unprocessable_content
     end
   end
 

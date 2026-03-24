@@ -59,7 +59,7 @@ class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSepa
     index
 
     if @add_another_form.invalid?
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     elsif @add_another_form.adding_another_adjustment?
       show_all_adjustments = params[:add_another_form][:show_all_adjustments] == "true"
       redirect_to new_npq_separation_admin_finance_statement_adjustment_path(@statement, show_all_adjustments:)

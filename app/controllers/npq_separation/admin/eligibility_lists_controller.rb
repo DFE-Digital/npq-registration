@@ -12,7 +12,7 @@ class NpqSeparation::Admin::EligibilityListsController < NpqSeparation::AdminCon
       return redirect_to npq_separation_admin_eligibility_lists_path
     end
 
-    render :show, status: :unprocessable_entity
+    render :show, status: :unprocessable_content
   end
 
 private

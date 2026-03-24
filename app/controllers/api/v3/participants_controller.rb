@@ -23,7 +23,7 @@ module API
         if service.resume
           render json: to_json(service.participant)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -33,7 +33,7 @@ module API
         if service.defer
           render json: to_json(service.participant)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -43,7 +43,7 @@ module API
         if service.withdraw
           render json: to_json(service.participant)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -53,7 +53,7 @@ module API
         if service.change_schedule
           render json: to_json(service.participant)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 

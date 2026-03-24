@@ -19,7 +19,7 @@ module API
           if service.create_outcome
             render json: to_json(service.created_outcome)
           else
-            render json: API::Errors::Response.from(service), status: :unprocessable_entity
+            render json: API::Errors::Response.from(service), status: :unprocessable_content
           end
         end
 
