@@ -22,6 +22,7 @@
 1. [Data Model](docs/data_model.md)
 1. [Swagger API documentation](docs/swagger.md)
 1. [Qualifications API](docs/qualifications_api.md)
+1. [Architecture Decision Records](docs/adr/)
 
 ## Content Editors
 
