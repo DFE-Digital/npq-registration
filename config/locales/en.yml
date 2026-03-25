@@ -473,6 +473,7 @@ en:
               invalid: No matching childcare provider found
             institution_name:
               no_results: No nurseries with the name %{name} were found, please try again
+              blank: Enter a childcare provider
         questionnaires/choose_private_childcare_provider:
           attributes:
             institution_identifier:
