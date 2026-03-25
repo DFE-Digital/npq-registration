@@ -486,6 +486,7 @@ en:
               invalid: No matching school found
             institution_name:
               no_results: No schools with the name %{name} were found, please try again
+              blank: Enter your workplace
         questionnaires/find_school:
           attributes:
             institution_location:
