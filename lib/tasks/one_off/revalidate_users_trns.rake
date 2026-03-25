@@ -27,6 +27,7 @@ namespace :one_off do
           trn_verified: true,
           trn_auto_verified: true,
           active_alert: record.active_alert,
+          national_insurance_number: nil,
         )
 
         trn_changed = user.previous_changes.keys.include?("trn") ? "Yes" : "No"

@@ -5,7 +5,7 @@ RSpec.describe "one_off:revalidate_users_trns" do
     Rake::Task["one_off:revalidate_users_trns"].invoke(dry_run)
   end
 
-  let(:user) { create(:user, trn_verified: false, trn: old_trn) }
+  let(:user) { create(:user, trn_verified: false, trn: old_trn, national_insurance_number: "QQ123456B") }
   let(:old_trn) { "1234567" }
   let(:new_trn) { "2345678" }
   let(:cohort) { create(:cohort, start_year: 2025, identifier: "2025b", suffix: "b") }
@@ -37,6 +37,11 @@ RSpec.describe "one_off:revalidate_users_trns" do
           trn_auto_verified: true,
           active_alert: true,
         )
+      end
+
+      it "blanks the user's national insurance number" do
+        run_task
+        expect(user.reload.national_insurance_number).to be_nil
       end
     end
 
