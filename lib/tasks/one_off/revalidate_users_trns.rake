@@ -8,10 +8,10 @@ namespace :one_off do
 
     Rails.logger.warn "Dry Run" if dry_run
 
-    users = User.joins(:applications).where(trn_verified: false, applications: { lead_provider_approval_status: "accepted" })
+    users = User.distinct.joins(:applications).where(trn_verified: false, applications: { lead_provider_approval_status: "accepted" })
     users_updated = []
 
-    Application.transaction do
+    User.transaction do
       users.each do |user|
         record = ParticipantValidator.new(
           trn: user.trn,
@@ -34,7 +34,7 @@ namespace :one_off do
       end
 
       Rails.logger.warn "Users updated:\nuser_id,user_ecf_id,trn_changed?,cohorts\n#{users_updated.join}"
-      Rails.logger.warn "\nTotal users updated: #{users_updated.count}"
+      Rails.logger.warn "\nTotal users updated: #{users_updated.length}"
 
       if dry_run
         Rails.logger.warn "DRY RUN: Rolling back"
