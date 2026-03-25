@@ -341,6 +341,32 @@ RSpec.describe User do
     end
   end
 
+  describe "#teacher_auth_provider?" do
+    context "when the user is using teacher auth" do
+      let(:user) { create(:user, :with_teacher_auth) }
+
+      it "returns true" do
+        expect(user).to be_teacher_auth_provider
+      end
+    end
+
+    context "when the user is using GAI" do
+      let(:user) { create(:user, :with_get_an_identity_id) }
+
+      it "returns false" do
+        expect(user).not_to be_teacher_auth_provider
+      end
+    end
+
+    context "when the user provider is empty" do
+      let(:user) { create(:user) }
+
+      it "returns false" do
+        expect(user).not_to be_teacher_auth_provider
+      end
+    end
+  end
+
   describe "#get_an_identity_id" do
     context "when the user is using GAI" do
       let(:uid) { SecureRandom.uuid }

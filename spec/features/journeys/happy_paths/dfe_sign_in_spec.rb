@@ -8,7 +8,7 @@ require "rails_helper"
 # 4. update `email_for_account_without_trn` to the email address for the account without a TRN
 # 5. make sure your local server is not running on port 3000 (or you can change the port of HOSTING_DOMAIN in your .env.test.local to something else)
 # 6. run the first 2 specs - be sure to follow the prompts from the command-line, and do not enter your code into the browser
-RSpec.feature "DfE Sign In", :with_default_schedules, :with_teacher_auth_disabled, type: :feature do
+RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 

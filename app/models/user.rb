@@ -72,6 +72,10 @@ class User < ApplicationRecord
     provider == Omniauth::Strategies::TraOpenidConnect::NAME.to_s
   end
 
+  def teacher_auth_provider?
+    provider == Omniauth::Strategies::TeacherAuth::NAME.to_s
+  end
+
   def get_an_identity_id
     uid if get_an_identity_provider?
   end

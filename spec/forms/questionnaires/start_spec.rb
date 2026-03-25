@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::Start, :with_teacher_auth_disabled do
+RSpec.describe Questionnaires::Start do
   it { is_expected.to be_requirements_met }
 
   describe "#next_step?" do
