@@ -22,6 +22,10 @@ FactoryBot.define do
       start_year { Date.current.month < 9 ? Date.current.year : Date.current.year.succ }
     end
 
+    trait :next_plus_one do
+      start_year { (Date.current.month < 9 ? Date.current.year : Date.current.year.succ) + 1 }
+    end
+
     trait :previous do
       start_year { Date.current.month < 9 ? Date.current.year : (Date.current.year - 1) }
     end
