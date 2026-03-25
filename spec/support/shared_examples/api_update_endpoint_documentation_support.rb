@@ -76,7 +76,7 @@ RSpec.shared_examples "an API update endpoint documentation", :exceptions_app do
           run_test!
         end
 
-        response "422", "Unprocessable content" do
+        response "422", "Unprocessable entity" do
           let(:id) { resource.ecf_id }
           let(:attributes) { invalid_attributes }
 
