@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_26_144612) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -274,6 +274,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_09_223650) do
     t.datetime "updated_at", null: false
     t.bigint "delivery_partner_id"
     t.bigint "secondary_delivery_partner_id"
+    t.index ["application_id", "declaration_type", "state"], name: "idx_unique_declarations", unique: true, where: "(state = ANY (ARRAY['submitted'::declaration_states, 'eligible'::declaration_states, 'payable'::declaration_states, 'paid'::declaration_states]))"
     t.index ["application_id"], name: "index_declarations_on_application_id"
     t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_declarations_on_delivery_partner_id"
