@@ -16,7 +16,7 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
       flash[:success] = "Schedule created"
       redirect_to npq_separation_admin_cohort_path(cohort)
     else
-      render :form, status: :unprocessable_entity
+      render :form, status: :unprocessable_content
     end
   end
 
@@ -29,7 +29,7 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
       flash[:success] = "Schedule updated"
       redirect_to npq_separation_admin_cohort_schedule_path(cohort, @schedule)
     else
-      render :form, status: :unprocessable_entity
+      render :form, status: :unprocessable_content
     end
   end
 
@@ -42,7 +42,7 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
       render :destroy
     end
   rescue ActiveRecord::RecordNotDestroyed
-    render :destroy, status: :unprocessable_entity
+    render :destroy, status: :unprocessable_content
   end
 
 private

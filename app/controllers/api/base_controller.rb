@@ -22,7 +22,7 @@ module API
     end
 
     def unpermitted_parameter_response(exception)
-      render json: { errors: API::Errors::Response.new(error: I18n.t(:unpermitted_parameters), params: exception.params).call }, status: :unprocessable_entity
+      render json: { errors: API::Errors::Response.new(error: I18n.t(:unpermitted_parameters), params: exception.params).call }, status: :unprocessable_content
     end
 
     def bad_request_response(exception)
@@ -31,7 +31,7 @@ module API
     end
 
     def filter_validation_error_response(exception)
-      render json: { errors: API::Errors::Response.new(error: I18n.t(:unpermitted_parameters), params: exception.message).call }, status: :unprocessable_entity
+      render json: { errors: API::Errors::Response.new(error: I18n.t(:unpermitted_parameters), params: exception.message).call }, status: :unprocessable_content
     end
 
     def api_token_scope

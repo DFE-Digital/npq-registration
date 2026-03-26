@@ -25,7 +25,7 @@ module API
         if service.void
           render json: to_json(service.declaration)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -35,7 +35,7 @@ module API
         if service.create_declaration
           render json: to_json(service.declaration)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -45,7 +45,7 @@ module API
         if service.change_delivery_partner
           render json: to_json(service.declaration)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 

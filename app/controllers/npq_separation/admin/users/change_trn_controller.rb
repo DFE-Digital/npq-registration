@@ -10,7 +10,7 @@ module NpqSeparation
           if @change_trn.change_trn
             redirect_to npq_separation_admin_user_path(@user)
           else
-            render :show, status: :unprocessable_entity
+            render :show, status: :unprocessable_content
           end
         end
 

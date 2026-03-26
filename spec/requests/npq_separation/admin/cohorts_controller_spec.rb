@@ -54,7 +54,7 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
     describe "#create with invalid params" do
       before { post npq_separation_admin_cohorts_path, params: invalid_params }
 
-      it { is_expected.to have_http_status :unprocessable_entity }
+      it { is_expected.to have_http_status :unprocessable_content }
     end
 
     describe "#edit" do
@@ -76,7 +76,7 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
     describe "#update with invalid params" do
       before { patch npq_separation_admin_cohort_path(cohort), params: invalid_params }
 
-      it { is_expected.to have_http_status :unprocessable_entity }
+      it { is_expected.to have_http_status :unprocessable_content }
     end
 
     describe "#destroy" do

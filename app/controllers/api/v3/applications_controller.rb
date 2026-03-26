@@ -22,7 +22,7 @@ module API
         if service.accept
           render json: to_json(service.application)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -35,7 +35,7 @@ module API
         if service.reject
           render json: to_json(service.application)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 
@@ -45,7 +45,7 @@ module API
         if service.change
           render json: to_json(service.application)
         else
-          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          render json: API::Errors::Response.from(service), status: :unprocessable_content
         end
       end
 

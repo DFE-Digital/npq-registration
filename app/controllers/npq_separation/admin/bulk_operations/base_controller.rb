@@ -23,7 +23,7 @@ module NpqSeparation::Admin::BulkOperations
         end
       end
 
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
 
   private

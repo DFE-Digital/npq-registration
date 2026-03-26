@@ -292,7 +292,7 @@ Rails.application.routes.draw do
   get "maintenance_banners/dismiss", to: "maintenance_banners#dismiss", as: :maintenance_banner_dismiss
 
   get "/404", to: "errors#not_found", via: :all
-  get "/422", to: "errors#unprocessable_entity", via: :all
+  get "/422", to: "errors#unprocessable_content", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
   get "/development_login", to: "registration_wizard#development_login"

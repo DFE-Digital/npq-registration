@@ -23,7 +23,7 @@ module NpqSeparation
             end
             redirect_to npq_separation_admin_application_path(@application)
           else
-            render :new, status: :unprocessable_entity
+            render :new, status: :unprocessable_content
           end
         end
 

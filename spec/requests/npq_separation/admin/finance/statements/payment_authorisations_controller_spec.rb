@@ -29,14 +29,14 @@ RSpec.describe NpqSeparation::Admin::Finance::Statements::PaymentAuthorisationsC
       context "with invalid form params" do
         let(:params) { { statements_payment_authorisation_form: { checks_done: "0" } } }
 
-        it { is_expected.to have_http_status :unprocessable_entity }
+        it { is_expected.to have_http_status :unprocessable_content }
         it { is_expected.to have_attributes body: /Check \w+ \d+ statement/i }
       end
 
       context "without form params" do
         let(:params) { {} }
 
-        it { is_expected.to have_http_status :unprocessable_entity }
+        it { is_expected.to have_http_status :unprocessable_content }
         it { is_expected.to have_attributes body: /Check \w+ \d+ statement/i }
       end
     end

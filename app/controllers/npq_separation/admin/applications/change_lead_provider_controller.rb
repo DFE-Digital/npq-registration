@@ -12,7 +12,7 @@ module NpqSeparation
           if @change_lead_provider.change_lead_provider
             redirect_to npq_separation_admin_application_path(@application)
           else
-            render :show, status: :unprocessable_entity
+            render :show, status: :unprocessable_content
           end
         end
 

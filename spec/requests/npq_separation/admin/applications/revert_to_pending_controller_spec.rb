@@ -41,7 +41,7 @@ RSpec.describe NpqSeparation::Admin::Applications::RevertToPendingController, ty
       context "without form params" do
         let(:params) { {} }
 
-        it { is_expected.to have_http_status :unprocessable_entity }
+        it { is_expected.to have_http_status :unprocessable_content }
         it { is_expected.to have_attributes body: /change the status to pending/i }
       end
     end
