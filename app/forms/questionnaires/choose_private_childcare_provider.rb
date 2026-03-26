@@ -68,7 +68,6 @@ module Questionnaires
     end
 
     def validate_institution_identifier
-      # return if no_js_fallback_search_loop?
       return if institution_identifier.blank? || institution_identifier == "other"
 
       unless institution_identifier.start_with?("PrivateChildcareProvider-")

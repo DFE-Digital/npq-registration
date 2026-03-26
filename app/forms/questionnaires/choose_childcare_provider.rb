@@ -44,10 +44,10 @@ module Questionnaires
     end
 
     def next_step
-      if !institution(source: institution_identifier).in_england? # Right now this is always true when it shouldn't be
-        :childcare_provider_not_in_england
-      else
+      if institution(source: institution_identifier).in_england? # Right now this is always true when it shouldn't be
         :choose_your_npq
+      else
+        :childcare_provider_not_in_england
       end
     end
 
