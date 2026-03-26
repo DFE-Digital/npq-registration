@@ -26,10 +26,10 @@ module Questionnaires
     end
 
     def next_step
-      if !institution(source: institution_identifier).in_england?
-        :school_not_in_england
-      else
+      if institution(source: institution_identifier).in_england?
         :choose_your_npq
+      else
+        :school_not_in_england
       end
     end
 
