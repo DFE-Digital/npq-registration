@@ -36,29 +36,15 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Date of birth
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @user.date_of_birth.try(:to_fs, :govuk_short) %>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          National Insurance number
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @user.national_insurance_number %>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
           TRN
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @user.trn %>
           <%= trn_verified_badge(@user) %>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="<%= npq_separation_admin_users_change_trn_path(@user) %>">Change<span class="govuk-visually-hidden"> age (Lead tenant)</span></a>
+          <%= govuk_link_to "Change", npq_separation_admin_users_change_trn_path(@user) %>
+          <br>
+          <%= govuk_link_to "View teaching record", "#{ENV['TRS_URL']}/persons?Search=#{@user.trn}", new_tab: "" %>
         </dd>
         </dd>
       </div>
