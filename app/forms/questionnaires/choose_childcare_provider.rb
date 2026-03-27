@@ -2,8 +2,6 @@ module Questionnaires
   # This is for choosing *public* childcare providers, these are stored alongside schools in the educationl_institutions
   # table as type School, therefore, we search and display identically to as we do for schools
   class ChooseChildcareProvider < Base
-    include Helpers::Institution
-
     attribute :institution_name
     attribute :institution_identifier
 
@@ -44,7 +42,7 @@ module Questionnaires
     end
 
     def next_step
-      if institution(source: institution_identifier).in_england? # Right now this is always true when it shouldn't be
+      if institution.in_england? # Right now this is always true when it shouldn't be
         :choose_your_npq
       else
         :childcare_provider_not_in_england
@@ -78,6 +76,12 @@ module Questionnaires
     end
 
   private
+
+    def institution
+      ::Registration::Institution.fetch(identifier: institution_identifier,
+                                        works_in_school: false,
+                                        works_in_childcare: true)
+    end
 
     def institution_location
       wizard.store["institution_location"]

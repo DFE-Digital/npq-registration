@@ -1,7 +1,5 @@
 module Questionnaires
   class PossibleFunding < Base
-    include Helpers::Institution
-
     def next_step
       :choose_your_provider
     end
@@ -27,7 +25,7 @@ module Questionnaires
     end
 
     def message_template
-      return "private_childcare_provider" if institution.is_a?(PrivateChildcareProvider)
+      return "private_childcare_provider" if query_store.institution.is_a?(PrivateChildcareProvider)
       return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?
       return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
 

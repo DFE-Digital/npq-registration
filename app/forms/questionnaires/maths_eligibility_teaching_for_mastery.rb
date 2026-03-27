@@ -1,7 +1,5 @@
 module Questionnaires
   class MathsEligibilityTeachingForMastery < Base
-    include Helpers::Institution
-
     QUESTION_NAME = :maths_eligibility_teaching_for_mastery
 
     attribute QUESTION_NAME
@@ -55,7 +53,7 @@ module Questionnaires
     def funding_eligibility_calculator
       @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course:,
-        institution:,
+        institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         trn:,

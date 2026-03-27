@@ -2,8 +2,6 @@ module Questionnaires
   class EhcoHeadteacher < Base
     VALID_EHCO_HEADTEACHER_OPTIONS = %w[yes no].freeze
 
-    include Helpers::Institution
-
     attribute :ehco_headteacher
 
     validates :ehco_headteacher, presence: true, inclusion: { in: VALID_EHCO_HEADTEACHER_OPTIONS }

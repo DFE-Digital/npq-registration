@@ -1,7 +1,5 @@
 module Questionnaires
   class CheckAnswers < Base
-    include Helpers::Institution
-
     def previous_step
       :share_provider
     end

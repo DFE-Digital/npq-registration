@@ -2,8 +2,6 @@ module Questionnaires
   class NpqhStatus < Base
     VALID_NPQH_STATUS_OPTIONS = %w[completed_npqh studying_npqh will_start_npqh none].freeze
 
-    include Helpers::Institution
-
     attribute :npqh_status
 
     validates :npqh_status, presence: true, inclusion: { in: VALID_NPQH_STATUS_OPTIONS }
