@@ -1,7 +1,5 @@
 module Questionnaires
   class ChoosePrivateChildcareProvider < Base
-    include Helpers::Institution
-
     attribute :institution_name
     attribute :institution_identifier
 
@@ -61,6 +59,12 @@ module Questionnaires
 
   private
 
+    def institution
+      ::Registration::Institution.fetch(identifier: institution_identifier,
+                                        works_in_school: false,
+                                        works_in_childcare: true)
+    end
+
     def validate_private_childcare_provider_name_returns_results
       if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?
         errors.add(:institution_name, :no_results, urn: institution_name)
@@ -74,7 +78,7 @@ module Questionnaires
         errors.add(:institution_identifier, :invalid, urn: institution_identifier)
       end
 
-      return if institution(source: institution_identifier).present?
+      return if institution.present?
 
       errors.add(:institution_identifier, :no_results, urn: institution_identifier.split("-").last)
     end

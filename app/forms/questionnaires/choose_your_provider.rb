@@ -1,7 +1,5 @@
 module Questionnaires
   class ChooseYourProvider < Base
-    include Helpers::Institution
-
     attribute :lead_provider_id
 
     validates :lead_provider_id, presence: true
@@ -71,7 +69,7 @@ module Questionnaires
     def funding_eligibility_calculator
       @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course:,
-        institution: institution(source: institution_identifier),
+        institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         trn:,
@@ -86,10 +84,6 @@ module Questionnaires
 
     def lead_provider
       providers.find_by(id: lead_provider_id)
-    end
-
-    def institution_identifier
-      wizard.store["institution_identifier"]
     end
 
     delegate :approved_itt_provider?,

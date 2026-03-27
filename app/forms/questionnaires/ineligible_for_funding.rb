@@ -2,8 +2,6 @@ module Questionnaires
   class IneligibleForFunding < Base
     class UnexpectedEligibilityStatusCode < StandardError; end
 
-    include Helpers::Institution
-
     NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
     NOT_IN_ENGLAND = "not_in_england".freeze
     EARLY_YEARS_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
@@ -80,7 +78,7 @@ module Questionnaires
     def funding_eligibility
       @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
-        institution:,
+        institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         trn: wizard.query_store.trn,

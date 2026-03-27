@@ -11,7 +11,6 @@ module Questionnaires
       end
     end
 
-    include Helpers::Institution
     include ApplicationHelper
 
     QUESTION_NAME = :course_start_date

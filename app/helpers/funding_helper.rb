@@ -1,5 +1,4 @@
 module FundingHelper
-  include Helpers::Institution
   def scholarship_funding_eligibility(application)
     funding_eligibility = funding_eligibility_calculator(application)
 
@@ -28,7 +27,7 @@ private
   def funding_eligibility_calculator(application)
     FundingEligibility.new_from_query_store(
       course: application.course,
-      institution: institution(source: application.raw_application_data["institution_identifier"], application:),
+      institution: query_store(application).institution,
       approved_itt_provider: application.itt_provider.present?,
       inside_catchment: application.teacher_catchment == "england",
       trn: application.user.trn,
