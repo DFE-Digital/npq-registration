@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
   subject :instance do
     described_class.new(wizard:,
-                        institution_identifier: identifier,
-                        institution_name: name)
+                        childcare_identifier: identifier,
+                        childcare_name: name)
   end
 
   let(:current_step) { :choose_childcare_provider }
@@ -21,46 +21,46 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
   describe "validations" do
     let(:errors) { instance.tap(&:valid?).errors.to_hash }
 
-    describe "#institution_identifier" do
-      it "can have institution_identifier as empty string" do
-        subject.institution_identifier = ""
+    describe "#childcare_identifier" do
+      it "can have childcare_identifier as empty string" do
+        subject.childcare_identifier = ""
         subject.valid?
-        expect(subject.errors[:institution_identifier]).to be_blank
+        expect(subject.errors[:childcare_identifier]).to be_blank
       end
 
-      it "can have institution_identifier as 'other'" do
-        subject.institution_identifier = "other"
+      it "can have childcare_identifier as 'other'" do
+        subject.childcare_identifier = "other"
         subject.valid?
-        expect(subject.errors[:institution_identifier]).to be_blank
+        expect(subject.errors[:childcare_identifier]).to be_blank
       end
 
-      it "can have institution_identifier as 'School-123456'" do
-        subject.institution_identifier = "School-123456"
+      it "can have childcare_identifier as 'School-123456'" do
+        subject.childcare_identifier = "School-123456"
         subject.valid?
-        expect(subject.errors[:institution_identifier]).to be_blank
+        expect(subject.errors[:childcare_identifier]).to be_blank
       end
 
       # this is used for the sandbox environment
-      it "can have institution_identifier as 'School-1234567'" do
-        subject.institution_identifier = "School-1234567"
+      it "can have childcare_identifier as 'School-1234567'" do
+        subject.childcare_identifier = "School-1234567"
         subject.valid?
-        expect(subject.errors[:institution_identifier]).to be_blank
+        expect(subject.errors[:childcare_identifier]).to be_blank
       end
 
-      it "can have institution_identifier as 'LocalAuthority-1'" do
-        subject.institution_identifier = "LocalAuthority-1"
+      it "can have childcare_identifier as 'LocalAuthority-1'" do
+        subject.childcare_identifier = "LocalAuthority-1"
         subject.valid?
-        expect(subject.errors[:institution_identifier]).to be_blank
+        expect(subject.errors[:childcare_identifier]).to be_blank
       end
 
-      it "cannot have institution_identifier as '1234567'" do
-        subject.institution_identifier = "1234567"
+      it "cannot have childcare_identifier as '1234567'" do
+        subject.childcare_identifier = "1234567"
         subject.valid?
-        expect(subject.errors[:institution_identifier]).to be_present
+        expect(subject.errors[:childcare_identifier]).to be_present
       end
     end
 
-    it { is_expected.to validate_length_of(:institution_name).is_at_most(64) }
+    it { is_expected.to validate_length_of(:childcare_name).is_at_most(64) }
 
     context "when used from javascript autocomplete widget" do
       context "with institution valid" do
@@ -72,7 +72,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
       context "with no institution or name" do
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter a childcare provider"] }
+        it { expect(errors).to eq childcare_name: ["Enter a childcare provider"] }
       end
 
       context "with invalid institution" do
@@ -80,7 +80,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_identifier: ["No matching childcare provider found"] }
+        it { expect(errors).to eq childcare_identifier: ["No matching childcare provider found"] }
       end
     end
 
@@ -95,7 +95,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
       context "with no institution or name" do
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter a childcare provider"] }
+        it { expect(errors).to eq childcare_name: ["Enter a childcare provider"] }
       end
 
       context "with workplace set to other" do
@@ -113,7 +113,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["No nurseries with the name School-X were found, please try again"] }
+        it { expect(errors).to eq childcare_name: ["No nurseries with the name School-X were found, please try again"] }
       end
 
       context "with workplace set to invalid value and blank identifier" do
@@ -121,7 +121,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["No nurseries with the name School-X were found, please try again"] }
+        it { expect(errors).to eq childcare_name: ["No nurseries with the name School-X were found, please try again"] }
       end
 
       context "with workplace set to other and not name" do
@@ -129,13 +129,13 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter a childcare provider"] }
+        it { expect(errors).to eq childcare_name: ["Enter a childcare provider"] }
       end
     end
   end
 
   describe "#next_step" do
-    subject { described_class.new(institution_identifier: "School-#{provider.urn}", wizard:) }
+    subject { described_class.new(childcare_identifier: "School-#{provider.urn}", wizard:) }
 
     let(:course) { create(:course) }
     let(:store) do

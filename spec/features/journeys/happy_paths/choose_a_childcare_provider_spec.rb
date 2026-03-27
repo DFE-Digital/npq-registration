@@ -100,7 +100,7 @@ RSpec.feature "Choose a childcare provider page", :with_default_schedules, type:
       end
       page.click_button("Continue")
       page.choose "Workplace not shown above"
-      page.fill_in "registration-wizard-institution-name-field", with: "xxxx"
+      page.fill_in "registration-wizard-childcare-name-field", with: "xxxx"
       page.click_button("Continue")
 
       expect(page).to have_content("No nurseries with the name xxxx were found, please try again")
