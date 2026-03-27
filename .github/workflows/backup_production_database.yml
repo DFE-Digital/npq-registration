@@ -73,7 +73,7 @@ jobs:
           echo "KEYVAULT_NAME=${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-inf-kv" >> $GITHUB_ENV
 
       - name: Fetch secrets from key vault
-        uses: azure/CLI@v2
+        uses: azure/CLI@v3
         id: key-vault-secrets
         with:
           inlineScript: |
