@@ -10,7 +10,7 @@
     "@babel/preset-env": "^7.29.0",
     "@ministryofjustice/frontend": "3.7.2",
     "accessible-autocomplete": "^3.0.1",
-    "babel-loader": "^10.0.0",
+    "babel-loader": "^10.1.1",
     "file-loader": "^6.2.0",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^5.8",
