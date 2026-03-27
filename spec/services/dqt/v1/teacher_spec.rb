@@ -14,7 +14,7 @@ RSpec.describe Dqt::V1::Teacher do
       "trn": trn,
       "ni_number": "AB123456D",
       "name": "Mostly Populated",
-      "dob": "1987-12-13",
+      "dob": "1987-12-13T00:00:00Z",
       "active_alert": active_alert,
       "state_name": "Active",
     }
@@ -78,7 +78,7 @@ RSpec.describe Dqt::V1::Teacher do
 
       expect(record["ni_number"]).to eq("AB123456D")
       expect(record["name"]).to eq("Mostly Populated")
-      expect(record["dob"]).to eq("1987-12-13")
+      expect(record["dob"]).to eq("1987-12-13T00:00:00Z")
       expect(record["state_name"]).to eq("Active")
     end
 

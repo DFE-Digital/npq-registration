@@ -9,6 +9,7 @@ module Dqt
       default_timeout 5.seconds
 
       def self.find(trn:, birthdate:, nino: nil)
+        # birthdate should be a string in the format "YYYY-MM-DD" (ISO8601)
         path = "/v1/teachers/#{trn}"
         query = {
           birthdate:,
@@ -22,6 +23,7 @@ module Dqt
         Rails.logger.info("DQT API response: #{response.code}")
 
         if response.success?
+          # 'dob' returned from API is a string: "1980-01-01T00:00:00Z"
           response.slice(
             "trn",
             "state_name",

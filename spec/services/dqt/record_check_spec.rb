@@ -12,7 +12,7 @@ RSpec.describe Dqt::RecordCheck do
   let(:padded_trn) { trn }
   let(:trn) { "1234567" }
   let(:nino) { "QQ123456A" }
-  let(:date_of_birth) { 25.years.ago.to_date }
+  let(:date_of_birth) { 25.years.ago.to_date.iso8601 }
   let(:full_name) { "Mr Nelson Muntz" }
   let(:kwargs) { { full_name:, trn:, date_of_birth:, nino: } }
   let(:default_api_response) do
@@ -21,7 +21,7 @@ RSpec.describe Dqt::RecordCheck do
       "trn" => padded_trn,
       "name" => full_name,
       "ni_number" => nino,
-      "dob" => 25.years.ago.to_date,
+      "dob" => 25.years.ago.to_date.strftime("%FT%TZ"),
       "active_alert": true,
     }
   end
@@ -173,7 +173,15 @@ RSpec.describe Dqt::RecordCheck do
 
       context "when different" do
         include_context "with fake DQT response" do
-          let(:fake_api_response) { default_api_response.merge("dob" => 27.years.ago.to_date) }
+          let(:fake_api_response) { default_api_response.merge("dob" => 27.years.ago.to_date.strftime("%FT%TZ")) }
+        end
+
+        it("#dob_matches is false") { expect(subject.call.dob_matches).to be(false) }
+      end
+
+      context "when date cannot be parsed" do
+        include_context "with fake DQT response" do
+          let(:fake_api_response) { default_api_response.merge("dob" => "invalid date") }
         end
 
         it("#dob_matches is false") { expect(subject.call.dob_matches).to be(false) }
