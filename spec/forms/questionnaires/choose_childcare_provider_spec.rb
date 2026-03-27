@@ -1,18 +1,18 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::ChooseSchool, type: :model do
+RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
   subject :instance do
     described_class.new(wizard:,
                         institution_identifier: identifier,
                         institution_name: name)
   end
 
-  let(:current_step) { :choose_school }
+  let(:current_step) { :choose_childcare_provider }
   let(:store) { {} }
   let(:request) { nil }
   let(:identifier) { "" }
   let(:name) { "" }
-  let(:school) { create :school, urn: "8329422" }
+  let(:provider) { create :school, urn: "8329422" }
 
   let(:wizard) do
     RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
@@ -64,7 +64,7 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
 
     context "when used from javascript autocomplete widget" do
       context "with institution valid" do
-        let(:identifier) { "School-#{school.urn}" }
+        let(:identifier) { "School-#{provider.urn}" }
 
         it { is_expected.to be_valid }
       end
@@ -72,7 +72,7 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
       context "with no institution or name" do
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter your workplace"] }
+        it { expect(errors).to eq institution_name: ["Enter a childcare provider"] }
       end
 
       context "with invalid institution" do
@@ -80,14 +80,14 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_identifier: ["No matching school found"] }
+        it { expect(errors).to eq institution_identifier: ["No matching childcare provider found"] }
       end
     end
 
     context "when used from static input fields without javascript" do
       context "with institution valid" do
-        let(:identifier) { "School-#{school.urn}" }
-        let(:name) { school.name }
+        let(:identifier) { "School-#{provider.urn}" }
+        let(:name) { provider.name }
 
         it { is_expected.to be_valid }
       end
@@ -95,12 +95,12 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
       context "with no institution or name" do
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter your workplace"] }
+        it { expect(errors).to eq institution_name: ["Enter a childcare provider"] }
       end
 
       context "with workplace set to other" do
         let(:identifier) { "other" }
-        let(:name) { school.name }
+        let(:name) { provider.name }
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
@@ -113,7 +113,7 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["No schools with the name School-X were found, please try again"] }
+        it { expect(errors).to eq institution_name: ["No nurseries with the name School-X were found, please try again"] }
       end
 
       context "with workplace set to invalid value and blank identifier" do
@@ -121,7 +121,7 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["No schools with the name School-X were found, please try again"] }
+        it { expect(errors).to eq institution_name: ["No nurseries with the name School-X were found, please try again"] }
       end
 
       context "with workplace set to other and not name" do
@@ -129,22 +129,22 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter your workplace"] }
+        it { expect(errors).to eq institution_name: ["Enter a childcare provider"] }
       end
     end
   end
 
   describe "#next_step" do
-    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
+    subject { described_class.new(institution_identifier: "School-#{provider.urn}", wizard:) }
 
     let(:course) { create(:course) }
     let(:store) do
       {
         "course_identifier" => course.identifier.to_s,
-        "works_in_school" => "yes",
+        "works_in_childcare" => "yes",
       }
     end
-    let(:school) { create(:school) }
+    let(:provider) { create(:school) }
 
     it "goes to choose_your_npq" do
       expect(subject.next_step).to be(:choose_your_npq)

@@ -7,6 +7,7 @@ module Questionnaires
 
     validates :institution_identifier, format: { with: /\ASchool-\d{6,7}\z|\ALocalAuthority-\d+\z/, unless: -> { institution_identifier.blank? || institution_identifier == "other" } }
     validates :institution_name, length: { maximum: 64 }
+    validates :institution_name, presence: true, if: -> { institution_identifier.blank? || institution_identifier == "other" }
 
     validate :validate_school_name_returns_results
 
@@ -17,13 +18,18 @@ module Questionnaires
       ]
     end
 
+    # In the no js scenario we want the step to loop, showing a different screen
+    # the second time but without showing an error - hence a negative response to
+    # #valid? preventing saving but without appending errors
+    def valid?(...)
+      super(...) && institution_identifier.present? && institution_identifier != "other"
+    end
+
     def next_step
-      if institution_identifier == "other" || institution_identifier.blank?
-        :choose_school
-      elsif !institution(source: institution_identifier).in_england?
-        :school_not_in_england
-      else
+      if institution(source: institution_identifier).in_england?
         :choose_your_npq
+      else
+        :school_not_in_england
       end
     end
 
@@ -62,17 +68,17 @@ module Questionnaires
       @possible_institutions = schools + local_authorities
     end
 
-  private
-
     def search_term_entered_in_no_js_fallback_form?
       # This combination of fields is only used in the no-js fallback form
       # institution_name will be set from the search term being entered into the search
       # field that is only visible when JS is disabled.
-      wizard.store["institution_name"].present?
+      institution_name.present? || institution_identifier == "other"
     end
 
+  private
+
     def validate_school_name_returns_results
-      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank?
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?
         errors.add(:institution_name, :no_results, name: institution_name)
       end
     end
