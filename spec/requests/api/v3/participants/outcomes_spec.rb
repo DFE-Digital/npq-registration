@@ -9,7 +9,7 @@ RSpec.describe "Participants outcome endpoints", type: :request do
 
   def create_resource(**attrs)
     if attrs[:lead_provider]
-      attrs[:declaration] = create(:declaration, application:, lead_provider: attrs[:lead_provider])
+      attrs[:declaration] = create(:declaration, state: "ineligible", application:, lead_provider: attrs[:lead_provider])
       attrs.delete(:lead_provider)
     end
 
