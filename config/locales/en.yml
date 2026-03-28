@@ -476,10 +476,10 @@ en:
               blank: Enter a childcare provider
         questionnaires/choose_private_childcare_provider:
           attributes:
-            institution_identifier:
+            private_childcare_identifier:
               no_results: No private childcare providers with the URN %{urn} were found, please try again
               invalid: No matching private childcare provider found
-            institution_name:
+            private_childcare_name:
               no_results: No private childcare providers with the URN %{urn} were found, please try again
               blank: Enter a private childcare provider
         questionnaires/choose_school:

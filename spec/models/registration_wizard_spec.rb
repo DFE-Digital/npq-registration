@@ -69,8 +69,8 @@ RSpec.describe RegistrationWizard do
           "date_of_birth" => 30.years.ago,
           "full_name" => "Tatyana Christensen",
           "has_ofsted_urn" => has_ofsted_urn,
-          "institution_identifier" => institution_identifier,
-          "institution_name" => "",
+          "private_childcare_identifier" => private_childcare_identifier,
+          "private_childcare_name" => "",
           "kind_of_nursery" => "private_nursery",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "national_insurance_number" => "123420",
@@ -88,7 +88,7 @@ RSpec.describe RegistrationWizard do
 
       context "without urn" do
         let(:has_ofsted_urn) { "no" }
-        let(:institution_identifier) { "" }
+        let(:private_childcare_identifier) { "" }
 
         it "does not show Ofsted registration details" do
           expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
@@ -105,7 +105,7 @@ RSpec.describe RegistrationWizard do
 
       context "with urn" do
         let(:has_ofsted_urn) { "yes" }
-        let(:institution_identifier) { private_childcare_provider.identifier }
+        let(:private_childcare_identifier) { private_childcare_provider.identifier }
 
         it "shows Ofsted registration details" do
           expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
