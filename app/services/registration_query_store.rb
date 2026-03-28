@@ -198,12 +198,12 @@ class RegistrationQueryStore
                                         works_in_school: true,
                                         works_in_childcare: false)
       elsif works_in_childcare? && !works_in_school?
-        if !kind_of_nursery_private?
+        if kind_of_nursery_public?
           Registration::Institution.fetch(identifier: store["childcare_identifier"],
                                           works_in_school: false,
                                           works_in_childcare: true)
         elsif has_ofsted_urn?
-          Registration::Institution.fetch(identifier: store["institution_identifier"],
+          Registration::Institution.fetch(identifier: store["private_childcare_identifier"],
                                           works_in_school: false,
                                           works_in_childcare: true)
         end

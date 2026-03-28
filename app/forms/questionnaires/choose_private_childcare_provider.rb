@@ -1,18 +1,18 @@
 module Questionnaires
   class ChoosePrivateChildcareProvider < Base
-    attribute :institution_name
-    attribute :institution_identifier
+    attribute :private_childcare_name
+    attribute :private_childcare_identifier
 
-    validates :institution_name, length: { maximum: 64 }
-    validates :institution_name, presence: true, if: -> { institution_identifier.blank? || institution_identifier == "other" }
+    validates :private_childcare_name, length: { maximum: 64 }
+    validates :private_childcare_name, presence: true, if: -> { private_childcare_identifier.blank? || private_childcare_identifier == "other" }
 
-    validate :validate_institution_identifier
+    validate :validate_private_childcare_identifier
     validate :validate_private_childcare_provider_name_returns_results
 
     def self.permitted_params
       %i[
-        institution_name
-        institution_identifier
+        private_childcare_name
+        private_childcare_identifier
       ]
     end
 
@@ -20,7 +20,7 @@ module Questionnaires
     # the second time but without showing an error - hence a negative response to
     # #valid? preventing saving but without appending errors
     def valid?(...)
-      super(...) && institution_identifier.present? && institution_identifier != "other"
+      super(...) && private_childcare_identifier.present? && private_childcare_identifier != "other"
     end
 
     def next_step
@@ -34,13 +34,13 @@ module Questionnaires
     def questions
       [
         QuestionTypes::AutoCompleteInstitution.new(
-          name: :institution_identifier,
+          name: :private_childcare_identifier,
           locale_name: :choose_private_childcare_provider,
           picker: :"private-childcare-provider",
           options: possible_institutions,
           display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
           search_question: QuestionTypes::TextField.new(
-            name: :institution_name,
+            name: :private_childcare_name,
             locale_name: :choose_private_childcare_provider_search,
           ),
         ),
@@ -54,33 +54,33 @@ module Questionnaires
     end
 
     def search_term_entered_in_no_js_fallback_form?
-      institution_name.present? || institution_identifier == "other"
+      private_childcare_name.present? || private_childcare_identifier == "other"
     end
 
   private
 
     def institution
-      ::Registration::Institution.fetch(identifier: institution_identifier,
+      ::Registration::Institution.fetch(identifier: private_childcare_identifier,
                                         works_in_school: false,
                                         works_in_childcare: true)
     end
 
     def validate_private_childcare_provider_name_returns_results
-      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?
-        errors.add(:institution_name, :no_results, urn: institution_name)
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && private_childcare_name.present?
+        errors.add(:private_childcare_name, :no_results, urn: private_childcare_name)
       end
     end
 
-    def validate_institution_identifier
-      return if institution_identifier.blank? || institution_identifier == "other"
+    def validate_private_childcare_identifier
+      return if private_childcare_identifier.blank? || private_childcare_identifier == "other"
 
-      unless institution_identifier.start_with?("PrivateChildcareProvider-")
-        errors.add(:institution_identifier, :invalid, urn: institution_identifier)
+      unless private_childcare_identifier.start_with?("PrivateChildcareProvider-")
+        errors.add(:private_childcare_identifier, :invalid, urn: private_childcare_identifier)
       end
 
       return if institution.present?
 
-      errors.add(:institution_identifier, :no_results, urn: institution_identifier.split("-").last)
+      errors.add(:private_childcare_identifier, :no_results, urn: private_childcare_identifier.split("-").last)
     end
   end
 end
