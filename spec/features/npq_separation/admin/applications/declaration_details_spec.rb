@@ -4,6 +4,7 @@ RSpec.feature "Application declaration details", :versioning, type: :feature do
   include Helpers::AdminLogin
 
   let(:application) { create(:application) }
+  let(:application_2) { create(:application) }
 
   context "when not logged in" do
     scenario "viewing declaration details" do
@@ -23,17 +24,13 @@ RSpec.feature "Application declaration details", :versioning, type: :feature do
       completed_declaration = create(:declaration, :completed, application:)
       completed_declaration.mark_eligible!
 
-      payable_statement = create(:statement, :payable)
-      payable_declaration = create(:declaration, :payable, application:, statement: payable_statement)
-      paid_statement = create(:statement, :paid, declaration: payable_declaration)
-
       visit(npq_separation_admin_application_path(application))
       click_link "Declaration details"
 
       expect(page).to have_css("h1", text: "Declaration details")
 
       summary_cards = all(".govuk-summary-card")
-      expect(summary_cards).to have_attributes(length: 3)
+      expect(summary_cards).to have_attributes(length: 2)
 
       within(summary_cards[0]) do |summary_card|
         expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started (Submitted)")
@@ -70,7 +67,17 @@ RSpec.feature "Application declaration details", :versioning, type: :feature do
         expect(summary_card).to have_css(".moj-timeline__item", text: /Eligible\s+#{completed_declaration.created_at.to_fs(:govuk_short)}/)
       end
 
-      within(summary_cards[2]) do
+      payable_statement = create(:statement, :payable)
+      payable_declaration = create(:declaration, :payable, application: application_2, statement: payable_statement)
+      paid_statement = create(:statement, :paid, declaration: payable_declaration)
+
+      visit(npq_separation_admin_application_path(application_2))
+      click_link "Declaration details"
+
+      summary_cards = all(".govuk-summary-card")
+      expect(summary_cards).to have_attributes(length: 1)
+
+      within(summary_cards[0]) do
         within(find(".govuk-summary-list")) do |summary_list|
           expect(summary_list).to have_summary_item(
             "Statements",
@@ -84,7 +91,7 @@ RSpec.feature "Application declaration details", :versioning, type: :feature do
       click_link("#{Date::MONTHNAMES[payable_statement.month]} #{payable_statement.year}")
       expect(page).to have_current_path(npq_separation_admin_finance_statement_path(payable_statement))
 
-      visit(npq_separation_admin_application_declarations_path(application))
+      visit(npq_separation_admin_application_declarations_path(application_2))
       click_link("#{Date::MONTHNAMES[paid_statement.month]} #{paid_statement.year}")
       expect(page).to have_current_path(npq_separation_admin_finance_statement_path(paid_statement))
     end

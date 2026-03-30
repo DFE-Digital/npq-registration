@@ -41,9 +41,10 @@ RSpec.describe Declarations::Query do
         let(:other_lead_provider) { create(:lead_provider) }
 
         let(:application) { create(:application, lead_provider: current_lead_provider) }
+        let(:application_2) { create(:application, lead_provider: current_lead_provider) }
 
         let!(:declaration_before_transfer) { create(:declaration, lead_provider: previous_lead_provider, application:) }
-        let!(:declaration_after_transfer)  { create(:declaration, :eligible, lead_provider: current_lead_provider, application:) }
+        let!(:declaration_after_transfer)  { create(:declaration, :eligible, lead_provider: current_lead_provider, application: application_2) }
 
         before do
           create(:declaration, lead_provider: other_lead_provider)
