@@ -6,12 +6,12 @@ RSpec.describe "one_off:void_or_clawback_duplicate_declarations" do
   end
 
   let(:lead_provider) { create(:lead_provider) }
-  let(:cohort) { create(:cohort, :next) }
+  let(:cohort) { create(:cohort, :current) }
   let(:application) { create(:application, :accepted, cohort:, lead_provider:) }
   let(:declaration) { create(:declaration, :paid, application:, lead_provider:) }
   let(:duplicate_declaration) { create(:declaration, :paid, application:, lead_provider:) }
   let(:not_paid_declaration) { create(:declaration, :payable, application:, lead_provider:) }
-  let(:other_cohort) { create(:cohort, :next_plus_one) }
+  let(:other_cohort) { create(:cohort, :next) }
   let(:other_cohort_application) { create(:application, :accepted, cohort: other_cohort, lead_provider:) }
   let(:other_cohort_declaration) { create(:declaration, :paid, application: other_cohort_application, cohort: other_cohort, lead_provider:) }
   let(:other_cohort_duplicate_declaration) { create(:declaration, :paid, application: other_cohort_application, cohort: other_cohort, lead_provider:) }
