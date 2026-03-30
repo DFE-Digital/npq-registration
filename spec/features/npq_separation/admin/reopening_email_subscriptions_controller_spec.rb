@@ -6,9 +6,9 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
   let(:super_admin) { create(:super_admin) }
 
   before do
-    sign_in_as(super_admin)
-    create(:cohort, registration_start_date: 1.year.ago, start_year: 1.year.ago.year)
+    create(:cohort, :previous)
     create :user, email_updates_status: :senco, email: "example@example.org", full_name: "John Doe"
+    sign_in_as(super_admin)
   end
 
   scenario "unsubscribe user" do
