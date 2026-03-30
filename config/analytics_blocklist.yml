@@ -66,6 +66,7 @@ shared:
     - otp_expires_at
     - created_at
     - updated_at
+    - archived_at
   :flipper_gates:
     - id
     - feature_key

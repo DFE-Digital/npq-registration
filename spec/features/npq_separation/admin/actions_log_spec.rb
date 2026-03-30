@@ -5,10 +5,13 @@ RSpec.feature "actions log", :no_js, :versioning, type: :feature do
 
   let(:application_1) { create(:application) }
   let(:application_2) { create(:application) }
-  let(:sign_in_as_admin) { create(:admin) }
-  let(:admin) { create(:admin) }
+  let(:signed_in_admin) { create(:admin, full_name: "A admin") }
+  let(:archived_admin) { create(:admin, :archived, full_name: "B admin") }
+  let(:admin) { create(:admin, full_name: "C admin") }
 
   before do
+    signed_in_admin
+    archived_admin
     admin
     application_1
     application_2
@@ -29,13 +32,13 @@ RSpec.feature "actions log", :no_js, :versioning, type: :feature do
       eligible_for_funding: false,
     ).change_funding_eligibility
 
-    sign_in_as(create(:admin))
+    sign_in_as(signed_in_admin)
   end
 
   scenario "Admin actions log page" do
     click_on "Actions log"
-    all_admin_users = Admin.order(:full_name).map(&:name_with_email)
-    expect(page).to have_select("Admin user", options: ["- select admin user -"] + all_admin_users)
+    all_admin_users = [signed_in_admin, admin, archived_admin].map(&:name_with_email)
+    expect(page.find_field("Admin user").all("option").map(&:text)).to eq(["- select admin user -"] + all_admin_users)
   end
 
   scenario "viewing an admin user's actions" do
@@ -57,7 +60,7 @@ RSpec.feature "actions log", :no_js, :versioning, type: :feature do
   end
 
   scenario "when there are no actions for an admin user" do
-    visit npq_separation_admin_actions_log_path(sign_in_as_admin.id)
+    visit npq_separation_admin_actions_log_path(signed_in_admin.id)
     expect(page).to have_content "No applications have been updated by this admin user."
   end
 end
