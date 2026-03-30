@@ -8,7 +8,7 @@ namespace :one_off do
 
     applications_with_duplicate_declarations = Application
       .joins(:declarations, :cohort)
-      .where(declarations: { state: %w[submitted paid] }) # TODO: test submitted state
+      .where(declarations: { state: %w[submitted paid] })
       .group(:id, :declaration_type, :state)
       .having("count(applications.id) > 1")
     duplicate_declarations = applications_with_duplicate_declarations.pluck(Arel.sql("array_agg(declarations.id)"))
@@ -16,8 +16,8 @@ namespace :one_off do
 
     Declaration.transaction do
       duplicate_declarations.each do |declaration_ids|
-        declaration_id_to_clawback = declaration_ids.max
-        declaration = Declaration.find(declaration_id_to_clawback)
+        declaration_id_to_void = declaration_ids.max
+        declaration = Declaration.find(declaration_id_to_void)
         service = Declarations::Void.new(declaration:)
         result = service.void
 
@@ -28,7 +28,7 @@ namespace :one_off do
             "Cohort: #{declaration.cohort.identifier}, " \
             "Lead Provider: #{declaration.lead_provider.name}"
         else
-          logger.error "Failed to claw back declaration #{declaration.id} - #{service.errors.full_messages.to_sentence}"
+          logger.error "Failed to void/clawback declaration #{declaration.id} - #{service.errors.full_messages.to_sentence}"
           raise ActiveRecord::Rollback
         end
       end
