@@ -256,12 +256,14 @@ private
   def declaration_unique_for_application_and_type
     return if errors.any?
 
-    if application.declarations
+    duplicate_declarations =
+      application.declarations
       .where(declaration_type:)
       .where.not(id:)
-      .where(state:)
-      .exists?
-      errors.add(:base, :duplicate_declaration, declaration_state: state)
+      .where(state: DUPLICATES_NOT_ALLOWED_STATES)
+
+    if duplicate_declarations.exists?
+      errors.add(:base, :duplicate_declaration, declaration_state: duplicate_declarations.first.state)
     end
   end
 end

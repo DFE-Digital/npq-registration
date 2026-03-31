@@ -308,21 +308,37 @@ RSpec.describe Declaration, type: :model do
 
       let(:application) { create(:application, :accepted) }
 
-      before { create(:declaration, application: application, state: state) }
+      before { create(:declaration, application: application, state: existing_declaration_state) }
 
-      Declaration::DUPLICATES_NOT_ALLOWED_STATES.each do |state|
-        context "and the state is #{state}" do
-          let(:state) { state }
+      context "and the state of the existing declaration is the same as the one being created" do
+        let(:existing_declaration_state) { state }
 
-          it { is_expected.to have_error(:base, :duplicate_declaration, "There is already a declaration with state #{state} for this application") }
+        Declaration::DUPLICATES_NOT_ALLOWED_STATES.each do |state|
+          context "and the state is #{state}" do
+            let(:state) { state }
+
+            it { is_expected.to have_error(:base, :duplicate_declaration, "There is already a declaration with state #{state} for this application") }
+          end
+        end
+
+        (Declaration.states.keys - Declaration::DUPLICATES_NOT_ALLOWED_STATES).each do |state|
+          context "and the state is #{state}" do
+            let(:state) { state }
+
+            it { is_expected.to be_valid }
+          end
         end
       end
 
-      (Declaration.states.keys - Declaration::DUPLICATES_NOT_ALLOWED_STATES).each do |state|
-        context "and the state is #{state}" do
-          let(:state) { state }
+      context "and the state of the existing declaration is different from the one being created, but still not allowed" do
+        let(:existing_declaration_state) { Declaration::DUPLICATES_NOT_ALLOWED_STATES.excluding(state).last }
 
-          it { is_expected.to be_valid }
+        Declaration::DUPLICATES_NOT_ALLOWED_STATES.each do |state|
+          context "and the state is #{state}" do
+            let(:state) { state }
+
+            it { is_expected.to have_error(:base, :duplicate_declaration, "There is already a declaration with state #{existing_declaration_state} for this application") }
+          end
         end
       end
     end
