@@ -6,6 +6,7 @@ class Course < ApplicationRecord
   NPQ_LEADING_PRIMARY_MATHEMATICS = "npq-leading-primary-mathematics".freeze
   NPQ_ADDITIONAL_SUPPORT_OFFER = "npq-additional-support-offer".freeze
   NPQ_SENCO = "npq-senco".freeze
+  NPQ_SENIOR_LEADERSHIP = "npq-senior-leadership".freeze
 
   belongs_to :course_group, optional: true
 
@@ -96,16 +97,16 @@ class Course < ApplicationRecord
     identifier == NPQ_ADDITIONAL_SUPPORT_OFFER
   end
 
+  def senior_leadership?
+    identifier == NPQ_SENIOR_LEADERSHIP
+  end
+
   def only_pp50?
     ONLY_PP50.include?(identifier)
   end
 
   def la_nursery_approved?
     LA_NURSERY_APPROVED.include?(identifier)
-  end
-
-  def eyl_disadvantaged?
-    EYL_DISADVANTAGED.include?(identifier)
   end
 
   def rebranded_alternative_courses

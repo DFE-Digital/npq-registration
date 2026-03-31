@@ -41,7 +41,7 @@ RSpec.feature "Sad journey", :with_default_schedules, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      page.choose("Senior leadership", visible: :all)
+      page.choose("Executive leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false)

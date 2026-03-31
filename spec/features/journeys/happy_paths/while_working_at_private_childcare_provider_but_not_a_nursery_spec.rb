@@ -59,15 +59,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
 
     choose_a_private_childcare_provider(js:, urn: "EY487263", name: "searchable childcare provider")
 
-    eyl_course = ["Early years leadership"]
-    ehco_course = ["Early headship coaching offer"]
-    npqlpm_course = ["Leading primary mathematics"]
+    courses_list = Questionnaires::ChooseYourNpq.new.options.map(&:value)
 
-    ineligible_courses_list = Questionnaires::ChooseYourNpq.new.options.map(&:value)
-
-    ineligible_courses = ineligible_courses_list.map { |name|
-      I18n.t("course.name.#{name}")
-    } - eyl_course - ehco_course - npqlpm_course
+    ineligible_courses = courses_list.map { |name| I18n.t("course.name.#{name}") }
+      .excluding("Early headship coaching offer", "Leading primary mathematics", "Senior leadership", "Early years leadership")
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
