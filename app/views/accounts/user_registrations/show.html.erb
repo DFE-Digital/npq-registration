@@ -28,10 +28,10 @@
 
 <p class="govuk-body"><strong>Application ID:</strong> <%= @application.ecf_id %></p>
 
-<%= render "accounts/course_details", application: @application %>
-<%= render "accounts/funding_details", application: @application %>
-<%= render "accounts/personal_details", application: @application %>
-<%= render "accounts/work_details", application: @application %>
+<%= render "course_details", application: @application %>
+<%= render "funding_details", application: @application %>
+<%= render "personal_details", application: @application %>
+<%= render "work_details", application: @application %>
 
 
 <% if Feature.registration_enabled? %>

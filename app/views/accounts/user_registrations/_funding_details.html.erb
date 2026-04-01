@@ -5,9 +5,9 @@
     </dt>
     <dd class="govuk-summary-list__value">
       <% if application.eligible_for_funding %>
-        <%= render "accounts/eligible_for_funding_details", application: @application %>
+        <%= render "eligible_for_funding_details", application: @application %>
       <% elsif scholarship_eligibility_in_review?(application) %>
-        <%= render "accounts/in_review_funding_details", application: @application %>
+        <%= render "in_review_funding_details", application: @application %>
       <% else %>
         <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= scholarship_funding_eligibility(application) %></p>
         <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("funding_details.ineligible_message") %></p>
