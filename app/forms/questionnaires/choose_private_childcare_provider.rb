@@ -6,6 +6,7 @@ module Questionnaires
     attribute :institution_identifier
 
     validates :institution_name, length: { maximum: 64 }
+    validates :institution_name, presence: true, if: -> { institution_identifier.blank? || institution_identifier == "other" }
 
     validate :validate_institution_identifier
     validate :validate_private_childcare_provider_name_returns_results
@@ -17,12 +18,15 @@ module Questionnaires
       ]
     end
 
+    # In the no js scenario we want the step to loop, showing a different screen
+    # the second time but without showing an error - hence a negative response to
+    # #valid? preventing saving but without appending errors
+    def valid?(...)
+      super(...) && institution_identifier.present? && institution_identifier != "other"
+    end
+
     def next_step
-      if no_js_fallback_search_loop? || institution_identifier.blank?
-        :choose_private_childcare_provider
-      else
-        :choose_your_npq
-      end
+      :choose_your_npq
     end
 
     def previous_step
@@ -51,25 +55,20 @@ module Questionnaires
       @possible_institutions = PrivateChildcareProvider.limit(10)
     end
 
+    def search_term_entered_in_no_js_fallback_form?
+      institution_name.present? || institution_identifier == "other"
+    end
+
   private
 
-    def search_term_entered_in_no_js_fallback_form?
-      wizard.store["institution_name"].present?
-    end
-
-    def no_js_fallback_search_loop?
-      institution_identifier == "other"
-    end
-
     def validate_private_childcare_provider_name_returns_results
-      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank?
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?
         errors.add(:institution_name, :no_results, urn: institution_name)
       end
     end
 
     def validate_institution_identifier
-      return if no_js_fallback_search_loop?
-      return if institution_identifier.blank?
+      return if institution_identifier.blank? || institution_identifier == "other"
 
       unless institution_identifier.start_with?("PrivateChildcareProvider-")
         errors.add(:institution_identifier, :invalid, urn: institution_identifier)
