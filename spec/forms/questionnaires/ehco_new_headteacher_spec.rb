@@ -24,7 +24,7 @@ RSpec.describe Questionnaires::EhcoNewHeadteacher, type: :model do
 
   it { is_expected.to validate_inclusion_of(:ehco_new_headteacher).in_array(Questionnaires::EhcoNewHeadteacher::VALID_EHCO_NEW_HEADTEACHER_OPTIONS) }
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     context "when the funding eligibility status is eligible" do

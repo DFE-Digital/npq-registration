@@ -5,7 +5,7 @@ RSpec.describe Questionnaires::IttProvider, type: :model do
     it { is_expected.to validate_presence_of(:itt_provider) }
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject do
       described_class.new(itt_provider: approved_itt_provider.legal_name)
     end

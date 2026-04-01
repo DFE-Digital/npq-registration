@@ -93,6 +93,13 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
                                                              "trn_verified" => true,
                                                            ))
 
+    npq_wizard_compat =
+      if Rails.configuration.x.dfe_wizard
+        {}
+      else
+        { "employer_name" => "Return to teaching adviser referral" }
+      end
+
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => Cohort.current.id,
@@ -144,7 +151,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
-        "employer_name" => "Return to teaching adviser referral",
         "funding_eligiblity_status_code" => "referred_by_return_to_teaching_adviser",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
@@ -154,7 +160,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "work_setting" => "other",
         "works_in_childcare" => "no",
         "works_in_school" => "no",
-      },
+      }.merge(npq_wizard_compat),
     )
   end
 end

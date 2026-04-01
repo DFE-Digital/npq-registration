@@ -1,9 +1,25 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
+  let(:current_step) { "choose_your_provider" }
+  let(:request) { nil }
+
+  let(:wizard) do
+    if Rails.configuration.x.dfe_wizard
+      create(:registration_wizard, current_step:,
+                                   state: store,
+                                   current_user: build_stubbed(:user))
+    else
+      RegistrationWizard.new(
+        current_step:,
+        store:,
+        request:,
+        current_user: create(:user),
+      )
+    end
+  end
+
   describe "validations" do
-    let(:current_step) { "choose_your_provider" }
-    let(:request) { nil }
     let(:course) { Course.find_by(identifier: "npq-headship") }
     let(:school) { create(:school) }
     let(:works_in_school) { "yes" }
@@ -15,18 +31,8 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         "works_in_school" => works_in_school,
       }
     end
-    let(:wizard) do
-      RegistrationWizard.new(
-        current_step:,
-        store:,
-        request:,
-        current_user: create(:user),
-      )
-    end
 
-    before do
-      subject.wizard = wizard
-    end
+    before { subject.wizard = wizard }
 
     it { is_expected.to validate_presence_of(:lead_provider_id) }
 
@@ -192,7 +198,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     end
   end
 
-  describe "#previous_step" do
+  describe "#previous_step", skip: Rails.configuration.x.dfe_wizard do
     let(:current_step) { "choose_your_provider" }
     let(:request) { nil }
     let(:course) { Course.find_by(identifier: "npq-headship") }
@@ -271,14 +277,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
 
     let(:expected_providers) { LeadProvider.all }
 
-    before do
-      form.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store:,
-        request: nil,
-        current_user: create(:user),
-      )
-    end
+    before { form.wizard = wizard }
 
     npqeyl_and_npqll_codes = %w[
       npq-early-years-leadership

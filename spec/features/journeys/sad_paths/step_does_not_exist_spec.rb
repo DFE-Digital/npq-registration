@@ -41,6 +41,11 @@ RSpec.feature "visiting steps that do not exist", type: :feature do
   end
 
   scenario "visiting steps that never existed", :no_js do
-    expect { visit("/registration/this-step-never-existed") }.to raise_error(RegistrationWizard::InvalidStep)
+    if Rails.configuration.x.dfe_wizard
+      visit("/registration/this-step-never-existed")
+      expect(page).to have_current_path "/"
+    else
+      expect { visit("/registration/this-step-never-existed") }.to raise_error(RegistrationWizard::InvalidStep)
+    end
   end
 end

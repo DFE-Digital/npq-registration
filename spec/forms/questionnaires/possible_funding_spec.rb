@@ -4,21 +4,27 @@ RSpec.describe Questionnaires::PossibleFunding do
   let(:store) { {} }
 
   let(:wizard) do
-    RegistrationWizard.new(
-      current_step: :possible_funding,
-      store:,
-      request: nil,
-      current_user: build(:user),
-    )
+    if Rails.configuration.x.dfe_wizard
+      create(:registration_wizard, current_step: :possible_funding,
+                                   current_user: build_stubbed(:user),
+                                   state: store)
+    else
+      RegistrationWizard.new(
+        current_step: :possible_funding,
+        store:,
+        request: nil,
+        current_user: build(:user),
+      )
+    end
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     it "returns choose_your_provider" do
       expect(subject.next_step).to be(:choose_your_provider)
     end
   end
 
-  describe "#previous_step" do
+  describe "#previous_step", skip: Rails.configuration.x.dfe_wizard do
     subject { described_class.new(wizard:).previous_step }
 
     context "when the course is NPQLPM" do
@@ -77,14 +83,6 @@ RSpec.describe Questionnaires::PossibleFunding do
         "work_setting" => "another_setting" }
     end
     let(:request) { nil }
-    let(:wizard) do
-      RegistrationWizard.new(
-        current_step: :possible_funding,
-        store:,
-        request:,
-        current_user: create(:user),
-      )
-    end
 
     before do
       subject.wizard = wizard

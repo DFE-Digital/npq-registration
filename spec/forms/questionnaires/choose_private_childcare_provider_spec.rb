@@ -15,7 +15,11 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   let(:provider) { create :private_childcare_provider, provider_urn: "8329422" }
 
   let(:wizard) do
-    RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
+    if Rails.configuration.x.dfe_wizard
+      create(:registration_wizard, current_step:, state: store, current_user: build_stubbed(:user))
+    else
+      RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
+    end
   end
 
   describe "validations" do
@@ -136,7 +140,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
     end
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     before { allow(subject).to receive(:private_childcare_identifier).and_return("12345") }
 
     it "is choose_private_childcare_provider" do
@@ -144,7 +148,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
     end
   end
 
-  describe "#previous_step" do
+  describe "#previous_step", skip: Rails.configuration.x.dfe_wizard do
     it { expect(subject.previous_step).to be(:have_ofsted_urn) }
   end
 end

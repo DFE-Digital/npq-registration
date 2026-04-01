@@ -95,10 +95,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         },
       )
 
-      page.click_link("Change", href: "/registration/work-setting/change")
+      page.click_link("Change", href: step_change_path("work-setting"))
     end
 
-    expect_page_to_have(path: "/registration/work-setting/change", submit_form: true) do
+    expect_page_to_have(path: step_change_path("work-setting"), submit_form: true) do
       page.choose("A school", visible: :all)
     end
 
@@ -109,12 +109,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("such as state-funded schools")
       expect(page).to have_text("You’re not eligible for scholarship funding")
-
-      page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -159,6 +157,16 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
                                                              "trn_auto_verified" => false,
                                                              "trn_verified" => true,
                                                            ))
+
+    npq_wizard_compat =
+      if Rails.configuration.x.dfe_wizard
+        {}
+      else
+        {
+          "employer_name" => "Big company",
+          "employment_type" => "hospital_school",
+        }
+      end
 
     deep_compare_application_data(
       "accepted_at" => nil,
@@ -210,8 +218,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
-        "employer_name" => "Big company",
-        "employment_type" => "hospital_school",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
@@ -224,7 +230,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "work_setting" => "a_school",
         "works_in_childcare" => "no",
         "works_in_school" => "yes",
-      },
+      }.merge(npq_wizard_compat),
     )
   end
 end

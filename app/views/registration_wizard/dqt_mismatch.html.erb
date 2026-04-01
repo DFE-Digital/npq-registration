@@ -20,18 +20,18 @@
 
     <% summary_list.with_row do |row|
          row.with_key { "Full name" }
-         row.with_value { @wizard.store["full_name"] } %>
+         row.with_value { @wizard.query_store.full_name } %>
     <% end %>
 
     <% summary_list.with_row do |row|
          row.with_key { "Date of birth" }
-         row.with_value { @wizard.query_store.formatted_date_of_birth } %>
+         row.with_value { @wizard.query_store.date_of_birth&.to_fs(:govuk) } %>
     <% end %>
 
-    <% if @wizard.store["national_insurance_number"].present? %>
+    <% if @wizard.query_store.national_insurance_number.present? %>
       <% summary_list.with_row do |row|
            row.with_key { "National Insurance number" }
-           row.with_value { @wizard.store["national_insurance_number"] } %>
+           row.with_value { @wizard.query_store.national_insurance_number } %>
       <% end %>
     <% end %>
   <% end %>
@@ -41,7 +41,7 @@
   </p>
 
   <ul class="govuk-list govuk-list--bullet">
-    <% unless @wizard.store["national_insurance_number"].present? %>
+    <% unless @wizard.query_store.national_insurance_number.present? %>
       <li>you have not entered your National Insurance number</li>
     <% end %>
     <li>you’ve abbreviated your first name, for example ‘Rob’ for ‘Robert’</li>
@@ -56,7 +56,7 @@
   </p>
 
   <ul class="govuk-list govuk-list--bullet">
-    <% unless @wizard.store["national_insurance_number"].present? %>
+    <% unless @wizard.query_store.national_insurance_number.present? %>
       <li>enter your National Insurance number</li>
     <% end %>
     <li>check your TRN is correct using the <%= external_link_to "Find a lost TRN", :find_a_lost_trn %> service</li>
@@ -76,8 +76,8 @@
   </div>
 
   <div class="govuk-button-group">
-    <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path) %>
-    <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path), class: "govuk-button--secondary" %>
+    <%= govuk_button_link_to "Try again", registration_wizard_back_link(@wizard) %>
+    <%= govuk_button_link_to "Continue registration", registration_wizard_next_link(@wizard), class: "govuk-button--secondary" %>
   </div>
 
 <% end %>

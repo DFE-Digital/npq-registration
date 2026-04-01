@@ -62,12 +62,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("such as state-funded schools")
       expect(page).to have_text("This means that you would need to pay for the course another way")
-
-      page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -99,10 +97,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         },
       )
 
-      page.click_link("Change", href: "/registration/work-setting/change")
+      page.click_link("Change", href: step_change_path("work-setting"))
     end
 
-    expect_page_to_have(path: "/registration/work-setting/change", submit_form: true) do
+    expect_page_to_have(path: step_change_path("work-setting"), submit_form: true) do
       page.choose("Another setting", visible: :all)
     end
 
@@ -169,6 +167,16 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
                                                              "trn_verified" => true,
                                                            ))
 
+    npq_wizard_compat =
+      if Rails.configuration.x.dfe_wizard
+        {}
+      else
+        {
+          "childcare_identifier" => "School-100000",
+          "childcare_name" => js ? "" : "open",
+        }
+      end
+
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => Cohort.current.id,
@@ -221,8 +229,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "self",
-        "childcare_identifier" => "School-100000",
-        "childcare_name" => js ? "" : "open",
         "employer_name" => "Big company",
         "employment_type" => "hospital_school",
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
@@ -233,7 +239,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "works_in_childcare" => "no",
         "works_in_school" => "no",
         "work_setting" => "another_setting",
-      },
+      }.merge(npq_wizard_compat),
     )
   end
 end

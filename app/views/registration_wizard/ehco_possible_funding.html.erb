@@ -7,5 +7,7 @@
 %>
   <%= render "registration_wizard/possible_funding/eligible_for_scholarship_funding", course: @form.course %>
 
-  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit "Continue" %>
+  <% end %>
 <% end %>

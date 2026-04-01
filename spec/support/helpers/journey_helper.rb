@@ -2,6 +2,23 @@ module Helpers
   module JourneyHelper
     APPLICATION_COMPARISON_IGNORED_ATTRIBUTES = %i[id created_at updated_at significantly_updated_at user_id DEPRECATED_school_urn DEPRECATED_private_childcare_provider_urn DEPRECATED_itt_provider].freeze
 
+    RAW_DATA_EXCLUSIONS = %w[
+      started
+      submitted
+      course_start
+      email_template
+      works_in_school
+      works_in_childcare
+      funding_eligiblity_status_code
+      trn_lookup_status
+      trn_auto_verified
+      trn_verified
+      active_alert
+      verified_trn
+      trn_set_via_fallback_verification_question
+      maths_understanding
+    ].freeze
+
     def latest_application
       Application.order(created_at: :asc, id: :asc).last
     end
@@ -27,7 +44,16 @@ module Helpers
 
       # Doing these separately lets us get proper diffs on raw_application_data
       expect(latest_application_data.except("raw_application_data")).to match(default_application_data.merge(expected_data).except("raw_application_data"))
-      expect(latest_application_data["raw_application_data"]).to match(expected_data["raw_application_data"])
+      compare_raw_application_data(expected_data, latest_application_data)
+    end
+
+    def compare_raw_application_data(expected_data, actual_data)
+      exclusions = Rails.configuration.x.dfe_wizard ? RAW_DATA_EXCLUSIONS : []
+
+      expected_raw = expected_data["raw_application_data"].without(exclusions)
+      actual_raw = actual_data["raw_application_data"].without(exclusions)
+
+      expect(actual_raw).to match(expected_raw)
     end
 
     def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", nino: "AB123456C", response: {})

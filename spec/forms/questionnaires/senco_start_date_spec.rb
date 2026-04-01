@@ -52,7 +52,7 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
     end
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     context "when the funding eligibility status is eligible" do

@@ -62,12 +62,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("you do not work in one of the eligible settings")
       expect(page).to have_text("Senior leadership")
-
-      page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -99,34 +97,32 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         },
       )
 
-      page.click_link("Change", href: "/registration/choose-your-npq/change")
+      page.click_link("Change", href: step_change_path("choose-your-npq"))
     end
 
-    expect_page_to_have(path: "/registration/choose-your-npq/change", submit_form: true) do
+    expect_page_to_have(path: step_change_path("choose-your-npq"), submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
       page.choose("Early years leadership", visible: :all) # Needs changing to an early years course once added
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
+    expect_page_to_have(path: step_change_path("ineligible-for-funding", secondary: true), submit_form: true) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("Early years leadership NPQ course as your workplace is not in the list of EY settings that are eligible for funding")
       expect(page).to have_text("This means that you would need to pay for the course another way")
-
-      page.click_link("Continue")
     end
 
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+    expect_page_to_have(path: step_change_path("funding-your-npq", secondary: true), submit_form: true) do
       expect(page).to have_text("How are you funding your course?")
       page.choose "My workplace is covering the cost", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+    expect_page_to_have(path: step_change_path("choose-your-provider", secondary: true), submit_form: true) do
       expect(page).to have_text("Select your provider")
       expect(page).not_to have_text("Best Practice Network")
       page.choose("National Institute of Teaching", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+    expect_page_to_have(path: step_change_path("share-provider", secondary: true), submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end

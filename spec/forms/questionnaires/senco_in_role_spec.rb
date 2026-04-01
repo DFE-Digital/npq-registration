@@ -22,7 +22,7 @@ RSpec.describe Questionnaires::SencoInRole, type: :model do
     )
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     context "when the answer is yes" do

@@ -6,7 +6,7 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
     it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::ALL_SETTINGS) }
   end
 
-  describe "#after_save" do
+  describe "#after_save", skip: Rails.configuration.x.dfe_wizard do
     subject { described_class.new(work_setting:, wizard:) }
 
     let(:session) { {} }

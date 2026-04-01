@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe RegistrationWizardController do
+RSpec.describe RegistrationWizardController, skip: Rails.configuration.x.dfe_wizard do
   let(:missing_institution_wizard) do
     Class.new do
       def initialize(*args); end

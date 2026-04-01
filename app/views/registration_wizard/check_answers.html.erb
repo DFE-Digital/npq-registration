@@ -15,7 +15,7 @@
             row.with_action(
               text: 'Change',
               visually_hidden_text: answer.key,
-              href: "/registration/#{answer.change_step.to_s.dasherize}/change",
+              href: @form.change_path(answer.change_step),
             )
           end
         end

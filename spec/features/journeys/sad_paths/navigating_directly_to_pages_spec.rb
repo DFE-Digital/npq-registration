@@ -32,14 +32,18 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, type: :feature do
 
   RegistrationWizard::VALID_REGISTRATION_STEPS
     .excluding(:choose_your_npq)
-    .map { |step| step.to_s.dasherize }.each do |step|
-    scenario "Navigating directly to the #{step} page does not raise an error" do
-      visit "/registration/#{step}"
-      if steps_that_require_course.include?(step)
-        expect(page).to have_current_path("/registration/course-start-date")
-      else
-        expect(page).to have_current_path("/registration/#{step}")
+    .map { |step| step.to_s.dasherize }
+    .each do |step|
+      scenario "Navigating directly to the #{step} page does not raise an error" do
+        visit "/registration/#{step}"
+
+        if step == "start"
+          expect(page).to have_current_path("/registration/start")
+        elsif Rails.configuration.x.dfe_wizard || steps_that_require_course.include?(step)
+          expect(page).to have_current_path("/registration/course-start-date")
+        else
+          expect(page).to have_current_path("/registration/#{step}")
+        end
       end
     end
-  end
 end

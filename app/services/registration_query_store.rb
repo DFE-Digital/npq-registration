@@ -134,6 +134,14 @@ class RegistrationQueryStore
     date_of_birth&.to_fs(:govuk)
   end
 
+  def national_insurance_number
+    store["national_insurance_number"]
+  end
+
+  def full_name
+    store["full_name"]
+  end
+
   def maths_understanding?
     store["maths_understanding"]
   end

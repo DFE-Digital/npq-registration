@@ -62,13 +62,11 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all) # Needs changing to an early years course once added
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("You’re not eligible for scholarship funding")
       expect(page).to have_text("such as state-funded schools")
       expect(page).to have_text("This means that you would need to pay for the course another way")
-
-      page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do

@@ -12,8 +12,6 @@ module Questionnaires
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
 
-    attribute :version
-
     def next_step
       :funding_your_npq
     end
@@ -72,15 +70,11 @@ module Questionnaires
     end
 
     def funding_eligibility
-      @funding_eligibility ||= FundingEligibility.new_from_query_store(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        trn: wizard.query_store.trn,
-        get_an_identity_id: wizard.query_store.get_an_identity_id,
-        query_store: wizard.query_store,
-      )
+      @funding_eligibility ||= if Rails.configuration.x.dfe_wizard
+                                 dfe_wizard_funding_eligibility
+                               else
+                                 query_store_funding_eligibility
+                               end
     end
 
     delegate :course,
@@ -92,5 +86,21 @@ module Questionnaires
              :works_in_another_setting?,
              :employment_type_other?,
              to: :query_store
+
+    def query_store_funding_eligibility
+      FundingEligibility.new_from_query_store(
+        course:,
+        institution: query_store.institution,
+        approved_itt_provider: approved_itt_provider?,
+        inside_catchment: inside_catchment?,
+        trn: wizard.query_store.trn,
+        get_an_identity_id: wizard.query_store.get_an_identity_id,
+        query_store: wizard.query_store,
+      )
+    end
+
+    def dfe_wizard_funding_eligibility
+      wizard.state_store.funding_calculator
+    end
   end
 end

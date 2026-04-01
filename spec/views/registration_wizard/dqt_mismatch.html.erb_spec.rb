@@ -3,12 +3,18 @@ require "rails_helper"
 RSpec.describe "registration_wizard/dqt_mismatch.html.erb", type: :view do
   let(:request) { {} }
   let(:wizard) do
-    RegistrationWizard.new(
-      current_step: :dqt_mismatch,
-      store:,
-      request:,
-      current_user: create(:user),
-    )
+    if Rails.configuration.x.dfe_wizard
+      create(:registration_wizard, current_step: :dqt_mismatch,
+                                   state: store,
+                                   current_user: create(:user))
+    else
+      RegistrationWizard.new(
+        current_step: :dqt_mismatch,
+        store:,
+        request:,
+        current_user: create(:user),
+      )
+    end
   end
 
   context "when NI number is present" do

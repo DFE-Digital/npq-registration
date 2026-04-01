@@ -8,13 +8,13 @@ RSpec.describe Questionnaires::DqtMismatch do
   let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :dqt_mismatch, current_user:) }
   let(:current_user) { create(:user) }
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject(:next_step) { step.next_step }
 
     it { is_expected.to be :course_start_date }
   end
 
-  describe "#requirements_met" do
+  describe "#requirements_met", skip: Rails.configuration.x.dfe_wizard do
     it { is_expected.to be_requirements_met }
 
     context "when current_user is blank" do

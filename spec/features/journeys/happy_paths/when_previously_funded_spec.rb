@@ -31,12 +31,21 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/account", submit_form: false) do
       expect(page).to have_text("Your NPQ registrations")
-      page.click_link("Register for another NPQ")
-    end
+      if Rails.configuration.x.dfe_wizard
+        page.click_button("Register for another NPQ")
 
-    expect_page_to_have(path: "/registration/course_start_date", submit_form: true) do
-      expect(page).to have_text("Do you want to start a course in autumn 2025?")
-      page.choose("Yes", visible: :all)
+        expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+          expect(page).to have_text("Do you want to start a course in autumn 2025?")
+          page.choose("Yes", visible: :all)
+        end
+      else
+        page.click_link("Register for another NPQ")
+
+        expect_page_to_have(path: "/registration/course_start_date", submit_form: true) do
+          expect(page).to have_text("Do you want to start a course in autumn 2025?")
+          page.choose("Yes", visible: :all)
+        end
+      end
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
@@ -98,11 +107,9 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-previously-funded", submit_form: false) do
+    expect_page_to_have(path: "/registration/ehco-previously-funded", submit_form: true) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("You would need to pay for the EHCO if you were previously funded but you withdrew")
-
-      page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do

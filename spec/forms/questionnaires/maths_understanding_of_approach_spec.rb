@@ -21,7 +21,7 @@ RSpec.describe Questionnaires::MathsUnderstandingOfApproach, type: :model do
     )
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     %w[

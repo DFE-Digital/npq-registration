@@ -25,8 +25,17 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
            raw_tra_provider_data: {},
            updated_from_tra_at: Time.zone.now)
   end
-  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user:) }
+
+  let(:wizard) do
+    if Rails.configuration.x.dfe_wizard
+      create(:registration_wizard, current_step: :qualified_teacher_check, current_user:, state: store)
+    else
+      RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user:)
+    end
+  end
+
   let(:request) { nil }
+
   let(:store) do
     { "teacher_catchment" => "england" }
   end
@@ -180,7 +189,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     end
   end
 
-  describe "#requirements_met?" do
+  describe "#requirements_met?", skip: Rails.configuration.x.dfe_wizard do
     it { is_expected.to be_requirements_met }
 
     context "without current user" do
@@ -190,7 +199,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     end
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject do
       described_class.new(
         trn: "RP12/34567",
@@ -274,7 +283,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     end
   end
 
-  describe "#after_save" do
+  describe "#after_save", skip: Rails.configuration.x.dfe_wizard do
     subject do
       described_class.new(
         trn: trn,

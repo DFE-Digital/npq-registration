@@ -47,19 +47,39 @@ RSpec.feature "Sad journey", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false)
 
     click_link "Back"
+    expect(page).to have_current_path("/registration/choose-your-npq")
+
     click_link "Back"
-    click_button "Continue"
+
+    unless Rails.configuration.x.dfe_wizard
+      # FIXME: Spec encodes bug in back button behaviour under old wizard model
+      click_button "Continue"
+    end
 
     expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
     end
 
-    click_button "Continue"
+    expect(page).to have_current_path("/registration/choose-your-npq")
     click_button "Continue"
 
-    click_link "Back"
+    expect(page).to have_current_path("/registration/possible-funding")
+    click_button "Continue"
+
+    expect(page).to have_current_path("/registration/choose-your-provider")
     click_link "Back"
 
-    expect_page_to_have(path: "/registration/course-start-date")
+    if Rails.configuration.x.dfe_wizard
+      expect(page).to have_current_path("/registration/possible-funding")
+
+      click_link "Back"
+      expect_page_to_have(path: "/registration/choose-your-npq")
+    else
+      # FIXME: Spec encodes bug in back button behaviour under old wizard model
+      expect(page).to have_current_path("/registration/funding-your-npq")
+
+      click_link "Back"
+      expect_page_to_have(path: "/registration/course-start-date")
+    end
   end
 end

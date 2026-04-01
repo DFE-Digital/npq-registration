@@ -23,12 +23,19 @@ Rails.application.routes.draw do
     end
   end
 
-  root "registration_wizard#show", step: "start"
+  if Rails.configuration.x.dfe_wizard
+    root "registration/steps#show", step: "start"
 
-  get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
-  get "/registration/:step/change", to: "registration_wizard#show", as: "registration_wizard_show_change", changing_answer: "1"
-  patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
-  patch "/registration/:step/change", to: "registration_wizard#update", as: "registration_wizard_update_change", changing_answer: "1"
+    get "/registration/:step", to: "registration/steps#show", as: "registration_wizard_show"
+    patch "/registration/:step", to: "registration/steps#update"
+  else
+    root "registration_wizard#show", step: "start"
+
+    get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
+    get "/registration/:step/change", to: "registration_wizard#show", as: "registration_wizard_show_change", changing_answer: "1"
+    patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
+    patch "/registration/:step/change", to: "registration_wizard#update", as: "registration_wizard_update_change", changing_answer: "1"
+  end
 
   get "/registration-interest/sign-up", to: "interest_notification_sign_up#new"
   post "/registration-interest/sign-up", to: "interest_notification_sign_up#create"

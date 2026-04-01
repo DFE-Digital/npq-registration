@@ -74,13 +74,25 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
     before do
       create(:cohort, :current)
 
-      allow_any_instance_of(RegistrationWizardController)
-        .to receive(:session).and_return({
-          "registration_store" => wizard_store,
-          :user_id => current_user.id,
-        })
+      if Rails.configuration.x.dfe_wizard
+        allow_any_instance_of(Registration::StepsController)
+          .to receive(:session).and_return({ user_id: current_user.id })
 
-      patch registration_wizard_update_path(:check_answers)
+        allow_any_instance_of(Registration::StepsController)
+          .to receive(:state_store).and_return(
+            create(:registration_state_store, :completed, current_user:),
+          )
+
+        patch registration_wizard_show_path(:check_answers)
+      else
+        allow_any_instance_of(RegistrationWizardController)
+          .to receive(:session).and_return({
+            "registration_store" => wizard_store,
+            :user_id => current_user.id,
+          })
+
+        patch registration_wizard_update_path(:check_answers)
+      end
     end
 
     let(:current_user) { create(:user) }

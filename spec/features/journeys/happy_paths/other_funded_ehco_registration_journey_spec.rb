@@ -73,7 +73,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
       page.choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-funding-not-available", click_continue: true) do
+    expect_page_to_have(path: "/registration/ehco-funding-not-available", submit_form: true) do
       expect(page).to have_selector "p", text: "not eligible for the scholarship funding"
     end
 

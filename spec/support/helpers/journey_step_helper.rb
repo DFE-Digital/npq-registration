@@ -108,5 +108,16 @@ module Helpers
         end
       end
     end
+
+    def step_change_path(step_id, secondary: false)
+      suffix =
+        if !Rails.configuration.x.dfe_wizard
+          "/change"
+        elsif !secondary
+          "?return_to_review=#{step_id.to_s.underscore}"
+        end
+
+      "/registration/#{step_id.to_s.dasherize}#{suffix}"
+    end
   end
 end

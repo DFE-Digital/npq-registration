@@ -37,9 +37,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
       page.choose("Headship", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      page.click_link("Continue")
-    end
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true)
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       page.choose "My trust is paying", visible: :all

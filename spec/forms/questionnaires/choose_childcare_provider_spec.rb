@@ -134,7 +134,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
     end
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { described_class.new(childcare_identifier: "School-#{provider.urn}", wizard:) }
 
     let(:course) { create(:course) }

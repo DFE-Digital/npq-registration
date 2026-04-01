@@ -11,18 +11,7 @@ RSpec.describe Questionnaires::YourEmployment, type: :model do
     it { is_expected.to validate_presence_of(:employment_type) }
   end
 
-  def next_step
-    case employment_type
-    when "lead_mentor_for_accredited_itt_provider"
-      :itt_provider
-    when "hospital_school", "young_offender_institution"
-      :your_employer
-    else
-      :your_role
-    end
-  end
-
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     context "when an employment type is hospital_school" do
       let(:employment_type) { "hospital_school" }
 

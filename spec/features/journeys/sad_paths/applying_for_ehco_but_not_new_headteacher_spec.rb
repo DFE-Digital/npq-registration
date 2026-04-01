@@ -81,7 +81,7 @@ RSpec.feature "Sad journeys", :with_default_schedules, :with_default_school, typ
       page.choose "No", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/ehco-funding-not-available", click_continue: true) do
+    expect_page_to_have(path: "/registration/ehco-funding-not-available", submit_form: true) do
       expect(page).to have_selector "p", text: "not eligible for the scholarship funding for"
     end
 

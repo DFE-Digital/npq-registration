@@ -58,16 +58,21 @@ RSpec.feature "Sad journeys", type: :feature do
     expect_page_to_have(path: "/registration/choose-school", submit_form: false)
 
     # back to window 1 (with the store work setting now changed from window 2)
-    navigate_to_page(path: "/registration/choose-your-npq", submit_form: true) do
-      page.choose("Headship", visible: :all)
+    if Rails.configuration.x.dfe_wizard
+      visit("/registration/choose-your-npq")
+      expect_page_to_have(path: "/registration/course-start-date", submit_form: false)
+    else
+      navigate_to_page(path: "/registration/choose-your-npq", submit_form: true) do
+        page.choose("Headship", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/choose-school", submit_form: true)
+
+      navigate_to_page(path: "/registration/share-provider", submit_form: true) do
+        page.check("Yes, I agree to share my information", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/choose-school", submit_form: true)
     end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true)
-
-    navigate_to_page(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true)
   end
 end

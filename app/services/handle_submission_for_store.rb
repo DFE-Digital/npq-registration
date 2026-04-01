@@ -17,7 +17,7 @@ class HandleSubmissionForStore
         eligible_for_funding: eligible_for_funding?,
         funding_eligiblity_status_code:,
         funding_choice:,
-        teacher_catchment:,
+        teacher_catchment: store["teacher_catchment"],
         works_in_school: store["works_in_school"] == "yes",
         employer_name:,
         employment_role:,
@@ -37,8 +37,8 @@ class HandleSubmissionForStore
         senco_in_role: store["senco_in_role"],
         senco_start_date: store["senco_start_date"],
         on_submission_trn: store["trn"],
-        teacher_catchment_country:,
-        teacher_catchment_iso_country_code:,
+        teacher_catchment_country: catchment_area.teacher_catchment_country,
+        teacher_catchment_iso_country_code: catchment_area.teacher_catchment_iso_country_code,
         cohort: Cohort.current,
         lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
         review_status: funding_eligibility_service.subject_to_review? ? "needs_review" : nil,
@@ -205,33 +205,11 @@ private
     @user ||= store["current_user"].presence || User.find(store["current_user_id"])
   end
 
-  def uk_country
-    @uk_country ||= ISO3166::Country.find_country_by_any_name("United Kingdom")
-  end
-
-  def teacher_catchment_country
-    return uk_country.iso_short_name if in_uk_catchement_area?
-
-    store["teacher_catchment_country"]
-  end
-
-  def teacher_catchment
-    store["teacher_catchment"]
-  end
-
-  def in_uk_catchement_area?
-    teacher_catchment.in?(Application::UK_CATCHMENT_AREA)
-  end
-
-  def teacher_catchment_iso_country_code
-    return if teacher_catchment_country.blank?
-    return uk_country.alpha3 if in_uk_catchement_area?
-
-    if (country = ISO3166::Country.find_country_by_any_name(teacher_catchment_country))
-      country.alpha3
-    else
-      Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.", level: :warning)
-      nil
-    end
+  def catchment_area
+    @catchment_area ||=
+      Registration::CatchmentArea.new(
+        teacher_catchment: store["teacher_catchment"],
+        country_name: store["teacher_catchment_country"],
+      )
   end
 end

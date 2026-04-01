@@ -17,5 +17,7 @@
 
   <p class="govuk-body">You would need to pay for the EHCO if you were previously funded but you withdrew.</p>
 
-  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit "Continue" %>
+  <% end %>
 <% end  %>

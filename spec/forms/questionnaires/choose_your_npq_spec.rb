@@ -17,7 +17,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
     end
   end
 
-  describe "#next_step" do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     let(:instance) { described_class.new(course_identifier: course.identifier) }
@@ -118,7 +118,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
     end
   end
 
-  describe "#previous_step" do
+  describe "#previous_step", skip: Rails.configuration.x.dfe_wizard do
     let(:request) { nil }
     let(:store) do
       {

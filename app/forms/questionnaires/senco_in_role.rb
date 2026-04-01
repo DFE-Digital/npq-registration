@@ -30,10 +30,10 @@ module Questionnaires
 
     def next_step
       if senco_in_role == "yes"
-        wizard.store["senco_in_role_status"] = true
+        wizard.store["senco_in_role_status"] = true # FIXME: NEW WIZARD NEEDS TO PERSIST
         :senco_start_date
       else
-        wizard.store["senco_in_role_status"] = false
+        wizard.store["senco_in_role_status"] = false # FIXME: NEW WIZARD NEEDS TO PERSIST
 
         if funding_eligibility.funded?
           :funding_eligibility_senco

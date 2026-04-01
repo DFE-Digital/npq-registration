@@ -161,6 +161,10 @@ module Questionnaires
       wizard.query_store.inside_catchment?
     end
 
+    def trn_digits_only
+      trn.scan(/\d/).join
+    end
+
   private
 
     attr_reader :verified_trn
@@ -191,10 +195,6 @@ module Questionnaires
 
     def strip_ni_number_whitespace
       national_insurance_number&.gsub!(" ", "")
-    end
-
-    def trn_digits_only
-      trn.scan(/\d/).join
     end
 
     def mark_trn_as_verified

@@ -1,6 +1,9 @@
 class OmniauthController < Devise::OmniauthCallbacksController
+  include RegistrationWizardState
+
   skip_before_action :verify_authenticity_token, only: [
-    Omniauth::Strategies::TraOpenidConnect::NAME, Omniauth::Strategies::TeacherAuth::NAME
+    Omniauth::Strategies::TraOpenidConnect::NAME,
+    Omniauth::Strategies::TeacherAuth::NAME,
   ]
   skip_before_action :authenticate_user!
 
@@ -121,9 +124,14 @@ private
       return new_email_update_path
     end
 
-    return account_path if user.applications.any?
-
-    start_questionnaire_path(user)
+    if user.applications.any?
+      account_path
+    elsif Rails.configuration.x.dfe_wizard
+      start_application
+      continue_registration_wizard_path
+    else
+      start_questionnaire_path(user)
+    end
   end
 
   def start_questionnaire_path(user)
@@ -136,6 +144,23 @@ private
     )
 
     registration_wizard_show_path(wizard.next_step_path)
+  end
+
+  def continue_registration_wizard_path
+    registration_wizard.next_step_path
+  end
+
+  def start_application
+    registration_wizard.current_step.started = true
+    registration_wizard.save_current_step
+  end
+
+  def registration_wizard
+    @registration_wizard ||= Registration::Wizard.new(
+      current_step: :start,
+      current_step_params: {},
+      state_store:,
+    )
   end
 
   def try_to_extract_user_uid

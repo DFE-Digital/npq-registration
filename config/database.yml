@@ -15,7 +15,7 @@ default_primary: &default_primary
 
 development:
   <<: *default_primary
-  database: npq_registration_development
+  database: npq_registration_development_current
 
 review:
   <<: *default_primary
