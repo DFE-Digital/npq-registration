@@ -122,6 +122,7 @@ class School < ApplicationRecord
   end
 
   def eyl_disadvantaged?
+    # not used, since NPQ-3618 (April 2026) - keeping for future policy changes
     EligibilityList::DisadvantagedEarlyYearsSchool.eligible?(urn)
   end
 

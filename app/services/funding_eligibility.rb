@@ -19,7 +19,7 @@ class FundingEligibility
   # Early Years
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
-  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution # not used since https://dfedigital.atlassian.net/browse/NPQ-3618
+  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution # not used since NPQ-3618
   NOT_ENTITLED_CHILDMINDER = :not_entitled_childminder
 
   # Lead Mentor
