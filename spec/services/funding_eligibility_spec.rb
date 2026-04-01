@@ -88,10 +88,6 @@ RSpec.describe FundingEligibility do
     it "returns the funding eligibility status code #{result}" do
       expect(funding_eligibility.funding_eligiblity_status_code).to eq result
     end
-
-    it "has a funding eligibility status description" do
-      expect { funding_eligibility.get_description_for_funding_status }.not_to raise_error
-    end
   end
 
   RSpec.shared_examples "general rules" do
@@ -476,19 +472,6 @@ RSpec.describe FundingEligibility do
         expect { subject }.to raise_error(FundingEligibility::MissingMandatoryInstitution)
       end
     end
-  end
-
-  describe "#get_description_for_funding_status" do
-    subject { funding_eligibility.get_description_for_funding_status }
-
-    let(:course) { build(:course, :early_headship_coaching_offer) }
-
-    before do
-      allow_any_instance_of(CourseHelper).to receive(:localise_sentence_embedded_course_name).with(course).and_return("Localised Course Name")
-      allow(I18n).to receive(:t).with("funding_details.not_eligible_ehco", course_name: "Localised Course Name").and_return("message")
-    end
-
-    it { is_expected.to eq "message" }
   end
 
   describe "#possible_funding_for_non_pp50_and_fe?" do
