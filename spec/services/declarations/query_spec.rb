@@ -4,7 +4,7 @@ RSpec.describe Declarations::Query do
   describe "#declarations" do
     it "returns all declarations" do
       declaration1 = create(:declaration)
-      declaration2 = create(:declaration)
+      declaration2 = create(:declaration, :payable)
 
       query = described_class.new
       expect(query.declarations).to contain_exactly(declaration1, declaration2)
@@ -12,8 +12,8 @@ RSpec.describe Declarations::Query do
 
     it "orders declarations by created_at in ascending order" do
       declaration1 = create(:declaration)
-      declaration2 = travel_to(1.hour.ago) { create(:declaration) }
-      declaration3 = travel_to(1.minute.ago) { create(:declaration) }
+      declaration2 = travel_to(1.hour.ago) { create(:declaration, :payable) }
+      declaration3 = travel_to(1.minute.ago) { create(:declaration, :paid) }
 
       query = described_class.new
       expect(query.declarations).to eq([declaration2, declaration3, declaration1])
@@ -21,7 +21,7 @@ RSpec.describe Declarations::Query do
 
     context "when declaration has multiple associated records" do
       let!(:declaration1) { create(:declaration) }
-      let!(:declaration2) { create(:declaration) }
+      let!(:declaration2) { create(:declaration, :payable) }
 
       before do
         create(:participant_outcome, declaration: declaration1)
@@ -41,9 +41,10 @@ RSpec.describe Declarations::Query do
         let(:other_lead_provider) { create(:lead_provider) }
 
         let(:application) { create(:application, lead_provider: current_lead_provider) }
+        let(:application_2) { create(:application, lead_provider: current_lead_provider) }
 
         let!(:declaration_before_transfer) { create(:declaration, lead_provider: previous_lead_provider, application:) }
-        let!(:declaration_after_transfer)  { create(:declaration, lead_provider: current_lead_provider, application:) }
+        let!(:declaration_after_transfer)  { create(:declaration, :eligible, lead_provider: current_lead_provider, application: application_2) }
 
         before do
           create(:declaration, lead_provider: other_lead_provider)

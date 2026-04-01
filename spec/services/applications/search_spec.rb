@@ -5,13 +5,13 @@ require "rails_helper"
 RSpec.describe Applications::Search do
   subject { described_class.search(q) }
 
-  let(:user)         { build(:user, preferred_name: "Rasmus Lerdorf") }
-  let(:application)  { create(:application, user:) }
-  let(:declarations) { create_list(:declaration, 2, application:) }
+  let(:user) { build(:user, preferred_name: "Rasmus Lerdorf") }
+  let(:application) { create(:application, user:) }
+  let(:declaration) { create(:declaration, application:) }
 
   before do
-    a = create(:application, user: create(:user, full_name: "Jane Doe"))
-    create_list(:declaration, 2, application: a)
+    other_application = create(:application, user: create(:user, full_name: "Jane Doe"))
+    create(:declaration, application: other_application)
   end
 
   shared_examples "a search returning matching applications" do
@@ -19,25 +19,25 @@ RSpec.describe Applications::Search do
   end
 
   context "when name matches" do
-    let(:q) { application.user.full_name }
+    let(:q) { user.full_name }
 
     it_behaves_like "a search returning matching applications"
   end
 
   context "when name partially matches" do
-    let(:q) { application.user.full_name.split(" ").first }
+    let(:q) { user.full_name.split(" ").first }
 
     it_behaves_like "a search returning matching applications"
   end
 
   context "when preferred name matches" do
-    let(:q) { application.user.preferred_name }
+    let(:q) { user.preferred_name }
 
     it_behaves_like "a search returning matching applications"
   end
 
   context "when preferred name partially matches" do
-    let(:q) { application.user.preferred_name.split(" ").first }
+    let(:q) { user.preferred_name.split(" ").first }
 
     it_behaves_like "a search returning matching applications"
   end
@@ -49,7 +49,7 @@ RSpec.describe Applications::Search do
   end
 
   context "when declaration ID matches" do
-    let(:q) { declarations.first.ecf_id }
+    let(:q) { declaration.ecf_id }
 
     it_behaves_like "a search returning matching applications"
   end

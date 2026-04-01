@@ -276,7 +276,7 @@ RSpec.describe Declaration, type: :model do
 
           it "is not valid" do
             subject.declaration_date = new_declaration_date
-            expect(subject).not_to be_valid
+            expect(subject).to have_error(:declaration_date, :declaration_before_schedule_start, "Enter a '#/declaration_date' that's on or after the schedule start.")
           end
         end
       end
@@ -299,8 +299,47 @@ RSpec.describe Declaration, type: :model do
       it "is not valid" do
         create_list(:statement_item, 3, declaration: subject)
 
-        expect(subject).not_to be_valid
         expect(subject).to have_error(:statement_items, :more_than_two_statement_items, "There cannot be more than two items per declaration")
+      end
+    end
+
+    context "when there is already a declaration of that type for the application" do
+      subject { build(:declaration, course: application.course, application:, state:) }
+
+      let(:application) { create(:application, :accepted) }
+
+      before { create(:declaration, application: application, state: existing_declaration_state) }
+
+      context "and the state of the existing declaration is the same as the one being created" do
+        let(:existing_declaration_state) { state }
+
+        Declaration::DUPLICATES_NOT_ALLOWED_STATES.each do |state|
+          context "and the state is #{state}" do
+            let(:state) { state }
+
+            it { is_expected.to have_error(:base, :duplicate_declaration, "There is already a declaration with state #{state} for this application") }
+          end
+        end
+
+        (Declaration.states.keys - Declaration::DUPLICATES_NOT_ALLOWED_STATES).each do |state|
+          context "and the state is #{state}" do
+            let(:state) { state }
+
+            it { is_expected.to be_valid }
+          end
+        end
+      end
+
+      context "and the state of the existing declaration is different from the one being created, but still not allowed" do
+        let(:existing_declaration_state) { Declaration::DUPLICATES_NOT_ALLOWED_STATES.excluding(state).last }
+
+        Declaration::DUPLICATES_NOT_ALLOWED_STATES.each do |state|
+          context "and the state is #{state}" do
+            let(:state) { state }
+
+            it { is_expected.to have_error(:base, :duplicate_declaration, "There is already a declaration with state #{existing_declaration_state} for this application") }
+          end
+        end
       end
     end
   end
@@ -810,46 +849,42 @@ RSpec.describe Declaration, type: :model do
     let(:cohort) { create(:cohort, :current) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
+    let(:other_course) { course }
     let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:application) { create(:application, :accepted, cohort:, course:) }
+    let(:other_application) { create(:application, :accepted, cohort:, course: other_course, user: other_user) }
     let(:participant) { application.user }
     let!(:declaration) { create(:declaration, application:) }
+    let(:other_user) { create(:user, trn: participant.trn) }
 
-    context "when a user exists with the same TRN" do
-      let(:other_user) { create(:user, trn: participant.trn) }
+    context "when declarations have been made for a user with the same TRN" do
+      context "when declarations have been made for the same course" do
+        let!(:other_declaration) { create(:declaration, application: other_application) }
 
-      context "when declarations have been made for a user with the same trn" do
-        context "when declarations have been made for the same course" do
-          let(:other_application) { create(:application, :accepted, cohort:, course:, user: other_user) }
-          let!(:other_declaration) { create(:declaration, application: other_application) }
-
-          it "returns those declarations" do
-            expect(declaration.duplicate_declarations).to eq([other_declaration])
-          end
-        end
-
-        context "when declarations have been made for a different course" do
-          before do
-            course = create(:course, :early_headship_coaching_offer, course_group:)
-            other_application = create(:application, :accepted, course:, cohort:, user: other_user)
-            create(:declaration, application: other_application)
-          end
-
-          it "returns no declarations" do
-            expect(declaration.duplicate_declarations).to be_empty
-          end
+        it "returns those declarations" do
+          expect(declaration.duplicate_declarations).to eq([other_declaration])
         end
       end
 
-      context "when no declaration has been made for a user with the same trn" do
+      context "when declarations have been made for a different course" do
+        let(:other_course) { create(:course, :early_headship_coaching_offer, course_group:) }
+
+        before { create(:declaration, application: other_application) }
+
         it "returns no declarations" do
           expect(declaration.duplicate_declarations).to be_empty
         end
       end
     end
 
+    context "when no declaration has been made for a user with the same TRN" do
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
     context "when a declaration has been superseded by another" do
-      before { create(:declaration, application:, superseded_by: declaration) }
+      before { create(:declaration, application: other_application, superseded_by: declaration) }
 
       it "returns no declarations" do
         expect(declaration.duplicate_declarations).to be_empty
