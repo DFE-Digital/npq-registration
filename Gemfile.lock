@@ -274,11 +274,11 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
-    govuk-components (5.11.3)
+    govuk-components (6.1.0)
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 10)
-      view_component (>= 4.0, < 4.1)
-    govuk_design_system_formbuilder (5.11.0)
+      view_component (>= 4.0, < 4.7)
+    govuk_design_system_formbuilder (6.1.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -707,8 +707,9 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    view_component (4.0.2)
-      activesupport (>= 7.1.0, < 8.1)
+    view_component (4.6.0)
+      actionview (>= 7.1.0)
+      activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
     virtus (2.0.0)
       axiom-types (~> 0.1)
@@ -780,8 +781,8 @@ DEPENDENCIES
   flipper-active_record
   foreman
   google-cloud-bigquery
-  govuk-components (~> 5.11)
-  govuk_design_system_formbuilder (~> 5.8)
+  govuk-components (~> 6.0)
+  govuk_design_system_formbuilder (~> 6.0)
   govuk_markdown
   httparty (~> 0.24)
   i18n-debug

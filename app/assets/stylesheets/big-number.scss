@@ -99,13 +99,13 @@
 
     &:hover {
 
-      color: govuk-tint(govuk-colour("light-blue"), 75);
+      color: govuk-colour("blue", $variant: "tint-80");
 
       .big-number,
       .big-number-number,
       .big-number-smaller,
       .big-number-label {
-        color: govuk-tint(govuk-colour("light-blue"), 75);
+        color: govuk-colour("blue", $variant: "tint-80");
       }
 
     }
