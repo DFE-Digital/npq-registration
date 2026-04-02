@@ -7,7 +7,7 @@
     <div class="govuk-grid-column-full">
       <%= f.govuk_collection_select(
        :admin_id,
-       Admin.all.order(:full_name),
+       @admins,
        :id,
        :name_with_email,
         options: { include_blank: "- select admin user -" },

@@ -7,6 +7,10 @@ class NpqSeparation::Admin::ActionsLogController < NpqSeparation::AdminControlle
     end
   end
 
+  def index
+    @admins = Admin.active.order(:full_name) + Admin.archived.order(:full_name)
+  end
+
   def show
     @admin = Admin.find(params[:id])
     versions = PaperTrail::Version

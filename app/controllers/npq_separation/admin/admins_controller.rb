@@ -2,7 +2,7 @@ class NpqSeparation::Admin::AdminsController < NpqSeparation::AdminController
   before_action :require_super_admin
 
   def index
-    @pagy, @admins = pagy(Admin.all)
+    @pagy, @admins = pagy(Admin.active)
   end
 
   def new
@@ -27,7 +27,7 @@ class NpqSeparation::Admin::AdminsController < NpqSeparation::AdminController
     if @admin == current_admin || @admin.super_admin?
       flash[:error] = "You cannot remove admin permissions from yourself or another super admin."
       redirect_back fallback_location: npq_separation_admin_admins_path
-    elsif @admin.destroy!
+    elsif @admin.archive!
       redirect_to npq_separation_admin_admins_path, flash: { success: "#{@admin.full_name} deleted" }
     else
       flash[:error] = "Failed to remove admin permissions from #{@admin.email}, please contact technical support if this problem persists."
@@ -38,6 +38,6 @@ class NpqSeparation::Admin::AdminsController < NpqSeparation::AdminController
 private
 
   def admin_params
-    params.require(:admin).permit(:full_name, :email)
+    params.require(:admin).permit(:full_name, :email).merge(super_admin: false, archived_at: nil)
   end
 end
