@@ -1,61 +1,3 @@
-// primary navigation
-//
-// borrowed from x-govuk/govuk-prototype-components
-// https://github.com/x-govuk/govuk-prototype-components/blob/main/x-govuk/components/primary-navigation/_primary-navigation.scss
-.x-govuk-primary-navigation {
-  @include govuk-font(19, $weight: bold);
-  background-color: govuk-colour("light-grey");
-  border-bottom: 1px solid transparent;
-  margin-bottom: -1px;
-  padding-inline: .5em;
-}
-
-.x-govuk-primary-navigation__list {
-  @include govuk-clearfix;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  width: calc(100% + #{govuk-spacing(6)});
-}
-
-.x-govuk-primary-navigation__item {
-  box-sizing: border-box;
-  display: block;
-  float: left;
-  height: 55px;
-  line-height: 55px;
-  margin-right: govuk-spacing(6);
-  position: relative;
-}
-
-.x-govuk-primary-navigation__item--current {
-  border-bottom: $govuk-border-width-narrow solid $govuk-brand-colour;
-}
-
-.x-govuk-primary-navigation__item--align-right {
-  @include govuk-media-query($from: tablet) {
-    float: right;
-  }
-}
-
-.x-govuk-primary-navigation__link {
-  @include govuk-link-common;
-  @include govuk-link-style-no-visited-state;
-  @include govuk-link-style-no-underline;
-  @include govuk-typography-weight-bold;
-
-  // Extend the touch area of the link to the list
-  &::after {
-    bottom: 0;
-    content: "";
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-}
-
 // sub navigation
 //
 // borrowed from x-govuk/govuk-prototype-components
@@ -107,14 +49,14 @@
 }
 
 .x-govuk-sub-navigation__section--nested .x-govuk-sub-navigation__section-item::before {
-  color: govuk-colour("dark-grey");
+  color: govuk-functional-colour("secondary-text");
   content: "—";
   margin-left: -(govuk-spacing(4));
 }
 
 .x-govuk-sub-navigation__theme {
   @include govuk-font(19);
-  color: govuk-colour("dark-grey");
+  color: govuk-functional-colour("secondary-text");
   margin: 0;
   padding: govuk-spacing(2) govuk-spacing(3) govuk-spacing(2) 0;
 }
@@ -125,7 +67,7 @@
 }
 
 .app-statement-block {
-  background-color: govuk-colour("light-grey");
+  background-color: govuk-colour("black", $variant: "tint-95");
 }
 
 .app-statement-block__declaration-types {
