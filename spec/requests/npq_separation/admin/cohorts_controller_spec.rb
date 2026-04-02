@@ -12,7 +12,7 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
     {
       cohort: {
         start_year: 2029,
-        funding_cap: true,
+        funding: "capped",
         registration_start_date: "2029-03-02",
         name: "2029",
         description: "2029 to 2030",

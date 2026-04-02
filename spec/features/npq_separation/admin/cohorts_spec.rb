@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
+RSpec.feature "Managing cohorts", type: :feature do
   include Helpers::AdminLogin
   include Helpers::FileHelper
 
@@ -24,9 +24,9 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
     expect(Cohort.count).to eq(3)
 
     expect(page).to have_table(rows: [
-      ["2028 to 2029", "3 April 2028", "Yes"],
-      ["2027 to 2028", "3 April 2027", "Yes"],
-      ["2026 to 2027", "3 April 2026", "Yes"],
+      ["2028 to 2029", "3 April 2028", "capped"],
+      ["2027 to 2028", "3 April 2027", "capped"],
+      ["2026 to 2027", "3 April 2026", "capped"],
     ])
   end
 
@@ -41,7 +41,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect(summary_list).to have_summary_item("Start year", "2026")
       expect(summary_list).to have_summary_item("Suffix", "a")
       expect(summary_list).to have_summary_item("Registration start date", "3 April 2026")
-      expect(summary_list).to have_summary_item("Funding cap", "Yes")
+      expect(summary_list).to have_summary_item("Funding", "capped")
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
 
       fill_in "Description", with: "2029 to 2030"
       fill_in "Start year", with: "2029"
-      check "Funding cap", visible: :all
+      choose "capped", visible: :all
       fill_in "Day", with: "2"
       fill_in "Month", with: "3"
       fill_in "Year", with: "2029"
@@ -72,21 +72,19 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect(cohort.description).to eq("2029 to 2030")
       expect(cohort.start_year).to be(2029)
       expect(cohort.suffix).to eq("a")
-      expect(cohort.funding_cap).to be(true)
+      expect(cohort.funding).to eq("capped")
       expect(cohort.registration_start_date).to eq(Date.new(2029, 3, 2))
       expect(cohort.delivery_partnerships.pluck(:delivery_partner_id, :lead_provider_id)).to eq(partnerships.pluck(:delivery_partner_id, :lead_provider_id))
     end
 
     scenario "editing" do
-      cohort.update! funding_cap: false
-
       navigate_to_cohort
       click_on edit_button_text
 
       fill_in "Description", with: "2025 to 2026"
       fill_in "Start year", with: "2025"
       fill_in "Suffix", with: "b"
-      check "Funding cap", visible: :all
+      choose "funded", visible: :all
       fill_in "Day", with: "6"
       fill_in "Month", with: "5"
       fill_in "Year", with: "2025"
@@ -94,15 +92,15 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect { click_on "Update cohort" }.not_to(change(Cohort, :count))
       expect(page).to have_text("Cohort updated")
 
-      cohort.reload
+      updated_cohort = Cohort.find_by! identifier: "2025b"
 
-      expect(cohort.identifier).to eq("2025b")
-      expect(cohort.name).to eq("2025b")
-      expect(cohort.description).to eq("2025 to 2026")
-      expect(cohort.start_year).to be(2025)
-      expect(cohort.suffix).to eq("b")
-      expect(cohort.funding_cap).to be(true)
-      expect(cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
+      expect(updated_cohort.identifier).to eq("2025b")
+      expect(updated_cohort.name).to eq("2025b")
+      expect(updated_cohort.description).to eq("2025 to 2026")
+      expect(updated_cohort.start_year).to be(2025)
+      expect(updated_cohort.suffix).to eq("b")
+      expect(updated_cohort.funding).to eq("funded")
+      expect(updated_cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
     end
 
     scenario "deletion" do

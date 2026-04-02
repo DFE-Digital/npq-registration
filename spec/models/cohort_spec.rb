@@ -23,8 +23,8 @@ RSpec.describe Cohort, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }
-    it { is_expected.to allow_value(%w[true false]).for(:funding_cap).with_message("Choose true or false for funding cap") }
-    it { is_expected.not_to allow_value(nil).for(:funding_cap).with_message("Choose true or false for funding cap") }
+    it { is_expected.to allow_values("funded", "capped", "unfunded").for(:funding).with_message("Choose funded, capped or unfunded for funding") }
+    it { is_expected.not_to allow_value(nil).for(:funding).with_message("Choose funded, capped or unfunded for funding") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
 
     describe "registration_start_date year should match start_year" do
@@ -77,26 +77,35 @@ RSpec.describe Cohort, type: :model do
       it { is_expected.to have_attributes name: "2029c" }
     end
 
-    describe "changing funding_cap when there are applications" do
+    describe "changing funding when there are applications" do
       before do
         create(:application, cohort: cohort)
       end
 
-      context "when the funding cap is true" do
+      context "when the funding is capped" do
         let(:cohort) { create(:cohort, :with_funding_cap) }
 
-        it "does not allow changing the funding_cap" do
-          cohort.funding_cap = false
-          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+        it "does not allow changing funding" do
+          cohort.funding = "funded"
+          expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
         end
       end
 
-      context "when the funding cap is false" do
+      context "when the funding is funded" do
         let(:cohort) { create(:cohort, :without_funding_cap) }
 
-        it "does not allow changing the funding_cap" do
-          cohort.funding_cap = true
-          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+        it "does not allow changing the funding" do
+          cohort.funding = "capped"
+          expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
+        end
+      end
+
+      context "when the funding is unfunded" do
+        let(:cohort) { create(:cohort, :unfunded) }
+
+        it "does not allow changing the funding" do
+          cohort.funding = "capped"
+          expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
         end
       end
     end
@@ -179,6 +188,30 @@ RSpec.describe Cohort, type: :model do
       let(:cohort) { create(:cohort, suffix: "c") }
 
       it { is_expected.to eq "#{cohort.start_year}#{cohort.suffix}" }
+    end
+  end
+
+  describe "#funding_cap?" do
+    subject { cohort.funding_cap? }
+
+    let(:cohort) { create(:cohort, funding:) }
+
+    context "when funding is 'funded'" do
+      let(:funding) { "funded" }
+
+      it { is_expected.to be false }
+    end
+
+    context "when funding is 'capped'" do
+      let(:funding) { "capped" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'unfunded'" do
+      let(:funding) { "unfunded" }
+
+      it { is_expected.to be_nil }
     end
   end
 end

@@ -191,8 +191,8 @@ en:
               invalid: Suffix must be a lower case character
               too_long: Suffix must be a single character
               too_short: Suffix must be a single character
-            funding_cap:
-              inclusion: Choose true or false for funding cap
+            funding:
+              inclusion: Choose funded, capped or unfunded for funding
             ecf_id:
               *ecf_id
             registration_start_date:
