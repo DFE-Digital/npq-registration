@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_01_112940) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -22,6 +22,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "api_token_scopes", ["lead_provider", "teacher_record_service"]
   create_enum "application_statuses", ["active", "deferred", "withdrawn"]
+  create_enum "cohort_funding", ["funded", "capped", "unfunded"]
   create_enum "declaration_state_reasons", ["duplicate"]
   create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
@@ -204,6 +205,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
     t.string "suffix", limit: 1, default: "a", null: false
     t.string "description", limit: 50, null: false
     t.virtual "identifier", type: :string, as: "(start_year || (suffix)::text)", stored: true
+    t.enum "funding", default: "funded", null: false, enum_type: "cohort_funding"
     t.index ["description"], name: "index_cohorts_on_description", unique: true
     t.index ["ecf_id"], name: "index_cohorts_on_ecf_id", unique: true
     t.index ["identifier"], name: "index_cohorts_on_identifier", unique: true
