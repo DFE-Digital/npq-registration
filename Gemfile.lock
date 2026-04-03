@@ -657,11 +657,11 @@ GEM
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.3)
-    site_prism (5.1.1)
+    site_prism (5.2)
       addressable (~> 2.8, >= 2.8.4)
       capybara (~> 3.34)
       site_prism-all_there (> 3, < 5)
-    site_prism-all_there (3.0.7)
+    site_prism-all_there (3.0.8)
     skylight (7.0.0)
       activesupport (>= 7.1.0)
     sprockets (4.2.2)
@@ -820,7 +820,7 @@ DEPENDENCIES
   shoulda-matchers
   simplecov
   simpleidn
-  site_prism (~> 5.1)
+  site_prism (~> 5.2)
   skylight (~> 7.0)
   sprockets (~> 4.2.2)
   sprockets-rails
