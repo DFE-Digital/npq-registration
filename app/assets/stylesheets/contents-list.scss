@@ -8,13 +8,13 @@
   box-shadow: 0 20px 15px -10px govuk-colour("white");
 
   &__title {
-    @include govuk-text-colour;
+    color: $govuk-text-colour;
     @include govuk-font($size: 16, $weight: regular, $line-height: 1.5);
     margin: 0;
   }
 
   &__list {
-    @include govuk-text-colour;
+    color: $govuk-text-colour;
     @include govuk-font($size: 16);
     margin: 0;
     padding: 0;
@@ -27,7 +27,7 @@
     list-style-type: none;
 
     @include govuk-media-query($from: tablet) {
-      padding-top: govuk-spacing(6) / 4;
+      padding-top: calc(govuk-spacing(6) / 4);
     }
 
     $contents-spacing: govuk-spacing(5);

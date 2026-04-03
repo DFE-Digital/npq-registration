@@ -18,7 +18,7 @@
 
 .app-subnav__title {
   @include govuk-font($size: 19);
-  color: govuk-colour("dark-grey");
+  color: govuk-colour("black", $variant: "tint-25");
   font-weight: normal;
   margin: 0;
   padding: govuk-spacing(2);
@@ -105,7 +105,7 @@
     a,
     a:link,
     a:visited {
-      background-color: govuk-colour("light-grey");
+      background-color: govuk-colour("black", $variant: "tint-95");
     }
 
     a:focus {

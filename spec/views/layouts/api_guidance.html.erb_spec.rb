@@ -13,7 +13,7 @@ RSpec.describe "layouts/api_guidance.html.erb", type: :view do
   end
 
   describe "service navigation" do
-    it { is_expected.not_to have_css(".govuk-service-navigation__service-name") }
+    it { is_expected.to have_css(".govuk-service-navigation__service-name", text: "Register for a national professional qualification") }
 
     it "has links for the guidance navigation structure" do
       expected_items.each do |item|
