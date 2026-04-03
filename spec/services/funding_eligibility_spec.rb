@@ -150,9 +150,9 @@ RSpec.describe FundingEligibility do
         leading_literacy: :ineligible_establishment_not_a_pp50,
         leading_teaching: :ineligible_establishment_not_a_pp50,
         leading_teaching_development: :ineligible_establishment_not_a_pp50,
-        senior_leadership: :ineligible_establishment_not_a_pp50,
+        senior_leadership: :funded,
         executive_leadership: :ineligible_establishment_not_a_pp50,
-        early_years_leadership: :ineligible_establishment_not_a_pp50,
+        early_years_leadership: :funded,
       }
 
       context "and the institution is on the RISE list" do
@@ -207,9 +207,9 @@ RSpec.describe FundingEligibility do
         leading_literacy: :ineligible_establishment_type,
         leading_teaching: :ineligible_establishment_type,
         leading_teaching_development: :ineligible_establishment_type,
-        senior_leadership: :ineligible_establishment_type,
+        senior_leadership: :funded,
         executive_leadership: :ineligible_establishment_type,
-        early_years_leadership: :ineligible_establishment_type,
+        early_years_leadership: :funded,
       }
 
       include_examples "funding eligibility status codes by course", ineligible
@@ -246,9 +246,9 @@ RSpec.describe FundingEligibility do
         leading_literacy: :early_years_invalid_npq,
         leading_teaching: :early_years_invalid_npq,
         leading_teaching_development: :early_years_invalid_npq,
-        senior_leadership: :early_years_invalid_npq,
+        senior_leadership: :funded,
         executive_leadership: :early_years_invalid_npq,
-        early_years_leadership: :not_entitled_ey_institution,
+        early_years_leadership: :funded,
       }
 
       context "and the institution is a Local authority-maintained nursery" do
@@ -258,7 +258,6 @@ RSpec.describe FundingEligibility do
         include_examples "funding eligibility status codes by course", default_eligibility.merge({
           senco: :ineligible_establishment_type,
           headship: :ineligible_establishment_type,
-          early_years_leadership: :ineligible_establishment_type,
         })
 
         context "and the institution is on the LA disadvantaged nursery list" do
@@ -269,7 +268,6 @@ RSpec.describe FundingEligibility do
           include_examples "funding eligibility status codes by course", default_eligibility.merge({
             senco: :funded,
             headship: :funded,
-            early_years_leadership: :funded,
           })
         end
       end
@@ -285,9 +283,7 @@ RSpec.describe FundingEligibility do
             allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
-          })
+          include_examples "funding eligibility status codes by course", default_eligibility
         end
       end
 
@@ -302,9 +298,7 @@ RSpec.describe FundingEligibility do
             allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
-          })
+          include_examples "funding eligibility status codes by course", default_eligibility
         end
       end
 
@@ -312,18 +306,14 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "childminder" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :not_entitled_childminder,
-        })
+        include_examples "funding eligibility status codes by course", default_eligibility
 
         context "and the institution is on the childminders list" do
           before do
             allow(institution).to receive(:on_childminders_list?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
-          })
+          include_examples "funding eligibility status codes by course", default_eligibility
         end
       end
 
@@ -338,9 +328,7 @@ RSpec.describe FundingEligibility do
             allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
-          })
+          include_examples "funding eligibility status codes by course", default_eligibility
         end
       end
     end
@@ -377,15 +365,15 @@ RSpec.describe FundingEligibility do
         leading_literacy: :ineligible_establishment_type,
         leading_teaching: :ineligible_establishment_type,
         leading_teaching_development: :ineligible_establishment_type,
-        senior_leadership: :ineligible_establishment_type,
+        senior_leadership: :funded,
         executive_leadership: :ineligible_establishment_type,
-        early_years_leadership: :ineligible_establishment_type,
+        early_years_leadership: :funded,
       }
 
       context "and the employment type is a virtual school" do
         let(:employment_type) { "local_authority_virtual_school" }
 
-        include_examples "funding eligibility status codes by course", default_eligibility.merge
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the employment type is a hospital school" do
@@ -417,9 +405,9 @@ RSpec.describe FundingEligibility do
           leading_literacy: :not_lead_mentor_course,
           leading_teaching: :not_lead_mentor_course,
           leading_teaching_development: :ineligible_establishment_type,
-          senior_leadership: :not_lead_mentor_course,
+          senior_leadership: :funded,
           executive_leadership: :not_lead_mentor_course,
-          early_years_leadership: :not_lead_mentor_course,
+          early_years_leadership: :funded,
         }
 
         include_examples "funding eligibility status codes by course", default_eligibility
@@ -445,9 +433,9 @@ RSpec.describe FundingEligibility do
         leading_literacy: :ineligible_establishment_type,
         leading_teaching: :ineligible_establishment_type,
         leading_teaching_development: :ineligible_establishment_type,
-        senior_leadership: :ineligible_establishment_type,
+        senior_leadership: :funded,
         executive_leadership: :ineligible_establishment_type,
-        early_years_leadership: :ineligible_establishment_type,
+        early_years_leadership: :funded,
       }
 
       context "and there is a return to teaching adviser referral" do
@@ -461,16 +449,16 @@ RSpec.describe FundingEligibility do
           leading_literacy: :referred_by_return_to_teaching_adviser,
           leading_teaching: :referred_by_return_to_teaching_adviser,
           leading_teaching_development: :referred_by_return_to_teaching_adviser,
-          senior_leadership: :referred_by_return_to_teaching_adviser,
+          senior_leadership: :funded,
           executive_leadership: :referred_by_return_to_teaching_adviser,
-          early_years_leadership: :referred_by_return_to_teaching_adviser,
+          early_years_leadership: :funded,
         }
       end
     end
 
     context "when institution is mandatory but missing" do
       let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
-      let(:course) { Course.first }
+      let(:course) { Course.find_by(identifier: "npq-executive-leadership") }
 
       it "raises an error" do
         expect { subject }.to raise_error(FundingEligibility::MissingMandatoryInstitution)

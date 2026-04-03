@@ -19,7 +19,7 @@ class FundingEligibility
   # Early Years
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
-  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
+  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution # not used since NPQ-3618
   NOT_ENTITLED_CHILDMINDER = :not_entitled_childminder
 
   # Lead Mentor
@@ -119,6 +119,10 @@ class FundingEligibility
       return NOT_IN_ENGLAND unless inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 
+      if course.senior_leadership? || course.eyl?
+        return FUNDED_ELIGIBILITY_RESULT
+      end
+
       if course.ehco?
         return FUNDED_ELIGIBILITY_RESULT if new_headteacher
 
@@ -156,28 +160,11 @@ private
       return FUNDED_ELIGIBILITY_RESULT
     end
 
-    if childminder
-      if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
-
-        return NOT_ENTITLED_CHILDMINDER
-      end
-
-      return EARLY_YEARS_INVALID_NPQ
-    end
-
-    if course.eyl?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
-
-      return NOT_ENTITLED_EY_INSTITUTION
-    end
-
     EARLY_YEARS_INVALID_NPQ
   end
 
   def school_policy
     return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.rise?
-
     return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
 
     if course.only_pp50?

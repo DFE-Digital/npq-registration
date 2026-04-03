@@ -19,14 +19,16 @@
   <%= tabs.with_tab(label: "Childminders") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::Childminder,
                                           bulk_operation_class: BulkOperation::UploadEligibilityList::Childminder,
-                                          fragment: "childminders" } %>
+                                          fragment: "childminders",
+                                          no_longer_used: true } %>
   <% end %>
 
   <%= tabs.with_tab(label: "Disadvantaged EY") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::DisadvantagedEarlyYearsSchool,
                                           bulk_operation_class: BulkOperation::UploadEligibilityList::DisadvantagedEarlyYearsSchool,
                                           fragment: "disadvantaged-ey",
-                                          csv_note: "Ofsted URN is optional - if it doesn't exist, the Disadvantaged EY School URN will be used." } %>
+                                          csv_note: "Ofsted URN is optional - if it doesn't exist, the Disadvantaged EY School URN will be used.",
+                                          no_longer_used: true } %>
   <% end %>
 
   <%= tabs.with_tab(label: "LA Nurseries") do %>

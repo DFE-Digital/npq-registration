@@ -47,7 +47,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
+      page.choose("Executive leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "In #{application_course_start_date}",
-          "Course" => "Senior leadership",
+          "Course" => "Executive leadership",
           "Course funding" => "I am paying",
           "Work setting" => "A school",
           "Provider" => "Teach First",
@@ -101,7 +101,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
+      page.choose("Executive leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -131,7 +131,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "In #{application_course_start_date}",
-          "Course" => "Senior leadership",
+          "Course" => "Executive leadership",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "A school",
@@ -158,7 +158,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-executive-leadership").id,
       "schedule_id" => nil,
       "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
@@ -204,7 +204,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "chosen_provider" => "yes",
         "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
-        "course_identifier" => "npq-senior-leadership",
+        "course_identifier" => "npq-executive-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
         "funding_amount" => nil,

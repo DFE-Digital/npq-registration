@@ -56,14 +56,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Early years leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
       page.click_on("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How are you funding your course?")
-      page.choose("I am paying", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -79,7 +73,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course funding" => "I am paying",
           "Course start" => "In #{application_course_start_date}",
           "Course" => "Early years leadership",
           "Employment type" => "In an independent hospital education organisation",
@@ -111,12 +104,12 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "schedule_id" => nil,
       "ecf_id" => latest_application.ecf_id,
-      "eligible_for_funding" => false,
+      "eligible_for_funding" => true,
       "employer_name" => "Big company",
       "employment_type" => "hospital_school",
       "funded_place" => nil,
-      "funding_choice" => "self",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "funding_choice" => nil,
+      "funding_eligiblity_status_code" => "funded",
       "employment_role" => nil,
       "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
@@ -155,11 +148,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-early-years-leadership",
-        "email_template" => "not_on_ofsted_register",
+        "email_template" => "eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",
         "employment_type" => "hospital_school",
-        "funding" => "self",
-        "funding_eligiblity_status_code" => "ineligible_establishment_type",
+        "funding_eligiblity_status_code" => "funded",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "funding_amount" => nil,

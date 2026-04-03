@@ -1,11 +1,16 @@
 class Course < ApplicationRecord
-  NPQ_HEADSHIP = "npq-headship".freeze
+  NPQ_ADDITIONAL_SUPPORT_OFFER = "npq-additional-support-offer".freeze # npq-additional-support-offer is replaced by npq-early-headship-coaching-offer
   NPQ_EARLY_HEADSHIP_COACHING_OFFER = "npq-early-headship-coaching-offer".freeze
   NPQ_EARLY_YEARS_LEADERSHIP = "npq-early-years-leadership".freeze
-  NPQ_LEADING_TEACHING_DEVELOPMENT = "npq-leading-teaching-development".freeze
+  NPQ_EXECUTIVE_LEADERSHIP = "npq-executive-leadership".freeze
+  NPQ_HEADSHIP = "npq-headship".freeze
+  NPQ_LEADING_BEHAVIOUR_CULTURE = "npq-leading-behaviour-culture".freeze
+  NPQ_LEADING_LITERACY = "npq-leading-literacy".freeze
   NPQ_LEADING_PRIMARY_MATHEMATICS = "npq-leading-primary-mathematics".freeze
-  NPQ_ADDITIONAL_SUPPORT_OFFER = "npq-additional-support-offer".freeze
+  NPQ_LEADING_TEACHING = "npq-leading-teaching".freeze
+  NPQ_LEADING_TEACHING_DEVELOPMENT = "npq-leading-teaching-development".freeze
   NPQ_SENCO = "npq-senco".freeze
+  NPQ_SENIOR_LEADERSHIP = "npq-senior-leadership".freeze
 
   belongs_to :course_group, optional: true
 
@@ -13,41 +18,37 @@ class Course < ApplicationRecord
   validates :identifier, presence: true, uniqueness: true
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
-  # npq-additional-support-offer is replaced by npq-early-headship-coaching-offer
-  IDENTIFIERS = %w[
-    npq-senior-leadership
-    npq-headship
-    npq-executive-leadership
-    npq-early-years-leadership
-    npq-leading-teaching
-    npq-leading-behaviour-culture
-    npq-leading-teaching-development
-    npq-leading-literacy
-    npq-leading-primary-mathematics
-    npq-additional-support-offer
-    npq-early-headship-coaching-offer
-    npq-senco
+  IDENTIFIERS = [
+    # not in alphabetical order on purpose, to keep swagger docs consistent
+    NPQ_SENIOR_LEADERSHIP,
+    NPQ_HEADSHIP,
+    NPQ_EXECUTIVE_LEADERSHIP,
+    NPQ_EARLY_YEARS_LEADERSHIP,
+    NPQ_LEADING_TEACHING,
+    NPQ_LEADING_BEHAVIOUR_CULTURE,
+    NPQ_LEADING_TEACHING_DEVELOPMENT,
+    NPQ_LEADING_LITERACY,
+    NPQ_LEADING_PRIMARY_MATHEMATICS,
+    NPQ_ADDITIONAL_SUPPORT_OFFER,
+    NPQ_EARLY_HEADSHIP_COACHING_OFFER,
+    NPQ_SENCO,
   ].freeze
 
-  ONLY_PP50 = %w[
-    npq-leading-primary-mathematics
-    npq-leading-behaviour-culture
-    npq-leading-literacy
-    npq-leading-teaching
-    npq-leading-teaching-development
-    npq-senior-leadership
-    npq-executive-leadership
-    npq-early-years-leadership
+  ONLY_PP50 = [
+    NPQ_EARLY_YEARS_LEADERSHIP,
+    NPQ_EXECUTIVE_LEADERSHIP,
+    NPQ_LEADING_BEHAVIOUR_CULTURE,
+    NPQ_LEADING_LITERACY,
+    NPQ_LEADING_PRIMARY_MATHEMATICS,
+    NPQ_LEADING_TEACHING,
+    NPQ_LEADING_TEACHING_DEVELOPMENT,
+    NPQ_SENIOR_LEADERSHIP,
   ].freeze
 
-  EYL_DISADVANTAGED = %w[
-    npq-early-years-leadership
-  ].freeze
-
-  LA_NURSERY_APPROVED = %w[
-    npq-senco
-    npq-headship
-    npq-early-years-leadership
+  LA_NURSERY_APPROVED = [
+    NPQ_EARLY_YEARS_LEADERSHIP,
+    NPQ_HEADSHIP,
+    NPQ_SENCO,
   ].freeze
 
   def schedule_for(cohort: Cohort.current, schedule_date: Date.current)
@@ -96,16 +97,16 @@ class Course < ApplicationRecord
     identifier == NPQ_ADDITIONAL_SUPPORT_OFFER
   end
 
+  def senior_leadership?
+    identifier == NPQ_SENIOR_LEADERSHIP
+  end
+
   def only_pp50?
     ONLY_PP50.include?(identifier)
   end
 
   def la_nursery_approved?
     LA_NURSERY_APPROVED.include?(identifier)
-  end
-
-  def eyl_disadvantaged?
-    EYL_DISADVANTAGED.include?(identifier)
   end
 
   def rebranded_alternative_courses
