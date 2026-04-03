@@ -2,7 +2,6 @@ module Questionnaires
   class SencoStartDate < Base
     include ActiveModel::Attributes
     include ActiveRecord::AttributeAssignment
-    include Helpers::Institution
 
     QUESTION_NAME = :senco_start_date
     EARLIEST_SENCO_START_DATE = Date.new(1960, 1, 1)
@@ -51,7 +50,7 @@ module Questionnaires
     def funding_eligibility
       @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
-        institution:,
+        institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         trn:,

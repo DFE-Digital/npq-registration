@@ -1,6 +1,4 @@
 class HandleSubmissionForStore
-  include Helpers::Institution
-
   attr_reader :store, :application
 
   def initialize(store:)
@@ -81,11 +79,11 @@ private
   end
 
   def primary_establishment
-    institution_from_store.is_a?(School) && institution_from_store.primary_education_phase?
+    query_store.institution.is_a?(School) && query_store.institution.primary_education_phase?
   end
 
   def number_of_pupils
-    institution_from_store.is_a?(School) && institution_from_store.number_of_pupils
+    query_store.institution.is_a?(School) && query_store.institution.number_of_pupils
   end
 
   def employer_name
@@ -100,34 +98,30 @@ private
     store["employment_type"].presence if employment_type_matters?
   end
 
-  def institution_from_store
-    @institution_from_store ||= institution(source: store["institution_identifier"])
-  end
-
   def store_private_childcare_provider_urn?
-    inside_catchment? && institution_from_store.is_a?(PrivateChildcareProvider)
+    inside_catchment? && query_store.institution.is_a?(PrivateChildcareProvider)
   end
 
   def private_childcare_provider_urn
-    institution_from_store.provider_urn if store_private_childcare_provider_urn?
+    query_store.institution.provider_urn if store_private_childcare_provider_urn?
   end
 
   def store_school_urn?
-    inside_catchment? && institution_from_store.is_a?(School)
+    inside_catchment? && query_store.institution.is_a?(School)
   end
 
   def school_urn
-    institution_from_store.urn if store_school_urn?
+    query_store.institution.urn if store_school_urn?
   end
 
   def store_ukprn?
     return false unless inside_catchment?
 
-    institution_from_store.is_a?(LocalAuthority) || institution_from_store.is_a?(School)
+    query_store.institution.is_a?(LocalAuthority) || query_store.institution.is_a?(School)
   end
 
   def ukprn
-    institution_from_store.ukprn if store_ukprn?
+    query_store.institution.ukprn if store_ukprn?
   end
 
   def funding_choice
@@ -168,7 +162,7 @@ private
   def funding_eligibility_service
     @funding_eligibility_service ||= FundingEligibility.new_from_query_store(
       course:,
-      institution: institution_from_store,
+      institution: query_store.institution,
       approved_itt_provider:,
       inside_catchment: inside_catchment?,
       trn: query_store.trn,

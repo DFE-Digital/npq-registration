@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   subject :instance do
     described_class.new(wizard:,
-                        institution_identifier: identifier,
-                        institution_name: name)
+                        private_childcare_identifier: identifier,
+                        private_childcare_name: name)
   end
 
   let(:current_step) { :choose_private_childcare_provider }
@@ -21,48 +21,48 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   describe "validations" do
     let(:errors) { instance.tap(&:valid?).errors.to_hash }
 
-    describe "#institution_identifier" do
+    describe "#private_childcare_identifier" do
       before { create(:private_childcare_provider, provider_urn: "123456") }
 
-      it "can have institution_identifier as empty string" do
-        subject.institution_identifier = ""
+      it "can have private_childcare_identifier as empty string" do
+        subject.private_childcare_identifier = ""
         expect(subject).to be_invalid
-        expect(errors).to eq institution_name: ["Enter a private childcare provider"]
+        expect(errors).to eq private_childcare_name: ["Enter a private childcare provider"]
       end
 
-      it "can have institution_identifier as 'other'" do
-        subject.institution_identifier = "other"
+      it "can have private_childcare_identifier as 'other'" do
+        subject.private_childcare_identifier = "other"
         expect(subject).to be_invalid
-        expect(errors).to eq institution_name: ["Enter a private childcare provider"]
+        expect(errors).to eq private_childcare_name: ["Enter a private childcare provider"]
       end
 
-      it "can have institution_identifier as 'PrivateChildcareProvider-123456'" do
-        subject.institution_identifier = "PrivateChildcareProvider-123456"
+      it "can have private_childcare_identifier as 'PrivateChildcareProvider-123456'" do
+        subject.private_childcare_identifier = "PrivateChildcareProvider-123456"
         expect(subject).to be_valid
       end
 
-      it "is invalid when the institution_identifier contains a URN that doesn't exist" do
+      it "is invalid when the private_childcare_identifier contains a URN that doesn't exist" do
         missing_identifier = "PrivateChildcareProvider-000000"
         expected_message = "No private childcare providers with the URN 000000 were found, please try again"
 
-        subject.institution_identifier = missing_identifier
+        subject.private_childcare_identifier = missing_identifier
 
         expect(subject).to be_invalid
-        expect(subject.errors.messages[:institution_identifier]).to include(expected_message)
+        expect(subject.errors.messages[:private_childcare_identifier]).to include(expected_message)
       end
 
-      it "is invalid when the institution_identifier is in the wrong format" do
+      it "is invalid when the private_childcare_identifier is in the wrong format" do
         invalid_identifier = "PrivateChildcareProvider/999876"
         expected_message = "No matching private childcare provider found"
 
-        subject.institution_identifier = invalid_identifier
+        subject.private_childcare_identifier = invalid_identifier
 
         expect(subject).to be_invalid
-        expect(subject.errors.messages[:institution_identifier]).to include(expected_message)
+        expect(subject.errors.messages[:private_childcare_identifier]).to include(expected_message)
       end
     end
 
-    it { is_expected.to validate_length_of(:institution_name).is_at_most(64) }
+    it { is_expected.to validate_length_of(:private_childcare_name).is_at_most(64) }
 
     context "when used from javascript autocomplete widget" do
       context "with institution valid" do
@@ -74,7 +74,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
       context "with no institution or name" do
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter a private childcare provider"] }
+        it { expect(errors).to eq private_childcare_name: ["Enter a private childcare provider"] }
       end
 
       context "with invalid institution" do
@@ -82,7 +82,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_identifier: ["No private childcare providers with the URN X were found, please try again"] }
+        it { expect(errors).to eq private_childcare_identifier: ["No private childcare providers with the URN X were found, please try again"] }
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
       context "with no institution or name" do
         it { is_expected.to be_invalid }
         it { is_expected.not_to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter a private childcare provider"] }
+        it { expect(errors).to eq private_childcare_name: ["Enter a private childcare provider"] }
       end
 
       context "with workplace set to other" do
@@ -115,7 +115,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["No private childcare providers with the URN Something were found, please try again"] }
+        it { expect(errors).to eq private_childcare_name: ["No private childcare providers with the URN Something were found, please try again"] }
       end
 
       context "with workplace set to invalid value and blank identifier" do
@@ -123,7 +123,7 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["No private childcare providers with the URN Something were found, please try again"] }
+        it { expect(errors).to eq private_childcare_name: ["No private childcare providers with the URN Something were found, please try again"] }
       end
 
       context "with workplace set to other and not name" do
@@ -131,13 +131,13 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
 
         it { is_expected.to be_invalid }
         it { is_expected.to be_search_term_entered_in_no_js_fallback_form }
-        it { expect(errors).to eq institution_name: ["Enter a private childcare provider"] }
+        it { expect(errors).to eq private_childcare_name: ["Enter a private childcare provider"] }
       end
     end
   end
 
   describe "#next_step" do
-    before { allow(subject).to receive(:institution_identifier).and_return("12345") }
+    before { allow(subject).to receive(:private_childcare_identifier).and_return("12345") }
 
     it "is choose_private_childcare_provider" do
       expect(subject.next_step).to be(:choose_your_npq)

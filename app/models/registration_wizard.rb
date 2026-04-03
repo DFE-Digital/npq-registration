@@ -2,7 +2,6 @@ require "active_support/time"
 
 class RegistrationWizard
   include ActiveModel::Model
-  include Helpers::Institution
   include ActionView::Helpers::TranslationHelper
 
   class InvalidStep < StandardError; end
@@ -267,7 +266,7 @@ private
   end
 
   def institution_from_store
-    @institution_from_store ||= institution(source: store["institution_identifier"])
+    @institution_from_store ||= query_store.institution
   end
 
   def funding_eligibility_calculator

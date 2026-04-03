@@ -2,34 +2,32 @@ module Questionnaires
   # This is for choosing *public* childcare providers, these are stored alongside schools in the educationl_institutions
   # table as type School, therefore, we search and display identically to as we do for schools
   class ChooseChildcareProvider < Base
-    include Helpers::Institution
+    attribute :childcare_name
+    attribute :childcare_identifier
 
-    attribute :institution_name
-    attribute :institution_identifier
-
-    validates :institution_identifier, format: { with: /\ASchool-\d{6,7}\z|\ALocalAuthority-\d+\z/, unless: -> { institution_identifier.blank? || institution_identifier == "other" } }
-    validates :institution_name, length: { maximum: 64 }
-    validates :institution_name, presence: true, if: -> { institution_identifier.blank? || institution_identifier == "other" }
+    validates :childcare_identifier, format: { with: /\ASchool-\d{6,7}\z|\ALocalAuthority-\d+\z/, unless: -> { childcare_identifier.blank? || childcare_identifier == "other" } }
+    validates :childcare_name, length: { maximum: 64 }
+    validates :childcare_name, presence: true, if: -> { childcare_identifier.blank? || childcare_identifier == "other" }
 
     validate :validate_childcare_provider_name_returns_results
 
     def self.permitted_params
       %i[
-        institution_name
-        institution_identifier
+        childcare_name
+        childcare_identifier
       ]
     end
 
     def questions
       [
         QuestionTypes::AutoCompleteInstitution.new(
-          name: :institution_identifier,
+          name: :childcare_identifier,
           locale_name: :choose_childcare_provider,
           picker: :nursery,
           options: possible_institutions,
           display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
           search_question: QuestionTypes::TextField.new(
-            name: :institution_name,
+            name: :childcare_name,
             locale_name: :choose_childcare_provider_search,
           ),
         ),
@@ -40,11 +38,11 @@ module Questionnaires
     # the second time but without showing an error - hence a negative response to
     # #valid? preventing saving but without appending errors
     def valid?(...)
-      super(...) && institution_identifier.present? && institution_identifier != "other"
+      super(...) && childcare_identifier.present? && childcare_identifier != "other"
     end
 
     def next_step
-      if institution(source: institution_identifier).in_england? # Right now this is always true when it shouldn't be
+      if institution.in_england? # Right now this is always true when it shouldn't be
         :choose_your_npq
       else
         :childcare_provider_not_in_england
@@ -57,21 +55,21 @@ module Questionnaires
 
     def search_term_entered_in_no_js_fallback_form?
       # This combination of fields is only used in the no-js fallback form
-      # institution_name will be set from the search term being entered into the search
+      # childcare_name will be set from the search term being entered into the search
       # field that is only visible when JS is disabled.
-      institution_name.present? || institution_identifier == "other"
+      childcare_name.present? || childcare_identifier == "other"
     end
 
     def possible_institutions
       return @possible_institutions if @possible_institutions
 
       schools = School
-                  .search_by_name(institution_name)
+                  .search_by_name(childcare_name)
                   .open
                   .limit(10)
 
       local_authorities = LocalAuthority
-                            .search_by_name(institution_name)
+                            .search_by_name(childcare_name)
                             .limit(10)
 
       @possible_institutions = schools + local_authorities
@@ -79,13 +77,19 @@ module Questionnaires
 
   private
 
+    def institution
+      ::Registration::Institution.fetch(identifier: childcare_identifier,
+                                        works_in_school: false,
+                                        works_in_childcare: true)
+    end
+
     def institution_location
       wizard.store["institution_location"]
     end
 
     def validate_childcare_provider_name_returns_results
-      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?
-        errors.add(:institution_name, :no_results, name: institution_name)
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && childcare_name.present?
+        errors.add(:childcare_name, :no_results, name: childcare_name)
       end
     end
   end
