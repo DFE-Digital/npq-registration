@@ -1,9 +1,17 @@
 class Cohort < ApplicationRecord
+  self.ignored_columns += [:funding_cap]
+
   has_many :declarations, dependent: :restrict_with_exception
   has_many :schedules, dependent: :destroy
   has_many :statements, dependent: :restrict_with_exception
   has_many :delivery_partnerships, dependent: :destroy
   has_many :delivery_partners, through: :delivery_partnerships
+
+  enum :funding, {
+    funded: "funded",
+    capped: "capped",
+    unfunded: "unfunded",
+  }
 
   validates :start_year,
             presence: true,
@@ -25,7 +33,7 @@ class Cohort < ApplicationRecord
 
   validates :registration_start_date, presence: true
   validate :registration_start_date_matches_start_year
-  validates :funding_cap, inclusion: { in: [true, false] }
+  validates :funding, inclusion: { in: fundings.values }
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
   validate :changing_funding_cap_with_dependent_applications
 
@@ -45,6 +53,13 @@ class Cohort < ApplicationRecord
     suffix == "a" ? start_year.to_s : identifier
   end
 
+  def funding_cap?
+    return true if funding == "capped"
+    return false if funding == "funded"
+
+    nil # TODO: test
+  end
+
 private
 
   def registration_start_date_matches_start_year
@@ -54,8 +69,8 @@ private
   end
 
   def changing_funding_cap_with_dependent_applications
-    return unless funding_cap_changed? && Application.where(cohort: self).any?
+    return unless funding_changed? && Application.where(cohort: self).any?
 
-    errors.add(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+    errors.add(:funding, "Cannot change funding when there are existing applications for this cohort")
   end
 end

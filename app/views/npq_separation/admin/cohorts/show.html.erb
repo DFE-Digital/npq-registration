@@ -1,3 +1,5 @@
+<%= govuk_back_link href: npq_separation_admin_cohorts_path %>
+
 <h1 class="govuk-heading-l">Cohort <%= @cohort.description %></h1>
 
 <%=
@@ -28,8 +30,8 @@
     end
 
     sl.with_row do |row|
-      row.with_key(text: "Funding cap")
-      row.with_value(text: boolean_red_green_tag(@cohort.funding_cap))
+      row.with_key(text: "Funding")
+      row.with_value(text: @cohort.funding)
     end
   end
 %>

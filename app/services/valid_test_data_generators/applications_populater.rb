@@ -47,7 +47,7 @@ module ValidTestDataGenerators
 
     def prepare_cohort!
       cohort.tap do |c|
-        c.funding_cap = cohort.start_year >= Cohort.current.start_year
+        c.funding_cap = cohort.start_year >= Cohort.current.start_year ? "capped" : "funded"
         c.save!
       end
     end
