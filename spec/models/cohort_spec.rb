@@ -226,4 +226,28 @@ RSpec.describe Cohort, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe "#funded?" do
+    subject { cohort.funded? }
+
+    let(:cohort) { create(:cohort, funding:) }
+
+    context "when funding is 'funded'" do
+      let(:funding) { "funded" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'capped'" do
+      let(:funding) { "capped" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'unfunded'" do
+      let(:funding) { "unfunded" }
+
+      it { is_expected.to be false }
+    end
+  end
 end
