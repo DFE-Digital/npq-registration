@@ -79,6 +79,20 @@ RSpec.feature "Listing and viewing applications", :no_js, type: :feature do
     expect(page).to have_application(application)
   end
 
+  scenario "defaults to showing applications from the current cohort" do
+    old_cohort = create(:cohort, start_year: 2022)
+    old_application = create(:application, cohort: old_cohort)
+
+    visit(npq_separation_admin_applications_path)
+
+    current_cohort = Cohort.current
+    expect(page).to have_select("Year of application", selected: current_cohort.description)
+    expect(page).not_to have_text(old_application.user.full_name)
+    applications_in_order.where(cohort: current_cohort).limit(applications_per_page).each do |application|
+      expect(page).to have_text(application.user.full_name)
+    end
+  end
+
   scenario "filtering applications by year of application" do
     cohort = create(:cohort, start_year: 2022)
     application = applications_in_order.last
@@ -91,6 +105,18 @@ RSpec.feature "Listing and viewing applications", :no_js, type: :feature do
     expect(page).to have_select("Year of application", selected: "2022 to 2023")
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
     expect(page).to have_application(application)
+  end
+
+  scenario "filtering applications by all cohorts" do
+    old_cohort = create(:cohort, start_year: 2022)
+    old_application = create(:application, cohort: old_cohort)
+
+    visit(npq_separation_admin_applications_path)
+    select "All", from: "Year of application"
+    click_on "Search"
+
+    expect(page).to have_select("Year of application", selected: "All")
+    expect(page).to have_text(old_application.user.full_name)
   end
 
   scenario "filtering applications by work setting" do
