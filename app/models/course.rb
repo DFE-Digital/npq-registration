@@ -50,7 +50,7 @@ class Course < ApplicationRecord
     npq-early-years-leadership
   ].freeze
 
-  def schedule_for(cohort: Cohort.current, schedule_date: Date.current)
+  def schedule_for(cohort:, schedule_date: Date.current)
     course_group.schedule_for(cohort:, schedule_date:)
   end
 
