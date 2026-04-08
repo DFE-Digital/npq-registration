@@ -15,6 +15,7 @@ module Participants
     validate :validate_permitted_schedule_for_course
     validate :validate_not_changing_cohort_with_declarations
     validate :validate_application_funded_place
+    validate :validate_unfunded_cohort
 
     def change_schedule
       return false if invalid?
@@ -64,8 +65,10 @@ module Participants
         params[:cohort] = cohort
       end
 
-      if !application.cohort.funding_cap? && cohort.funding_cap?
+      if application.cohort&.funding == Cohort.fundings[:funded] && cohort.funding == Cohort.fundings[:capped]
         params[:funded_place] = application.eligible_for_funding
+      elsif cohort.funding == Cohort.fundings[:unfunded]
+        params[:funded_place] = false
       end
 
       application.update!(params)
@@ -134,8 +137,17 @@ module Participants
       return unless application
       return unless application.cohort != cohort
 
-      if application.cohort&.funding_cap? && !cohort.funding_cap?
+      if application.cohort&.funding == Cohort.fundings[:capped] && cohort.funding == Cohort.fundings[:funded]
         errors.add(:cohort, :cannot_change_to_cohort_without_funding_cap)
+      end
+    end
+
+    def validate_unfunded_cohort
+      return unless application
+      return unless cohort.funding.in?(Cohort::FUNDED_FUNDINGS)
+
+      if application.cohort.funding == Cohort.fundings[:unfunded]
+        errors.add(:cohort, :cannot_change_to_funded_cohort)
       end
     end
   end

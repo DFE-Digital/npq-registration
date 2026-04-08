@@ -349,7 +349,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       end
     end
 
-    describe "NPQ capping" do
+    describe "when the cohort is capped" do
       let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
       before do
@@ -384,20 +384,9 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       context "when funded_place is nil" do
         let(:params) { { application:, funded_place: nil } }
 
-        context "when funding_cap is true" do
-          it "returns funded_place is required error" do
-            service.accept
-            expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
-          end
-        end
-
-        context "when funding_cap is false" do
-          let(:cohort) { create(:cohort, :current, :without_funding_cap) }
-
-          it "does not validate funded_place" do
-            service.accept
-            expect(service.errors.messages_for(:funded_place)).to be_empty
-          end
+        it "returns funded_place is required error" do
+          service.accept
+          expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
         end
       end
 
@@ -436,6 +425,27 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
             service.accept
             expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
+        end
+      end
+    end
+
+    describe "when the cohort is funded" do
+      let(:cohort) { create(:cohort, :current, :without_funding_cap) }
+
+      it "does not validate funded_place" do
+        service.accept
+        expect(service.errors.messages_for(:funded_place)).to be_empty
+      end
+    end
+
+    describe "when the cohort is unfunded" do
+      context "when funded_place is true" do
+        let(:cohort) { create(:cohort, :current, :unfunded) }
+        let(:params) { { application:, funded_place: true } }
+
+        it "returns an error" do
+          service.accept
+          expect(service).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field cannot be set to true for unfunded cohorts.")
         end
       end
     end

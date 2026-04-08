@@ -18,7 +18,15 @@ FactoryBot.define do
     funding_choice { Application.funding_choices.keys.first }
     lead_mentor { false }
     ukprn { rand(10_000_000..99_999_999).to_s }
-    funded_place { cohort&.funding_cap? ? !!eligible_for_funding : nil }
+
+    funded_place do
+      case cohort&.funding
+      when Cohort.fundings[:capped]
+        !!eligible_for_funding
+      when Cohort.fundings[:unfunded]
+        false
+      end
+    end
 
     trait :with_school do
       school

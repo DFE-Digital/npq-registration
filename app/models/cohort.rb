@@ -1,6 +1,10 @@
 class Cohort < ApplicationRecord
   self.ignored_columns += [:funding_cap]
 
+  FUNDED_FUNDINGS = %w[funded capped].freeze
+
+  has_paper_trail
+
   has_many :declarations, dependent: :restrict_with_exception
   has_many :schedules, dependent: :destroy
   has_many :statements, dependent: :restrict_with_exception
@@ -57,6 +61,10 @@ class Cohort < ApplicationRecord
     return true if funding == "capped"
 
     false if funding == "funded"
+  end
+
+  def funded?
+    FUNDED_FUNDINGS.include?(funding)
   end
 
 private

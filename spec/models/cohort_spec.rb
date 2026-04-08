@@ -14,6 +14,10 @@ RSpec.describe Cohort, type: :model do
 
   subject { cohort }
 
+  it "has paper trail" do
+    expect(subject).to be_versioned
+  end
+
   describe "relationships" do
     it { is_expected.to have_many(:declarations).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:schedules).dependent(:destroy) }
@@ -79,7 +83,7 @@ RSpec.describe Cohort, type: :model do
 
     describe "changing funding when there are applications" do
       before do
-        create(:application, cohort: cohort)
+        create(:application, :without_funded_place, cohort: cohort)
       end
 
       context "when the funding is capped" do
@@ -212,6 +216,30 @@ RSpec.describe Cohort, type: :model do
       let(:funding) { "unfunded" }
 
       it { is_expected.to be_nil }
+    end
+  end
+
+  describe "#funded?" do
+    subject { cohort.funded? }
+
+    let(:cohort) { create(:cohort, funding:) }
+
+    context "when funding is 'funded'" do
+      let(:funding) { "funded" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'capped'" do
+      let(:funding) { "capped" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'unfunded'" do
+      let(:funding) { "unfunded" }
+
+      it { is_expected.to be false }
     end
   end
 end
