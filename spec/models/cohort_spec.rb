@@ -140,20 +140,22 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe ".current" do
-    it "returns the closest cohort in the past" do
-      current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
-      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
-      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+    let(:current_cohort) { create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10)) }
+    let(:older_cohort) { create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10)) }
+    let(:future_cohort) { create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)) }
 
-      expect(Cohort.current(Date.new(2022, 4, 11))).to eq(current_cohort)
+    before do
+      current_cohort
+      older_cohort
+      future_cohort
+    end
+
+    it "returns the closest cohort in the past" do
+      expect(Cohort.current(timestamp: Date.new(2022, 4, 11))).to eq(current_cohort)
     end
 
     it "includes the Cohort starting exactly on the current date" do
-      current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
-      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
-      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
-
-      expect(Cohort.current(Date.new(2022, 4, 10))).to eq(current_cohort)
+      expect(Cohort.current(timestamp: Date.new(2022, 4, 10))).to eq(current_cohort)
     end
 
     context "when there is no cohort for the current year" do
@@ -165,19 +167,25 @@ RSpec.describe Cohort, type: :model do
     end
 
     context "when there are multiple cohorts for the past year" do
-      subject { Cohort.current(Date.new(2022, 4, 11)) }
+      subject { Cohort.current(timestamp: Date.new(2022, 4, 11)) }
 
-      before { cohorts }
+      let(:current_cohort) { create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)) }
+      let(:older_cohort) { create(:cohort, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)) }
+      let(:future_cohort) { create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)) }
 
-      let :cohorts do
-        {
-          current: create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)),
-          older: create(:cohort, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)),
-          future: create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)),
-        }
+      it { is_expected.to eq(current_cohort) }
+    end
+
+    context "when cohort_funding is specified" do
+      subject { Cohort.current(cohort_funding: "unfunded") }
+
+      let(:current_cohort) { create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)) }
+      let(:older_cohort) { create(:cohort, :unfunded, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)) }
+      let(:future_cohort) { create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)) }
+
+      it "returns the closest cohort in the past with the specified funding" do
+        expect(subject).to eq(older_cohort)
       end
-
-      it { is_expected.to eq(cohorts[:current]) }
     end
   end
 

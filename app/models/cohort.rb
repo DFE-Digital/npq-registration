@@ -49,8 +49,10 @@ class Cohort < ApplicationRecord
           year: cohort.start_year, suffix: cohort.suffix)
   }
 
-  def self.current(timestamp = Time.zone.today)
-    order_by_latest.find_by!(registration_start_date: ..timestamp)
+  def self.current(timestamp: Time.zone.today, cohort_funding: nil)
+    scope = order_by_latest
+    scope = scope.where(funding: cohort_funding) if cohort_funding.present?
+    scope.find_by!(registration_start_date: ..timestamp)
   end
 
   def name
