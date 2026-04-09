@@ -129,6 +129,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           course_identifier: application.course.identifier,
           schedule_identifier: application.schedule.identifier,
           cohort: application.cohort.start_year.to_s,
+          cohort_suffix: application.cohort.suffix,
           npq_application_id: application.ecf_id,
           eligible_for_funding: application.eligible_for_funding,
           training_status: application.training_status,
@@ -142,6 +143,28 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
       ])
     end
 
+    context "when serializing `cohort_suffix` in enrolments" do
+      context "when the config flag is enabled" do
+        before do
+          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(true)
+        end
+
+        it "includes `cohort_suffix` in the enrolment" do
+          expect(attributes["npq_enrolments"][0]["cohort_suffix"]).to eq(application.cohort.suffix)
+        end
+      end
+
+      context "when the config flag is disabled" do
+        before do
+          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(false)
+        end
+
+        it "does not include `cohort_suffix` in the enrolment" do
+          expect(attributes["npq_enrolments"][0]).not_to have_key("cohort_suffix")
+        end
+      end
+    end
+
     context "when application has been withdrawn" do
       let(:application) { create(:application, :withdrawn, :eligible_for_funded_place, lead_provider:, user:) }
 
@@ -152,6 +175,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             course_identifier: application.course.identifier,
             schedule_identifier: application.schedule.identifier,
             cohort: application.cohort.start_year.to_s,
+            cohort_suffix: application.cohort.suffix,
             npq_application_id: application.ecf_id,
             eligible_for_funding: application.eligible_for_funding,
             training_status: application.training_status,
@@ -179,6 +203,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             course_identifier: application.course.identifier,
             schedule_identifier: application.schedule.identifier,
             cohort: application.cohort.start_year.to_s,
+            cohort_suffix: application.cohort.suffix,
             npq_application_id: application.ecf_id,
             eligible_for_funding: application.eligible_for_funding,
             training_status: application.training_status,
