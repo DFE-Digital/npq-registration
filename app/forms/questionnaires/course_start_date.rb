@@ -12,6 +12,11 @@ module Questionnaires
                    cohort_description: "Spring 2026" },
     }.freeze
 
+    OPTIONS = {
+      "2026a" => "Spring 2026",
+      "2026b" => "Autumn 2026",
+    }.freeze
+
     attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true, inclusion: { in: OPTIONS.keys }
