@@ -6,7 +6,7 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
   let(:current_step) { :course_start_date }
   let(:user) { create(:user) }
   let(:wizard) { RegistrationWizard.new(current_step:, store: {}, request: nil, current_user: user) }
-  let(:course_start_cohort) { "" }
+  let(:course_start_date) { "" }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:course_start_cohort) }
