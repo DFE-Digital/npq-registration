@@ -60,22 +60,6 @@
         </dd>
       </div>
 
-      <% if application.lead_provider_approval_status.blank? || pending?(application) %>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Course start
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= application_course_start_date.titleize %>
-            <% if application.eligible_for_funding %>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.eligible_for_funding", date: application_course_start_date) %></p>
-            <% else %>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.not_eligible_for_funding", date: application_course_start_date) %></p>
-            <% end %>
-          </dd>
-        </div>
-      <% end %>
-
       <% if application.latest_participant_outcome_state.present? && accepted?(application) %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">

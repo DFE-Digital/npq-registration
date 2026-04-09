@@ -28,8 +28,7 @@ RSpec.feature "Service is closed", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_button("Start now")
 
-    expect(page).to have_text("Course start")
-    page.choose("Yes", visible: :all)
+    choose_course_start_date
 
     # Registration is now closed
     close_registration!
@@ -73,9 +72,7 @@ RSpec.feature "Service is closed", type: :feature do
       visit "/closed_registration_exception"
       click_on("Start now")
 
-      expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
-      end
+      choose_course_start_date
     end
 
     scenario "When user is deleted" do
@@ -97,9 +94,7 @@ RSpec.feature "Service is closed", type: :feature do
 
       click_on("Start now")
 
-      expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
-      end
+      choose_course_start_date
 
       visit "/npq-separation/admin/registration-closed/closed-registration-users"
 
