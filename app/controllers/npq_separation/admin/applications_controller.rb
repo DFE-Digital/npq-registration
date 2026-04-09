@@ -24,7 +24,24 @@ private
   end
 
   def filter_scope
-    Application.where(filter_params.compact_blank)
+    Application.where(effective_filter_params)
+  end
+
+  def default_cohort
+    @default_cohort ||= Cohort.current
+  end
+  helper_method :default_cohort
+
+  def effective_filter_params
+    result = filter_params.compact_blank
+
+    if params[:cohort_id] == "all"
+      result.delete(:cohort_id)
+    elsif result[:cohort_id].blank? && default_cohort
+      result[:cohort_id] = default_cohort.id
+    end
+
+    result
   end
 
   def search_scope

@@ -6,6 +6,8 @@ RSpec.describe NpqSeparation::Admin::ApplicationsController, type: :request do
   before { sign_in_as_admin }
 
   describe "/npq_separation/admin/applications" do
+    before { create(:cohort, :current) }
+
     subject do
       get npq_separation_admin_applications_path
       response

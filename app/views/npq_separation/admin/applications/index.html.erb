@@ -43,10 +43,10 @@
     <%=
       f.govuk_collection_select(
         :cohort_id,
-        Cohort.all.order_by_latest,
+        [OpenStruct.new(id: "all", description: "All")] + Cohort.all.order_by_latest.to_a,
         :id,
         :description,
-        options: { selected: params[:cohort_id], include_blank: "All" },
+        options: { selected: params[:cohort_id].presence || default_cohort&.id },
         label: { text: "Year of application", size: "s" }
       )
     %>
