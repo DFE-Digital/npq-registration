@@ -25,6 +25,7 @@ module API
       field(:reason_for_rejection)
       field(:works_in_school)
       field(:cohort) { |a| a.cohort&.start_year&.to_s }
+      field(:cohort_suffix, if: ->(_field_name, _object, _options) { Rails.configuration.x.api.cohort_suffix }) { |a| a.cohort&.suffix }
       field(:eligible_for_dfe_funding?, name: :eligible_for_funding)
       field(:targeted_delivery_funding_eligibility)
       field(:inside_uk_catchment?, name: :teacher_catchment)
