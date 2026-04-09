@@ -245,6 +245,8 @@ en:
               taken: "Course name already exist, enter a unique name"
         declaration:
           attributes:
+            base:
+              duplicate_declaration: There is already a declaration with state %{declaration_state} for this application
             declaration_date:
               *declaration_date
             declaration_type:

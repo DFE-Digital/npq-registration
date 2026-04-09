@@ -67,7 +67,7 @@ RSpec.describe Statements::CourseCalculator do
     end
 
     context "when multiple declarations from same user and same type" do
-      let(:declaration) { create(:declaration, :eligible, application:, course:, lead_provider:, cohort:, statement:) }
+      let(:declaration) { create(:declaration, :eligible, course: create(:course, :headship), lead_provider:, cohort:, statement:) }
 
       before do
         create(:declaration, :eligible, course:, lead_provider:, cohort:, application:, statement:).tap do |d|

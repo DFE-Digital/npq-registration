@@ -4,6 +4,7 @@ class Declaration < ApplicationRecord
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
   VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
+  DUPLICATES_NOT_ALLOWED_STATES = %w[submitted eligible payable paid].freeze
   DELIVER_PARTNER_REQUIRED_FROM = 2024
 
   has_paper_trail ignore: [:updated_at]
@@ -123,6 +124,7 @@ class Declaration < ApplicationRecord
             if: -> { secondary_delivery_partner && secondary_delivery_partner_changed? }
 
   validate :delivery_partners_are_not_the_same, if: :delivery_partner
+  validate :declaration_unique_for_application_and_type, if: -> { state.in?(DUPLICATES_NOT_ALLOWED_STATES) }
 
   scope :for_delivery_partners, lambda { |delivery_partner|
     where(delivery_partner: delivery_partner)
@@ -249,5 +251,19 @@ private
     return false if persisted? && !delivery_partner_id_changed?
 
     cohort.start_year >= DELIVER_PARTNER_REQUIRED_FROM
+  end
+
+  def declaration_unique_for_application_and_type
+    return if errors.any?
+
+    duplicate_declarations =
+      application.declarations
+      .where(declaration_type:)
+      .where.not(id:)
+      .where(state: DUPLICATES_NOT_ALLOWED_STATES)
+
+    if duplicate_declarations.exists?
+      errors.add(:base, :duplicate_declaration, declaration_state: duplicate_declarations.first.state)
+    end
   end
 end

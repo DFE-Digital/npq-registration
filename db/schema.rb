@@ -276,6 +276,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
     t.datetime "updated_at", null: false
     t.bigint "delivery_partner_id"
     t.bigint "secondary_delivery_partner_id"
+    t.index ["application_id", "declaration_type"], name: "idx_unique_declarations", unique: true, where: "(state = ANY (ARRAY['submitted'::declaration_states, 'eligible'::declaration_states, 'payable'::declaration_states, 'paid'::declaration_states]))"
     t.index ["application_id"], name: "index_declarations_on_application_id"
     t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_declarations_on_delivery_partner_id"
