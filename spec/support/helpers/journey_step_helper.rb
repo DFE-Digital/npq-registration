@@ -108,5 +108,20 @@ module Helpers
         end
       end
     end
+
+    def course_start_date_value
+      "2026b"
+    end
+
+    def course_start_date_description
+      "Autumn 2026"
+    end
+
+    def choose_course_start_date
+      expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+        expect(page).to have_text(I18n.t("helpers.legend.registration_wizard.course_start_date"))
+        page.choose(course_start_date_description, visible: :all)
+      end
+    end
   end
 end

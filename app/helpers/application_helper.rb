@@ -10,7 +10,7 @@ module ApplicationHelper
       if Feature.trn_required? && current_user.trn.blank?
         registration_wizard_show_path(:teacher_reference_number)
       else
-        registration_wizard_show_path(:course_start_date)
+        registration_wizard_show_path("course-start-date")
       end
     else
       "/"
@@ -48,10 +48,6 @@ module ApplicationHelper
 
   def rejected?(application)
     application.rejected_lead_provider_approval_status?
-  end
-
-  def application_course_start_date
-    "autumn 2025"
   end
 
   def show_otp_code_in_ui(current_env, admin)
