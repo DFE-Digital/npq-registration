@@ -19,7 +19,7 @@
     "sass": "^1.97.3",
     "svg-pan-zoom": "^3.6.2",
     "swagger-ui-dist": "^5.32.0",
-    "webpack": "^5.105.4",
+    "webpack": "^5.106.1",
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {},
