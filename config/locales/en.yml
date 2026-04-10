@@ -928,6 +928,7 @@ en:
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
+    unfunded_cohort: "You’re not eligible for scholarship funding."
     inside_catchment: "You’re not eligible for scholarship funding as you do not work in England."
     no_Ofsted: "You’re not eligible for schools funding as you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency."
     previously_funded: "You have already been allocated scholarship funding for %{course_name}."

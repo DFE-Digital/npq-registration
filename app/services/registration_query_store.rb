@@ -209,4 +209,8 @@ class RegistrationQueryStore
         end
       end
   end
+
+  def course_start_cohort
+    store["course_start_date"]
+  end
 end
