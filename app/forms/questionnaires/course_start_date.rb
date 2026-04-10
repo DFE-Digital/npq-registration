@@ -2,7 +2,7 @@ module Questionnaires
   class CourseStartDate < Base
     include ApplicationHelper
 
-    QUESTION_NAME = :course_start_date
+    QUESTION_NAME = :course_start_cohort
 
     OPTIONS = {
       "2026a" => "Spring 2026",
@@ -20,7 +20,7 @@ module Questionnaires
     def questions
       [
         QuestionTypes::RadioButtonGroup.new(
-          name: :course_start_date,
+          name: :course_start_cohort,
           options:,
         ),
       ]

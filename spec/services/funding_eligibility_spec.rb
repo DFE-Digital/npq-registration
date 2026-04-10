@@ -18,7 +18,7 @@ RSpec.describe FundingEligibility do
 
   let(:store) do
     {
-      course_start_date: course_start_cohort,
+      course_start_cohort: course_start_cohort,
       work_setting:,
       kind_of_nursery:,
       employment_type:,
@@ -75,13 +75,13 @@ RSpec.describe FundingEligibility do
     it { is_expected.not_to respond_to :lead_mentor_for_accredited_itt_provider }
     it { is_expected.not_to respond_to :query_store }
 
-    context "when the course_start_date is in an unfunded cohort" do
+    context "when the course_start_cohort is in an unfunded cohort" do
       let(:course_start_cohort) { unfunded_cohort.identifier }
 
       it { is_expected.to have_attributes cohort: unfunded_cohort }
     end
 
-    context "when the course_start_date is a funded cohort" do
+    context "when the course_start_cohort is a funded cohort" do
       let(:course_start_cohort) { cohort.identifier }
 
       it { is_expected.to have_attributes cohort: cohort }

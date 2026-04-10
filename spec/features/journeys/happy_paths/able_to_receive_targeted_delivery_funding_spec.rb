@@ -78,7 +78,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Workplace in England" => "Yes",
           "Work setting" => "A school",
           "Course" => "Senior leadership",
@@ -150,7 +150,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_amount" => nil,

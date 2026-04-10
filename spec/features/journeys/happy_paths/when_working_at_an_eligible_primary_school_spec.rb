@@ -74,7 +74,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
@@ -179,7 +179,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-headship",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",

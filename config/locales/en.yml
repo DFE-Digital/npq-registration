@@ -1035,7 +1035,7 @@ en:
         course_identifier: "Which NPQ do you want to do?"
         maths_eligibility_teaching_for_mastery: "Have you taken at least one year of the primary maths Teaching for Mastery programme?"
         maths_understanding_of_approach: "How can you show your understanding of mastery approaches to teaching maths?"
-        course_start_date: Choose when you want to start your course
+        course_start_cohort: Choose when you want to start your course
         funding_eligibility_maths: "Funding Eligibility"
         ehco_funding_choice: "How are you funding the Early headship coaching offer?"
         itt_provider: "Enter the name of the ITT provider you are working with"
