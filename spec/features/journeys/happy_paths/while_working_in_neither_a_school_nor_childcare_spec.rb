@@ -78,7 +78,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course funding" => "I am paying",
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Employment type" => "In an independent hospital education organisation",
           "Employer" => "Big company",
@@ -150,7 +150,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-years-leadership",
         "email_template" => "not_on_ofsted_register",
         "employer_name" => "Big company",

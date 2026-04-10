@@ -23,6 +23,6 @@ RSpec.feature "Back links", type: :feature do
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: false, axe_check: false)
 
-    expect(page).to have_checked_field(course_start_date_description, visible: :all)
+    expect(page).to have_checked_field(course_start_cohort_description, visible: :all)
   end
 end
