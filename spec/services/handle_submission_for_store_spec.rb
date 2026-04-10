@@ -79,6 +79,23 @@ RSpec.describe HandleSubmissionForStore do
       end
     end
 
+    context "when there are multiple cohorts" do
+      let(:cohort) { create(:cohort, :current, :unfunded) }
+      let(:newer_cohort) { create(:cohort, :current, suffix: "b") }
+
+      let(:store) { super().merge("course_start_cohort" => cohort.identifier) }
+
+      before do
+        cohort
+        newer_cohort
+      end
+
+      it "chooses the cohort specified in the store" do
+        subject.call
+        expect(last_application.cohort).to eq(cohort)
+      end
+    end
+
     context "when the store includes information from the school path" do
       let(:store) do
         {
@@ -178,7 +195,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
-        }
+        )
       end
 
       it "stores data from store" do
