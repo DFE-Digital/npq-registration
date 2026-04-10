@@ -110,11 +110,11 @@ module Helpers
     end
 
     def course_start_cohort_value
-      "2026b"
+      Questionnaires::CourseStartDate::OPTIONS.keys.last
     end
 
     def course_start_cohort_description
-      "Autumn 2026"
+      Questionnaires::CourseStartDate::OPTIONS.values.last
     end
 
     def choose_course_start_date
