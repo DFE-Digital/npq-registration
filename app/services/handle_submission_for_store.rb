@@ -41,15 +41,20 @@ class HandleSubmissionForStore
         on_submission_trn: store["trn"],
         teacher_catchment_country:,
         teacher_catchment_iso_country_code:,
-        cohort: Cohort.current,
+        cohort:,
         lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
         review_status: funding_eligibility_service.subject_to_review? ? "needs_review" : nil,
+        **({ funded_place: false } unless cohort.funded?),
       )
       enqueue_send_application_submission_email_job(application)
     end
   end
 
 private
+
+  def cohort
+    Cohort.find_by(identifier: store["course_start_cohort"])
+  end
 
   def raw_application_data
     # Cutting out confirmation keys since that is not application related data
@@ -208,6 +213,7 @@ private
   end
 
   def user
+    # TODO: remove current_user - this is legacy behaviour
     @user ||= store["current_user"].presence || User.find(store["current_user_id"])
   end
 

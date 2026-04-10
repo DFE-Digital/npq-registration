@@ -8,6 +8,7 @@ RSpec.describe RegistrationWizard do
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
   let(:user) { create(:user) }
   let(:current_step) { "share_provider" }
+  let(:cohort) { create(:cohort, :current) }
 
   before { create(:course, :additional_support_offer) }
 
@@ -33,6 +34,7 @@ RSpec.describe RegistrationWizard do
     context "when working in Local authority maintained nursery" do
       let(:store) do
         {
+          "course_start_cohort" => cohort.identifier,
           "chosen_provider" => "yes",
           "teacher_catchment" => "england",
           "teacher_catchment_country" => "",
@@ -64,6 +66,7 @@ RSpec.describe RegistrationWizard do
       let(:private_childcare_provider) { create(:private_childcare_provider) }
       let(:store) do
         {
+          "course_start_cohort" => cohort.identifier,
           "chosen_provider" => "yes",
           "course_identifier" => "npq-additional-support-offer",
           "date_of_birth" => 30.years.ago,
