@@ -6,9 +6,10 @@ FactoryBot.define do
       course { create(Course::IDENTIFIERS.first.to_sym) }
       school { create(:school, :funding_eligible_establishment_type_code) }
       lead_provider { LeadProvider.first }
+      user { create(:user) }
     end
 
-    current_user { create(:user) }
+    current_user_id { user.id }
     course_start_cohort { Cohort.current.identifier }
     course_identifier { course.identifier }
     institution_identifier { "School-#{school.urn}" }
@@ -19,6 +20,6 @@ FactoryBot.define do
     referred_by_return_to_teaching_adviser { "no" }
     senco_in_role { "yes" }
     senco_start_date { "2024-12-12" }
-    trn { current_user.trn }
+    trn { user.trn }
   end
 end
