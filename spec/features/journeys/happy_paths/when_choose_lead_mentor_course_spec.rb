@@ -74,7 +74,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
 
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
@@ -189,7 +189,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "tsf_primary_plus_eligibility" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-leading-teaching-development",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,

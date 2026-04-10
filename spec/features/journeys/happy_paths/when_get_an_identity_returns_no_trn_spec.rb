@@ -104,7 +104,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Full name" => "Jane Smith",
           "Teacher reference number (TRN)" => manually_entered_trn,
           "Date of birth" => "13 December 1980",
@@ -218,7 +218,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
         "active_alert" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-headship",
         "date_of_birth" => "1980-12-13",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",

@@ -76,7 +76,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course funding" => "My workplace is covering the cost",
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Course" => "Senior leadership",
           "Work setting" => "Other",
           "Referred by return to teaching adviser" => "No",
@@ -147,7 +147,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",

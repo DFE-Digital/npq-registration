@@ -101,7 +101,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
@@ -178,7 +178,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
         "tsf_primary_plus_eligibility" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => course_start_date_value,
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-years-leadership",
         "has_ofsted_urn" => "yes",
         "funding_amount" => nil,

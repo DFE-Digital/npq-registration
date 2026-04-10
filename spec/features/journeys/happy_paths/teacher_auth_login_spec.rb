@@ -54,7 +54,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_date_description,
+          "Course start" => course_start_cohort_description,
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",

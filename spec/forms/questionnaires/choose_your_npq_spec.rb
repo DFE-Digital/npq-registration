@@ -23,6 +23,8 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
     let(:instance) { described_class.new(course_identifier: course.identifier) }
     let(:course) { create(:course, :leading_behaviour_culture) }
     let(:lead_provider) { LeadProvider.for(course:).first }
+    let(:cohort) { create(:cohort, :current) }
+
     let(:store) do
       {
         course_identifier: course.identifier,
@@ -56,6 +58,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
         let(:previous_course) { create(:course, :headship) }
         let(:store) do
           {
+            course_start_cohort: cohort.identifier,
             course_identifier: previous_course.identifier,
             institution_identifier: "School-#{school.urn}",
             works_in_school: "yes",

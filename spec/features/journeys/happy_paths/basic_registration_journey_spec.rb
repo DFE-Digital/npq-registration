@@ -183,7 +183,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start_date" => "2026b",
+        "course_start_cohort" => "2026b",
         "course_identifier" => "npq-headship",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "trust",
