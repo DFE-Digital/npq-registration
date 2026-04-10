@@ -213,8 +213,7 @@ private
   end
 
   def user
-    # TODO: remove current_user - this is legacy behaviour
-    @user ||= store["current_user"].presence || User.find(store["current_user_id"])
+    @user ||= User.find(store["current_user_id"])
   end
 
   def uk_country

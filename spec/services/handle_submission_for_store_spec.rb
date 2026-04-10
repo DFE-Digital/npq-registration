@@ -62,22 +62,6 @@ RSpec.describe HandleSubmissionForStore do
       record.as_json(except: %i[id created_at updated_at significantly_updated_at updated_from_tra_at DEPRECATED_school_urn email_updates_status email_updates_unsubscribe_key])
     end
 
-    context "when the store includes a user object (legacy behaviour)" do
-      let(:store) do
-        {
-          "current_user" => user,
-          "course_start_cohort" => cohort.identifier,
-          "course_identifier" => course.identifier,
-          "lead_provider_id" => lead_provider.id,
-        }
-      end
-
-      it "creates an application for the user" do
-        subject.call
-        expect(user.applications.reload.count).to eq 1
-      end
-    end
-
     context "when there are multiple cohorts" do
       let(:cohort) { create(:cohort, :current, :unfunded) }
       let(:newer_cohort) { create(:cohort, :current, suffix: "b") }
