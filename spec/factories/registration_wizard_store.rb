@@ -9,6 +9,7 @@ FactoryBot.define do
     end
 
     current_user { create(:user) }
+    course_start_cohort { Cohort.current.identifier }
     course_identifier { course.identifier }
     institution_identifier { "School-#{school.urn}" }
     lead_provider_id { lead_provider.id }

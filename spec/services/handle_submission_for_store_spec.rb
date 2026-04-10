@@ -11,10 +11,12 @@ RSpec.describe HandleSubmissionForStore do
   let(:courses) { Course.where(identifier: "npq-leading-primary-mathematics") }
   let(:course) { courses.sample }
   let(:lead_provider) { LeadProvider.all.sample }
+  let(:last_application) { user.applications.last }
 
   let(:store) do
     {
       "current_user_id" => user.id,
+      "course_start_cohort" => cohort.identifier,
       "course_identifier" => course.identifier,
       "private_childcare_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
       "lead_provider_id" => lead_provider.id,
@@ -64,6 +66,7 @@ RSpec.describe HandleSubmissionForStore do
       let(:store) do
         {
           "current_user" => user,
+          "course_start_cohort" => cohort.identifier,
           "course_identifier" => course.identifier,
           "lead_provider_id" => lead_provider.id,
         }
@@ -75,10 +78,28 @@ RSpec.describe HandleSubmissionForStore do
       end
     end
 
-    context "when store includes information from the school path" do
+    context "when there are multiple cohorts" do
+      let(:cohort) { create(:cohort, :current, :unfunded) }
+      let(:newer_cohort) { create(:cohort, :current, suffix: "b") }
+
+      let(:store) { super().merge("course_start_cohort" => cohort.identifier) }
+
+      before do
+        cohort
+        newer_cohort
+      end
+
+      it "chooses the cohort specified in the store" do
+        subject.call
+        expect(last_application.cohort).to eq(cohort)
+      end
+    end
+
+    context "when the store includes information from the school path" do
       let(:store) do
         {
           "current_user_id" => user.id,
+          "course_start_cohort" => cohort.identifier,
           "course_identifier" => course.identifier,
           "institution_identifier" => "School-#{school.urn}",
           "lead_provider_id" => lead_provider.id,
@@ -101,7 +122,6 @@ RSpec.describe HandleSubmissionForStore do
 
         expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 1
-        last_application = user.applications.last
         expect(stable_as_json(last_application)).to match({
           "course_id" => course.id,
           "schedule_id" => nil,
@@ -155,7 +175,7 @@ RSpec.describe HandleSubmissionForStore do
       end
     end
 
-    context "when store includes information from the early years path" do
+    context "when the store includes information from the early years path" do
       let(:courses) { [Course.ehco] }
       let(:store) do
         {
@@ -173,7 +193,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
-        }
+        )
       end
 
       it "stores data from store" do
@@ -185,7 +205,6 @@ RSpec.describe HandleSubmissionForStore do
 
         expect(stable_as_json(user.reload)).to match(expected_user_attributes)
         expect(user.applications.reload.count).to eq 1
-        last_application = user.applications.last
         expect(stable_as_json(last_application)).to match({
           "course_id" => course.id,
           "schedule_id" => nil,
@@ -292,14 +311,12 @@ RSpec.describe HandleSubmissionForStore do
     context "when applying for EHCO" do
       context "happy path" do
         let(:store) do
-          {
-            "current_user_id" => user.id,
+          super().merge(
             "course_identifier" => ehco_course.identifier,
             "institution_identifier" => "School-#{school.urn}",
-            "lead_provider_id" => LeadProvider.all.sample.id,
             "ehco_headteacher" => "yes",
-            "ehco_new_headteacher" => "no",
-          }
+            "ehco_new_headteacher" => "yes",
+          )
         end
 
         let(:ehco_course) { Course.ehco }
@@ -308,18 +325,21 @@ RSpec.describe HandleSubmissionForStore do
           subject.call
           expect(user.applications.first.course).to eq(ehco_course)
         end
+
+        it "returns headteacher_status as yes_in_first_five_years" do
+          subject.call
+          expect(user.applications.first.reload.headteacher_status).to eq "yes_in_first_five_years"
+        end
       end
 
       context "a headteacher for over five years" do
         let(:store) do
-          {
-            "current_user_id" => user.id,
+          super().merge(
             "course_identifier" => Course.ehco.identifier,
             "institution_identifier" => "School-#{school.urn}",
-            "lead_provider_id" => LeadProvider.all.sample.id,
             "ehco_headteacher" => "yes",
             "ehco_new_headteacher" => "no",
-          }
+          )
         end
 
         it "returns headteacher_status as yes_over_five_years" do
@@ -335,14 +355,7 @@ RSpec.describe HandleSubmissionForStore do
 
     context "when teacher catchment is not in the UK catchment area" do
       let(:store) do
-        {
-          "current_user_id" => user.id,
-          "course_identifier" => course.identifier,
-          "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
-          "lead_provider_id" => lead_provider.id,
-          "works_in_childcare" => "yes",
-          "works_in_school" => "no",
-          "kind_of_nursery" => "private_nursery",
+        super().merge(
           "teacher_catchment" => "another",
           "teacher_catchment_country" => "spain",
           "work_setting" => "early_years_or_childcare",
@@ -350,7 +363,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
-        }
+        )
       end
 
       it "stores data from store" do
@@ -411,14 +424,7 @@ RSpec.describe HandleSubmissionForStore do
 
     context "when teacher catchment is empty" do
       let(:store) do
-        {
-          "current_user_id" => user.id,
-          "course_identifier" => course.identifier,
-          "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
-          "lead_provider_id" => lead_provider.id,
-          "works_in_childcare" => "yes",
-          "works_in_school" => "no",
-          "kind_of_nursery" => "private_nursery",
+        super().merge(
           "teacher_catchment" => nil,
           "teacher_catchment_country" => nil,
           "work_setting" => "early_years_or_childcare",
@@ -426,7 +432,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
-        }
+        )
       end
 
       it "stores data from store" do
@@ -491,14 +497,7 @@ RSpec.describe HandleSubmissionForStore do
       end
 
       let(:store) do
-        {
-          "current_user_id" => user.id,
-          "course_identifier" => course.identifier,
-          "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
-          "lead_provider_id" => lead_provider.id,
-          "works_in_childcare" => "yes",
-          "works_in_school" => "no",
-          "kind_of_nursery" => "private_nursery",
+        super().merge(
           "teacher_catchment" => "another",
           "teacher_catchment_country" => "wonderland",
           "work_setting" => "early_years_or_childcare",
@@ -506,7 +505,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
-        }
+        )
       end
 
       it "logs an error" do
