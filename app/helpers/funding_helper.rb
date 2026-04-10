@@ -38,6 +38,6 @@ private
   end
 
   def query_store(application)
-    RegistrationQueryStore.new(store: application.raw_application_data)
+    RegistrationQueryStore.new(store: application.raw_application_data.merge("course_start_cohort" => application.cohort.identifier))
   end
 end
