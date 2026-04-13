@@ -26,10 +26,12 @@ module Users
       user_matched_using_uid = User.find_by(provider: Omniauth::Strategies::TeacherAuth::NAME, uid:)
 
       if user_matched_using_uid
+        blank_clashing_email_user(except: user_matched_using_uid)
         user_matched_using_uid.update!(email: email, trn:, trn_verified: true, trn_auto_verified: true, full_name:, feature_flag_id:, previous_names:)
         return user_matched_using_uid
       end
 
+      blank_clashing_email_user
       create_user_with_provider_data
     end
 
@@ -37,6 +39,16 @@ module Users
 
     def matching_users
       @matching_users ||= User.where(trn:, trn_verified: true, archived_at: nil).order(updated_at: :desc).all.to_a
+    end
+
+    def blank_clashing_email_user(except: nil)
+      scope = User.where(email:).where(archived_at: nil)
+      scope = scope.where.not(id: except.id) if except
+      clashing = scope.first
+      return unless clashing
+      return if clashing.trn.present? && clashing.trn == trn
+
+      Users::BlankEmailForReuse.new(user: clashing).call
     end
 
     def merge_and_archive_other_users(user_to_keep, users_to_merge)

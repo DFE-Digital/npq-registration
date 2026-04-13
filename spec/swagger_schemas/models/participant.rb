@@ -29,9 +29,9 @@ PARTICIPANT = {
             example: "Isabelle MacDonald",
           },
           email: {
-            description: "The email address registered for this NPQ participant",
+            description: "The email address registered for this NPQ participant. May be null if the participant's email has been archived due to reuse by a different participant.",
             type: :string,
-            nullable: false,
+            nullable: true,
             example: "isabelle.macdonald2@some-school.example.com",
           },
           npq_courses: {
