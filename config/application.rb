@@ -83,5 +83,8 @@ module NpqRegistration
 
     # API configuration
     config.x.api.previous_names = Rails.env.local?
+
+    # Hide unverified TRNs on the applications API
+    config.x.api.application_api_hide_unverified_trns = Rails.env.local?
   end
 end
