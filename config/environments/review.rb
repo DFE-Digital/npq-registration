@@ -10,5 +10,4 @@ Rails.application.configure do
 
   config.x.teacher_auth.enabled = false
   config.x.api.previous_names = true
-  config.x.api.application_api_hide_unverified_trns = true
 end

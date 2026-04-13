@@ -207,55 +207,25 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
         expect(attributes["full_name"]).to eq(user.full_name)
       end
 
-      context "when the `api.applications_api_hide_unverified_trns` feature flag is not enabled" do
-        before { allow(Rails.configuration.x.api).to receive(:applications_api_hide_unverified_trns).and_return(false) }
-
-        context "when the TRN is not verified" do
-          it "serializes the `teacher_reference_number`" do
-            expect(attributes["teacher_reference_number"]).to eq user.trn
-          end
-
-          it "serializes the `teacher_reference_number_validated`" do
-            expect(attributes["teacher_reference_number_validated"]).to be(false)
-          end
+      context "when the TRN is not verified" do
+        it "serializes the `teacher_reference_number` as nil" do
+          expect(attributes["teacher_reference_number"]).to be_nil
         end
 
-        context "when the TRN is verified" do
-          before { user.trn_verified = true }
-
-          it "serializes the `teacher_reference_number`" do
-            expect(attributes["teacher_reference_number"]).to eq user.trn
-          end
-
-          it "serializes the `teacher_reference_number_validated`" do
-            expect(attributes["teacher_reference_number_validated"]).to be(true)
-          end
+        it "serializes the `teacher_reference_number_validated`" do
+          expect(attributes["teacher_reference_number_validated"]).to be(false)
         end
       end
 
-      context "when the `api.applications_api_hide_unverified_trns` feature flag is enabled" do
-        before { allow(Rails.configuration.x.api).to receive(:applications_api_hide_unverified_trns).and_return(true) }
+      context "when the TRN is verified" do
+        before { user.trn_verified = true }
 
-        context "when the TRN is not verified" do
-          it "serializes the `teacher_reference_number` as nil" do
-            expect(attributes["teacher_reference_number"]).to be_nil
-          end
-
-          it "serializes the `teacher_reference_number_validated`" do
-            expect(attributes["teacher_reference_number_validated"]).to be(false)
-          end
+        it "serializes the `teacher_reference_number`" do
+          expect(attributes["teacher_reference_number"]).to eq user.trn
         end
 
-        context "when the TRN is verified" do
-          before { user.trn_verified = true }
-
-          it "serializes the `teacher_reference_number`" do
-            expect(attributes["teacher_reference_number"]).to eq user.trn
-          end
-
-          it "serializes the `teacher_reference_number_validated`" do
-            expect(attributes["teacher_reference_number_validated"]).to be(true)
-          end
+        it "serializes the `teacher_reference_number_validated`" do
+          expect(attributes["teacher_reference_number_validated"]).to be(true)
         end
       end
     end
