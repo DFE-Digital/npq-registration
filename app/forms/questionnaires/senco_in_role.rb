@@ -1,7 +1,5 @@
 module Questionnaires
   class SencoInRole < Base
-    include Helpers::Institution
-
     QUESTION_NAME = :senco_in_role
 
     attribute QUESTION_NAME
@@ -54,7 +52,7 @@ module Questionnaires
     def funding_eligibility
       @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
-        institution:,
+        institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         trn:,

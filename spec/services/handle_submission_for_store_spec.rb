@@ -16,7 +16,7 @@ RSpec.describe HandleSubmissionForStore do
     {
       "current_user_id" => user.id,
       "course_identifier" => course.identifier,
-      "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
+      "private_childcare_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
       "lead_provider_id" => lead_provider.id,
       "works_in_childcare" => "yes",
       "works_in_school" => "no",
@@ -161,7 +161,8 @@ RSpec.describe HandleSubmissionForStore do
         {
           "current_user_id" => user.id,
           "course_identifier" => course.identifier,
-          "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
+          "has_ofsted_urn" => "yes",
+          "private_childcare_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
           "works_in_childcare" => "yes",
           "works_in_school" => "no",

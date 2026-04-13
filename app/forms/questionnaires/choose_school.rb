@@ -1,7 +1,5 @@
 module Questionnaires
   class ChooseSchool < Base
-    include Helpers::Institution
-
     attribute :institution_name
     attribute :institution_identifier
 
@@ -26,7 +24,7 @@ module Questionnaires
     end
 
     def next_step
-      if institution(source: institution_identifier).in_england?
+      if institution.in_england?
         :choose_your_npq
       else
         :school_not_in_england
@@ -76,6 +74,12 @@ module Questionnaires
     end
 
   private
+
+    def institution
+      ::Registration::Institution.fetch(identifier: institution_identifier,
+                                        works_in_school: true,
+                                        works_in_childcare: false)
+    end
 
     def validate_school_name_returns_results
       if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?

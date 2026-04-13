@@ -1,7 +1,5 @@
 module Questionnaires
   class MathsUnderstandingOfApproach < Base
-    include Helpers::Institution
-
     QUESTION_NAME = :maths_understanding_of_approach
 
     attribute QUESTION_NAME
@@ -54,7 +52,7 @@ module Questionnaires
     def funding_eligibility_calculator
       @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course:,
-        institution:,
+        institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         trn:,
