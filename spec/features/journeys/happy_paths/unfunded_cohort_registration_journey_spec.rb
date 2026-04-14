@@ -72,6 +72,6 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     application = Application.last
     expect(application.funded_place).to be(false)
     expect(application.eligible_for_funding).to be(false)
-    expect(application.cohort.funding).to eq "unfunded"
+    expect(application.cohort.funding).to eq "zero"
   end
 end
