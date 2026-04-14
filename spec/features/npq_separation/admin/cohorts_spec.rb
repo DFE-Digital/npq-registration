@@ -84,7 +84,7 @@ RSpec.feature "Managing cohorts", type: :feature do
       fill_in "Description", with: "2025 to 2026"
       fill_in "Start year", with: "2025"
       fill_in "Suffix", with: "b"
-      choose "funded", visible: :all
+      choose "full", visible: :all
       fill_in "Day", with: "6"
       fill_in "Month", with: "5"
       fill_in "Year", with: "2025"
@@ -99,7 +99,7 @@ RSpec.feature "Managing cohorts", type: :feature do
       expect(updated_cohort.description).to eq("2025 to 2026")
       expect(updated_cohort.start_year).to be(2025)
       expect(updated_cohort.suffix).to eq("b")
-      expect(updated_cohort.funding).to eq("funded")
+      expect(updated_cohort.funding).to eq("full")
       expect(updated_cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
     end
 

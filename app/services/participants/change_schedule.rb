@@ -65,9 +65,9 @@ module Participants
         params[:cohort] = cohort
       end
 
-      if application.cohort&.funding == Cohort.fundings[:funded] && cohort.funding == Cohort.fundings[:capped]
+      if application.cohort&.full_funding? && cohort.capped_funding?
         params[:funded_place] = application.eligible_for_funding
-      elsif cohort.funding == Cohort.fundings[:unfunded]
+      elsif cohort.zero_funding?
         params[:funded_place] = false
       end
 
@@ -137,16 +137,16 @@ module Participants
       return unless application
       return unless application.cohort != cohort
 
-      if application.cohort&.funding == Cohort.fundings[:capped] && cohort.funding == Cohort.fundings[:funded]
+      if application.cohort&.capped_funding? && cohort.full_funding?
         errors.add(:cohort, :cannot_change_to_cohort_without_funding_cap)
       end
     end
 
     def validate_unfunded_cohort
       return unless application
-      return unless cohort.funding.in?(Cohort::FUNDED_FUNDINGS)
+      return unless cohort.funded?
 
-      if application.cohort.funding == Cohort.fundings[:unfunded]
+      if application.cohort.zero_funding?
         errors.add(:cohort, :cannot_change_to_funded_cohort)
       end
     end

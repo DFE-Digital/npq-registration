@@ -1,8 +1,6 @@
 class Cohort < ApplicationRecord
   self.ignored_columns += [:funding_cap]
 
-  FUNDED_FUNDINGS = %w[funded capped].freeze
-
   has_paper_trail
 
   has_many :declarations, dependent: :restrict_with_exception
@@ -12,10 +10,10 @@ class Cohort < ApplicationRecord
   has_many :delivery_partners, through: :delivery_partnerships
 
   enum :funding, {
-    funded: "funded",
+    zero: "zero",
     capped: "capped",
-    unfunded: "unfunded",
-  }
+    full: "full",
+  }, suffix: true
 
   validates :start_year,
             presence: true,
@@ -59,14 +57,8 @@ class Cohort < ApplicationRecord
     suffix == "a" ? start_year.to_s : identifier
   end
 
-  def funding_cap?
-    return true if funding == "capped"
-
-    false if funding == "funded"
-  end
-
   def funded?
-    FUNDED_FUNDINGS.include?(funding)
+    full_funding? || capped_funding?
   end
 
 private

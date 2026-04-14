@@ -210,24 +210,24 @@ private
   end
 
   def validate_funded_place?
-    accepted_lead_provider_approval_status? && errors.blank? && cohort&.funding_cap?
+    accepted_lead_provider_approval_status? && errors.blank? && cohort&.capped_funding?
   end
 
   def funded_place_nil_for_cohort_with_no_funding_cap
-    if accepted_lead_provider_approval_status? && errors.blank? && cohort&.funding == "funded" && !funded_place.nil?
+    if accepted_lead_provider_approval_status? && errors.blank? && cohort&.full_funding? && !funded_place.nil?
       errors.add(:funded_place, :should_not_be_set)
     end
   end
 
   def funded_place_false_for_unfunded_cohort
-    if !cohort&.funded? && funded_place != false
+    if cohort&.zero_funding? && funded_place != false
       errors.add(:funded_place, :cannot_be_funded_for_unfunded_cohort)
     end
   end
 
   def eligible_for_funded_place
     return if errors.any?
-    return unless cohort&.funding_cap?
+    return unless cohort&.capped_funding?
 
     if funded_place && !eligible_for_funding
       errors.add(:funded_place, :not_eligible)

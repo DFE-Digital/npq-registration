@@ -31,11 +31,11 @@ FactoryBot.define do
     end
 
     trait :without_funding_cap do
-      funding { "funded" }
+      funding { "full" }
     end
 
     trait :unfunded do
-      funding { "unfunded" }
+      funding { "zero" }
     end
 
     trait :has_targeted_delivery_funding do

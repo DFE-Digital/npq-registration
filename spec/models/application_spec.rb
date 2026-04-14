@@ -111,7 +111,7 @@ RSpec.describe Application do
             expect(subject).to be_valid
 
             subject.funded_place = true
-            expect(subject).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field cannot be set to true for unfunded cohorts.")
+            expect(subject).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field should be false for unfunded cohorts.")
           end
         end
       end
@@ -159,7 +159,7 @@ RSpec.describe Application do
             expect(subject).to be_valid
 
             subject.funded_place = true
-            expect(subject).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field cannot be set to true for unfunded cohorts.")
+            expect(subject).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field should be false for unfunded cohorts.")
           end
         end
       end

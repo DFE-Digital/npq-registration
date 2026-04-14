@@ -140,7 +140,7 @@ LeadProvider.find_each do |lead_provider|
       eligible_for_funding: Faker::Boolean.boolean,
       lead_provider:,
       course: all_courses.sample,
-      cohort: Cohort.where(funding: "funded").sample,
+      cohort: Cohort.where(funding: "full").sample,
     )
   end
 end

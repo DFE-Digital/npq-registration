@@ -47,7 +47,7 @@ module ValidTestDataGenerators
 
     def prepare_cohort!
       cohort.tap do |c|
-        c.funding = cohort.start_year >= Cohort.current.start_year ? "capped" : "funded"
+        c.funding = cohort.start_year >= Cohort.current.start_year ? "capped" : "full"
         c.save!
       end
     end
@@ -120,7 +120,7 @@ module ValidTestDataGenerators
     end
 
     def accept_application(application)
-      funded_place = if application.cohort.funding_cap?
+      funded_place = if application.cohort.capped_funding?
                        application.eligible_for_funding? ? Faker::Boolean.boolean(true_ratio: 0.7) : false
                      end
 

@@ -1,7 +1,7 @@
 class AddFundingToCohorts < ActiveRecord::Migration[8.0]
   def up
-    create_enum :cohort_funding, %w[funded capped unfunded]
-    add_column :cohorts, :funding, :enum, enum_type: "cohort_funding", default: "funded", null: false
+    create_enum :cohort_funding, %w[zero capped full]
+    add_column :cohorts, :funding, :enum, enum_type: "cohort_funding", default: "full", null: false
 
     safety_assured do
       execute <<~SQL
@@ -9,7 +9,7 @@ class AddFundingToCohorts < ActiveRecord::Migration[8.0]
         SET funding =
           CASE
             WHEN funding_cap = true THEN 'capped'::cohort_funding
-            WHEN funding_cap = false THEN 'funded'::cohort_funding
+            WHEN funding_cap = false THEN 'full'::cohort_funding
           END
       SQL
     end
