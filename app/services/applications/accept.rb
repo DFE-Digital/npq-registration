@@ -40,7 +40,7 @@ module Applications
 
     def funded_place_false_for_unfunded_cohort
       return if application.blank?
-      return if cohort&.funded?
+      return unless cohort&.zero_funding?
 
       if funded_place != false
         errors.add(:funded_place, :cannot_be_funded_for_unfunded_cohort)
@@ -71,7 +71,7 @@ module Applications
         training_status: :active,
       }
 
-      if cohort&.funding_cap?
+      if cohort&.capped_funding?
         opts[:funded_place] = funded_place
       end
 
@@ -121,7 +121,7 @@ module Applications
 
     def eligible_for_funded_place
       return if errors.any?
-      return unless cohort&.funding_cap?
+      return unless cohort&.capped_funding?
 
       if funded_place && !application.eligible_for_funding
         errors.add(:application, :not_eligible_for_funded_place)
@@ -129,7 +129,7 @@ module Applications
     end
 
     def validate_funded_place?
-      errors.blank? && cohort&.funding_cap?
+      errors.blank? && cohort&.capped_funding?
     end
 
     def new_schedule

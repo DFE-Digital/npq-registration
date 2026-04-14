@@ -445,7 +445,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
         it "returns an error" do
           service.accept
-          expect(service).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field cannot be set to true for unfunded cohorts.")
+          expect(service).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field should be false for unfunded cohorts.")
         end
       end
     end

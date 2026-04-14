@@ -27,8 +27,8 @@ RSpec.describe Cohort, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }
-    it { is_expected.to allow_values("funded", "capped", "unfunded").for(:funding).with_message("Choose funded, capped or unfunded for funding") }
-    it { is_expected.not_to allow_value(nil).for(:funding).with_message("Choose funded, capped or unfunded for funding") }
+    it { is_expected.to allow_values("zero", "capped", "full").for(:funding).with_message("Choose zero, capped or full for funding") }
+    it { is_expected.not_to allow_value(nil).for(:funding).with_message("Choose zero, capped or full for funding") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
 
     describe "registration_start_date year should match start_year" do
@@ -86,16 +86,16 @@ RSpec.describe Cohort, type: :model do
         create(:application, :without_funded_place, cohort: cohort)
       end
 
-      context "when the funding is capped" do
+      context "when the funding is 'capped'" do
         let(:cohort) { create(:cohort, :with_funding_cap) }
 
         it "does not allow changing funding" do
-          cohort.funding = "funded"
+          cohort.funding = "full"
           expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
         end
       end
 
-      context "when the funding is funded" do
+      context "when the funding is 'full'" do
         let(:cohort) { create(:cohort, :without_funding_cap) }
 
         it "does not allow changing the funding" do
@@ -104,7 +104,7 @@ RSpec.describe Cohort, type: :model do
         end
       end
 
-      context "when the funding is unfunded" do
+      context "when the funding is 'zero'" do
         let(:cohort) { create(:cohort, :unfunded) }
 
         it "does not allow changing the funding" do
@@ -177,7 +177,7 @@ RSpec.describe Cohort, type: :model do
     end
 
     context "when cohort_funding is specified" do
-      subject { Cohort.current(cohort_funding: "unfunded") }
+      subject { Cohort.current(cohort_funding: "zero") }
 
       let(:current_cohort) { create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)) }
       let(:older_cohort) { create(:cohort, :unfunded, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)) }
@@ -203,37 +203,13 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
-  describe "#funding_cap?" do
-    subject { cohort.funding_cap? }
-
-    let(:cohort) { create(:cohort, funding:) }
-
-    context "when funding is 'funded'" do
-      let(:funding) { "funded" }
-
-      it { is_expected.to be false }
-    end
-
-    context "when funding is 'capped'" do
-      let(:funding) { "capped" }
-
-      it { is_expected.to be true }
-    end
-
-    context "when funding is 'unfunded'" do
-      let(:funding) { "unfunded" }
-
-      it { is_expected.to be_nil }
-    end
-  end
-
   describe "#funded?" do
     subject { cohort.funded? }
 
     let(:cohort) { create(:cohort, funding:) }
 
-    context "when funding is 'funded'" do
-      let(:funding) { "funded" }
+    context "when funding is 'full'" do
+      let(:funding) { "full" }
 
       it { is_expected.to be true }
     end
@@ -244,8 +220,8 @@ RSpec.describe Cohort, type: :model do
       it { is_expected.to be true }
     end
 
-    context "when funding is 'unfunded'" do
-      let(:funding) { "unfunded" }
+    context "when funding is 'zero'" do
+      let(:funding) { "zero" }
 
       it { is_expected.to be false }
     end

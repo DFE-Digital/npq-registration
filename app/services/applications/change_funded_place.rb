@@ -41,7 +41,7 @@ module Applications
 
     def cohort_has_funding_cap
       return if errors.any?
-      return if cohort&.funding_cap?
+      return if cohort&.capped_funding?
 
       errors.add(:application, :cohort_does_not_accept_capping)
     end

@@ -20,10 +20,9 @@ FactoryBot.define do
     ukprn { rand(10_000_000..99_999_999).to_s }
 
     funded_place do
-      case cohort&.funding
-      when Cohort.fundings[:capped]
+      if cohort.capped_funding?
         !!eligible_for_funding
-      when Cohort.fundings[:unfunded]
+      elsif cohort.zero_funding?
         false
       end
     end
@@ -68,7 +67,6 @@ FactoryBot.define do
     trait :accepted do
       lead_provider_approval_status { :accepted }
       schedule { Schedule.find_by(cohort:, course_group: course.course_group) || create(:schedule, course_group: course.course_group, cohort:) }
-      funded_place { cohort.funding_cap? ? !!eligible_for_funding : nil }
       accepted_at { Time.zone.now }
       training_status { :active }
     end
@@ -88,7 +86,6 @@ FactoryBot.define do
     trait :eligible_for_funded_place do
       accepted
       eligible_for_funding
-      funded_place { cohort.funding_cap? || nil }
     end
 
     trait :with_funded_place do
