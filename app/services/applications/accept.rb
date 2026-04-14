@@ -29,6 +29,14 @@ module Applications
 
       application.reload
 
+      ApplicationAcceptedMailer.application_accepted_mail(
+        to: user.email,
+        full_name: user.full_name,
+        provider_name: lead_provider.name,
+        course_name: course.name,
+        ecf_id: application.ecf_id,
+      ).deliver_later
+
       true
     end
 

@@ -39,6 +39,7 @@ module Participants
         create_application_state!(state: :withdrawn, reason:)
         application.withdrawn_training_status!
         participant.reload
+        send_email
       end
 
       true
@@ -55,6 +56,16 @@ module Participants
       return if errors.any?
 
       errors.add(:participant_id, :no_started_declarations) unless application&.declarations&.any?(&:started_declaration_type?)
+    end
+
+    def send_email
+      ApplicationWithdrawnMailer.application_withdrawn_mail(
+        to: application.user.email,
+        full_name: application.user.full_name,
+        provider_name: application.lead_provider.name,
+        course_name: application.course.name,
+        ecf_id: application.ecf_id,
+      ).deliver_later
     end
   end
 end
