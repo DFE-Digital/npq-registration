@@ -44,7 +44,7 @@ class HandleSubmissionForStore
         cohort:,
         lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
         review_status: funding_eligibility_service.subject_to_review? ? "needs_review" : nil,
-        **({ funded_place: false } unless cohort.funded?),
+        funded_place:,
       )
       enqueue_send_application_submission_email_job(application)
     end
@@ -53,7 +53,7 @@ class HandleSubmissionForStore
 private
 
   def cohort
-    Cohort.find_by(identifier: store["course_start_cohort"])
+    Cohort.find_by!(identifier: store["course_start_cohort"])
   end
 
   def raw_application_data
@@ -244,5 +244,9 @@ private
       Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.", level: :warning)
       nil
     end
+  end
+
+  def funded_place
+    false unless cohort.funded?
   end
 end
