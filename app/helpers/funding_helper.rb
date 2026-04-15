@@ -1,7 +1,8 @@
 module FundingHelper
   def scholarship_funding_eligibility(application)
+    # This appears to be a work around for the funding status not recording the no ofsted outcome
     if application.raw_application_data["has_ofsted_urn"] == "no" && !application.course.ehco?
-      return I18n.t("funding_details.no_ofsted")
+      return I18n.t("funding_details.no_ofsted") # FIXME: this appears to be recalculating funding outcome
     end
 
     key = FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS[application.funding_eligiblity_status_code&.to_sym]
