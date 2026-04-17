@@ -57,5 +57,15 @@ RSpec.describe Applications::Reject, type: :model do
     it "sets the reason for rejection" do
       expect { service.reject }.to change { application.reload.reason_for_rejection }.from(nil).to(reason_for_rejection)
     end
+
+    it "sends an email to the user" do
+      expect(ApplicationRejectedMailer).to send_mail(:application_rejected_mail)
+        .with_params(to: application.user.email,
+                     full_name: application.user.full_name,
+                     provider_name: application.lead_provider.name,
+                     course_name: application.course.name,
+                     ecf_id: application.ecf_id)
+      service.reject
+    end
   end
 end

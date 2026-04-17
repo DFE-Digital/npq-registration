@@ -94,6 +94,12 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
           expect(created_outcome).to eq(existing_outcome)
         end
 
+        it "does not send an email to the user" do
+          expect(ParticipantOutcomePassedMailer).not_to send_mail(:passed_mail)
+          expect(ParticipantOutcomeFailedMailer).not_to send_mail(:failed_mail)
+          create_outcome
+        end
+
         it "does not update the completed declaration `updated_at`" do
           expect { create_outcome }.not_to(change { completed_declaration.reload.updated_at })
         end
@@ -110,6 +116,12 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
             expect(created_outcome).to eq(existing_outcome)
           end
 
+          it "does not send an email to the user" do
+            expect(ParticipantOutcomePassedMailer).not_to send_mail(:passed_mail)
+            expect(ParticipantOutcomeFailedMailer).not_to send_mail(:failed_mail)
+            create_outcome
+          end
+
           it "does not update the completed declaration `updated_at`" do
             expect { create_outcome }.not_to(change { completed_declaration.reload.updated_at })
           end
@@ -119,6 +131,16 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
 
             it "creates a new outcome" do
               expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+            end
+
+            it "sends an email to the user" do
+              expect(ParticipantOutcomePassedMailer).to send_mail(:passed_mail)
+                .with_params(to: completed_declaration.user.email,
+                             full_name: completed_declaration.user.full_name,
+                             provider_name: completed_declaration.lead_provider.name,
+                             course_name: completed_declaration.course.name,
+                             ecf_id: completed_declaration.application.ecf_id)
+              create_outcome
             end
 
             it "sets the created_outcome to the newly created outcome" do
@@ -142,6 +164,16 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
             expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
           end
 
+          it "sends an email to the user" do
+            expect(ParticipantOutcomeFailedMailer).to send_mail(:failed_mail)
+              .with_params(to: completed_declaration.user.email,
+                           full_name: completed_declaration.user.full_name,
+                           provider_name: completed_declaration.lead_provider.name,
+                           course_name: completed_declaration.course.name,
+                           ecf_id: completed_declaration.application.ecf_id)
+            create_outcome
+          end
+
           it "sets the created_outcome to the newly created outcome" do
             create_outcome
             expect(created_outcome).not_to eq(existing_outcome)
@@ -162,6 +194,16 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
 
         it "creates a new outcome" do
           expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+        end
+
+        it "sends an email to the user" do
+          expect(ParticipantOutcomePassedMailer).to send_mail(:passed_mail)
+            .with_params(to: completed_declaration.user.email,
+                         full_name: completed_declaration.user.full_name,
+                         provider_name: completed_declaration.lead_provider.name,
+                         course_name: completed_declaration.course.name,
+                         ecf_id: completed_declaration.application.ecf_id)
+          create_outcome
         end
 
         it "sets the created_outcome to the newly created outcome" do
@@ -206,6 +248,12 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
               expect { create_outcome }.not_to change(ParticipantOutcome, :count)
             end
 
+            it "does not send an email to the user" do
+              expect(ParticipantOutcomePassedMailer).not_to send_mail(:passed_mail)
+              expect(ParticipantOutcomeFailedMailer).not_to send_mail(:failed_mail)
+              create_outcome
+            end
+
             it "sets the created_outcome to the latest existing outcome" do
               create_outcome
               expect(created_outcome).to eq(not_matching_outcome)
@@ -225,6 +273,12 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
               expect { create_outcome }.not_to change(ParticipantOutcome, :count)
             end
 
+            it "does not send an email to the user" do
+              expect(ParticipantOutcomeFailedMailer).not_to send_mail(:failed_mail)
+              expect(ParticipantOutcomePassedMailer).not_to send_mail(:passed_mail)
+              create_outcome
+            end
+
             it "sets the created_outcome to the latest existing outcome" do
               create_outcome
               expect(created_outcome).to eq(matching_outcome)
@@ -238,6 +292,16 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
 
             it "creates a new outcome" do
               expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+            end
+
+            it "sends an email to the user" do
+              expect(ParticipantOutcomeFailedMailer).to send_mail(:failed_mail)
+                .with_params(to: completed_declaration.user.email,
+                             full_name: completed_declaration.user.full_name,
+                             provider_name: completed_declaration.lead_provider.name,
+                             course_name: completed_declaration.course.name,
+                             ecf_id: completed_declaration.application.ecf_id)
+              create_outcome
             end
 
             it "sets the created_outcome to the newly created outcome" do
@@ -265,6 +329,16 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
 
       it "creates a new outcome" do
         expect { create_outcome }.to change(ParticipantOutcome, :count).by(1)
+      end
+
+      it "sends an email to the user" do
+        expect(ParticipantOutcomePassedMailer).to send_mail(:passed_mail)
+          .with_params(to: completed_declaration.user.email,
+                       full_name: completed_declaration.user.full_name,
+                       provider_name: completed_declaration.lead_provider.name,
+                       course_name: completed_declaration.course.name,
+                       ecf_id: completed_declaration.application.ecf_id)
+        create_outcome
       end
 
       it "sets the created_outcome to the newly created outcome" do
