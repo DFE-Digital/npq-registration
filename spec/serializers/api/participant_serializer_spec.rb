@@ -72,7 +72,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
     end
 
     context "when serializing `teacher_reference_number`" do
-      context "when trn is verified" do
+      context "when the TRN is verified" do
         let(:user) { create(:user, trn_verified: true) }
 
         it "serializes the `teacher_reference_number`" do
@@ -80,7 +80,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         end
       end
 
-      context "when trn is not verified" do
+      context "when the TRN is not verified" do
         it "serializes nil" do
           expect(attributes["teacher_reference_number"]).to be_nil
         end
