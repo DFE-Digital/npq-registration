@@ -2,7 +2,8 @@ require "rails_helper"
 
 RSpec.describe FundingEligibility do
   subject(:funding_eligibility) do
-    described_class.new(institution:,
+    described_class.new(cohort:,
+                        institution:,
                         course:,
                         inside_catchment:,
                         trn: "1234567",
@@ -17,6 +18,7 @@ RSpec.describe FundingEligibility do
 
   let(:store) do
     {
+      course_start_cohort: course_start_cohort,
       work_setting:,
       kind_of_nursery:,
       employment_type:,
@@ -26,6 +28,9 @@ RSpec.describe FundingEligibility do
     }.stringify_keys
   end
 
+  let(:unfunded_cohort) { create(:cohort, :current, :unfunded) }
+  let(:cohort) { create(:cohort, :current, suffix: "b", registration_start_date: (unfunded_cohort.registration_start_date + 2.months)) }
+  let(:course_start_cohort) { cohort.identifier }
   let(:inside_catchment) { true }
   let(:approved_itt_provider) { nil }
   let(:institution) { nil }
@@ -35,6 +40,11 @@ RSpec.describe FundingEligibility do
   let(:referred_by_return_to_teaching_adviser) { nil }
   let(:new_headteacher) { "no" }
   let(:query_store) { RegistrationQueryStore.new(store:) }
+
+  before do
+    unfunded_cohort
+    cohort
+  end
 
   describe ".new_from_query_store" do
     subject do
@@ -64,6 +74,18 @@ RSpec.describe FundingEligibility do
     it { is_expected.not_to respond_to :lead_mentor }
     it { is_expected.not_to respond_to :lead_mentor_for_accredited_itt_provider }
     it { is_expected.not_to respond_to :query_store }
+
+    context "when the course_start_cohort is in an unfunded cohort" do
+      let(:course_start_cohort) { unfunded_cohort.identifier }
+
+      it { is_expected.to have_attributes cohort: unfunded_cohort }
+    end
+
+    context "when the course_start_cohort is a funded cohort" do
+      let(:course_start_cohort) { cohort.identifier }
+
+      it { is_expected.to have_attributes cohort: cohort }
+    end
 
     context "with childminder" do
       before { store["kind_of_nursery"] = "childminder" }
@@ -95,6 +117,12 @@ RSpec.describe FundingEligibility do
   end
 
   RSpec.shared_examples "general rules" do
+    context "and the cohort chosen is in an unfunded cohort" do
+      let(:cohort) { create(:cohort, :current, :unfunded) }
+
+      include_examples "funding eligibility", :unfunded_cohort
+    end
+
     context "and the applicant is outside England" do
       let(:inside_catchment) { false }
 

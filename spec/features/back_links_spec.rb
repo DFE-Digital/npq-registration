@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Back links", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -15,15 +16,13 @@ RSpec.feature "Back links", type: :feature do
 
     expect(page).not_to have_content("Before you start")
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: false, axe_check: false)
     page.click_link("Back")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: false, axe_check: false)
 
-    expect(page).to have_checked_field("Yes", visible: :all)
+    expect(page).to have_checked_field(course_start_cohort_description, visible: :all)
   end
 end

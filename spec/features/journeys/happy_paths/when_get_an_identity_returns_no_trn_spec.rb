@@ -55,10 +55,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
       page.fill_in "National Insurance number", with: "AB123456C"
     end
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
@@ -107,7 +104,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "In #{application_course_start_date}",
+          "Course start" => course_start_cohort_description,
           "Full name" => "Jane Smith",
           "Teacher reference number (TRN)" => manually_entered_trn,
           "Date of birth" => "13 December 1980",
@@ -221,8 +218,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
         "active_alert" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "In #{application_course_start_date}",
-        "course_start_date" => "yes",
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-headship",
         "date_of_birth" => "1980-12-13",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",

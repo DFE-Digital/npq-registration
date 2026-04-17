@@ -190,4 +190,8 @@ class RegistrationQueryStore
 
     !(lead_mentor_for_accredited_itt_provider? || employment_type_other?)
   end
+
+  def course_start_cohort
+    store["course_start_cohort"]
+  end
 end

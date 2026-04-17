@@ -53,14 +53,14 @@ RSpec.describe RegistrationWizardController do
   end
 
   describe "#update" do
-    let(:wizard_params) { { course_start_date: "yes" } }
+    let(:wizard_params) { { course_start_cohort: "2026a" } }
     let(:make_request) { patch :update, params: { step: "course-start-date", registration_wizard: wizard_params } }
 
     it_behaves_like "it redirects on missing mandatory institution"
 
     it "persists data to session" do
       make_request
-      expect(session["registration_store"]["course_start_date"]).to eql("yes")
+      expect(session["registration_store"]["course_start_cohort"]).to eql("2026a")
     end
 
     context "when step is being skipped" do

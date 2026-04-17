@@ -5,17 +5,19 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "with stubbed Teacher Auth OmniAuth responses"
-  include_context "with stubbed Teaching Record System person API"
+  # include_context "retrieve latest application data"
+  include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "the registration journey starts" do
+  scenario "unfunded cohort registration journey" do
+    stub_participant_validation_request
+
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now with Teacher Auth")
+      page.click_button("Start now")
     end
 
-    choose_course_start_date
-    expect(User.last.attributes).to include(user_attributes_from_stubbed_callback_response)
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      page.choose("Spring 2026", visible: :all)
+    end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       page.choose("Yes", visible: :all)
@@ -44,7 +46,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("Teach First", visible: :all)
+      page.choose("Ambition Institute", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -54,9 +56,9 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "Course start" => "Spring 2026",
           "Course" => "Headship",
-          "Provider" => "Teach First",
+          "Provider" => "Ambition Institute",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My trust is paying",
           "Work setting" => "A school",
@@ -67,6 +69,9 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
 
     expect_applicant_reached_end_of_journey
 
-    expect(retrieve_latest_application_user_data).to include(user_attributes_from_stubbed_callback_response)
+    application = Application.last
+    expect(application.funded_place).to be(false)
+    expect(application.eligible_for_funding).to be(false)
+    expect(application.cohort.funding).to eq "zero"
   end
 end

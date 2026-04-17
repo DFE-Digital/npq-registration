@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 all_courses = Course.all.to_a
-all_cohorts = Cohort.all.to_a
+funded_cohorts = Cohort.capped_funding.or(Cohort.full_funding).to_a
 
 LeadProvider.find_each do |lead_provider|
   quantity = { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)
@@ -17,7 +17,7 @@ LeadProvider.find_each do |lead_provider|
       lead_provider:,
       course: all_courses.sample,
       lead_provider_approval_status: "pending",
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     # users with 3 applications each
@@ -31,7 +31,7 @@ LeadProvider.find_each do |lead_provider|
       user:,
       lead_provider:,
       course: all_courses.sample,
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     FactoryBot.create_list(
@@ -43,7 +43,7 @@ LeadProvider.find_each do |lead_provider|
       user:,
       lead_provider:,
       course: all_courses.sample,
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     # users with one accepted application each
@@ -56,7 +56,7 @@ LeadProvider.find_each do |lead_provider|
       lead_provider:,
       course: all_courses.sample,
       participant_outcome_state: "passed",
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     # users with one rejected application each
@@ -69,7 +69,7 @@ LeadProvider.find_each do |lead_provider|
       lead_provider:,
       course: all_courses.sample,
       participant_outcome_state: "failed",
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     # users with one deferred application each
@@ -83,7 +83,7 @@ LeadProvider.find_each do |lead_provider|
       :with_random_participant_outcome_state,
       lead_provider:,
       course: all_courses.sample,
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     # users with one withdrawn application each
@@ -97,7 +97,7 @@ LeadProvider.find_each do |lead_provider|
       :with_random_participant_outcome_state,
       lead_provider:,
       course: all_courses.sample,
-      cohort: all_cohorts.sample,
+      cohort: funded_cohorts.sample,
     )
 
     # users with one eligible for funded place application each (cohort funding_cap true)

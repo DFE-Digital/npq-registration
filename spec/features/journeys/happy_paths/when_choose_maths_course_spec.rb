@@ -22,10 +22,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
 
     expect(page).not_to have_content("Before you start")
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
@@ -89,7 +86,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "In #{application_course_start_date}",
+          "Course start" => course_start_cohort_description,
           "Workplace in England" => "Yes",
           "Work setting" => "A school",
           "Workplace" => "open manchester school – street 1, manchester",
@@ -190,8 +187,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "In #{application_course_start_date}",
-        "course_start_date" => "yes",
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-leading-primary-mathematics",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",

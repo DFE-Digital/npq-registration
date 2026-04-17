@@ -68,6 +68,8 @@ module Questionnaires
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                               when FundingEligibility::UNFUNDED_COHORT
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
       raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}"
