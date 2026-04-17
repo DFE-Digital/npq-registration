@@ -25,10 +25,11 @@ class User < ApplicationRecord
 
   validates :full_name, presence: true
 
+  validates :email, presence: true, unless: :archived?
   validates :email,
-            presence: true,
-            uniqueness: true,
-            notify_email: true
+            uniqueness: { allow_nil: true },
+            notify_email: true,
+            if: :email?
 
   validates :uid, uniqueness: { allow_blank: true }
   validates :ecf_id, uniqueness: { case_sensitive: false }

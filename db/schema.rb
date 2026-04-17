@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_13_174338) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -618,7 +618,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
+    t.string "email", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
@@ -651,6 +651,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_084312) do
     t.index ["significantly_updated_at"], name: "index_users_on_significantly_updated_at"
     t.index ["trn"], name: "index_users_on_trn"
     t.index ["uid"], name: "index_users_on_uid", unique: true
+    t.check_constraint "email IS NOT NULL OR archived_email IS NOT NULL AND archived_at IS NOT NULL", name: "users_email_null_only_when_archived"
   end
 
   create_table "versions", force: :cascade do |t|

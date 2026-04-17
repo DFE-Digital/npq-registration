@@ -191,11 +191,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         end
       end
 
-      context "when the email clashes with an existing user" do
-        before { create(:user, :with_get_an_identity_id, email:) }
+      context "when the email clashes with a different existing user" do
+        let!(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
 
-        it "raises an error" do
-          expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
+        it "blanks the clashing user's email and updates the matched user" do
+          expect { subject }.not_to raise_error
+          expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
+          expect(clashing_user.archived_at).to be_present
+          expect(existing_user.reload.email).to eq(email)
         end
       end
 
@@ -240,11 +243,28 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         )
       end
 
-      context "when the email clashes with an existing user" do
-        before { create(:user, :with_get_an_identity_id, email:) }
+      context "when the email clashes with a different existing user" do
+        let!(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
 
-        it "raises an error" do
-          expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
+        it "blanks the clashing user's email and creates the new user" do
+          expect { subject }.not_to raise_error
+          expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
+          expect(clashing_user.archived_at).to be_present
+          expect(User.find_by(provider: "teacher_auth", uid:).email).to eq(email)
+        end
+
+        it "does not move applications from the clashing user" do
+          application = create(:application, user: clashing_user)
+          subject
+          expect(application.reload.user).to eq(clashing_user)
+        end
+
+        it "sends a Sentry notification" do
+          expect(Sentry).to receive(:capture_message).with(
+            "Blanked email on the user due to reuse when used by a later participant",
+            hash_including(extra: { ecf_id: clashing_user.ecf_id }),
+          )
+          subject
         end
       end
 
