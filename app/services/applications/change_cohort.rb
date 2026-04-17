@@ -13,6 +13,7 @@ module Applications
     validates :application, presence: true
     validates :cohort_id, presence: true
     validate :different_cohort, if: :application
+    validate :funding_is_the_same, if: :application
     validate :declarations_present, if: :application, unless: :override_declarations_check
     validate :schedule_exists_in_new_cohort, if: :application
 
@@ -29,12 +30,15 @@ module Applications
     def cohort_options
       if application.schedule
         Cohort.joins(:schedules)
-          .where(schedules: { course_group: application.course.course_group })
+          .where(funding: application.cohort.funding, schedules: { course_group: application.course.course_group })
           .where.not(id: application.cohort.id)
           .distinct
           .order_by_oldest
       else
-        Cohort.where.not(id: application.cohort.id).order_by_oldest
+        Cohort
+          .where(funding: application.cohort.funding)
+          .where.not(id: application.cohort.id)
+          .order_by_oldest
       end
     end
 
@@ -60,6 +64,12 @@ module Applications
       return unless application.schedule
 
       errors.add(:cohort_id, :schedule_not_found) unless new_schedule
+    end
+
+    def funding_is_the_same
+      return unless cohort_id
+
+      errors.add(:cohort_id, :funding_different) if cohort.funding != application.cohort.funding
     end
   end
 end

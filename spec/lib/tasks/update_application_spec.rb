@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "update_application" do
   include_context "with default schedules"
 
-  let(:cohort) { create(:cohort, :previous, :without_funding_cap) }
+  let(:cohort) { create(:cohort, :previous) }
 
   shared_examples "outputting an error" do |message: "Application not found: "|
     it "outputs an error message" do
@@ -12,15 +12,30 @@ RSpec.describe "update_application" do
   end
 
   describe "update_application:accept" do
-    subject(:run_task) { Rake::Task["update_application:accept"].invoke(application.ecf_id) }
+    subject(:run_task) { Rake::Task["update_application:accept"].invoke(application.ecf_id, funded_place_parameter) }
 
     after { Rake::Task["update_application:accept"].reenable }
 
-    let(:application) { create(:application, :pending, cohort:) }
+    let(:application) { create(:application, :eligible_for_funding, :pending, cohort:) }
+    let(:funded_place_parameter) { "false" }
 
     it "accepts the application" do
       run_task
       expect(application.reload.lead_provider_approval_status).to eq "accepted"
+    end
+
+    it "sets the funded place" do
+      run_task
+      expect(application.reload.funded_place).to be false
+    end
+
+    context "when the funded_place parameter is true" do
+      let(:funded_place_parameter) { "true" }
+
+      it "sets the funded place" do
+        run_task
+        expect(application.reload.funded_place).to be true
+      end
     end
 
     context "when the application does not exist" do
@@ -83,7 +98,7 @@ RSpec.describe "update_application" do
     after { Rake::Task["update_application:change_cohort"].reenable }
 
     let(:application) { create(:application, cohort: Cohort.first) }
-    let(:new_cohort) { create(:cohort, :next, :without_funding_cap) }
+    let(:new_cohort) { create(:cohort, :next) }
 
     it "changes the cohort of the application" do
       run_task
