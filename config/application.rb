@@ -83,5 +83,6 @@ module NpqRegistration
 
     # API configuration
     config.x.api.previous_names = Rails.env.local?
+    config.x.api.cohort_suffix = Rails.env.local?
   end
 end
