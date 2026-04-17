@@ -14,6 +14,10 @@ RSpec.describe Cohort, type: :model do
 
   subject { cohort }
 
+  it "has paper trail" do
+    expect(subject).to be_versioned
+  end
+
   describe "relationships" do
     it { is_expected.to have_many(:declarations).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:schedules).dependent(:destroy) }
@@ -23,8 +27,8 @@ RSpec.describe Cohort, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }
-    it { is_expected.to allow_value(%w[true false]).for(:funding_cap).with_message("Choose true or false for funding cap") }
-    it { is_expected.not_to allow_value(nil).for(:funding_cap).with_message("Choose true or false for funding cap") }
+    it { is_expected.to allow_values("zero", "capped", "full").for(:funding).with_message("Choose zero, capped or full for funding") }
+    it { is_expected.not_to allow_value(nil).for(:funding).with_message("Choose zero, capped or full for funding") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
 
     describe "registration_start_date year should match start_year" do
@@ -77,26 +81,35 @@ RSpec.describe Cohort, type: :model do
       it { is_expected.to have_attributes name: "2029c" }
     end
 
-    describe "changing funding_cap when there are applications" do
+    describe "changing funding when there are applications" do
       before do
-        create(:application, cohort: cohort)
+        create(:application, :without_funded_place, cohort: cohort)
       end
 
-      context "when the funding cap is true" do
+      context "when the funding is 'capped'" do
         let(:cohort) { create(:cohort, :with_funding_cap) }
 
-        it "does not allow changing the funding_cap" do
-          cohort.funding_cap = false
-          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+        it "does not allow changing funding" do
+          cohort.funding = "full"
+          expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
         end
       end
 
-      context "when the funding cap is false" do
+      context "when the funding is 'full'" do
         let(:cohort) { create(:cohort, :without_funding_cap) }
 
-        it "does not allow changing the funding_cap" do
-          cohort.funding_cap = true
-          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+        it "does not allow changing the funding" do
+          cohort.funding = "capped"
+          expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
+        end
+      end
+
+      context "when the funding is 'zero'" do
+        let(:cohort) { create(:cohort, :unfunded) }
+
+        it "does not allow changing the funding" do
+          cohort.funding = "capped"
+          expect(cohort).to have_error(:funding, "Cannot change funding when there are existing applications for this cohort")
         end
       end
     end
@@ -127,20 +140,22 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe ".current" do
-    it "returns the closest cohort in the past" do
-      current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
-      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
-      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+    let(:current_cohort) { create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10)) }
+    let(:older_cohort) { create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10)) }
+    let(:future_cohort) { create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)) }
 
-      expect(Cohort.current(Date.new(2022, 4, 11))).to eq(current_cohort)
+    before do
+      current_cohort
+      older_cohort
+      future_cohort
+    end
+
+    it "returns the closest cohort in the past" do
+      expect(Cohort.current(timestamp: Date.new(2022, 4, 11))).to eq(current_cohort)
     end
 
     it "includes the Cohort starting exactly on the current date" do
-      current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
-      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
-      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
-
-      expect(Cohort.current(Date.new(2022, 4, 10))).to eq(current_cohort)
+      expect(Cohort.current(timestamp: Date.new(2022, 4, 10))).to eq(current_cohort)
     end
 
     context "when there is no cohort for the current year" do
@@ -152,19 +167,25 @@ RSpec.describe Cohort, type: :model do
     end
 
     context "when there are multiple cohorts for the past year" do
-      subject { Cohort.current(Date.new(2022, 4, 11)) }
+      subject { Cohort.current(timestamp: Date.new(2022, 4, 11)) }
 
-      before { cohorts }
+      let(:current_cohort) { create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)) }
+      let(:older_cohort) { create(:cohort, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)) }
+      let(:future_cohort) { create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)) }
 
-      let :cohorts do
-        {
-          current: create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)),
-          older: create(:cohort, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)),
-          future: create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)),
-        }
+      it { is_expected.to eq(current_cohort) }
+    end
+
+    context "when cohort_funding is specified" do
+      subject { Cohort.current(cohort_funding: "zero") }
+
+      let(:current_cohort) { create(:cohort, start_year: 2022, suffix: "b", registration_start_date: Date.new(2022, 4, 10)) }
+      let(:older_cohort) { create(:cohort, :unfunded, start_year: 2022, suffix: "a", registration_start_date: Date.new(2022, 1, 10)) }
+      let(:future_cohort) { create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10)) }
+
+      it "returns the closest cohort in the past with the specified funding" do
+        expect(subject).to eq(older_cohort)
       end
-
-      it { is_expected.to eq(cohorts[:current]) }
     end
   end
 
@@ -179,6 +200,30 @@ RSpec.describe Cohort, type: :model do
       let(:cohort) { create(:cohort, suffix: "c") }
 
       it { is_expected.to eq "#{cohort.start_year}#{cohort.suffix}" }
+    end
+  end
+
+  describe "#funded?" do
+    subject { cohort.funded? }
+
+    let(:cohort) { create(:cohort, funding:) }
+
+    context "when funding is 'full'" do
+      let(:funding) { "full" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'capped'" do
+      let(:funding) { "capped" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding is 'zero'" do
+      let(:funding) { "zero" }
+
+      it { is_expected.to be false }
     end
   end
 end

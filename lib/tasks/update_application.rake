@@ -6,10 +6,11 @@ class UpdateApplicationRakeTask
   def initialize
     namespace :update_application do
       desc "Accept an application"
-      task :accept, %i[application_ecf_id] => :versioned_environment do |_t, args|
+      task :accept, %i[application_ecf_id funded_place] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
+        funded_place = args.funded_place == "true"
 
-        service = Applications::Accept.new(application:)
+        service = Applications::Accept.new(application:, funded_place:)
 
         result = service.accept
         log_result("Application #{args.application_ecf_id} accepted", result, service.errors)

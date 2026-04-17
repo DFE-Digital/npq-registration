@@ -58,7 +58,7 @@ private
     params.require(:cohort).permit(
       :start_year,
       :registration_start_date,
-      :funding_cap,
+      :funding,
       :suffix,
       :description,
     )

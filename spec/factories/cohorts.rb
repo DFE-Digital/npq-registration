@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :cohort do
     sequence(:start_year, 0) { |n| 2021 + n % 9 }
     registration_start_date { Date.new(start_year, 4, 3) }
-    funding_cap { true }
+    funding { "capped" }
     suffix { "a" }
 
     description do
@@ -27,11 +27,15 @@ FactoryBot.define do
     end
 
     trait :with_funding_cap do
-      funding_cap { true }
+      funding { "capped" }
     end
 
     trait :without_funding_cap do
-      funding_cap { false }
+      funding { "full" }
+    end
+
+    trait :unfunded do
+      funding { "zero" }
     end
 
     trait :has_targeted_delivery_funding do
