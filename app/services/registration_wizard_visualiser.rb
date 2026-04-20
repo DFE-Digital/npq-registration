@@ -85,39 +85,44 @@ class RegistrationWizardVisualiser
 
   def call(generate_image: true)
     Rails.logger.debug("Generating .dot file")
-    digraph_output = generate_digraph_output
-    generate_and_save_graph(digraph_output, generate_image:)
+
+    make_output_dir
+    save_graphviz_output
+    generate_png_output if generate_image
   end
 
 private
+
+  def save_graphviz_output
+    save_file(output_dot_filename, generate_graphviz_output)
+  end
 
   # Image Generation
 
   def output_dir
     tmp_dir = Rails.env.test? ? "visualisations_test" : "visualisations"
 
-    Rails.root.join("tmp", tmp_dir)
+    @output_dir ||= Rails.root.join("tmp", tmp_dir)
   end
 
   def make_output_dir
     FileUtils.mkdir_p(output_dir)
   end
 
-  def generate_and_save_graph(digraph_output, generate_image: true)
-    make_output_dir
+  def output_dot_filename
+    output_dir.join("registration_wizard_visualisation.dot")
+  end
 
-    output_digraph_filename = output_dir.join("registration_wizard_visualisation.dot")
-    output_graph_filename = output_dir.join("registration_wizard_visualisation.png")
+  def output_png_filename
+    output_dir.join("registration_wizard_visualisation.png")
+  end
 
-    save_file(output_digraph_filename, digraph_output)
+  def generate_png_output
+    Rails.logger.debug("Generating #{output_png_filename}")
+    generate_png_command = "dot -Tpng #{output_dot_filename} -o #{output_png_filename}"
 
-    return unless generate_image
-
-    Rails.logger.debug("Generating #{output_graph_filename}")
-    generate_graph_command = "dot -Tpng #{output_digraph_filename} -o #{output_graph_filename}"
-
-    Rails.logger.debug(generate_graph_command)
-    system(generate_graph_command)
+    Rails.logger.debug(generate_png_command)
+    system(generate_png_command)
 
     raise "Graph generation failed" unless $CHILD_STATUS.exitstatus.zero?
   end
@@ -131,7 +136,7 @@ private
 
   # Graph String Generation
 
-  def generate_digraph_output
+  def generate_graphviz_output
     <<~DOT
       digraph "Registration Wizard Flow" {
         #{digraph_settings}
