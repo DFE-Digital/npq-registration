@@ -291,3 +291,15 @@ shared:
     - statement_id
     - created_at
     - updated_at
+  :course_cohort_providers:
+    - id
+    - course_cohort_id
+    - lead_provider_id
+    - created_at
+    - updated_at
+  :course_cohorts:
+    - id
+    - course_id
+    - cohort_id
+    - created_at
+    - updated_at
