@@ -504,6 +504,7 @@ en:
             funding:
               blank: Choose how your NPQ will be funded
               invalid: Choose a valid funding option
+              inclusion: Choose a valid funding option
         questionnaires/npqh_status:
           attributes:
             npqh_status:

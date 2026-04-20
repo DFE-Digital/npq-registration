@@ -4,7 +4,7 @@ module Questionnaires
 
     attribute :funding
 
-    validates :funding, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
+    validates :funding, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS, allow_blank: true }
 
     def self.permitted_params
       %i[
