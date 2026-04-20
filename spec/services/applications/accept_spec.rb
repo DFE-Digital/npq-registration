@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
+RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, type: :model do
   let(:params) do
     {
       application:,

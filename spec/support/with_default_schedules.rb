@@ -23,12 +23,6 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
       FactoryBot.create(:cohort, start_year:)
     end
 
-    # create an unfunded cohort for the end year
-    FactoryBot.create(:cohort, :unfunded, start_year: end_year)
-
-    # create a funded 'b' cohort for the end year
-    FactoryBot.create(:cohort, start_year: end_year, suffix: "b")
-
     # create default schedules for all cohorts
     Cohort.find_each do |cohort|
       default_schedules.each do |schedule_identifier|

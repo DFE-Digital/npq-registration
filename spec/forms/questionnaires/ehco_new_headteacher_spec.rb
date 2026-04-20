@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::EhcoNewHeadteacher, type: :model do
+RSpec.describe Questionnaires::EhcoNewHeadteacher, :with_cohorts, type: :model do
   let(:instance) { described_class.new }
   let(:course) { create(:course, :senco) }
   let(:lead_provider) { LeadProvider.for(course:).first }

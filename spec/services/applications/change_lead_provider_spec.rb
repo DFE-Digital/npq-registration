@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Applications::ChangeLeadProvider, type: :model do
+RSpec.describe Applications::ChangeLeadProvider, :with_cohorts, type: :model do
   subject(:service) { described_class.new(application:, lead_provider_id:) }
 
   let(:application) { create(:application) }

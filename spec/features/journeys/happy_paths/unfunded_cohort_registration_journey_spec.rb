@@ -1,12 +1,17 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  # include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
+
+  before do
+    # create course cohort providers for the unfunded spring 2026a cohort
+    file_name = "db/seeds/data/unfunded_spring_2026a_course_cohort_providers.csv"
+    CourseCohortProviders::Updater.new(cohort: Cohort.find_by(identifier: "2026a"), course_to_provider_csv: file_name, dry_run: false).call
+  end
 
   scenario "unfunded cohort registration journey" do
     stub_participant_validation_request

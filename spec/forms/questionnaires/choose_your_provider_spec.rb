@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
+RSpec.describe Questionnaires::ChooseYourProvider, :with_cohorts, type: :model do
   describe "validations" do
     let(:current_step) { "choose_your_provider" }
     let(:request) { nil }
@@ -13,6 +13,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
+        "course_start_cohort" => Cohort.current.identifier,
       }
     end
     let(:wizard) do
@@ -204,6 +205,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
+        "course_start_cohort" => Cohort.current.identifier,
       }
     end
 
@@ -236,6 +238,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       let(:store) do
         {
           "teacher_catchment" => "another",
+          "course_start_cohort" => Cohort.current.identifier,
         }
       end
 
@@ -263,6 +266,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     let(:store) do
       {
         "course_identifier" => course_identifier,
+        "course_start_cohort" => Cohort.current.identifier,
       }
     end
 
