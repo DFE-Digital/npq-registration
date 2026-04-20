@@ -1,7 +1,7 @@
 namespace :api_token do
   namespace :teacher_record_service do
     desc "Generate a new API token for the Teacher Record Service"
-    task generate_token: :environment do
+    task generate_token: :versioned_environment do
       scope = APIToken.scopes[:teacher_record_service]
       logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
       token = APIToken.create_with_random_token!(scope:)
@@ -11,7 +11,7 @@ namespace :api_token do
 
   namespace :lead_provider do
     desc "Generate a new API token for the Lead Providers API"
-    task :generate_token, %i[lead_provider_id] => :environment do |_t, args|
+    task :generate_token, %i[lead_provider_id] => :versioned_environment do |_t, args|
       logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
 
       lead_provider = LeadProvider.find_by(id: args.lead_provider_id)

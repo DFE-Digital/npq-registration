@@ -1,7 +1,7 @@
 namespace :tad_requests do
   desc "Generate TAD request for Autumn 2023 for NPQLL"
 
-  task autumn_2023_npqll: :environment do
+  task autumn_2023_npqll: :versioned_environment do
     course_identifiers = [
       "npq-leading-literacy", # NPQLL,
     ].freeze

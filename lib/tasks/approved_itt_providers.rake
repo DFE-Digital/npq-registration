@@ -6,7 +6,7 @@
 
 namespace :approved_itt_providers do
   desc "update the itt providers list"
-  task :update, %i[file_name] => :environment do |_t, args|
+  task :update, %i[file_name] => :versioned_environment do |_t, args|
     file_name = args.file_name
 
     Rails.logger.info("Importing Approved ITT providers from CSV file: #{file_name}")

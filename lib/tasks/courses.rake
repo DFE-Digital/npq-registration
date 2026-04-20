@@ -1,6 +1,6 @@
 namespace :courses do
   desc "Update courses"
-  task update: :environment do
+  task update: :versioned_environment do
     %w[
       leadership
       specialist

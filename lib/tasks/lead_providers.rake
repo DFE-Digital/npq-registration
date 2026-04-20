@@ -1,6 +1,6 @@
 namespace :lead_providers do
   desc "Updates Lead Providers in DB to match LeadProvider::ALL_ACTIVE_PROVIDERS"
-  task update: :environment do |t|
+  task update: :versioned_environment do |t|
     Rails.logger.info("Running #{t.name}")
 
     LeadProviders::Updater.call

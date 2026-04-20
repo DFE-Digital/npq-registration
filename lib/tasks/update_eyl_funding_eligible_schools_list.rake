@@ -2,7 +2,7 @@ require "csv"
 
 namespace :update_eyl_funding_eligible_schools_list do
   desc "Make schools funding eligible for NPQEYL courses"
-  task :update, %i[file_name] => :environment do |_t, args|
+  task :update, %i[file_name] => :versioned_environment do |_t, args|
     file_name = args.file_name
     previous_file = "lib/eyl_funding_eligible_schools/2022-11-30/eligible-schools.csv"
 

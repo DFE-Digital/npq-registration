@@ -1,6 +1,6 @@
 namespace :update_legacy_passed_participant_outcomes do
   desc "Update TRNs for legacy passed participant outcomes"
-  task :update_trn, %i[old_trn new_trn] => :environment do |_t, args|
+  task :update_trn, %i[old_trn new_trn] => :versioned_environment do |_t, args|
     logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
 
     raise "Missing required argument: old_trn" unless args.old_trn

@@ -5,7 +5,7 @@ require "rake"
 namespace :ehco do
   namespace :update_targeted_delivery_funding_eligibility do
     desc "DRY RUN: Marks targeted_delivery_funding_eligibility on all EHCO NPQ applications as false"
-    task dry_run: :environment do
+    task dry_run: :versioned_environment do
       Application.transaction do
         Ehco::TargetedDeliveryFundingEligibilityUpdater.run
 
@@ -14,7 +14,7 @@ namespace :ehco do
     end
 
     desc "Marks targeted_delivery_funding_eligibility on all EHCO NPQ applications as false"
-    task run: :environment do
+    task run: :versioned_environment do
       Ehco::TargetedDeliveryFundingEligibilityUpdater.run
     end
   end
