@@ -129,7 +129,7 @@ module Questionnaires
     end
 
     def valid_providers
-      LeadProvider.for(course:)
+      LeadProvider.for(course:, cohort: Cohort.find_by!(identifier: wizard.query_store.course_start_cohort))
     end
 
     def courses

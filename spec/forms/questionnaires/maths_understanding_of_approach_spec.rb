@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::MathsUnderstandingOfApproach, type: :model do
+RSpec.describe Questionnaires::MathsUnderstandingOfApproach, :with_cohorts, type: :model do
   let(:instance) { described_class.new }
   let(:course) { create(:course, :leading_primary_mathematics) }
   let(:lead_provider) { LeadProvider.for(course:).first }

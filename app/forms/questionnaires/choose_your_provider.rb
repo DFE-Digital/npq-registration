@@ -79,7 +79,7 @@ module Questionnaires
     end
 
     def providers
-      LeadProvider.for(course:).alphabetical
+      LeadProvider.for(course:, cohort: Cohort.find_by(identifier: wizard.query_store.course_start_cohort)).alphabetical
     end
 
     def lead_provider
@@ -95,6 +95,7 @@ module Questionnaires
              to: :query_store
 
     def validate_lead_provider_exists
+      # TODO: check provider is in list of providers for course and cohort
       if lead_provider.blank?
         errors.add(:lead_provider_id, :invalid)
       end

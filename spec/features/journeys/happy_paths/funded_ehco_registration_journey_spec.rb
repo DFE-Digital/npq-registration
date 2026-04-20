@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper

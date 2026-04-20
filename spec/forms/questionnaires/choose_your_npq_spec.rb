@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
+RSpec.describe Questionnaires::ChooseYourNpq, :with_cohorts, type: :model do
   describe "validations" do
     let(:valid_course_identifier) { create(:course, :early_headship_coaching_offer).identifier }
 
@@ -27,6 +27,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
 
     let(:store) do
       {
+        course_start_cohort: cohort.identifier,
         course_identifier: course.identifier,
         lead_provider_id: lead_provider.id,
       }.stringify_keys
