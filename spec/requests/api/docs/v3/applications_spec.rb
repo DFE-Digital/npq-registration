@@ -4,6 +4,10 @@ require "swagger_helper"
 RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spec: "v3/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
+  before do
+    allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(false)
+  end
+
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
   let(:cohort) { create(:cohort, :current, funding_cap: true) }
