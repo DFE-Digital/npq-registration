@@ -9,6 +9,7 @@ RSpec.describe "course cohort providers rake tasks" do
     let(:cohort_identifier) { cohort.identifier }
     let(:headship_course) { create(:course, :headship) }
     let(:csv_file_path) { csv_file.path }
+    let(:updater) { instance_double(CourseCohortProviders::Updater, call: nil) }
 
     let(:csv_file) do
       tempfile <<~CSV
@@ -21,6 +22,7 @@ RSpec.describe "course cohort providers rake tasks" do
     before do
       cohort
       headship_course
+      allow(CourseCohortProviders::Updater).to receive(:new).and_return(updater)
     end
 
     after do
@@ -54,32 +56,28 @@ RSpec.describe "course cohort providers rake tasks" do
     context "when dry run is false" do
       let(:dry_run) { "false" }
 
-      it "creates course cohorts" do
-        run_task
-        expect(cohort.course_cohorts.pluck(:course_id)).to contain_exactly(headship_course.id)
-      end
-
-      it "creates course cohort providers" do
-        run_task
-        course_cohort = cohort.course_cohorts.find_by(course: headship_course)
-        expect(headship_course.course_cohort_providers.where(course_cohort:).pluck(:lead_provider_id)).to(
-          contain_exactly(
-            LeadProvider.find_by(name: "Ambition Institute").id,
-            LeadProvider.find_by(name: "Best Practice Network").id,
-          ),
+      it "calls the updater" do
+        expect(CourseCohortProviders::Updater).to receive(:new).with(
+          cohort:,
+          course_to_provider_csv: csv_file_path,
+          dry_run: false,
+          logger: Rails.logger,
         )
+        expect(updater).to receive(:call)
+        run_task
       end
     end
 
     context "when dry run is true" do
-      it "does not create course cohorts" do
+      it "calls the updater" do
+        expect(CourseCohortProviders::Updater).to receive(:new).with(
+          cohort:,
+          course_to_provider_csv: csv_file_path,
+          dry_run: true,
+          logger: Rails.logger,
+        )
+        expect(updater).to receive(:call)
         run_task
-        expect(CourseCohort.count).to eq 0
-      end
-
-      it "does not create course cohort providers" do
-        run_task
-        expect(CourseCohortProvider.count).to eq 0
       end
     end
   end
