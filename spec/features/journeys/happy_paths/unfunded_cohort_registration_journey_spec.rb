@@ -52,7 +52,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("Ambition Institute", visible: :all)
+      page.choose("LLSE", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -64,7 +64,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         {
           "Course start" => "Spring 2026",
           "Course" => "Headship",
-          "Provider" => "Ambition Institute",
+          "Provider" => "LLSE",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My trust is paying",
           "Work setting" => "A school",

@@ -20,9 +20,11 @@ module Applications
     end
 
     def lead_provider_options
+      # TODO: specify cohort when checking for valid lead provider
       current_cohort_lead_providers_offering_the_same_course = LeadProvider.for(course: application.course).pluck(:id)
       LeadProvider.where.not(id: application.lead_provider.id).pluck(:id, :name).map do |id, name|
         unless current_cohort_lead_providers_offering_the_same_course.include?(id)
+          # TODO: change description to include application cohort
           description = "This provider is not offering #{application.course.identifier} for the latest cohort"
         end
         OpenStruct.new(id:, name:, description:)
