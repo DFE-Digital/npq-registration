@@ -1,194 +1,82 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::ChooseYourProvider, :with_cohorts, type: :model do
+RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
+  let(:cohort) { create(:cohort, :current) }
+  let(:request) { nil }
+  let(:valid_lead_provider) { LeadProvider.first }
+  let(:current_step) { "choose_your_provider" }
+
+  let(:wizard) do
+    RegistrationWizard.new(
+      current_step:,
+      store:,
+      request:,
+      current_user: create(:user),
+    )
+  end
+
   describe "validations" do
-    let(:current_step) { "choose_your_provider" }
-    let(:request) { nil }
     let(:course) { Course.find_by(identifier: "npq-headship") }
     let(:school) { create(:school) }
     let(:works_in_school) { "yes" }
+    let(:chosen_cohort) { cohort }
+
     let(:store) do
       {
         "teacher_catchment" => "england",
         "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
-        "course_start_cohort" => Cohort.current.identifier,
+        "course_start_cohort" => chosen_cohort.identifier,
       }
-    end
-    let(:wizard) do
-      RegistrationWizard.new(
-        current_step:,
-        store:,
-        request:,
-        current_user: create(:user),
-      )
     end
 
     before do
+      course_cohort = create(:course_cohort, course:, cohort: chosen_cohort)
+      create(:course_cohort_provider, course_cohort:, lead_provider: valid_lead_provider)
       subject.wizard = wizard
     end
 
     it { is_expected.to validate_presence_of(:lead_provider_id) }
 
-    it "lead provider must exist" do
-      subject.lead_provider_id = 0
-      subject.valid?
-      expect(subject.errors[:lead_provider_id]).to be_present
+    context "when the lead provider does not exist" do
+      before { subject.lead_provider_id = 0 }
 
-      subject.lead_provider_id = LeadProvider.first.id
-      subject.valid?
-      expect(subject.errors[:lead_provider_id]).to be_blank
+      it { is_expected.to have_error(:lead_provider_id, :invalid, "Choose a valid provider") }
     end
 
-    npqeyl_and_npqll_codes = %w[
-      npq-early-years-leadership
-      npq-leading-literacy
-    ].freeze
-    npqel_code = %w[
-      npq-executive-leadership
-    ].freeze
-    npqh_sl_lt_ltd_lbc_codes = %w[ npq-headship
-                                   npq-senior-leadership
-                                   npq-leading-teaching
-                                   npq-leading-teaching-development
-                                   npq-leading-behaviour-culture
-                                   npq-additional-support-offer].freeze
-    npqh_ehco_codes = %w[
-      npq-early-headship-coaching-offer
-    ].freeze
-    npqlpm_codes = %w[
-      npq-leading-primary-mathematics
-    ]
-    senco_codes = %w[
-      npq-senco
-    ]
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_codes - npqh_ehco_codes - npqlpm_codes - senco_codes
+    context "when choosing a lead provider that offers the course in the current cohort" do
+      before { subject.lead_provider_id = valid_lead_provider.id }
 
-    other_npq_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:valid_lead_providers) { LeadProvider.all }
+      it { is_expected.not_to have_error(:lead_provider_id) }
+    end
 
-        let(:invalid_lead_providers) do
-          LeadProvider.where.not(id: valid_lead_providers)
-        end
+    context "when choosing a lead provider that does not offer the course in the current cohort" do
+      before { subject.lead_provider_id = LeadProvider.last.id }
 
-        it "returns raises an error when an invalid lead provider is used" do
-          valid_lead_providers.each do |valid_lead_provider|
-            subject.lead_provider_id = valid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_blank
-          end
+      it { is_expected.to have_error(:lead_provider_id, :invalid, "Choose a valid provider") }
+    end
 
-          invalid_lead_providers.each do |invalid_lead_provider|
-            subject.lead_provider_id = invalid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_present
-          end
-        end
+    context "when the chosen cohort is not the current cohort" do
+      let(:other_cohort) { create(:cohort, :previous) }
+      let(:chosen_cohort) { other_cohort }
+
+      before { cohort }
+
+      context "when choosing a lead provider that offers the course in the current cohort" do
+        let(:valid_lead_provider) { LeadProvider.second }
+
+        before { subject.lead_provider_id = valid_lead_provider.id }
+
+        it { is_expected.not_to have_error(:lead_provider_id) }
       end
-    end
 
-    npqeyl_and_npqll_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:valid_lead_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "National Institute of Teaching",
-            "Teach First",
-            "UCL Institute of Education",
-          ])
-        end
+      context "when choosing a lead provider that does not offer the course in the current cohort" do
+        let(:valid_lead_provider) { LeadProvider.second }
 
-        let(:invalid_lead_providers) do
-          LeadProvider.where.not(id: valid_lead_providers)
-        end
+        before { subject.lead_provider_id = LeadProvider.first.id }
 
-        it "returns raises an error when an invalid lead provider is used" do
-          valid_lead_providers.each do |valid_lead_provider|
-            subject.lead_provider_id = valid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_blank
-          end
-
-          invalid_lead_providers.each do |invalid_lead_provider|
-            subject.lead_provider_id = invalid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_present
-          end
-        end
-      end
-    end
-
-    npqel_code.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:valid_lead_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "Best Practice Network",
-            "Church of England",
-            "LLSE",
-            "National Institute of Teaching",
-            "Teach First",
-            "UCL Institute of Education",
-          ])
-        end
-
-        let(:invalid_lead_providers) do
-          LeadProvider.where.not(id: valid_lead_providers)
-        end
-
-        it "returns raises an error when an invalid lead provider is used" do
-          valid_lead_providers.each do |valid_lead_provider|
-            subject.lead_provider_id = valid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_blank
-          end
-
-          invalid_lead_providers.each do |invalid_lead_provider|
-            subject.lead_provider_id = invalid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_present
-          end
-        end
-      end
-    end
-
-    npqh_sl_lt_ltd_lbc_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:valid_lead_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "Best Practice Network",
-            "Church of England",
-            "LLSE",
-            "National Institute of Teaching",
-            "Teach First",
-            "UCL Institute of Education",
-          ])
-        end
-
-        let(:invalid_lead_providers) do
-          LeadProvider.where.not(id: valid_lead_providers)
-        end
-
-        it "returns raises an error when an invalid lead provider is used" do
-          valid_lead_providers.each do |valid_lead_provider|
-            subject.lead_provider_id = valid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_blank
-          end
-
-          invalid_lead_providers.each do |invalid_lead_provider|
-            subject.lead_provider_id = invalid_lead_provider.id
-            subject.valid?
-            expect(subject.errors[:lead_provider_id]).to be_present
-          end
-        end
+        it { is_expected.to have_error(:lead_provider_id, :invalid, "Choose a valid provider") }
       end
     end
   end
@@ -205,7 +93,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, :with_cohorts, type: :model d
         "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
-        "course_start_cohort" => Cohort.current.identifier,
+        "course_start_cohort" => cohort.identifier,
       }
     end
 
@@ -238,7 +126,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, :with_cohorts, type: :model d
       let(:store) do
         {
           "teacher_catchment" => "another",
-          "course_start_cohort" => Cohort.current.identifier,
+          "course_start_cohort" => cohort.identifier,
         }
       end
 
@@ -257,149 +145,27 @@ RSpec.describe Questionnaires::ChooseYourProvider, :with_cohorts, type: :model d
   end
 
   describe ".options" do
-    subject do
-      form.options
-    end
+    subject { form.options }
 
     let(:form) { described_class.new }
+    let(:course) { Course.ehco }
+    let(:course_identifier) { course.identifier }
 
     let(:store) do
       {
         "course_identifier" => course_identifier,
-        "course_start_cohort" => Cohort.current.identifier,
+        "course_start_cohort" => cohort.identifier,
       }
     end
 
-    let(:course) { Course.ehco }
-    let(:course_identifier) { course.identifier }
-
-    let(:expected_providers) { LeadProvider.all }
-
     before do
-      form.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store:,
-        request: nil,
-        current_user: create(:user),
-      )
+      course_cohort = create(:course_cohort, course:, cohort:)
+      create(:course_cohort_provider, course_cohort:, lead_provider: valid_lead_provider)
+      form.wizard = wizard
     end
 
-    npqeyl_and_npqll_codes = %w[
-      npq-early-years-leadership
-      npq-leading-literacy
-    ].freeze
-    npqel_code = %w[
-      npq-executive-leadership
-    ].freeze
-    npqh_sl_lt_ltd_lbc_codes = %w[
-      npq-headship
-      npq-senior-leadership
-      npq-leading-teaching
-      npq-leading-teaching-development
-      npq-leading-behaviour-culture
-      npq-additional-support-offer
-    ].freeze
-    npqlpm_codes = %w[
-      npq-leading-primary-mathematics
-    ]
-    npqh_ehco_codes = %w[
-      npq-early-headship-coaching-offer
-    ].freeze
-    senco_codes = %w[
-      npq-senco
-    ]
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_codes - npqlpm_codes - senco_codes - npqh_ehco_codes
-
-    other_npq_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:expected_providers) { LeadProvider.all }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
-        end
-      end
-    end
-
-    npqeyl_and_npqll_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:expected_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "National Institute of Teaching",
-            "Teach First",
-            "UCL Institute of Education",
-          ])
-        end
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
-        end
-      end
-    end
-
-    npqel_code.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:expected_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "Best Practice Network",
-            "Church of England",
-            "LLSE",
-            "National Institute of Teaching",
-            "Teach First",
-            "UCL Institute of Education",
-          ])
-        end
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
-        end
-      end
-    end
-
-    npqh_sl_lt_ltd_lbc_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:expected_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "Best Practice Network",
-            "Church of England",
-            "LLSE",
-            "National Institute of Teaching",
-            "Teach First",
-            "UCL Institute of Education",
-          ])
-        end
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
-        end
-      end
-    end
-
-    npqh_ehco_codes.each do |course_code|
-      context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(identifier: course_code) }
-        let(:expected_providers) do
-          LeadProvider.where(name: [
-            "Ambition Institute",
-            "Best Practice Network",
-            "Church of England",
-            "National Institute of Teaching",
-            "Teach First",
-            "LLSE",
-            "UCL Institute of Education",
-          ])
-        end
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
-        end
-      end
+    it "returns all providers that offer the course in the current cohort" do
+      expect(subject.map(&:value)).to contain_exactly(valid_lead_provider.id)
     end
   end
 end
