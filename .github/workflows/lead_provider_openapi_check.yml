@@ -7,12 +7,12 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.4.8"
+        default: "3.4.9"
       node-version:
         description: Node version
         type: string
         required: false
-        default: "24.13.0"
+        default: "24.14.1"
 
 jobs:
   rspec:
