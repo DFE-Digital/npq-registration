@@ -164,6 +164,7 @@ RSpec.describe HandleSubmissionForStore do
       let(:store) do
         {
           "current_user_id" => user.id,
+          "course_start_cohort" => cohort.identifier,
           "course_identifier" => course.identifier,
           "has_ofsted_urn" => "yes",
           "private_childcare_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
