@@ -3,7 +3,7 @@ module Questionnaires
     attribute :lead_provider_id
 
     validates :lead_provider_id, presence: true
-    validate :validate_lead_provider_exists
+    validate :validate_lead_provider_valid
 
     def self.permitted_params
       %i[
@@ -79,7 +79,7 @@ module Questionnaires
     end
 
     def providers
-      LeadProvider.for(course:).alphabetical
+      LeadProvider.for(course:, cohort: Cohort.find_by(identifier: wizard.query_store.course_start_cohort)).alphabetical
     end
 
     def lead_provider
@@ -94,7 +94,7 @@ module Questionnaires
              :get_an_identity_id,
              to: :query_store
 
-    def validate_lead_provider_exists
+    def validate_lead_provider_valid
       if lead_provider.blank?
         errors.add(:lead_provider_id, :invalid)
       end

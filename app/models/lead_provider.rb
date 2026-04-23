@@ -10,87 +10,13 @@ class LeadProvider < ApplicationRecord
     "UCL Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
   }.freeze
 
-  NPQH_SL_LT_LTD_LBC_PROVIDERS = [
-    "Ambition Institute",
-    "Best Practice Network",
-    "Church of England",
-    "LLSE",
-    "National Institute of Teaching",
-    "Teach First",
-    "UCL Institute of Education",
-  ].freeze
-
-  NPQH_EHCO_PROVIDERS = [
-    "Ambition Institute",
-    "Best Practice Network",
-    "Church of England",
-    "National Institute of Teaching",
-    "Teach First",
-    "LLSE",
-    "UCL Institute of Education",
-  ].freeze
-
-  EYL_LL_PROVIDERS = [
-    "Ambition Institute",
-    "National Institute of Teaching",
-    "Teach First",
-    "UCL Institute of Education",
-  ].freeze
-
-  EL_PROVIDERS = [
-    "Ambition Institute",
-    "Best Practice Network",
-    "Church of England",
-    "LLSE",
-    "National Institute of Teaching",
-    "Teach First",
-    "UCL Institute of Education",
-  ].freeze
-
-  LPM_PROVIDERS = [
-    "Ambition Institute",
-    "Church of England",
-    "LLSE",
-    "Teach First",
-    "UCL Institute of Education",
-    "National Institute of Teaching",
-  ].freeze
-
-  SENCO_PROVIDERS = [
-    "Ambition Institute",
-    "Best Practice Network",
-    "Church of England",
-    "National Institute of Teaching",
-    "Teach First",
-    "UCL Institute of Education",
-  ].freeze
-
-  # TODO: Move all of this mapping into the database
-  #       Hardcoding this has been done for expediency but
-  #       longterm having this handled in the DB so none of
-  #       this data has to be hardcoded would be preferable.
-  COURSE_TO_PROVIDER_MAPPING = {
-    "npq-headship" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
-    "npq-senior-leadership" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
-    "npq-leading-teaching" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
-    "npq-leading-teaching-development" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
-    "npq-leading-behaviour-culture" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
-    "npq-early-headship-coaching-offer" => NPQH_EHCO_PROVIDERS,
-    "npq-additional-support-offer" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
-    "npq-early-years-leadership" => EYL_LL_PROVIDERS,
-    "npq-leading-literacy" => EYL_LL_PROVIDERS,
-    "npq-executive-leadership" => EL_PROVIDERS,
-    "npq-leading-primary-mathematics" => LPM_PROVIDERS,
-    "npq-senco" => SENCO_PROVIDERS,
-  }.freeze
-
   has_many :applications
   has_many :statements
 
   has_many :delivery_partnerships
   has_many :delivery_partners, through: :delivery_partnerships
 
-  has_many :course_cohort_providers
+  has_many :course_cohort_providers, dependent: :destroy
   has_many :course_cohorts, through: :course_cohort_providers
   has_many :courses, through: :course_cohorts
 
@@ -99,15 +25,11 @@ class LeadProvider < ApplicationRecord
 
   scope :alphabetical, -> { order(name: :asc) }
 
-  def self.for(course:)
-    course_specific_list = COURSE_TO_PROVIDER_MAPPING[course.identifier]
+  def self.for(course:, cohort: Cohort.current)
+    course_cohort = CourseCohort.find_by(course:, cohort:)
+    return none unless course_cohort
 
-    return all if course_specific_list.blank?
-
-    ecf_ids = ALL_ACTIVE_PROVIDERS.slice(*course_specific_list).values.compact_blank
-    raise "Missing provider ECF_ID for available providers list" if ecf_ids.count != course_specific_list.count
-
-    where(ecf_id: ecf_ids)
+    LeadProvider.joins(:course_cohort_providers).where(course_cohort_providers: { course_cohort_id: course_cohort.id }).distinct
   end
 
   def next_output_fee_statement(cohort)

@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.describe "update_application" do
+RSpec.describe "update_application", :with_cohorts do
   include_context "with default schedules"
 
-  let(:cohort) { create(:cohort, :previous) }
+  let(:cohort) { create(:cohort, :current) }
 
   shared_examples "outputting an error" do |message: "Application not found: "|
     it "outputs an error message" do

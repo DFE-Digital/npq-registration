@@ -75,6 +75,7 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "process_statements.rb",
   "add_delivery_partners.rb",
   "add_eligibility_list_entries.rb",
+  "add_course_cohort_providers.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   ApplicationRecord.transaction do
