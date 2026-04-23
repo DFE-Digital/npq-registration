@@ -11,6 +11,7 @@ module Applications
 
     validates :application, presence: true
     validates :funded_place, inclusion: { in: [true, false], if: :validate_funded_place? }
+    validate :funded_place_false_for_unfunded_cohort
     validate :not_already_accepted
     validate :cannot_change_from_rejected
     validate :other_accepted_applications_with_same_course_and_cohort?
@@ -37,6 +38,15 @@ module Applications
     delegate :cohort, :user, :course, :lead_provider,
              to: :application
 
+    def funded_place_false_for_unfunded_cohort
+      return if application.blank?
+      return unless cohort&.zero_funding?
+
+      if funded_place != false
+        errors.add(:funded_place, :cannot_be_funded_for_unfunded_cohort)
+      end
+    end
+
     def not_already_accepted
       return if application.blank?
 
@@ -61,7 +71,7 @@ module Applications
         training_status: :active,
       }
 
-      if cohort&.funding_cap?
+      if cohort&.capped_funding?
         opts[:funded_place] = funded_place
       end
 
@@ -111,7 +121,7 @@ module Applications
 
     def eligible_for_funded_place
       return if errors.any?
-      return unless cohort&.funding_cap?
+      return unless cohort&.capped_funding?
 
       if funded_place && !application.eligible_for_funding
         errors.add(:application, :not_eligible_for_funded_place)
@@ -119,7 +129,7 @@ module Applications
     end
 
     def validate_funded_place?
-      errors.blank? && cohort&.funding_cap?
+      errors.blank? && cohort&.capped_funding?
     end
 
     def new_schedule

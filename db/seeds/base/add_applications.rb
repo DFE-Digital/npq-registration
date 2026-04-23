@@ -112,7 +112,7 @@ LeadProvider.find_each do |lead_provider|
       lead_provider:,
       course: all_courses.sample,
       funded_place: Faker::Boolean.boolean(true_ratio: 0.6),
-      cohort: Cohort.where(funding_cap: true).sample,
+      cohort: Cohort.where(funding: "capped").sample,
     )
 
     # users with one not eligible for funded place application each (cohort funding_cap true)
@@ -126,7 +126,7 @@ LeadProvider.find_each do |lead_provider|
       lead_provider:,
       course: all_courses.sample,
       funded_place: false,
-      cohort: Cohort.where(funding_cap: true).sample,
+      cohort: Cohort.where(funding: "capped").sample,
     )
 
     # users with one funded place nil application each (cohort funding_cap false)
@@ -140,7 +140,7 @@ LeadProvider.find_each do |lead_provider|
       eligible_for_funding: Faker::Boolean.boolean,
       lead_provider:,
       course: all_courses.sample,
-      cohort: Cohort.where(funding_cap: false).sample,
+      cohort: Cohort.where(funding: "full").sample,
     )
   end
 end

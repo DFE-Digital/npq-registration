@@ -10,7 +10,7 @@ RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spe
 
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
-  let(:cohort) { create(:cohort, :current, funding_cap: true) }
+  let(:cohort) { create(:cohort, :current, :with_funding_cap) }
   let(:application) do
     create(
       :application,

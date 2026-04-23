@@ -186,11 +186,11 @@ shared:
     - registration_start_date
     - created_at
     - updated_at
-    - funding_cap
     - ecf_id
     - suffix
     - identifier
     - description
+    - funding
   :application_states:
     - id
     - application_id

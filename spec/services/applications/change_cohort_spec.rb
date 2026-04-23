@@ -67,6 +67,24 @@ RSpec.describe Applications::ChangeCohort, type: :model do
         it { is_expected.to have_error(:cohort_id, :schedule_not_found, "There is no schedule for the current course in the specified cohort") }
       end
     end
+
+    context "when the funding is different" do
+      [
+        { current: "full", new: "capped" },
+        { current: "capped", new: "full" },
+        { current: "full", new: "zero" },
+        { current: "zero", new: "full" },
+        { current: "capped", new: "zero" },
+        { current: "zero", new: "capped" },
+      ].each do |c|
+        let(:cohort_2021) { create(:cohort, start_year: 2021, funding: c[:current]) }
+        let(:new_cohort) { create(:cohort, start_year: 2025, funding: c[:new]) }
+
+        before { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
+
+        it { is_expected.to have_error(:cohort_id, :funding_different, "The funding for the new cohort is different to the current cohort") }
+      end
+    end
   end
 
   describe "#change_cohort" do
@@ -103,6 +121,7 @@ RSpec.describe Applications::ChangeCohort, type: :model do
     let(:cohort_2022) { create(:cohort, start_year: 2022) }
     let(:cohort_2023) { create(:cohort, start_year: 2023) }
     let(:cohort_2024) { create(:cohort, start_year: 2024) }
+    let(:unfunded_cohort_2026) { create(:cohort, :unfunded, start_year: 2026) }
     let(:schedule_2021) { create(:schedule, :npq_leadership_autumn, cohort: cohort_2021) }
 
     before do
@@ -114,19 +133,20 @@ RSpec.describe Applications::ChangeCohort, type: :model do
       create(:schedule, :npq_leadership_spring, cohort: cohort_2023)
       create(:schedule, :npq_specialist_autumn, cohort: cohort_2023)
       create(:schedule, :npq_specialist_autumn, cohort: cohort_2024)
+      create(:schedule, :npq_leadership_autumn, cohort: unfunded_cohort_2026)
     end
 
     context "when the application is in a schedule" do
       let(:application) { create(:application, cohort: cohort_2021, schedule: schedule_2021) }
 
-      it "includes all cohorts with schedules for the course group excluding the application's current cohort" do
+      it "includes all cohorts with the same funding with schedules for the course group excluding the application's current cohort" do
         expect(service.cohort_options).to contain_exactly(cohort_2022, cohort_2023, new_cohort)
       end
     end
 
     context "when the application is not in a schedule" do
-      it "includes all cohorts except the application's current cohort" do
-        expect(service.cohort_options).to eq [cohort_2022, cohort_2023, cohort_2024, new_cohort]
+      it "includes all cohorts with the same funding except the application's current cohort" do
+        expect(service.cohort_options).to contain_exactly(cohort_2022, cohort_2023, cohort_2024, new_cohort)
       end
     end
   end

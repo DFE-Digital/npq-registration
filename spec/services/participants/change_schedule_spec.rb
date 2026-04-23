@@ -156,22 +156,20 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         end
       end
 
-      context "when moving from funding cohort to funding cohort" do
+      context "when moving from a capped cohort to a capped cohort" do
         let(:cohort) { create(:cohort, :current, :with_funding_cap) }
         let(:new_cohort) { create(:cohort, :next, :with_funding_cap) }
 
-        before do
-          application.update!(funded_place: false, eligible_for_funding: true)
-        end
+        before { application.update!(funded_place: false, eligible_for_funding: true) }
 
-        it "does not change funding place if original contract has a funded place" do
+        it "does not change funded_place if original contract has a funded place" do
           expect(subject.change_schedule).to be_truthy
           application.reload
           expect(application.funded_place).to be_falsey
         end
       end
 
-      context "when moving from non funding cohort to funding cohort" do
+      context "when moving from an uncapped cohort to capped cohort" do
         let(:cohort) { create(:cohort, :current, :without_funding_cap) }
         let(:new_cohort) { create(:cohort, :next, :with_funding_cap) }
         let!(:application) do
@@ -190,7 +188,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         context "when `eligible_for_funding` is true" do
           let(:eligible_for_funding) { true }
 
-          it "sets funding place to `true`" do
+          it "sets funded_place to true" do
             expect(subject.change_schedule).to be_truthy
             application.reload
             expect(application.funded_place).to be_truthy
@@ -200,7 +198,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         context "when `eligible_for_funding` is false" do
           let(:eligible_for_funding) { false }
 
-          it "sets funding place to `false`" do
+          it "sets funded_place to false" do
             expect(subject.change_schedule).to be_truthy
             application.reload
             expect(application.funded_place).to be_falsey
@@ -208,15 +206,58 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         end
       end
 
-      context "when moving from funding cohort to non funding cohort" do
+      context "when moving from a capped cohort to an uncapped cohort" do
         let(:cohort) { create(:cohort, :current, :with_funding_cap) }
         let(:new_cohort) { create(:cohort, :next, :without_funding_cap) }
 
         it "does not change the application to the new cohort" do
-          expect(subject.change_schedule).to be_falsey
+          expect(subject.change_schedule).to be false
 
           expect(subject).to have_error(:cohort, :cannot_change_to_cohort_without_funding_cap, "You cannot change the '#/cohort' field from one with a funding cap to one without a funding cap")
           expect(subject.errors.count).to eq(1)
+        end
+      end
+
+      context "when moving from a capped cohort to an unfunded cohort" do
+        let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+        let(:new_cohort) { create(:cohort, :next, :unfunded) }
+
+        it "sets funded_place to false" do
+          expect(subject.change_schedule).to be_truthy
+          expect(application.reload.funded_place).to be false
+        end
+      end
+
+      context "when moving from an uncapped cohort to an unfunded cohort" do
+        let(:cohort) { create(:cohort, :current, :without_funding_cap) }
+        let(:new_cohort) { create(:cohort, :next, :unfunded) }
+
+        it "sets funded_place to false" do
+          expect(subject.change_schedule).to be_truthy
+          expect(application.reload.funded_place).to be false
+        end
+      end
+
+      context "when moving from an unfunded cohort to a capped cohort" do
+        let(:cohort) { create(:cohort, :current, :unfunded) }
+        let(:new_cohort) { create(:cohort, :next, :with_funding_cap) }
+        let!(:application) { create(:application, :accepted, :without_funded_place, cohort:, lead_provider:, course:, schedule:) }
+
+        it "does not change the application to the new cohort" do
+          expect(subject.change_schedule).to be false
+          expect(subject).to have_error(:cohort, :cannot_change_to_funded_cohort, "You cannot change the '#/cohort' field from one that is not funded to with that is funded")
+        end
+      end
+
+      context "when moving from an unfunded cohort to an uncapped cohort" do
+        let(:cohort) { create(:cohort, :current, :unfunded) }
+        let(:new_cohort) { create(:cohort, :next, :without_funding_cap) }
+        let!(:application) { create(:application, :accepted, :without_funded_place, cohort:, lead_provider:, course:, schedule:) }
+
+        it "does not change the application to the new cohort" do
+          expect(subject.change_schedule).to be false
+
+          expect(subject).to have_error(:cohort, :cannot_change_to_funded_cohort, "You cannot change the '#/cohort' field from one that is not funded to with that is funded")
         end
       end
 

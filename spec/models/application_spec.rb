@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Application do
-  subject(:application) { create(:application) }
+  subject(:application) { create(:application, user:) }
+
+  let(:user) { create(:user) }
 
   describe "relationships" do
     it { is_expected.to belong_to(:user) }
@@ -69,7 +71,52 @@ RSpec.describe Application do
     context "when the cohort has a funding cap" do
       let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
-      context "when accepted" do
+      context "when the application is not accepted" do
+        it "allows the funded place to be nil" do
+          subject.funded_place = nil
+          expect(subject).to be_valid
+        end
+
+        context "when changing to wrong schedule" do
+          let(:new_schedule) { create(:schedule, cohort:) }
+
+          it "does not validation error" do
+            subject.schedule = new_schedule
+            expect(subject).to be_valid
+          end
+        end
+
+        it "validates funded_place eligibility" do
+          subject.funded_place = true
+          subject.eligible_for_funding = false
+          expect(subject).to have_error(:funded_place, :not_eligible, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
+        end
+
+        context "when the cohort does not have a funding cap" do
+          let(:cohort) { create(:cohort, :without_funding_cap) }
+
+          it "allows funded_place to be a boolean" do
+            subject.funded_place = false
+            expect(subject).to be_valid
+          end
+        end
+
+        context "when the cohort is unfunded" do
+          subject(:application) { build(:application, :eligible_for_funding, cohort:) }
+
+          let(:cohort) { create(:cohort, :unfunded) }
+
+          it "validates funded place is false" do
+            subject.funded_place = false
+            expect(subject).to be_valid
+
+            subject.funded_place = true
+            expect(subject).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field should be false for unfunded cohorts.")
+          end
+        end
+      end
+
+      context "when the application is accepted" do
         subject { build(:application, :accepted, cohort:) }
 
         it "validates funded_place is boolean" do
@@ -78,36 +125,43 @@ RSpec.describe Application do
           expect(subject).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
         end
 
+        context "when changing to wrong schedule" do
+          let(:new_schedule) { create(:schedule, cohort:) }
+
+          it "returns a validation error" do
+            subject.schedule = new_schedule
+            expect(subject).to have_error(:schedule, :invalid_for_course, "The selected schedule is not valid for the course")
+          end
+        end
+
         it "validates funded_place eligibility" do
           subject.funded_place = true
           subject.eligible_for_funding = false
 
           expect(subject).to have_error(:funded_place, :not_eligible, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
         end
-      end
 
-      context "when changing to wrong schedule" do
-        let(:new_schedule) { create(:schedule, cohort:) }
+        context "when the cohort does not have a funding cap" do
+          let(:cohort) { create(:cohort, :without_funding_cap) }
 
-        subject { create(:application, :accepted, cohort:) }
+          it "validates funded_place is nil" do
+            subject.funded_place = false
 
-        it "returns validation error" do
-          subject.schedule = new_schedule
-
-          expect(subject).to have_error(:schedule, :invalid_for_course, "The selected schedule is not valid for the course")
+            expect(subject).to have_error(:funded_place, :should_not_be_set, "The '#//funded_place' field should not be set for cohorts that do not have a funding cap.")
+          end
         end
-      end
-    end
 
-    context "when the cohort does not have a funding cap" do
-      let(:cohort) { create(:cohort, :without_funding_cap) }
+        context "when the cohort is unfunded" do
+          let(:cohort) { create(:cohort, :unfunded) }
 
-      subject { build(:application, :accepted, cohort:) }
+          it "validates funded place is false" do
+            subject.funded_place = false
+            expect(subject).to be_valid
 
-      it "validates funded_place is nil" do
-        subject.funded_place = false
-
-        expect(subject).to have_error(:funded_place, :should_not_be_set, "The '#//funded_place' field should not be set for cohorts that do not have a funding cap.")
+            subject.funded_place = true
+            expect(subject).to have_error(:funded_place, :cannot_be_funded_for_unfunded_cohort, "The '#/funded_place' field should be false for unfunded cohorts.")
+          end
+        end
       end
     end
   end
@@ -364,8 +418,6 @@ RSpec.describe Application do
   end
 
   describe "#eligible_for_dfe_funding?" do
-    let(:user) { create(:user) }
-
     subject { application }
 
     context "when application has been previously funded" do
@@ -392,7 +444,6 @@ RSpec.describe Application do
   end
 
   describe "#previously_funded?" do
-    let(:user) { create(:user) }
     let(:application) { create(:application, :previously_funded, user:, course: Course.ehco, cohort: cohort_with_funding_cap) }
     let(:cohort_with_funding_cap) { create(:cohort, :with_funding_cap) }
     let(:cohort_without_funding_cap) { create(:cohort, :without_funding_cap) }
@@ -560,8 +611,6 @@ RSpec.describe Application do
     end
 
     context "when it was previously funded" do
-      let(:user) { create(:user) }
-
       subject(:application) { create(:application, :eligible_for_funding, :previously_funded, user:, course: Course.ehco) }
 
       it { is_expected.not_to be_fundable }
