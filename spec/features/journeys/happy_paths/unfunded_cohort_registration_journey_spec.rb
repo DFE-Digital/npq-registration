@@ -38,6 +38,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_content("You’re not eligible for scholarship funding for the Headship NPQ course as you have selected the Spring 2026 cohort.")
       page.click_link("Continue")
     end
 
