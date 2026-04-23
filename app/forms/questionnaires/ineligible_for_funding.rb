@@ -3,6 +3,7 @@ module Questionnaires
     class UnexpectedEligibilityStatusCode < StandardError; end
 
     NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
+    UNFUNDED_COHORT = "unfunded_cohort".freeze
     NOT_IN_ENGLAND = "not_in_england".freeze
     EARLY_YEARS_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
@@ -67,7 +68,7 @@ module Questionnaires
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::UNFUNDED_COHORT
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                                 return UNFUNDED_COHORT
                                end
 
       raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}"
