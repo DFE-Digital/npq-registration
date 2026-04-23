@@ -1,5 +1,5 @@
 # Build compilation image
-FROM ruby:3.4.8-alpine3.23 AS builder
+FROM ruby:3.4.9-alpine3.23 AS builder
 
 # The application runs from /app
 WORKDIR /app
@@ -13,7 +13,7 @@ RUN apk add --update --no-cache tzdata && \
 # yarn: node package manager
 # postgresql-dev: postgres driver and libraries
 # zlib: install newer version of zlib to avoid security vulnerabilities in base version
-RUN apk add --no-cache build-base git postgresql-dev yaml-dev yarn zlib=1.3.2-r0
+RUN apk add --no-cache build-base git postgresql-dev yaml-dev yarn
 
 # Install bundler to run bundle exec
 # This should be the same version as the Gemfile.lock
@@ -54,7 +54,7 @@ RUN rm -rf node_modules log/* tmp/* /tmp && \
     find /usr/local/bundle/gems -name "*.html" -delete
 
 # Build runtime image
-FROM ruby:3.4.8-alpine3.23 AS production
+FROM ruby:3.4.9-alpine3.23 AS production
 
 # The application runs from /app
 WORKDIR /app
@@ -62,7 +62,7 @@ WORKDIR /app
 # Add the timezone as it's not configured by default in Alpine
 # zlib: install newer version of zlib to avoid security vulnerabilities in base version
 ARG EXTRA_PACKAGES=""
-RUN apk add --update --no-cache libpq tzdata yaml zlib=1.3.2-r0 ${EXTRA_PACKAGES} && \
+RUN apk add --update --no-cache libpq tzdata yaml ${EXTRA_PACKAGES} && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
     echo "Europe/London" > /etc/timezone
 
