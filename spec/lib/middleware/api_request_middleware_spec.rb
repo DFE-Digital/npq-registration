@@ -110,5 +110,73 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
         )
       end
     end
+
+    describe "#call on non-tracked API paths" do
+      it "does not fire StreamAPIRequestsToBigQueryJob for /api/guidance" do
+        request.get "/api/guidance/some-page"
+
+        expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+      end
+
+      it "does not fire StreamAPIRequestsToBigQueryJob for /api/docs" do
+        request.get "/api/docs/v3"
+
+        expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+      end
+
+      it "fires StreamAPIRequestsToBigQueryJob for other versioned API paths" do
+        request.get "/api/v99/fake-endpoint"
+
+        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later)
+      end
+
+      it "fires StreamAPIRequestsToBigQueryJob for /api/v1/get_an_identity" do
+        request.post "/api/v1/get_an_identity/webhook_messages"
+
+        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later)
+      end
+    end
+
+    describe "#call with unprocessable content types" do
+      it "does not fire StreamAPIRequestsToBigQueryJob for multipart/form-data" do
+        request.post "/api/v3/participant-declarations",
+                     "CONTENT_TYPE" => "multipart/form-data; boundary=----WebKitFormBoundary",
+                     input: "some file data"
+
+        expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+      end
+
+      it "does not fire StreamAPIRequestsToBigQueryJob for application/octet-stream" do
+        request.post "/api/v3/participant-declarations",
+                     "CONTENT_TYPE" => "application/octet-stream",
+                     input: "\x00\x01\x02"
+
+        expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+      end
+
+      it "fires StreamAPIRequestsToBigQueryJob for application/json with charset" do
+        request.post "/api/v3/participant-declarations",
+                     "CONTENT_TYPE" => "application/json; charset=utf-8",
+                     input: '{"foo":"bar"}'
+
+        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later)
+      end
+    end
+
+    describe "#call with an oversized request body" do
+      it "fires StreamAPIRequestsToBigQueryJob with truncation message instead of body" do
+        large_body = "x" * (1_048_576 + 1)
+        request.post "/api/v3/participant-declarations",
+                     "CONTENT_TYPE" => "application/json",
+                     input: large_body
+
+        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
+          hash_including("body" => "[truncated: body exceeded 1048576 bytes]"),
+          anything,
+          anything,
+          anything,
+        )
+      end
+    end
   end
 end

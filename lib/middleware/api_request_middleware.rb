@@ -17,6 +17,10 @@ module Middleware
       QUERY_STRING
     ].freeze
 
+    PROCESSABLE_CONTENT_TYPES = %w[application/json application/x-www-form-urlencoded].freeze
+
+    MAX_REQUEST_BODY_SIZE = 1_048_576 # 1 MB
+
     def initialize(app)
       @app = app
     end
@@ -71,7 +75,15 @@ module Middleware
     def request_body
       return "" if @request.body.nil?
 
-      @request.body.dup.tap(&:rewind).read.force_encoding("utf-8")
+      body = @request.body.dup.tap(&:rewind)
+      content = body.read(MAX_REQUEST_BODY_SIZE + 1)
+      return "" if content.nil?
+
+      if content.bytesize > MAX_REQUEST_BODY_SIZE
+        return "[truncated: body exceeded #{MAX_REQUEST_BODY_SIZE} bytes]"
+      end
+
+      content.force_encoding("utf-8")
     end
 
     def request_headers
@@ -79,11 +91,18 @@ module Middleware
     end
 
     def trace_request?
-      trace_request_enabled? && vendor_api_path?
+      trace_request_enabled? && vendor_api_path? && processable_content_type?
     end
 
     def vendor_api_path?
       @request.path =~ /^\/api\/v\d+\/.*$/
+    end
+
+    def processable_content_type?
+      content_type = @request.content_type
+      return true if content_type.blank?
+
+      PROCESSABLE_CONTENT_TYPES.any? { |type| content_type.start_with?(type) }
     end
 
     def trace_request_enabled?
