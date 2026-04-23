@@ -156,7 +156,7 @@ jobs:
           bundler-cache: true
 
       - name: Setup sonarqube
-        uses: warchant/setup-sonar-scanner@v9
+        uses: warchant/setup-sonar-scanner@7a89a4622e5c3b5d9c9673cf04f15f005f69d2eb # Pinned at v9
 
       - name: Download Artifacts
         uses: actions/download-artifact@v8
