@@ -1,6 +1,6 @@
 namespace :participant_outcomes do
   desc "Create a participant outcome"
-  task :create, %i[user_ecf_id lead_provider_ecf_id course_identifier completion_date state] => :environment do |_t, args|
+  task :create, %i[user_ecf_id lead_provider_ecf_id course_identifier completion_date state] => :versioned_environment do |_t, args|
     logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
 
     user = User.find_by(ecf_id: args.user_ecf_id)
@@ -39,7 +39,7 @@ namespace :participant_outcomes do
   end
 
   desc "Void a duplicate participant outcome"
-  task :void_duplicate, %i[participant_outcome_id] => :environment do |_t, args|
+  task :void_duplicate, %i[participant_outcome_id] => :versioned_environment do |_t, args|
     logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
 
     participant_outcome = ParticipantOutcome.find_by(id: args.participant_outcome_id)

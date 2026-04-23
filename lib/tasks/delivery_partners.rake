@@ -3,7 +3,7 @@ require "csv"
 namespace :delivery_partners do
   namespace :partners do
     desc "Import delivery partners from csv"
-    task :import, %i[import_file dry_run] => :environment do |_t, args|
+    task :import, %i[import_file dry_run] => :versioned_environment do |_t, args|
       Rails.logger = Logger.new($stdout) unless Rails.env.test?
 
       raise "Import file not specified" if args[:import_file].blank?
@@ -42,7 +42,7 @@ namespace :delivery_partners do
 
   namespace :partnerships do
     desc "Import delivery partnerships from csv"
-    task :import, %i[import_file dry_run] => :environment do |_t, args|
+    task :import, %i[import_file dry_run] => :versioned_environment do |_t, args|
       Rails.logger = Logger.new($stdout) unless Rails.env.test?
 
       raise "Import file not specified" if args[:import_file].blank?

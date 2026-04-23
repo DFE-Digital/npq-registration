@@ -87,7 +87,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Update Participant on an application (and move declarations)"
-      task :update_participant, %i[application_ecf_id new_participant_ecf_id] => :environment do |_t, args|
+      task :update_participant, %i[application_ecf_id new_participant_ecf_id] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         old_user = application.user
@@ -101,7 +101,7 @@ class UpdateApplicationRakeTask
       end
 
       desc "Change the course on an application"
-      task :update_course, %i[application_ecf_id new_course_identifier override_declarations_check] => :environment do |_t, args|
+      task :update_course, %i[application_ecf_id new_course_identifier override_declarations_check] => :versioned_environment do |_t, args|
         find_application(args.application_ecf_id)
 
         override_declarations_check = args.override_declarations_check == "true"

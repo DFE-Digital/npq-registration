@@ -3,7 +3,7 @@ require "csv"
 namespace :one_off do
   namespace :legacy_participant_outcomes do
     desc "Import DQT data from CSV file (has header: trn,npq_type,awarded_date and the date is in format m/d/Y)"
-    task :import, %i[file_path truncate dry_run] => :environment do |_t, args|
+    task :import, %i[file_path truncate dry_run] => :versioned_environment do |_t, args|
       logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
       file_path = args[:file_path]
       dry_run = args[:dry_run] != "false"

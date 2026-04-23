@@ -2,7 +2,7 @@
 
 namespace :lead_providers do
   desc "seed good test data for lead providers for API testing"
-  task :seed_statements_and_applications, %i[lead_provider_name number_of_participants cohort_identifier] => :environment do |_t, args|
+  task :seed_statements_and_applications, %i[lead_provider_name number_of_participants cohort_identifier] => :versioned_environment do |_t, args|
     return unless Rails.env.in?(%w[development review sandbox])
 
     lead_provider = LeadProvider.find_by(name: args[:lead_provider_name])

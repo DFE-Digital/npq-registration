@@ -7,7 +7,7 @@
 # rake 'private_childcare_providers:import[lib/private_childcare_providers/2025-03-31/childcare_providers.csv,childcare_providers]'
 namespace :private_childcare_providers do
   desc "Sync PrivateChildcareProvider attributes with imported file"
-  task :import, %i[file_name parser] => :environment do |_t, args|
+  task :import, %i[file_name parser] => :versioned_environment do |_t, args|
     file_name = args.file_name
     parser = args.parser
     logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
