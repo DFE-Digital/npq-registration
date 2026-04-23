@@ -90,6 +90,10 @@ class LeadProvider < ApplicationRecord
   has_many :delivery_partnerships
   has_many :delivery_partners, through: :delivery_partnerships
 
+  has_many :course_cohort_providers
+  has_many :course_cohorts, through: :course_cohort_providers
+  has_many :courses, through: :course_cohorts
+
   validates :name, presence: true
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
