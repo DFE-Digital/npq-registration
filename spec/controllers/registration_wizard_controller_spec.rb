@@ -56,6 +56,8 @@ RSpec.describe RegistrationWizardController do
     let(:wizard_params) { { course_start_cohort: "2026a" } }
     let(:make_request) { patch :update, params: { step: "course-start-date", registration_wizard: wizard_params } }
 
+    before { create(:cohort, start_year: 2026) }
+
     it_behaves_like "it redirects on missing mandatory institution"
 
     it "persists data to session" do
