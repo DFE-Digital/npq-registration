@@ -12,6 +12,7 @@ module Questionnaires
     attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true, inclusion: { in: OPTIONS.keys }
+    validate :cohort_exists
 
     def self.permitted_params
       [QUESTION_NAME]
@@ -40,6 +41,13 @@ module Questionnaires
 
     def previous_step
       :start
+    end
+
+  private
+
+    def cohort_exists
+      cohort = Cohort.find_by(identifier: public_send(QUESTION_NAME))
+      errors.add(QUESTION_NAME, :invalid) unless cohort
     end
   end
 end
