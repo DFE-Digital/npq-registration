@@ -177,7 +177,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
-        )
+        }
       end
 
       it "stores data from store" do
