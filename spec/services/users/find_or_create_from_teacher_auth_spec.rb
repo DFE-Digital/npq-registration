@@ -116,6 +116,44 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
   end
 
+  context "when the TRN matches an unverified TRN on one GAI user" do
+    context "when the email matches a user" do
+      let(:user) { create(:user, :with_get_an_identity_id, trn:, trn_verified: false, email:) }
+
+      before { user }
+
+      it "sets the uid, provider and trn_verified on the matched user" do
+        subject
+        expect(user.reload).to have_attributes(uid:, provider: "teacher_auth", trn_verified: true, trn_auto_verified: true)
+      end
+    end
+
+    context "when the email does not match a user" do
+      it "creates a new user" do
+        subject
+        expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(
+          email:,
+          trn:,
+          trn_verified: true,
+          trn_auto_verified: true,
+          full_name: verified_name.join(" "),
+          date_of_birth: Date.parse("1990-01-01"),
+          feature_flag_id:,
+        )
+      end
+
+      context "when the email clashes with an existing user with a different TRN" do
+        let(:user) { create(:user, :with_get_an_identity_id, trn: "111111", trn_verified: true, email:) }
+
+        before { user }
+
+        it "raises an error" do
+          expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
+        end
+      end
+    end
+  end
+
   context "when the TRN matches a verified TRN on more than one user" do
     let(:most_recently_updated_user) { create(:user, trn:, trn_verified: true) }
     let(:older_user) { create(:user, trn:, trn_verified: true, updated_at: 2.days.ago) }
