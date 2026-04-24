@@ -41,7 +41,7 @@ The test environments feature all the NPQ API request endpoints and have been po
 
 The base URL for the API's test environments is:
 
-* [https://npq-registration-sandbox-web.teacherservices.cloud](https://npq-registration-sandbox-web.teacherservices.cloud)
+* [https://sandbox.register-npq.education.gov.uk](https://sandbox.register-npq.education.gov.uk)
 
 Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add `/api/v3/npq-applications` to the test environment URL if they want to retrieve multiple applications.
 
@@ -62,67 +62,67 @@ Providers can use API testing tools such as Postman to make test API calls. Prov
 
 ### Rate limits
 
-**Service rate limit**: The service allows 1,000 requests every 5 minutes in total. 
+**Service rate limit**: The service allows 1,000 requests every 5 minutes in total.
 
-**Per-IP limit**: Each IP address can make 300 requests in 5 minutes. 
+**Per-IP limit**: Each IP address can make 300 requests in 5 minutes.
 
-These limits help prevent the service from getting overloaded. 
+These limits help prevent the service from getting overloaded.
 
-### Best practices for efficient requests 
+### Best practices for efficient requests
 
-**Slow down requests**: Providers should add a small delay (e.g. 100ms) between requests to avoid overwhelming the system. 
+**Slow down requests**: Providers should add a small delay (e.g. 100ms) between requests to avoid overwhelming the system.
 
-**Request more data at once**: Use a larger page size (e.g. 300) to reduce the number of requests. This allows fetching up to 90,000 declarations in 5 minutes, which should be enough. 
+**Request more data at once**: Use a larger page size (e.g. 300) to reduce the number of requests. This allows fetching up to 90,000 declarations in 5 minutes, which should be enough.
 
-If the limit is exceeded, providers will see `429` HTTP status codes. 
+If the limit is exceeded, providers will see `429` HTTP status codes.
 
-This limit on requests for each authentication key is calculated on a rolling basis. 
+This limit on requests for each authentication key is calculated on a rolling basis.
 
-## Syncing data best practice 
+## Syncing data best practice
 
-### Polling the API regularly 
+### Polling the API regularly
 
 To make sure no declarations, participants, transfers or unfunded mentors are missed:
 
 * poll the relevant `GET endpoints` multiple times a day, ensuring you include an `updated_since` filter
-* use the default pagination of 100 records per page 
+* use the default pagination of 100 records per page
 * keep polling and incrementing the page number until you receive an empty response
 
-Contact the DfE using our Slack channel if you need further details. 
+Contact the DfE using our Slack channel if you need further details.
 
-### Performing a full sync  
+### Performing a full sync
 
-We recommend you do a full sync of all records in the API once a week without using the <code>updated_since</code> filters.  
+We recommend you do a full sync of all records in the API once a week without using the <code>updated_since</code> filters.
 
-The DfE can coordinate ‘windows’ (set time periods) for providers to do this at times when there is a low background load on the service. Contact the DfE using our Slack channel for more details. 
+The DfE can coordinate ‘windows’ (set time periods) for providers to do this at times when there is a low background load on the service. Contact the DfE using our Slack channel for more details.
 
-### Polling windows 
+### Polling windows
 
-Always poll 2 windows back from your last successful poll. This guarantees that all participant data is captured. For example: 
+Always poll 2 windows back from your last successful poll. This guarantees that all participant data is captured. For example:
 
 * at 3:15pm enter the following request - <code>/api/v3/participants/ecf?filter[updated_since]=2025-01-28T13:15:00Z</code>
 * at 4:15pm enter the following request - <code>/api/v3/participants/ecf?filter[updated_since]=2025-01-28T14:15:00Z</code>
 
-Try polling randomly rather than on the hour to prevent system overload. 
+Try polling randomly rather than on the hour to prevent system overload.
 
-### Changing the funded place 
+### Changing the funded place
 
-To prevent errors when updating the funded place status, follow these best practices: 
+To prevent errors when updating the funded place status, follow these best practices:
 
 **1. Set the correct status before submission**
 
-* Ensure the funded place field is correct before submitting a declaration. 
-* Avoid changing the funded place status after submission. 
+* Ensure the funded place field is correct before submitting a declaration.
+* Avoid changing the funded place status after submission.
 
 **2. Correct mistakes**
 
-* If the status was incorrect, void the original declaration and resubmit with the correct funded place status. 
-* Do not use the PUT change-funded-place request to update this field after submission. 
+* If the status was incorrect, void the original declaration and resubmit with the correct funded place status.
+* Do not use the PUT change-funded-place request to update this field after submission.
 
 **3. API best practices**
 
-* Always check and validate data before making a POST declaration request. 
-* Use the <code>GET declaration endpoint</code> to verify existing records before making updates. 
-* Minimise unnecessary updates to keep records consistent and reduce errors. 
+* Always check and validate data before making a POST declaration request.
+* Use the <code>GET declaration endpoint</code> to verify existing records before making updates.
+* Minimise unnecessary updates to keep records consistent and reduce errors.
 
-Following these steps will help maintain data accuracy and prevent processing issues. 
+Following these steps will help maintain data accuracy and prevent processing issues.
