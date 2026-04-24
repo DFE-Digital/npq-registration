@@ -107,14 +107,15 @@ jobs:
           deploy-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # Pinned at 2.3.3
-        env:
-          SLACK_COLOR: failure
-          SLACK_TITLE: Failure deploying to staging
-          SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.docker.outputs.docker-image }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify teams channel failure
+        if: ${{ failure() }}
+        uses: DFE-Digital/github-actions/send-to-teams-channel@master
+        with:
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          title: Failure deploying to staging
+          service: ${{ vars.TEAMS_MSG_SERVICE_NAME }}
+          message: |
+            Failure deploying to staging - Docker tag ${{ needs.docker.outputs.docker-image }}
 
   deploy-sandbox:
     name: Deploy sandbox
@@ -138,14 +139,15 @@ jobs:
           deploy-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # Pinned at 2.3.3
-        env:
-          SLACK_COLOR: failure
-          SLACK_TITLE: Failure deploying to sandbox
-          SLACK_MESSAGE: Failure deploying to sandbox - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify teams channel failure
+        if: ${{ failure() }}
+        uses: DFE-Digital/github-actions/send-to-teams-channel@master
+        with:
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          title: Failure deploying to sandbox
+          service: ${{ vars.TEAMS_MSG_SERVICE_NAME }}
+          message: |
+            Failure deploying to sandbox - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
 
   deploy-production:
     name: Deploy production
@@ -169,14 +171,15 @@ jobs:
           deploy-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # Pinned at 2.3.3
-        env:
-          SLACK_COLOR: failure
-          SLACK_TITLE: Failure deploying to production
-          SLACK_MESSAGE: Failure deploying to production - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify teams channel failure
+        if: ${{ failure() }}
+        uses: DFE-Digital/github-actions/send-to-teams-channel@master
+        with:
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          title: Failure deploying to production
+          service: ${{ vars.TEAMS_MSG_SERVICE_NAME }}
+          message: |
+            Failure deploying to production - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
 
   deploy_domains_infra:
     name: Deploy Domains Infrastructure
@@ -197,7 +200,8 @@ jobs:
           azure-client-id:  ${{ secrets.AZURE_CLIENT_ID  }}
           azure-tenant-id:  ${{ secrets.AZURE_TENANT_ID   }}
           azure-subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID   }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          service: ${{ vars.TEAMS_MSG_SERVICE_NAME }}
 
   deploy_domains_env:
     name: Deploy Domains to ${{ matrix.domain_environment }} environment
@@ -224,4 +228,5 @@ jobs:
           azure-subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID   }}
           environment: ${{ matrix.domain_environment }}
           healthcheck: healthcheck
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          service: ${{ vars.TEAMS_MSG_SERVICE_NAME }}
