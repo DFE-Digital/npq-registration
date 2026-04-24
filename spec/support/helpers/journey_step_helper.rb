@@ -108,5 +108,20 @@ module Helpers
         end
       end
     end
+
+    def course_start_cohort_value
+      Questionnaires::CourseStartDate::OPTIONS.keys.last
+    end
+
+    def course_start_cohort_description
+      Questionnaires::CourseStartDate::OPTIONS.values.last
+    end
+
+    def choose_course_start_date
+      expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+        expect(page).to have_text(I18n.t("helpers.legend.registration_wizard.course_start_cohort"))
+        page.choose(course_start_cohort_description, visible: :all)
+      end
+    end
   end
 end

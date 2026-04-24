@@ -141,7 +141,7 @@ class RegistrationWizard
       end
     end
 
-    array << Answer.new("Course start", store["course_start"], :course_start_date)
+    array << Answer.new("Course start", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]], :course_start_date)
     array << Answer.new("Workplace in England", teacher_catchment_humanized, :teacher_catchment)
 
     if store["referred_by_return_to_teaching_adviser"]

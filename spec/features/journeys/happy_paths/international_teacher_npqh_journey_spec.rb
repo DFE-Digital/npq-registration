@@ -22,10 +22,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
 
     expect(page).not_to have_content("Before you start")
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
@@ -72,7 +69,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "In #{application_course_start_date}",
+          "Course start" => course_start_cohort_description,
           "Workplace in England" => "No",
           "Work setting" => "A school",
           "Course" => "Headship",
@@ -164,8 +161,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
         "work_setting" => "a_school",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "In #{application_course_start_date}",
-        "course_start_date" => "yes",
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-headship",
         "funding" => "school",
         "funding_amount" => nil,

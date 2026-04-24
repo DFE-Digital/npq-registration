@@ -2,24 +2,36 @@
 
 RSpec.shared_context "with default schedules", shared_context: :metadata do
   before do
-    # create cohorts since 2021 with default schedule
+    default_schedules = %i[
+      npq_aso_december
+      npq_aso_june
+      npq_aso_march
+      npq_aso_november
+      npq_ehco_june
+      npq_ehco_march
+      npq_ehco_november
+      npq_ehco_december
+      npq_leadership_spring
+      npq_leadership_autumn
+      npq_specialist_spring
+      npq_specialist_autumn
+    ]
+
+    # create cohorts since 2021
     end_year = Date.current.month < 9 ? Date.current.year : Date.current.year.succ
-    (2021..end_year).each do |start_year|
-      cohort = FactoryBot.create(:cohort, start_year:)
-      %i[
-        npq_aso_december
-        npq_aso_june
-        npq_aso_march
-        npq_aso_november
-        npq_ehco_june
-        npq_ehco_march
-        npq_ehco_november
-        npq_ehco_december
-        npq_leadership_spring
-        npq_leadership_autumn
-        npq_specialist_spring
-        npq_specialist_autumn
-      ].each do |schedule_identifier|
+    (2021..(end_year - 1)).each do |start_year|
+      FactoryBot.create(:cohort, start_year:)
+    end
+
+    # create an unfunded cohort for the end year
+    FactoryBot.create(:cohort, :unfunded, start_year: end_year)
+
+    # create a funded 'b' cohort for the end year
+    FactoryBot.create(:cohort, start_year: end_year, suffix: "b")
+
+    # create default schedules for all cohorts
+    Cohort.find_each do |cohort|
+      default_schedules.each do |schedule_identifier|
         FactoryBot.create(:schedule, schedule_identifier, cohort:, change_applies_dates: false)
       end
     end

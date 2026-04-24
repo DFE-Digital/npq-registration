@@ -17,11 +17,10 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, :with_default_sch
         page.click_button("Start now with Teacher Auth")
       end
 
-      expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(User.last.trn).to be_nil
-        expect(User.last.attributes).to include(user_attributes_from_stubbed_callback_response)
-        page.choose("Yes", visible: :all)
-      end
+      choose_course_start_date
+
+      expect(User.last.trn).to be_nil
+      expect(User.last.attributes).to include(user_attributes_from_stubbed_callback_response)
 
       expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
         page.choose("Yes", visible: :all)
@@ -60,7 +59,7 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, :with_default_sch
       expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
         expect_check_answers_page_to_have_answers(
           {
-            "Course start" => "In #{application_course_start_date}",
+            "Course start" => course_start_cohort_description,
             "Course" => "Headship",
             "Provider" => "Teach First",
             "Workplace" => "open manchester school – street 1, manchester",

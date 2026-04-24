@@ -1,23 +1,18 @@
 module Questionnaires
   class CourseStartDate < Base
-    class Form < QuestionTypes::RadioButtonGroup
-      include ApplicationHelper
-      def type
-        "radio_button_group"
-      end
-
-      def question_text
-        "Do you want to start a course in #{application_course_start_date}?"
-      end
-    end
-
     include ApplicationHelper
 
-    QUESTION_NAME = :course_start_date
+    QUESTION_NAME = :course_start_cohort
+
+    OPTIONS = {
+      "2026a" => "Spring 2026",
+      "2026b" => "Autumn 2026",
+    }.freeze
 
     attribute QUESTION_NAME
 
-    validates QUESTION_NAME, presence: true, inclusion: { in: %w[yes no] }
+    validates QUESTION_NAME, presence: true, inclusion: { in: OPTIONS.keys }
+    validate :cohort_exists
 
     def self.permitted_params
       [QUESTION_NAME]
@@ -25,19 +20,15 @@ module Questionnaires
 
     def questions
       [
-        Form.new(
-          name: :course_start_date,
+        QuestionTypes::RadioButtonGroup.new(
+          name: :course_start_cohort,
           options:,
-          style_options: { legend: { size: "m", tag: "h2" } },
         ),
       ]
     end
 
     def options
-      [
-        build_option_struct(value: "yes", link_errors: true, hint: I18n.t("helpers.hint.registration_wizard.course_start_date_hint")),
-        build_option_struct(value: "no"),
-      ]
+      OPTIONS.map { |value, label| build_option_struct(value:, label:) }
     end
 
     def requirements_met?
@@ -45,18 +36,18 @@ module Questionnaires
     end
 
     def next_step
-      if course_start_date == "yes"
-        wizard.store["course_start"] = "In #{application_course_start_date}"
-        wizard.current_user.update!(notify_user_for_future_reg: false)
-        :provider_check
-      else
-        wizard.current_user.update!(notify_user_for_future_reg: true)
-        :cannot_register_yet
-      end
+      :provider_check
     end
 
     def previous_step
       :start
+    end
+
+  private
+
+    def cohort_exists
+      cohort = Cohort.find_by(identifier: public_send(QUESTION_NAME))
+      errors.add(QUESTION_NAME, :invalid) unless cohort
     end
   end
 end

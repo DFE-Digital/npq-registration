@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", type: :feature do
+RSpec.feature "Sad journeys", :no_js, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
@@ -14,9 +14,7 @@ RSpec.feature "Sad journeys", type: :feature do
       page.click_button("Start now")
     end
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       page.choose("Yes", visible: :all)

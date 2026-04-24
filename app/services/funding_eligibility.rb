@@ -25,10 +25,12 @@ class FundingEligibility
   # Lead Mentor
   NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
 
+  UNFUNDED_COHORT = :unfunded_cohort
   NOT_IN_ENGLAND = :not_in_england
 
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
     FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
+    UNFUNDED_COHORT => "funding_details.unfunded_cohort",
     NOT_IN_ENGLAND => "funding_details.inside_catchment",
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
@@ -44,7 +46,8 @@ class FundingEligibility
     SUBJECT_TO_REVIEW => "funding_details.subject_to_review",
   }.freeze
 
-  attr_reader :institution,
+  attr_reader :cohort,
+              :institution,
               :course,
               :trn,
               :approved_itt_provider,
@@ -64,7 +67,10 @@ class FundingEligibility
                              get_an_identity_id:,
                              approved_itt_provider: false,
                              query_store: nil)
-      new(institution:,
+      cohort = Cohort.find_by(identifier: query_store.course_start_cohort)
+
+      new(cohort:,
+          institution:,
           course:,
           inside_catchment:,
           trn:,
@@ -78,7 +84,9 @@ class FundingEligibility
     end
   end
 
-  def initialize(institution:,
+  # FundingEligibilty.new is not actually called outside of this class - only the specs call it directly
+  def initialize(cohort:,
+                 institution:,
                  course:,
                  inside_catchment:,
                  trn:,
@@ -89,6 +97,7 @@ class FundingEligibility
                  childminder:,
                  referred_by_return_to_teaching_adviser:,
                  work_setting:)
+    @cohort = cohort
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
@@ -116,6 +125,7 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
+      return UNFUNDED_COHORT unless cohort.funded?
       return NOT_IN_ENGLAND unless inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 
