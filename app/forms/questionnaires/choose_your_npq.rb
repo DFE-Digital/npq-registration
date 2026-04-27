@@ -53,7 +53,6 @@ module Questionnaires
 
     def after_save
       wizard.store["targeted_delivery_funding_eligibility"] = false
-      wizard.store["tsf_primary_plus_eligibility"] = false
       wizard.store["tsf_primary_eligibility"] = false
       wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
       wizard.store["lead_provider_id"] = store_lead_provider_id

@@ -41,10 +41,6 @@ class RegistrationQueryStore
     store["tsf_primary_eligibility"]
   end
 
-  def tsf_primary_plus_eligibility?
-    store["tsf_primary_plus_eligibility"]
-  end
-
   def funding_eligiblity_status_code
     store["funding_eligiblity_status_code"]
   end

@@ -197,7 +197,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "works_in_childcare" => "no",
         "funding_amount" => nil,
         "tsf_primary_eligibility" => false,
-        "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",
       },
     )

@@ -17,7 +17,7 @@ module Questionnaires
     end
 
     def funding_amount
-      @funding_amount ||= targeted_delivery_funding_eligibility? && tsf_primary_plus_eligibility? ? 800 : 200
+      @funding_amount ||= 200
     end
 
     def after_save
