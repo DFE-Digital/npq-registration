@@ -1,9 +1,18 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::Start do
+RSpec.describe Questionnaires::Start, type: :model do
   it { is_expected.to be_requirements_met }
 
-  describe "#next_step?" do
+  context "when running with new wizard" do
+    subject { create(:registration_wizard, current_step: :start).current_step }
+
+    it { is_expected.to be_dfe_wizard }
+    it { is_expected.to be_invalid }
+    it { is_expected.to validate_presence_of(:started) }
+    it { is_expected.to validate_acceptance_of(:started) }
+  end
+
+  describe "#next_step?", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     before { instance.wizard = wizard }
