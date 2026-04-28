@@ -160,7 +160,6 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
-        "tsf_primary_eligibility" => false,
         "work_setting" => "early_years_or_childcare",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",

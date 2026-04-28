@@ -243,7 +243,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
         "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
         "trn_verified" => true,
-        "tsf_primary_eligibility" => false,
         "trn_lookup_status" => "Found",
         "verified_trn" => manually_entered_trn,
         "work_setting" => "a_school",

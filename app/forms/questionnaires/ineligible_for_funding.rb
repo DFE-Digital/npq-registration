@@ -88,7 +88,7 @@ module Questionnaires
     end
 
     def tsf_elgible?
-      targeted_delivery_funding_eligibility? || tsf_primary_eligibility?
+      targeted_delivery_funding_eligibility?
     end
 
     def funding_amount
@@ -97,7 +97,6 @@ module Questionnaires
 
     delegate :course,
              :targeted_delivery_funding_eligibility?,
-             :tsf_primary_eligibility?,
              :lead_provider,
              :new_headteacher?,
              :inside_catchment?,

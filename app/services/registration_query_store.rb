@@ -37,10 +37,6 @@ class RegistrationQueryStore
     store["teacher_catchment"] == "england"
   end
 
-  def tsf_primary_eligibility?
-    store["tsf_primary_eligibility"]
-  end
-
   def funding_eligiblity_status_code
     store["funding_eligiblity_status_code"]
   end

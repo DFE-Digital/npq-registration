@@ -172,7 +172,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
-        "tsf_primary_eligibility" => false,
         "funding_eligiblity_status_code" => "not_in_england",
       },
     )

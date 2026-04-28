@@ -218,7 +218,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "tsf_primary_eligibility" => false,
         "work_setting" => "a_school",
       },
     )
