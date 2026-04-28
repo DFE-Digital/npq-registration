@@ -228,7 +228,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "full_name" => "Jane Smith",
         "funding" => "trust",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",

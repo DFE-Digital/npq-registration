@@ -185,7 +185,6 @@ RSpec.feature "Sad journeys", :with_default_schedules, :with_default_school, typ
         "ehco_headteacher" => "yes",
         "ehco_new_headteacher" => "no",
         "email_template" => "not_eligible_ehco_funding",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",

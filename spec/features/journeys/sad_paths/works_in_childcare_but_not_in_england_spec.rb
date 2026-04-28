@@ -153,7 +153,6 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_england_wrong_catchment",
         "funding" => "school",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "not_in_england",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

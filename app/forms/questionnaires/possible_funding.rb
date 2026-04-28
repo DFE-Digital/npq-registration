@@ -16,14 +16,6 @@ module Questionnaires
       end
     end
 
-    def funding_amount
-      @funding_amount ||= 200
-    end
-
-    def after_save
-      wizard.store["funding_amount"] = funding_amount
-    end
-
     def message_template
       return "private_childcare_provider" if query_store.institution.is_a?(PrivateChildcareProvider)
       return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?

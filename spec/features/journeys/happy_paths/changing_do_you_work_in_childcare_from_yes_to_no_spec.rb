@@ -225,7 +225,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "childcare_name" => js ? "" : "open",
         "employer_name" => "Big company",
         "employment_type" => "hospital_school",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

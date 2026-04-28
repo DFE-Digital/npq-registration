@@ -170,7 +170,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "funding_eligiblity_status_code" => "early_years_invalid_npq",
         "childcare_identifier" => "School-100000",
         "childcare_name" => js ? "" : "open",
-        "funding_amount" => nil,
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

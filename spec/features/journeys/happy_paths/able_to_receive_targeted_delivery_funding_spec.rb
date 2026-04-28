@@ -157,7 +157,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "eligible_scholarship_funding_not_tsf",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",

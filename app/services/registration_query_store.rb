@@ -29,10 +29,6 @@ class RegistrationQueryStore
     current_user.trn
   end
 
-  def funding_amount
-    store["funding_amount"]
-  end
-
   def inside_catchment?
     store["teacher_catchment"] == "england"
   end

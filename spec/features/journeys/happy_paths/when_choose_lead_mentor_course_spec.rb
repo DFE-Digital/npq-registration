@@ -186,7 +186,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
-        "funding_amount" => nil,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start" => "In #{application_course_start_date}",

@@ -214,7 +214,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "employment_type" => "hospital_school",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",

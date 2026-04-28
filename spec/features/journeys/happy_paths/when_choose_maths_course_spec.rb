@@ -205,7 +205,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "funding_amount" => nil,
         "work_setting" => "a_school",
       },
     )

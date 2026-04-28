@@ -182,7 +182,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
         "chosen_provider" => "yes",
         "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
-        "funding_amount" => nil,
         "course_identifier" => "npq-early-years-leadership",
         "has_ofsted_urn" => "yes",
         "private_childcare_identifier" => "PrivateChildcareProvider-EY487263",

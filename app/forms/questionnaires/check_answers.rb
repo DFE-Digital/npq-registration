@@ -12,7 +12,6 @@ module Questionnaires
 
     def after_save
       wizard.store["email_template"] = email_template
-      wizard.store["funding_amount"] = funding_amount
 
       wizard.store["submitted"] = true
       wizard.session["clear_tra_login"] = true
@@ -22,10 +21,6 @@ module Questionnaires
 
     def email_template
       @email_template ||= EmailTemplate.call(data: wizard.store)
-    end
-
-    def funding_amount
-      nil
     end
   end
 end

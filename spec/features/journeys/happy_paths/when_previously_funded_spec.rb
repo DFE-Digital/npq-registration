@@ -208,7 +208,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "ehco_headteacher" => "yes",
         "ehco_new_headteacher" => "yes",
         "funding_eligiblity_status_code" => "previously_funded",
-        "funding_amount" => nil,
         "has_ofsted_urn" => "yes",
         "private_childcare_identifier" => "PrivateChildcareProvider-EY123456",
         "private_childcare_name" => js ? "" : "EY123456",

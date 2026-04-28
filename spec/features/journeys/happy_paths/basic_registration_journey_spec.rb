@@ -191,7 +191,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
         "course_identifier" => "npq-headship",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "trust",
-        "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",

@@ -202,7 +202,6 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "itt_leader_wrong_course",
-        "funding_amount" => nil,
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "funding" => "self",
         "funding_eligiblity_status_code" => "not_lead_mentor_course",

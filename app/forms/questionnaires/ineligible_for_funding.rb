@@ -83,10 +83,6 @@ module Questionnaires
       )
     end
 
-    def funding_amount
-      @funding_amount ||= 200
-    end
-
     delegate :course,
              :lead_provider,
              :new_headteacher?,
