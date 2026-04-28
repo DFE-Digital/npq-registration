@@ -159,7 +159,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "submitted" => true,
         "funding_amount" => nil,
         "referred_by_return_to_teaching_adviser" => "no",
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "work_setting" => "other",

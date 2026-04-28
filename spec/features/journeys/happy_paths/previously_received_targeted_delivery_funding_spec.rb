@@ -163,7 +163,6 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibili
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "funding_amount" => nil,
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "work_setting" => "a_school",

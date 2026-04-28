@@ -198,7 +198,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
         "funding_amount" => nil,
         "npqh_status" => "completed_npqh",
         "submitted" => true,
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",

@@ -235,7 +235,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "national_insurance_number" => "AB123456C",
         "submitted" => true,
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn" => manually_entered_trn,

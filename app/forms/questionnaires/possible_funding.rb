@@ -29,11 +29,7 @@ module Questionnaires
       return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?
       return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
 
-      if targeted_delivery_funding_eligibility?
-        "eligible_for_scholarship_funding"
-      else
-        "eligible_for_scholarship_funding_not_tsf"
-      end
+      "eligible_for_scholarship_funding_not_tsf"
     end
 
   private

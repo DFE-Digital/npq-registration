@@ -25,9 +25,7 @@ module Questionnaires
     end
 
     def funding_amount
-      return nil unless wizard.query_store.targeted_delivery_funding_eligibility?
-
-      @funding_amount ||= 200
+      nil
     end
   end
 end

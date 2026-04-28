@@ -41,10 +41,6 @@ class RegistrationQueryStore
     store["funding_eligiblity_status_code"]
   end
 
-  def targeted_delivery_funding_eligibility?
-    store["targeted_delivery_funding_eligibility"]
-  end
-
   def teacher_catchment_humanized
     case store["teacher_catchment"]
     when "another"

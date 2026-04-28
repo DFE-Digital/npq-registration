@@ -184,7 +184,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "on_submission_trn" => nil,
       "review_status" => nil,
       "raw_application_data" => {
-        "targeted_delivery_funding_eligibility" => false,
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "funding_amount" => nil,

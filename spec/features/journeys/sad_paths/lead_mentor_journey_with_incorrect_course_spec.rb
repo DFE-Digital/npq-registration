@@ -209,7 +209,6 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
         "submitted" => true,
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "work_setting" => "another_setting",

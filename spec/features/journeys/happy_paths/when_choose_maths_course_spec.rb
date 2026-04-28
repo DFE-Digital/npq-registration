@@ -201,7 +201,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
         "maths_eligibility_teaching_for_mastery" => "yes",
         "maths_understanding" => true,
         "submitted" => true,
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",

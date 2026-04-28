@@ -47,11 +47,7 @@ module Questionnaires
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::PREVIOUSLY_FUNDED
-                                 if tsf_elgible?
-                                   return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
-                                 else
-                                   return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
-                                 end
+                                 return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
                                when FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
                                  return EARLY_YEARS_INELIGIBLE_ESTABLISHMENT
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
@@ -87,16 +83,11 @@ module Questionnaires
       )
     end
 
-    def tsf_elgible?
-      targeted_delivery_funding_eligibility?
-    end
-
     def funding_amount
       @funding_amount ||= 200
     end
 
     delegate :course,
-             :targeted_delivery_funding_eligibility?,
              :lead_provider,
              :new_headteacher?,
              :inside_catchment?,
