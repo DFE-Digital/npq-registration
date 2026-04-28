@@ -29,28 +29,12 @@ class RegistrationQueryStore
     current_user.trn
   end
 
-  def funding_amount
-    store["funding_amount"]
-  end
-
   def inside_catchment?
     store["teacher_catchment"] == "england"
   end
 
-  def tsf_primary_eligibility?
-    store["tsf_primary_eligibility"]
-  end
-
-  def tsf_primary_plus_eligibility?
-    store["tsf_primary_plus_eligibility"]
-  end
-
   def funding_eligiblity_status_code
     store["funding_eligiblity_status_code"]
-  end
-
-  def targeted_delivery_funding_eligibility?
-    store["targeted_delivery_funding_eligibility"]
   end
 
   def teacher_catchment_humanized

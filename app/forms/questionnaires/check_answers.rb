@@ -12,7 +12,6 @@ module Questionnaires
 
     def after_save
       wizard.store["email_template"] = email_template
-      wizard.store["funding_amount"] = funding_amount
 
       wizard.store["submitted"] = true
       wizard.session["clear_tra_login"] = true
@@ -22,12 +21,6 @@ module Questionnaires
 
     def email_template
       @email_template ||= EmailTemplate.call(data: wizard.store)
-    end
-
-    def funding_amount
-      return nil unless wizard.query_store.targeted_delivery_funding_eligibility?
-
-      @funding_amount ||= wizard.query_store.targeted_delivery_funding_eligibility? && wizard.query_store.tsf_primary_plus_eligibility? ? 800 : 200
     end
   end
 end

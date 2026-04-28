@@ -28,14 +28,10 @@ private
     end
 
     if eligible_for_funding?
-      return :eligible_scholarship_funding if targeted_delivery_funding_eligibility?
-
       return :eligible_scholarship_funding_not_tsf
     end
 
     if previously_funded?
-      return :not_eligible_scholarship_funding if targeted_delivery_funding_eligibility?
-
       return :already_funded_not_eligible_scholarship_funding_not_tsf
     end
 
@@ -45,7 +41,7 @@ private
       return :not_on_ofsted_register if !ofsted_register? && course&.eyl?
     end
 
-    return :not_eligible_scholarship_funding_not_tsf if !eligible_for_funding? && !targeted_delivery_funding_eligibility?
+    return :not_eligible_scholarship_funding_not_tsf unless eligible_for_funding?
 
     # Should not get called but left here as edge case if default ever needed
     :default
@@ -77,9 +73,5 @@ private
 
   def funding_eligiblity_status_code
     data["funding_eligiblity_status_code"]
-  end
-
-  def targeted_delivery_funding_eligibility?
-    data["targeted_delivery_funding_eligibility"]
   end
 end

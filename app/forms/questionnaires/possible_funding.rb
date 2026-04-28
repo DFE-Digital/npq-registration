@@ -16,24 +16,12 @@ module Questionnaires
       end
     end
 
-    def funding_amount
-      @funding_amount ||= targeted_delivery_funding_eligibility? && tsf_primary_plus_eligibility? ? 800 : 200
-    end
-
-    def after_save
-      wizard.store["funding_amount"] = funding_amount
-    end
-
     def message_template
       return "private_childcare_provider" if query_store.institution.is_a?(PrivateChildcareProvider)
       return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?
       return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
 
-      if targeted_delivery_funding_eligibility?
-        "eligible_for_scholarship_funding"
-      else
-        "eligible_for_scholarship_funding_not_tsf"
-      end
+      "eligible_for_scholarship_funding_not_tsf"
     end
 
   private

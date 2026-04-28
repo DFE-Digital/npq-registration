@@ -168,12 +168,8 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
         "course_start_date" => "yes",
         "course_identifier" => "npq-headship",
         "funding" => "school",
-        "funding_amount" => nil,
-        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
-        "tsf_primary_eligibility" => false,
-        "tsf_primary_plus_eligibility" => false,
         "funding_eligiblity_status_code" => "not_in_england",
       },
     )
