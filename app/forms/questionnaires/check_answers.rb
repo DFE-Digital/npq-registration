@@ -22,5 +22,13 @@ module Questionnaires
     def email_template
       @email_template ||= EmailTemplate.call(data: wizard.store)
     end
+
+    def change_path(step_id)
+      if Rails.configuration.x.dfe_wizard
+        wizard.resolve_step_path(step_id, return_to_review: step_id)
+      else
+        "/registration/#{step_id.to_s.dasherize}/change"
+      end
+    end
   end
 end

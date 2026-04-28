@@ -9,6 +9,15 @@ GIT
       multi_xml (~> 0.6.0)
       request_store_rails (~> 2)
 
+GIT
+  remote: https://github.com/DFE-Digital/dfe-wizard.git
+  revision: 32fae744e165d8901d8e71a9d4c345f09b179c5f
+  specs:
+    dfe-wizard (1.0.0.beta)
+      activemodel
+      activesupport
+      ruby-graphviz
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -772,6 +781,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise (~> 5.0)
   dfe-analytics!
+  dfe-wizard!
   dotenv-rails
   email_validator
   factory_bot_rails
