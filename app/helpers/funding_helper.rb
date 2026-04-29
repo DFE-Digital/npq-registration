@@ -1,10 +1,14 @@
 module FundingHelper
   def scholarship_funding_eligibility(application)
-    funding_eligibility = funding_eligibility_calculator(application)
+    # This appears to be a work around for the funding status not recording the no ofsted outcome
+    if application.raw_application_data["has_ofsted_urn"] == "no" && !application.course.ehco?
+      return I18n.t("funding_details.no_ofsted") # FIXME: this appears to be recalculating funding outcome
+    end
 
-    return I18n.t("funding_details.no_Ofsted") if application.raw_application_data["has_ofsted_urn"] == "no" && !application.course.ehco?
+    key = FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS[application.funding_eligiblity_status_code&.to_sym]
+    course_name = localise_sentence_embedded_course_name(application.course)
 
-    funding_eligibility.get_description_for_funding_status
+    sanitize I18n.t("funding_details.#{key}", course_name:) if key
   end
 
   def scholarship_eligibility_in_review?(application)
@@ -19,24 +23,6 @@ module FundingHelper
   end
 
   def targeted_support_funding
-    I18n.t("funding_details.targeted_funding_eligibility").html_safe
-  end
-
-private
-
-  def funding_eligibility_calculator(application)
-    FundingEligibility.new_from_query_store(
-      course: application.course,
-      institution: query_store(application).institution,
-      approved_itt_provider: application.itt_provider.present?,
-      inside_catchment: application.teacher_catchment == "england",
-      trn: application.user.trn,
-      get_an_identity_id: application.user.get_an_identity_id,
-      query_store: query_store(application),
-    )
-  end
-
-  def query_store(application)
-    RegistrationQueryStore.new(store: application.raw_application_data)
+    sanitize I18n.t("funding_details.targeted_funding_eligibility")
   end
 end

@@ -1,7 +1,11 @@
 require "rails_helper"
 
-RSpec.describe "accounts/_work_details.html.erb", type: :view do
-  subject(:rendered_page) { render(partial: "accounts/work_details", locals: { application: }) && Capybara.string(rendered) }
+RSpec.describe "accounts/user_registrations/_work_details.html.erb", type: :view do
+  subject { render_page && Capybara.string(rendered) }
+
+  let :render_page do
+    render(partial: "accounts/user_registrations/work_details", locals: { application: })
+  end
 
   let(:application) { build_stubbed(:application, employment_type: "lead_mentor_for_accredited_itt_provider", itt_provider:) }
 

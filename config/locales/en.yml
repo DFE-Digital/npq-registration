@@ -928,8 +928,8 @@ en:
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
-    inside_catchment: "You’re not eligible for scholarship funding as you do not work in England."
-    no_Ofsted: "You’re not eligible for schools funding as you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency."
+    outside_catchment: "You’re not eligible for scholarship funding as you do not work in England."
+    no_ofsted: "You’re not eligible for schools funding as you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency."
     previously_funded: "You have already been allocated scholarship funding for %{course_name}."
     targeted_funding_eligibility: "Your workplace will receive a <a href=\"https://www.gov.uk/government/publications/targeted-support-funding-for-national-professional-qualifications\" class=\"govuk-link\">targeted support funding</a> payment to support you to do this NPQ."
     ineligible_message: "This means that you would need to pay for the course another way."

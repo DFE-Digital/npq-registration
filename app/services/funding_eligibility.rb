@@ -28,20 +28,20 @@ class FundingEligibility
   NOT_IN_ENGLAND = :not_in_england
 
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
-    FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
-    NOT_IN_ENGLAND => "funding_details.inside_catchment",
-    INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
-    EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
-    NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
-    INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => "funding_details.not_a_pp50",
-    INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
-    NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
-    NOT_ENTITLED_EY_INSTITUTION => "funding_details.not_entitled_ey_institution",
-    NOT_ENTITLED_CHILDMINDER => "funding_details.not_entitled_childminder",
-    NOT_NEW_HEADTEACHER_REQUESTING_EHCO => "funding_details.not_eligible_ehco",
-    PREVIOUSLY_FUNDED => "funding_details.previously_funded",
-    REFERRED_BY_RETURN_TO_TEACHING_ADVISER => "funding_details.subject_to_review",
-    SUBJECT_TO_REVIEW => "funding_details.subject_to_review",
+    FUNDED_ELIGIBILITY_RESULT => :scholarship_eligibility,
+    NOT_IN_ENGLAND => :outside_catchment,
+    INELIGIBLE_INSTITUTION_TYPE => :ineligible_setting,
+    EARLY_YEARS_INVALID_NPQ => :ineligible_setting,
+    NOT_LEAD_MENTOR_COURSE => :ineligible_setting,
+    INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => :not_a_pp50,
+    INELIGIBLE_ESTABLISHMENT_TYPE => :ineligible_setting,
+    NOT_ON_EARLY_YEARS_REGISTER => :no_ofsted,
+    NOT_ENTITLED_EY_INSTITUTION => :not_entitled_ey_institution,
+    NOT_ENTITLED_CHILDMINDER => :not_entitled_childminder,
+    NOT_NEW_HEADTEACHER_REQUESTING_EHCO => :not_eligible_ehco,
+    PREVIOUSLY_FUNDED => :previously_funded,
+    REFERRED_BY_RETURN_TO_TEACHING_ADVISER => :subject_to_review,
+    SUBJECT_TO_REVIEW => :subject_to_review,
   }.freeze
 
   attr_reader :institution,
@@ -133,13 +133,6 @@ class FundingEligibility
       else INELIGIBLE_ESTABLISHMENT_TYPE
       end
     end
-  end
-
-  def get_description_for_funding_status
-    key = FUNDING_STATUS_CODE_DESCRIPTIONS.fetch(funding_eligiblity_status_code)
-    course_name = localise_sentence_embedded_course_name(course)
-
-    I18n.t(key, course_name:).html_safe if key
   end
 
   def possible_funding_for_non_pp50_and_fe?
