@@ -12,6 +12,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     scenario("registration journey when choosing Leading primary mathematics journey (with JS)") { run_scenario(js: true) }
   end
 
+  context "when JavaScript is disabled", :js do
+    scenario("registration journey when choosing Leading primary mathematics journey (without JS)") { run_scenario(js: true) }
+  end
+
   def run_scenario(*)
     stub_participant_validation_request
 

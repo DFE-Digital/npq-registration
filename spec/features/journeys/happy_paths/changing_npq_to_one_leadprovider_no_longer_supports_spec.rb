@@ -1,12 +1,20 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
+
+  before do
+    cohort = FactoryBot.create(:cohort, :next, suffix: "b")
+    provider_bpn = LeadProvider.find_by(name: "Best Practice Network")
+    FactoryBot.create(:course_cohort, :with_provider, cohort:, lead_provider: provider_bpn)
+    provider_niot = LeadProvider.find_by(name: "National Institute of Teaching")
+    FactoryBot.create(:course_cohort, :with_provider, course: create(:course, :early_years_leadership), cohort:, lead_provider: provider_niot)
+  end
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey changing NPQ to one LeadProvider no longer supports (with JS)") { run_scenario(js: true) }

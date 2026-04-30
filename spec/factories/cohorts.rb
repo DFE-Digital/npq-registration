@@ -41,5 +41,19 @@ FactoryBot.define do
     trait :has_targeted_delivery_funding do
       start_year { 2022 }
     end
+
+    trait :with_all_courses_for_provider do
+      transient do
+        lead_provider { create(:lead_provider) }
+      end
+
+      after(:create) do |cohort, evaluator|
+        Course::IDENTIFIERS.each do |course_identifier|
+          course = Course.find_by(identifier: course_identifier)
+          course_cohort = create(:course_cohort, course:, cohort:)
+          create(:course_cohort_provider, course_cohort:, lead_provider: evaluator.lead_provider)
+        end
+      end
+    end
   end
 end
