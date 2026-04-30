@@ -6,7 +6,7 @@ RSpec.describe LeadProvider do
     it { is_expected.to have_many(:statements) }
     it { is_expected.to have_many(:delivery_partnerships) }
     it { is_expected.to have_many(:delivery_partners).through(:delivery_partnerships) }
-    it { is_expected.to have_many(:course_cohort_providers) }
+    it { is_expected.to have_many(:course_cohort_providers).dependent(:destroy) }
     it { is_expected.to have_many(:course_cohorts).through(:course_cohort_providers) }
     it { is_expected.to have_many(:courses).through(:course_cohorts) }
   end
@@ -17,163 +17,41 @@ RSpec.describe LeadProvider do
   end
 
   describe "#for" do
-    subject { described_class.for(course:).map(&:name) }
+    subject { described_class.for(course:, cohort:).map(&:name) }
 
-    let(:course) { create(:course, identifier: course_identifier) }
+    let(:cohort) { create(:cohort, :current) }
+    let(:course) { Course.first }
 
-    before { LeadProviders::Updater.call }
+    before do
+      LeadProviders::Updater.call
+      other_course_cohort = create(:course_cohort, course:, cohort: create(:cohort, :previous))
+      create(:course_cohort_provider, course_cohort: other_course_cohort, lead_provider: LeadProvider.find_by(name: "Best Practice Network"))
+    end
 
-    context "with course npq-headship" do
-      let(:course_identifier) { "npq-headship" }
+    context "when there is a course cohort for the given course and cohort" do
+      let(:course_cohort) { create(:course_cohort, course:, cohort:) }
 
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
+      before do
+        create(:course_cohort_provider, course_cohort:, lead_provider: LeadProvider.find_by(name: "Ambition Institute"))
+        create(:course_cohort_provider, course_cohort:, lead_provider: LeadProvider.find_by(name: "LLSE"))
+      end
+
+      it "returns the lead providers for the course in the current cohort" do
+        expect(subject).to contain_exactly("Ambition Institute", "LLSE")
+      end
+
+      context "when cohort is not specified" do
+        subject { described_class.for(course:).map(&:name) }
+
+        it "defaults to the current cohort" do
+          expect(subject).to contain_exactly("Ambition Institute", "LLSE")
+        end
       end
     end
 
-    context "with course npq-senior-leadership" do
-      let(:course_identifier) { "npq-senior-leadership" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-leading-teaching" do
-      let(:course_identifier) { "npq-leading-teaching" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-leading-teaching-development" do
-      let(:course_identifier) { "npq-leading-teaching-development" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-leading-behaviour-culture" do
-      let(:course_identifier) { "npq-leading-behaviour-culture" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-early-headship-coaching-offer" do
-      let(:course_identifier) { "npq-early-headship-coaching-offer" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-additional-support-offer" do
-      let(:course_identifier) { "npq-additional-support-offer" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-early-years-leadership" do
-      let(:course_identifier) { "npq-early-years-leadership" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-leading-literacy" do
-      let(:course_identifier) { "npq-leading-literacy" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
-      end
-    end
-
-    context "with course npq-executive-leadership" do
-      let(:course_identifier) { "npq-executive-leadership" }
-
-      it "returns expected lead providers" do
-        expect(subject).to eq([
-          "Ambition Institute",
-          "Best Practice Network",
-          "Church of England",
-          "LLSE",
-          "National Institute of Teaching",
-          "Teach First",
-          "UCL Institute of Education",
-        ])
+    context "when there isn't a course cohort for the given course and cohort" do
+      it "returns an empty scope" do
+        expect(subject).to eq LeadProvider.none
       end
     end
   end
