@@ -2,16 +2,18 @@
 
 require "rails_helper"
 
-RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, type: :model do
+RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
+  let(:cohort) { create(:cohort, :current, :without_funding_cap, :with_all_courses_for_provider, lead_provider:) }
+
   let(:params) do
     {
       application:,
     }
   end
 
-  subject(:service) do
-    described_class.new(params)
-  end
+  before { cohort }
+
+  subject(:service) { described_class.new(params) }
 
   describe "#accept" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
@@ -19,8 +21,7 @@ RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, typ
     let(:course_group) { create(:course_group, name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current, :without_funding_cap) }
-    let(:cohort_next) { create(:cohort, :next, :without_funding_cap) }
+    let(:cohort_next) { create(:cohort, :next, :without_funding_cap, :with_all_courses_for_provider, lead_provider:) }
 
     let(:application) do
       create(
@@ -360,7 +361,7 @@ RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, typ
     end
 
     describe "when the cohort is capped" do
-      let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+      let(:cohort) { create(:cohort, :current, :with_funding_cap, :with_all_courses_for_provider, lead_provider:) }
 
       before do
         application.update!(eligible_for_funding: true)
@@ -440,8 +441,6 @@ RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, typ
     end
 
     describe "when the cohort is funded" do
-      let(:cohort) { create(:cohort, :current, :without_funding_cap) }
-
       it "does not validate funded_place" do
         service.accept
         expect(service.errors.messages_for(:funded_place)).to be_empty
@@ -450,7 +449,7 @@ RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, typ
 
     describe "when the cohort is unfunded" do
       context "when funded_place is true" do
-        let(:cohort) { create(:cohort, :current, :unfunded) }
+        let(:cohort) { create(:cohort, :current, :unfunded, :with_all_courses_for_provider, lead_provider:) }
         let(:params) { { application:, funded_place: true } }
 
         it "returns an error" do
@@ -461,7 +460,6 @@ RSpec.describe Applications::Accept, :with_cohorts, :with_default_schedules, typ
     end
 
     describe "changing schedule on accept" do
-      let(:cohort) { create(:cohort, :current, :without_funding_cap) }
       let(:course_group) { create(:course_group, name: "leadership") }
       let(:course) { create(:course, :senior_leadership, course_group:) }
 

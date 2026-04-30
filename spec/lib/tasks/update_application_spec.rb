@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "update_application", :with_cohorts do
+RSpec.describe "update_application" do
   include_context "with default schedules"
 
   let(:cohort) { create(:cohort, :current) }
@@ -116,7 +116,7 @@ RSpec.describe "update_application", :with_cohorts do
       end
 
       context "when the target schedule does not exist" do
-        let(:new_cohort) { create(:cohort, start_year: 2029) }
+        let(:new_cohort) { create(:cohort, start_year: Cohort.last.start_year.succ) }
 
         it "raises an error" do
           expect { run_task }.to raise_error(

@@ -8,9 +8,8 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   include_context "Stub Get An Identity Omniauth Responses"
 
   before do
-    # create course cohort providers for the unfunded spring 2026a cohort
-    file_name = "db/seeds/data/unfunded_spring_2026a_course_cohort_providers.csv"
-    CourseCohortProviders::Updater.new(cohort: Cohort.find_by(identifier: "2026a"), course_to_provider_csv: file_name, dry_run: false).call
+    course_cohort = create(:course_cohort, course: create(:course, :headship), cohort: Cohort.find_by(identifier: "2026a"))
+    create(:course_cohort_provider, course_cohort:, lead_provider: LeadProvider.find_by(name: "LLSE"))
   end
 
   scenario "unfunded cohort registration journey" do
