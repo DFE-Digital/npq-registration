@@ -37,6 +37,7 @@ module ParticipantOutcomes
                              build_outcome.tap do |new_outcome|
                                new_outcome.save!
                                new_outcome.declaration.touch(time: new_outcome.updated_at)
+                               send_email_notification(new_outcome)
                              end
                            end
       end
@@ -90,6 +91,24 @@ module ParticipantOutcomes
 
     def participant_exists
       errors.add(:participant_id, :invalid_participant) if participant.blank?
+    end
+
+    def send_email_notification(outcome)
+      mail_params = {
+        to: participant.email,
+        full_name: participant.full_name,
+        provider_name: outcome.lead_provider.name,
+        course_name: outcome.course.name,
+        ecf_id: outcome.declaration.application.ecf_id,
+      }
+
+      if outcome.has_passed?
+        ParticipantOutcomePassedMailer.passed_mail(**mail_params).deliver_later
+      end
+
+      if outcome.has_failed?
+        ParticipantOutcomeFailedMailer.failed_mail(**mail_params).deliver_later
+      end
     end
   end
 end
