@@ -8,7 +8,7 @@ Rails.application.configure do
     Bullet.unused_eager_loading_enable  = false # Disabled due to the way our queries are structured
   end
 
-  config.x.teacher_auth.enabled = false
+  config.x.teacher_auth.enabled = true
   config.x.api.previous_names = true
   config.x.api.cohort_suffix = true
 end
