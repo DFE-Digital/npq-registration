@@ -22,13 +22,13 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
           "note" => nil,
           "object_changes" => %w[
             id
-            email
             created_at
-            ecf_id
-            trn
-            full_name
             date_of_birth
+            ecf_id
+            email
+            full_name
             significantly_updated_at
+            trn
           ],
         }
       end
