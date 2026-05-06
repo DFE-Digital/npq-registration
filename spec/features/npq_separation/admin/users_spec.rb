@@ -80,11 +80,12 @@ RSpec.feature "User administration", :no_js, type: :feature do
 
       within(".govuk-summary-card", text: "Overview") do |summary_card|
         expect(summary_card).to have_summary_item("User ID", user.ecf_id)
-        expect(summary_card).to have_summary_item("Preferred Name", user.preferred_name)
+        expect(summary_card).to have_summary_item("Preferred name", user.preferred_name)
         expect(summary_card).to have_summary_item("Email", user.email)
         expect(summary_card).to have_summary_item("TRN", user.trn, "Not verified")
         expect(page).to have_link("View teaching record", href: "#{ENV['TRS_URL']}/persons?Search=#{user.trn}")
-        expect(summary_card).to have_summary_item("Get an Identity ID", user.uid)
+        expect(summary_card).to have_summary_item("Login provider", user.provider)
+        expect(summary_card).to have_summary_item("UID", user.uid)
       end
     end
 
