@@ -14,10 +14,8 @@
     "file-loader": "^6.2.0",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^6.0",
-    "mermaid": "^11.6.0",
     "rails-ujs": "^5.2.8",
     "sass": "^1.99.0",
-    "svg-pan-zoom": "^3.6.2",
     "swagger-ui-dist": "^5.32.5",
     "webpack": "^5.106.2",
     "webpack-cli": "^6.0.1"
