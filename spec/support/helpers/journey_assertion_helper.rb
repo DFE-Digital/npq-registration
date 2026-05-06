@@ -34,10 +34,11 @@ module Helpers
       expect(summary_data).to eql(values)
     end
 
-    def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1)
+    def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1, course_start: "Autumn 2026")
       expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.reload.id}?success=true", submit_form: false) do
         expect(page).to have_text("Registration successfully submitted")
         expect(page).to have_text("Application ID: #{latest_application.ecf_id}")
+        expect(page).to have_summary_item("Course start", course_start)
         expect(page).to have_link("Register for another NPQ", href: registration_wizard_show_path("course-start-date"))
       end
 

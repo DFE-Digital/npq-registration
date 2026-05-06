@@ -68,7 +68,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
       )
     end
 
-    expect_applicant_reached_end_of_journey
+    expect_applicant_reached_end_of_journey(course_start: "Spring 2026")
 
     application = Application.last
     expect(application.funded_place).to be(false)
