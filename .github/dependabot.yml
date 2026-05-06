@@ -4,17 +4,31 @@ updates:
   directory: "/"
   schedule:
     interval: daily
-  open-pull-requests-limit: 10
+    time: "07:00"
+  allow:
+    - dependency-name: "rails"
+      update-types:
+      - version-update:semver-patch
+  open-pull-requests-limit: 20
 - package-ecosystem: npm
   directory: "/"
+  cooldown:
+    default-days: 5
   schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+    interval: weekly
+    time: "07:00"
+    day: tuesday
+  open-pull-requests-limit: 20
 - package-ecosystem: docker
   directory: "/"
   schedule:
     interval: daily
+    time: "07:00"
   open-pull-requests-limit: 10
+  allow:
+    - dependency-name: "*"
+      update-types:
+      - "version-update:semver-patch"
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
