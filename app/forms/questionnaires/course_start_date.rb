@@ -46,8 +46,10 @@ module Questionnaires
   private
 
     def cohort_exists
-      cohort = Cohort.find_by(identifier: public_send(QUESTION_NAME))
+      cohort_identifier = course_start_cohort
+      cohort = Cohort.find_by(identifier: cohort_identifier)
       errors.add(QUESTION_NAME, :invalid) unless cohort
+      Sentry.capture_message("Cohort selected by user does not exist: #{cohort_identifier}")
     end
   end
 end
