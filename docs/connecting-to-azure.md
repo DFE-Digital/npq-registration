@@ -34,6 +34,8 @@ but you may need to re-authenticate every once in a while.
    Accessing production requires a
    [PIM (Privileged Identity Management) request](#privileged-identity-management-requests).
 
+   Sometimes, if there's an issue with `az login`, you may need to run `az logout` first, then `az login` again.
+
 3. If you're not using Docker Compose, install kubectl:
 
    ```shell
@@ -104,12 +106,17 @@ To make a PIM request:
 
 1. Visit
    [this page](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ActivationMenuBlade/~/aadgroup).
-2. Activate the 'Member' role for the `s189 CPD production PIM` group.
-3. Give a reason for your request and submit.
-4. The request must now be approved by another team member
+1. Activate the 'Member' role for the `s189 CPD production PIM` group.
+1. Give a reason for your request and submit.
+1. Post a message in the 'CPD Developers' teams channel - saying "PIM please" and a brief reason for the request.
+1. The PIM request must now be approved by another team member
 
 You can view and approve all pending requests
 [here](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ApproveRequestMenuBlade/~/aadgroup).
+
+## Connecting to the snapshot database
+1. once you have an approved PIM request, and have logged in via `az login` and selected the production environment, you can run the following command to connect to the snapshot database:
+1. `make ci production konduit-snapshot`
 
 ## Useful links
 
