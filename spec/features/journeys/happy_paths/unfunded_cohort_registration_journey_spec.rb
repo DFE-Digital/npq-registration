@@ -16,7 +16,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     end
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      page.choose("Spring 2026", visible: :all)
+      page.choose("No, I already started in Spring", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do

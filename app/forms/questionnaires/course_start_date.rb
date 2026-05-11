@@ -5,8 +5,11 @@ module Questionnaires
     QUESTION_NAME = :course_start_cohort
 
     OPTIONS = {
-      "2026a" => "Spring 2026",
-      "2026b" => "Autumn 2026",
+      "2026b" => { label: "Yes",
+                   cohort_description: "Autumn 2026" },
+      "2026a" => { label: "No, I already started in Spring",
+                   hint: "DfE scholarship funding is not available",
+                   cohort_description: "Spring 2026" },
     }.freeze
 
     attribute QUESTION_NAME
@@ -28,7 +31,9 @@ module Questionnaires
     end
 
     def options
-      OPTIONS.map { |value, label| build_option_struct(value:, label:) }
+      OPTIONS.map do |cohort_identifier, label_options|
+        build_option_struct(value: cohort_identifier, label: label_options[:label], hint: label_options[:hint])
+      end
     end
 
     def requirements_met?

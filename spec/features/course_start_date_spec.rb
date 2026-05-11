@@ -18,7 +18,7 @@ RSpec.feature "Happy journeys", :no_js, type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("Choose when you want to start your course")
+      expect(page).to have_text("Are you starting a course in Autumn 2026?")
     end
   end
 end

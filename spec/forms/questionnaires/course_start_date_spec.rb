@@ -18,7 +18,7 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
 
     context "when the course_start_cohort corresponds to an existing cohort" do
       before do
-        instance.course_start_cohort = described_class::OPTIONS.keys.first
+        instance.course_start_cohort = described_class::OPTIONS.keys.last
         create(:cohort, start_year: 2026)
       end
 
