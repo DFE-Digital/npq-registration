@@ -5,18 +5,6 @@ module ApplicationHelper
     current_user.applications.size == 1 ? accounts_user_registration_path(current_user.applications.first) : account_path
   end
 
-  def npq_registration_link
-    if signed_in?
-      if Feature.trn_required? && current_user.trn.blank?
-        registration_wizard_show_path(:teacher_reference_number)
-      else
-        registration_wizard_show_path("course-start-date")
-      end
-    else
-      "/"
-    end
-  end
-
   def boolean_red_green_tag(bool, text = nil)
     text ||= bool ? "Yes" : "No"
     colour = bool ? "green" : "red"
