@@ -27,7 +27,7 @@ APPLICATION = {
           email: {
             description: "The email address registered for this NPQ participant",
             type: :string,
-            nullable: false,
+            nullable: true,
             example: "isabelle.macdonald2@some-school.example.com",
           },
           email_validated: {
@@ -131,6 +131,12 @@ APPLICATION = {
             type: :string,
             nullable: true,
             example: "2022",
+          },
+          cohort_suffix: {
+            description: "Differentiator when there are multiple call-off contracts within the same year",
+            type: :string,
+            nullable: false,
+            example: "a",
           },
           eligible_for_funding: {
             description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
