@@ -8,12 +8,22 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
+  before do
+    create(:school,
+           :local_authority_nursery_school,
+           name: "open manchester school",
+           address_1: "street 1",
+           town: "manchester",
+           urn: "100000",
+           ukprn: "TEST00000001")
+  end
+
   context "when JavaScript is enabled", :js do
-    scenario("registration journey changing NPQ to one LeadProvider no longer supports (with JS)") { run_scenario(js: true) }
+    scenario("registration journey changing course to one that is not eligible for funding (with JS)") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
-    scenario("registration journey changing NPQ to one LeadProvider no longer supports (without JS)") { run_scenario(js: false) }
+    scenario("registration journey changing course to one that is not eligible for funding (without JS)") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
@@ -42,8 +52,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Early years or childcare", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
     public_kind_of_nursery_key = Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
     public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
 
@@ -59,17 +67,9 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("you do not work in one of the eligible settings")
-      expect(page).to have_text("Senior leadership")
-
-      page.click_link("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How are you funding your course?")
-      page.choose "My workplace is covering the cost", visible: :all
+      expect(page).to have_text("You’re eligible for scholarship funding for the Senior leadership NPQ")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -87,7 +87,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         {
           "Course start" => course_start_cohort_description,
           "Course" => "Senior leadership",
-          "Course funding" => "My workplace is covering the cost",
           "Provider" => "Best Practice Network",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
@@ -101,12 +100,12 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq/change", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early years leadership", visible: :all) # Needs changing to an early years course once added
+      page.choose("Executive leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("Early years leadership NPQ course as your workplace is not in the list of EY settings that are eligible for funding")
+      expect(page).to have_text("You’re not eligible for scholarship funding for the Executive leadership NPQ course")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")
@@ -119,7 +118,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      expect(page).not_to have_text("Best Practice Network")
       page.choose("National Institute of Teaching", visible: :all)
     end
 
@@ -132,7 +130,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => course_start_cohort_description,
-          "Course" => "Early years leadership",
+          "Course" => "Executive leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "National Institute of Teaching",
           "Work setting" => "Early years or childcare",
@@ -160,7 +158,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-executive-leadership").id,
       "schedule_id" => nil,
       "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
@@ -173,7 +171,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
-      "funding_eligiblity_status_code" => "not_entitled_ey_institution",
+      "funding_eligiblity_status_code" => "early_years_invalid_npq",
       "headteacher_status" => nil,
       "kind_of_nursery" => public_kind_of_nursery_key,
       "lead_provider_id" => LeadProvider.find_by(name: "National Institute of Teaching").id,
@@ -188,7 +186,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
-      "ukprn" => nil,
+      "ukprn" => "TEST00000001",
       "primary_establishment" => false,
       "number_of_pupils" => nil,
       "tsf_primary_eligibility" => false,
@@ -205,10 +203,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start_cohort" => course_start_cohort_value,
-        "course_identifier" => "npq-early-years-leadership",
-        "email_template" => "not_on_ofsted_register",
+        "course_identifier" => "npq-executive-leadership",
+        "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
-        "funding_eligiblity_status_code" => "not_entitled_ey_institution",
+        "funding_eligiblity_status_code" => "early_years_invalid_npq",
         "childcare_identifier" => "School-100000",
         "childcare_name" => js ? "" : "open",
         "kind_of_nursery" => public_kind_of_nursery_key,

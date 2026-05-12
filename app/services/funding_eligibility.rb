@@ -19,8 +19,6 @@ class FundingEligibility
   # Early Years
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
-  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
-  NOT_ENTITLED_CHILDMINDER = :not_entitled_childminder
 
   # Lead Mentor
   NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
@@ -38,8 +36,6 @@ class FundingEligibility
     INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => :not_a_pp50,
     INELIGIBLE_ESTABLISHMENT_TYPE => :ineligible_setting,
     NOT_ON_EARLY_YEARS_REGISTER => :no_ofsted,
-    NOT_ENTITLED_EY_INSTITUTION => :not_entitled_ey_institution,
-    NOT_ENTITLED_CHILDMINDER => :not_entitled_childminder,
     NOT_NEW_HEADTEACHER_REQUESTING_EHCO => :not_eligible_ehco,
     PREVIOUSLY_FUNDED => :previously_funded,
     REFERRED_BY_RETURN_TO_TEACHING_ADVISER => :subject_to_review,
@@ -159,16 +155,6 @@ private
       return EARLY_YEARS_INVALID_NPQ unless course.la_nursery_approved?
 
       return FUNDED_ELIGIBILITY_RESULT
-    end
-
-    if childminder
-      if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
-
-        return NOT_ENTITLED_CHILDMINDER
-      end
-
-      return EARLY_YEARS_INVALID_NPQ
     end
 
     EARLY_YEARS_INVALID_NPQ

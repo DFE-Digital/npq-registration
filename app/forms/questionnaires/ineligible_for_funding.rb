@@ -53,12 +53,8 @@ module Questionnaires
                                  return EARLY_YEARS_INELIGIBLE_ESTABLISHMENT
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
-                               when FundingEligibility::NOT_ENTITLED_EY_INSTITUTION
-                                 return "not_entitled_ey_institution"
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
                                  return "not_a_pp50_institution"
-                               when FundingEligibility::NOT_ENTITLED_CHILDMINDER
-                                 return "not_entitled_ey_institution"
                                when FundingEligibility::NO_INSTITUTION
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE

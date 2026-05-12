@@ -324,7 +324,7 @@ RSpec.describe FundingEligibility do
 
       default_eligibility = {
         additional_support_offer: :early_years_invalid_npq,
-        early_years_leadership: :not_entitled_ey_institution,
+        early_years_leadership: :funded,
         executive_leadership: :early_years_invalid_npq,
         headship: :early_years_invalid_npq,
         leading_behaviour_culture: :early_years_invalid_npq,
@@ -341,7 +341,6 @@ RSpec.describe FundingEligibility do
         let(:institution) { build(:school, :local_authority_nursery_school) }
 
         include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :funded,
           headship: :funded,
           senco: :funded,
           senior_leadership: :funded,
@@ -353,7 +352,6 @@ RSpec.describe FundingEligibility do
           end
 
           include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
             headship: :funded,
             senco: :funded,
             senior_leadership: :funded,
@@ -365,36 +363,28 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "preschool_class_as_part_of_school" }
         let(:institution) { build(:school) }
 
-        include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :funded,
-        })
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the institution is a private nursery" do
         let(:kind_of_nursery) { "private_nursery" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :funded,
-        })
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the institution is a childminder" do
         let(:kind_of_nursery) { "childminder" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :funded,
-        })
+        include_examples "funding eligibility status codes by course", default_eligibility
 
         context "and the institution is on the childminders list" do
           before do
             allow(institution).to receive(:on_childminders_list?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
-          })
+          include_examples "funding eligibility status codes by course", default_eligibility
         end
       end
 
@@ -402,9 +392,7 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "another_early_years_setting" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :funded,
-        })
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
     end
 

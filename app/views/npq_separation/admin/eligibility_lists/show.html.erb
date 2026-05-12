@@ -19,7 +19,8 @@
   <%= tabs.with_tab(label: "Childminders") do %>
     <%= render partial: "list", locals: { eligibility_list_type: EligibilityList::Childminder,
                                           bulk_operation_class: BulkOperation::UploadEligibilityList::Childminder,
-                                          fragment: "childminders" } %>
+                                          fragment: "childminders",
+                                          no_longer_used: true } %>
   <% end %>
 
   <%= tabs.with_tab(label: "Disadvantaged EY") do %>
