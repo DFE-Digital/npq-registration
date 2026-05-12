@@ -68,12 +68,14 @@ module NpqRegistration
     config.x.tracking_pixels_enabled = ENV["TRACKING_PIXELS"].to_s == "true"
     config.x.google_analytics_id = ENV["GOOGLE_ANALYTICS_ID"].presence
 
+    config.x.dfe_wizard = ENV["DFE_WIZARD"].to_s == "true"
+
     # Use active record session store in all environments for consistency
     config.session_store :active_record_store, key: "_npq_registration_session",
                                                secure: !Rails.env.local?,
                                                expire_after: 2.weeks
 
-    config.skylight.environments += ["review", "sandbox", "staging"]
+    config.skylight.environments += %w[review sandbox staging]
 
     # TeacherAuth configuration
     config.x.teacher_auth.enabled = Rails.env.local?

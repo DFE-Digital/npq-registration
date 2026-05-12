@@ -87,14 +87,33 @@ class RegistrationWizardVisualiser
     Rails.logger.debug("Generating .dot file")
 
     make_output_dir
-    save_graphviz_output
+
+    if Rails.configuration.x.dfe_wizard
+      generate_dfe_wizard_graphviz_file
+    else
+      generate_npq_wizard_graphviz_file
+    end
+
     generate_png_output if generate_image
   end
 
 private
 
-  def save_graphviz_output
-    save_file(output_dot_filename, generate_graphviz_output)
+  def generate_npq_wizard_graphviz_file
+    save_file(output_dot_filename, generate_graphviz_content)
+  end
+
+  def generate_dfe_wizard_graphviz_file
+    require "dfe/wizard/documentation/formatters/mermaid_formatter"
+    require "dfe/wizard/documentation/formatters/graphviz_formatter"
+
+    wizard.documentation.generate(:graphviz, output_dot_filename)
+  end
+
+  def wizard
+    repository = DfE::Wizard::Repository::InMemory.new
+    state_store = Registration::StateStore.new(repository:, current_user: nil)
+    Registration::Wizard.new(state_store:)
   end
 
   # Image Generation
@@ -136,7 +155,7 @@ private
 
   # Graph String Generation
 
-  def generate_graphviz_output
+  def generate_graphviz_content
     <<~DOT
       digraph "Registration Wizard Flow" {
         #{digraph_settings}
