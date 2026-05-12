@@ -74,6 +74,7 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def eyl_disadvantaged?
+    # not used, since NPQ-3719 (May 2026) - keeping for future policy changes
     EligibilityList::DisadvantagedEarlyYearsSchool.eligible?(provider_urn)
   end
 

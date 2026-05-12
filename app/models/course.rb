@@ -38,10 +38,6 @@ class Course < ApplicationRecord
     npq-executive-leadership
   ].freeze
 
-  EYL_DISADVANTAGED = %w[
-    npq-early-years-leadership
-  ].freeze
-
   LA_NURSERY_APPROVED = %w[
     npq-senco
     npq-headship
@@ -100,10 +96,6 @@ class Course < ApplicationRecord
 
   def la_nursery_approved?
     LA_NURSERY_APPROVED.include?(identifier)
-  end
-
-  def eyl_disadvantaged?
-    EYL_DISADVANTAGED.include?(identifier)
   end
 
   def rebranded_alternative_courses
