@@ -20,7 +20,7 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Preferred Name
+          Preferred name
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @user.preferred_name.presence || @user.full_name %>
@@ -50,7 +50,15 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Get an Identity ID
+          Login provider
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.provider %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          UID
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @user.uid %>

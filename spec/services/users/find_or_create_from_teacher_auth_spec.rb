@@ -116,6 +116,45 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
   end
 
+  context "when the TRN matches an unverified TRN on one GAI user" do
+    context "when the email matches a user" do
+      let(:user) { create(:user, :with_get_an_identity_id, trn:, trn_verified: false, email:) }
+
+      before { user }
+
+      it "sets the uid, provider and trn_verified on the matched user" do
+        subject
+        expect(user.reload).to have_attributes(uid:, provider: "teacher_auth", trn_verified: true, trn_auto_verified: true)
+      end
+    end
+
+    context "when the email does not match a user" do
+      it "creates a new user" do
+        subject
+        expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(
+          email:,
+          trn:,
+          trn_verified: true,
+          trn_auto_verified: true,
+          full_name: verified_name.join(" "),
+          date_of_birth: Date.parse("1990-01-01"),
+          feature_flag_id:,
+        )
+      end
+
+      context "when the email clashes with an existing user with a different TRN" do
+        let!(:clashing_user) { create(:user, :with_get_an_identity_id, trn: "111111", trn_verified: true, email:) }
+
+        it "blanks the clashing user's email and creates the new user" do
+          expect { subject }.not_to raise_error
+          expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
+          expect(clashing_user.archived_at).to be_present
+          expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(email:, trn:, trn_verified: true)
+        end
+      end
+    end
+  end
+
   context "when the TRN matches a verified TRN on more than one user" do
     let(:most_recently_updated_user) { create(:user, trn:, trn_verified: true) }
     let(:older_user) { create(:user, trn:, trn_verified: true, updated_at: 2.days.ago) }
@@ -191,11 +230,23 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         end
       end
 
-      context "when the email clashes with an existing user" do
-        before { create(:user, :with_get_an_identity_id, email:) }
+      context "when the existing user already has the incoming email" do
+        let(:existing_user) { create(:user, :with_teacher_auth, email:, uid:) }
 
-        it "raises an error" do
-          expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
+        it "does not archive the existing user" do
+          subject
+          expect(existing_user.reload).to have_attributes(email:, archived_at: nil, archived_email: nil)
+        end
+      end
+
+      context "when the email clashes with a different existing user" do
+        let!(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
+
+        it "blanks the clashing user's email and updates the matched user" do
+          expect { subject }.not_to raise_error
+          expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
+          expect(clashing_user.archived_at).to be_present
+          expect(existing_user.reload).to have_attributes(email:, archived_at: nil)
         end
       end
 
@@ -240,11 +291,28 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         )
       end
 
-      context "when the email clashes with an existing user" do
-        before { create(:user, :with_get_an_identity_id, email:) }
+      context "when the email clashes with a different existing user" do
+        let!(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
 
-        it "raises an error" do
-          expect { subject }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Email Email address must be unique")
+        it "blanks the clashing user's email and creates the new user" do
+          expect { subject }.not_to raise_error
+          expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
+          expect(clashing_user.archived_at).to be_present
+          expect(User.find_by(provider: "teacher_auth", uid:).email).to eq(email)
+        end
+
+        it "does not move applications from the clashing user" do
+          application = create(:application, user: clashing_user)
+          subject
+          expect(application.reload.user).to eq(clashing_user)
+        end
+
+        it "sends a Sentry notification" do
+          expect(Sentry).to receive(:capture_message).with(
+            "Blanked email on the user due to reuse when used by a later participant",
+            hash_including(extra: { ecf_id: clashing_user.ecf_id }),
+          )
+          subject
         end
       end
 

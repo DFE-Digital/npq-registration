@@ -68,6 +68,16 @@ RSpec.describe User do
     it { is_expected.not_to allow_value("invalid-email").for(:email) }
     it { is_expected.to validate_uniqueness_of(:uid).allow_blank }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
+
+    it "allows a nil email when the user is archived" do
+      user = build(:user, :archived, email: nil)
+      expect(user).to be_valid
+    end
+
+    it "does not allow a nil email when the user is not archived" do
+      user = build(:user, email: nil)
+      expect(user).not_to be_valid
+    end
   end
 
   describe "enums" do

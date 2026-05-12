@@ -9,11 +9,11 @@ echo "Installing dependencies..."
 # See: https://github.com/ruby/bigdecimal/issues/297
 export CC=/usr/bin/clang && export CXX=/usr/bin/clang++
 bundle install
-yarn install
+yarn install --ignore-scripts
 yarn build
 yarn build:css
 
 echo "Creating database..."
-bin/rails db:prepare 
+bin/rails db:prepare
 
 echo "Done!"
