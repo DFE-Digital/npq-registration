@@ -35,9 +35,7 @@ class Course < ApplicationRecord
     npq-leading-literacy
     npq-leading-teaching
     npq-leading-teaching-development
-    npq-senior-leadership
     npq-executive-leadership
-    npq-early-years-leadership
   ].freeze
 
   EYL_DISADVANTAGED = %w[
@@ -47,7 +45,7 @@ class Course < ApplicationRecord
   LA_NURSERY_APPROVED = %w[
     npq-senco
     npq-headship
-    npq-early-years-leadership
+    npq-senior-leadership
   ].freeze
 
   def schedule_for(cohort:, schedule_date: Date.current)

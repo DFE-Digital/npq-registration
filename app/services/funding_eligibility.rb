@@ -137,7 +137,8 @@ class FundingEligibility
 
       case work_setting
       when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
-      when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
+      when *Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING then a_16_19_policy
+      when Questionnaires::WorkSetting::A_SCHOOL, Questionnaires::WorkSetting::AN_ACADEMY_TRUST then school_or_academy_trust_policy
       when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
       when *Questionnaires::WorkSetting::OTHER_SETTINGS then other_settings_policy
       else INELIGIBLE_ESTABLISHMENT_TYPE
@@ -152,9 +153,10 @@ class FundingEligibility
 private
 
   def childcare_policy
+    return FUNDED_ELIGIBILITY_RESULT if course.eyl?
+
     if institution.try(:local_authority_nursery_school?)
       return EARLY_YEARS_INVALID_NPQ unless course.la_nursery_approved?
-      return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.la_disadvantaged_nursery?
 
       return FUNDED_ELIGIBILITY_RESULT
     end
@@ -169,16 +171,16 @@ private
       return EARLY_YEARS_INVALID_NPQ
     end
 
-    if course.eyl?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
-
-      return NOT_ENTITLED_EY_INSTITUTION
-    end
-
     EARLY_YEARS_INVALID_NPQ
   end
 
-  def school_policy
+  def school_or_academy_trust_policy
+    return FUNDED_ELIGIBILITY_RESULT if course.eyl?
+
+    a_16_19_policy
+  end
+
+  def a_16_19_policy
     return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.rise?
 
     return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
@@ -203,7 +205,7 @@ private
       return NOT_LEAD_MENTOR_COURSE
     end
 
-    if eligible_employment_type? && eligible_course?
+    if eligible_employment_type? && another_setting_eligible_course?
       SUBJECT_TO_REVIEW
     else
       INELIGIBLE_ESTABLISHMENT_TYPE
@@ -225,10 +227,11 @@ private
     employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]
   end
 
-  def eligible_course?
+  def another_setting_eligible_course?
     eligible_course_identifiers = %w[
-      npq-senco
       npq-headship
+      npq-senco
+      npq-senior-leadership
     ]
 
     course.identifier.in?(eligible_course_identifiers)
