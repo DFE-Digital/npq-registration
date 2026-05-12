@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
@@ -21,10 +22,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect(page).not_to have_content("Before you start")
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
@@ -80,7 +78,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course funding" => "I am paying",
-          "Course start" => "In #{application_course_start_date}",
+          "Course start" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Employment type" => "In an independent hospital education organisation",
           "Employer" => "Big company",
@@ -152,8 +150,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "In #{application_course_start_date}",
-        "course_start_date" => "yes",
+        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-years-leadership",
         "email_template" => "not_on_ofsted_register",
         "employer_name" => "Big company",

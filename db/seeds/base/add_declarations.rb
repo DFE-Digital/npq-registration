@@ -8,11 +8,13 @@ lead_providers.each do |lead_provider|
   Schedule.find_each do |schedule|
     schedule.courses.each do |course|
       application_count.times do
+        eligible_for_funding = schedule.cohort.funding != "unfunded"
         application = FactoryBot.create(
           :application,
-          :eligible_for_funded_place,
+          :accepted,
           :with_random_user,
           :with_random_work_setting,
+          eligible_for_funding:,
           cohort: schedule.cohort,
           lead_provider:,
           course:,

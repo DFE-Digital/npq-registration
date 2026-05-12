@@ -5,6 +5,7 @@ require "rails_helper"
 # The fix put in was just a quick fix - making the back steps correct will also fix the issue, but it's a larger piece of work (see CPDNPQ-3053).
 RSpec.feature "Sad journey", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "Stub Get An Identity Omniauth Responses"
@@ -20,9 +21,7 @@ RSpec.feature "Sad journey", :with_default_schedules, type: :feature do
       page.click_button("Start now")
     end
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
+    choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       page.choose("Yes", visible: :all)
