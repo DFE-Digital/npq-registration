@@ -2,6 +2,35 @@
 
 If you have any questions or comments about these notes, please contact DfE via Microsoft Teams or email.
 
+## API changes for 2026 reopening
+### 13 May 2026
+
+<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
+
+API changes for Teacher Auth integration and the 2026 re-opening have now been released to sandbox
+
+### API additions
+
+We've added:
+
+* a `cohort_suffix` field to Applications
+* a `cohort_suffix` field to the `npq_enrolments` section on Participants
+* a `previous_names` field to Participants
+
+### Changes to API behaviour
+
+Email address may now be `NULL` if we know it has been re-used by a different participant at a later point.
+
+* `email` on Applications may now be `NULL`
+* `enrolments.email` on Participants may now be `NULL`
+
+Teacher Reference Number may now be `NULL` for new participants until they are accepted onto a course.
+
+_Whilst this field has always been NULLable, it was always populated under DfE Identity._
+
+* `teacher_reference_number` on Applications may now be `NULL`
+* `teacher_reference_number` on Participants may now be `NULL`
+
 ## Transferred declarations are now shown in production
 ### 1 December 2025
 
