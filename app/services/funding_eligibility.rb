@@ -19,6 +19,7 @@ class FundingEligibility
   # Early Years
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
+  NOT_ENTITLED_CHILDMINDER = :not_entitled_childminder
 
   # Lead Mentor
   NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
@@ -149,7 +150,13 @@ class FundingEligibility
 private
 
   def childcare_policy
-    return FUNDED_ELIGIBILITY_RESULT if course.eyl?
+    if course.eyl?
+      return FUNDED_ELIGIBILITY_RESULT unless childminder
+
+      return FUNDED_ELIGIBILITY_RESULT if institution&.on_childminders_list?
+
+      return NOT_ENTITLED_CHILDMINDER
+    end
 
     if institution.try(:local_authority_nursery_school?)
       return EARLY_YEARS_INVALID_NPQ unless course.la_nursery_approved?

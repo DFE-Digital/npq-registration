@@ -79,7 +79,6 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def on_childminders_list?
-    # not used, since NPQ-3719 (May 2026) - keeping for future policy changes
     EligibilityList::Childminder.eligible?(provider_urn)
   end
 

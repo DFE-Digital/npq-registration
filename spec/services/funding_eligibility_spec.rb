@@ -377,7 +377,9 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "childminder" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes by course", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility.merge({
+          early_years_leadership: :not_entitled_childminder,
+        })
 
         context "and the institution is on the childminders list" do
           before do
