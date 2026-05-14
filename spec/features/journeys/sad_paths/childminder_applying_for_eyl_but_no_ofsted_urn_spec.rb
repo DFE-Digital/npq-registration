@@ -5,7 +5,6 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibili
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  # include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "registration journey while working at a childminder but with no OFSTED URN" do
@@ -25,7 +24,6 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibili
       page.choose("Yes", visible: :all)
     end
 
-    # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
     end
