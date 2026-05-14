@@ -6,7 +6,6 @@ class FundingEligibility
   FUNDED_ELIGIBILITY_RESULT = :funded
   SUBJECT_TO_REVIEW = :subject_to_review
 
-  NO_INSTITUTION = :no_institution
   INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
   INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 = :ineligible_establishment_not_a_pp50
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
@@ -35,7 +34,7 @@ class FundingEligibility
     NOT_LEAD_MENTOR_COURSE => :ineligible_setting,
     INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => :not_a_pp50,
     INELIGIBLE_ESTABLISHMENT_TYPE => :ineligible_setting,
-    NOT_ENTITLED_CHILDMINDER => :not_entitled_childminder, # TODO: test this line (are any of these descriptions tested?)
+    NOT_ENTITLED_CHILDMINDER => :not_entitled_childminder,
     NOT_NEW_HEADTEACHER_REQUESTING_EHCO => :not_eligible_ehco,
     PREVIOUSLY_FUNDED => :previously_funded,
     REFERRED_BY_RETURN_TO_TEACHING_ADVISER => :subject_to_review,
