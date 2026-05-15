@@ -47,6 +47,7 @@ module Questionnaires
             link_errors: index.zero?,
             divider: divider_index == index,
             label: I18n.t("course.name.#{course.identifier}", default: course.name),
+            hint: course.description,
           )
         end
     end

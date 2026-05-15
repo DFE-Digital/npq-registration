@@ -1074,8 +1074,6 @@ en:
           another: "For example, I am sharing the costs with my workplace"
         funding_options:
           another: "For example, I am sharing the costs with my workplace"
-        course_identifier_options:
-          "npq-early-headship-coaching-offer": "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship."
         npqh_status_title_hint: "To be eligible for the Early headship coaching offer you need to do the Headship NPQ."
         can_share_choices:
           - All the information you enter for your NPQ registration will be shared with external organisations including auditors, evaluators, relevant bodies and training providers – this allows your provider to register you onto their course.
