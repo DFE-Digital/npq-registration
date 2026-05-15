@@ -18,7 +18,7 @@ RSpec.describe ValidTestDataGenerators::SandboxSharedData, :with_default_schedul
   subject { described_class.new(lead_provider:, cohort:) }
 
   describe "#populate" do
-    context "when running in other environment other than sandbox or development" do
+    context "when running in other environment other than sandbox, staging or development" do
       let(:environment) { "test" }
 
       it "returns nil" do
