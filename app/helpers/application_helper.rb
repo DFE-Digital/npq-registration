@@ -39,7 +39,8 @@ module ApplicationHelper
   end
 
   def application_cohort_description(application)
-    Questionnaires::CourseStartDate::OPTIONS[application.cohort.identifier][:cohort_description]
+    cohort_option = Questionnaires::CourseStartDate::OPTIONS[application.cohort.identifier]
+    cohort_option ? cohort_option[:cohort_description] : application.cohort.start_year
   end
 
   def show_otp_code_in_ui(current_env, admin)
