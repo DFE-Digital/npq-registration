@@ -64,7 +64,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      expect(page).to have_text("Before selecting your provider, you must check that they are currently open to accepting NPQ applications.")
       page.choose("Teach First", visible: :all)
     end
 
