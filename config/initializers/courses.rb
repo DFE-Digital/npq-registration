@@ -2,7 +2,7 @@ module Courses
   DEFINITIONS = [
     {
       position: 0,
-      name: "NPQ for Early Years Leadership (NPQEYL)",
+      name: "NPQ Early Years Leadership (NPQEYL)",
       ecf_id: "66dff4af-a518-498f-9042-36a41f9e8aa7",
       identifier: "npq-early-years-leadership",
       course_group_name: "leadership",
@@ -29,7 +29,7 @@ module Courses
     },
     {
       position: 3,
-      name: "NPQ for Leading Behaviour and Culture (NPQLBC)",
+      name: "NPQ Leading Behaviour and Culture (NPQLBC)",
       ecf_id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5",
       identifier: "npq-leading-behaviour-culture",
       course_group_name: "specialist",
@@ -38,7 +38,7 @@ module Courses
     },
     {
       position: 4,
-      name: "NPQ for Leading Literacy (NPQLL)",
+      name: "NPQ Leading Literacy (NPQLL)",
       ecf_id: "829fcd45-e39d-49a9-b309-26d26debfa90",
       identifier: "npq-leading-literacy",
       course_group_name: "specialist",
@@ -47,8 +47,8 @@ module Courses
     },
     {
       position: 5,
-      name: "Leading primary mathematics (NPQLPM)",
-      ecf_id: "604c0c72-0e4b-42e7-ba5a-4aac7cafe1c5",
+      name: "NPQ Leading Primary Mathematics (NPQLPM)",
+      ecf_id: "7866f853-064f-44b4-9287-20b9993452d6",
       identifier: "npq-leading-primary-mathematics",
       course_group_name: "specialist",
       display: true,
@@ -56,7 +56,7 @@ module Courses
     },
     {
       position: 6,
-      name: "NPQ for Leading Teaching (NPQLT)",
+      name: "NPQ Leading Teaching (NPQLT)",
       ecf_id: "15c52ed8-06b5-426e-81a2-c2664978a0dc",
       identifier: "npq-leading-teaching",
       course_group_name: "specialist",
@@ -66,7 +66,7 @@ module Courses
     },
     {
       position: 7,
-      name: "NPQ for Leading Teacher Development (NPQLTD)",
+      name: "NPQ Leading Teacher Development (NPQLTD)",
       ecf_id: "29fee78b-30ce-4b93-ba21-80be2fde286f",
       identifier: "npq-leading-teaching-development",
       course_group_name: "specialist",
@@ -86,7 +86,7 @@ module Courses
     {
       position: 9,
       name: "NPQ for Senco (NPQSENCO)",
-      ecf_id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
+      ecf_id: "d8662dbd-f50a-4bbf-a9dd-359e1d32e050",
       identifier: "npq-senco",
       course_group_name: "leadership",
       display: true,
@@ -94,7 +94,7 @@ module Courses
     },
     {
       position: 10,
-      name: "Early Headship Coaching Offer",
+      name: "The Early Headship Coaching Offer",
       ecf_id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a",
       identifier: "npq-early-headship-coaching-offer",
       course_group_name: "ehco",
