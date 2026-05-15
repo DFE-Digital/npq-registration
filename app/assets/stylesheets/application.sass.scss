@@ -69,3 +69,10 @@ $admin-template-max-width: 1200px;
     margin-bottom: govuk-spacing(1);
   }
 }
+
+div.eligibility-page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  @include govuk-responsive-margin(8, "bottom");
+}

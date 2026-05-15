@@ -2,7 +2,7 @@
   <%= @form.errors.present? ? "Error: " : nil %> Funding
 <% end %>
 
-<h1 class="govuk-heading-xl">Funding</h1>
+<%= funding_title(:not_eligible) %>
 
 <p class="govuk-body">You’re not eligible for scholarship funding for the <%= localise_sentence_embedded_course_name(course) %> course because you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency.</p>
 
