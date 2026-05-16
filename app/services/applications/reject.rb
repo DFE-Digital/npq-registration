@@ -18,6 +18,7 @@ module Applications
         application.update!(lead_provider_approval_status: "rejected", reason_for_rejection:)
         clear_token_if_no_remaining_applications
       end
+
       application.reload
 
       ApplicationRejectedMailer.application_rejected_mail(
