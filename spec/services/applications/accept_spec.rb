@@ -517,5 +517,37 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         end
       end
     end
+
+    describe "allocating a TRN" do
+      before do
+        allow(TeachingRecordSystem::AllocateTrnJob).to receive(:perform_later)
+      end
+
+      context "with a user who already has a TRN" do
+        let(:user) { create(:user, :with_verified_trn) }
+
+        it "does not activating the users TRN request" do
+          service.accept
+
+          expect(TeachingRecordSystem::AllocateTrnJob)
+            .not_to have_received(:perform_later)
+        end
+      end
+
+      context "with a user who does not have a TRN" do
+        before do
+          user.oauth_tokens.create(token: "REFRESH", last_updated_token_at: 5.minutes.ago)
+        end
+
+        let(:user) { create(:user, :without_trn) }
+
+        it "schedules activating the users TRN request" do
+          service.accept
+
+          expect(TeachingRecordSystem::AllocateTrnJob)
+            .to have_received(:perform_later)
+        end
+      end
+    end
   end
 end

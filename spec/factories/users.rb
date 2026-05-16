@@ -38,6 +38,12 @@ FactoryBot.define do
       trn_lookup_status { "Found" }
     end
 
+    trait :without_trn do
+      trn { nil }
+      trn_verified { false }
+      trn_auto_verified { false }
+    end
+
     trait :with_previous_names do
       previous_names { ["Sarah Johnson", "Sarah Ann Williams"] }
     end
