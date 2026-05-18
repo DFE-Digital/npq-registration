@@ -9,7 +9,7 @@ module Omniauth
       option :send_scope_to_token_endpoint, false
 
       # TeacherAuth scopes: openid, email, profile, teaching_record
-      option :scope, %i[email openid profile teaching_record].join(" ")
+      option :scope, %i[email openid profile teaching_record offline_access].join(" ")
     end
   end
 end

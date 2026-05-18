@@ -58,6 +58,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
       feature_flag_id: session["feature_flag_id"],
     )
     if @user
+      if provider_data.credentials
+        refresh_token = @user.oauth_tokens.first || @user.oauth_tokens.build
+        refresh_token.last_updated_token_at = Time.zone.now
+        refresh_token.token = provider_data.credentials["refresh_token"]
+        refresh_token.save!
+      end
+
       session["user_id"] = @user.id
       @user.set_closed_registration_feature_flag
       sign_in_and_redirect @user

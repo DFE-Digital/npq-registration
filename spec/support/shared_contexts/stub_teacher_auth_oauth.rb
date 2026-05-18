@@ -22,7 +22,8 @@ RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
       "credentials" => {
         "token" => "some-token",
         "expires_in" => 3600,
-        "scope" => "email openid profile teaching_record",
+        "scope" => "email openid profile teaching_record offline_access",
+        "refresh_token" => "some-refresh-token",
       },
       "extra" => {
         "raw_info" => {
