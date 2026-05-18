@@ -6,6 +6,9 @@ RSpec.describe LeadProvider do
     it { is_expected.to have_many(:statements) }
     it { is_expected.to have_many(:delivery_partnerships) }
     it { is_expected.to have_many(:delivery_partners).through(:delivery_partnerships) }
+    it { is_expected.to have_many(:course_cohort_providers) }
+    it { is_expected.to have_many(:course_cohorts).through(:course_cohort_providers) }
+    it { is_expected.to have_many(:courses).through(:course_cohorts) }
   end
 
   describe "validations" do

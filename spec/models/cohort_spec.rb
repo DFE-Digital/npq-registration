@@ -23,6 +23,7 @@ RSpec.describe Cohort, type: :model do
     it { is_expected.to have_many(:schedules).dependent(:destroy) }
     it { is_expected.to have_many(:statements).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:delivery_partnerships) }
+    it { is_expected.to have_many(:course_cohorts).dependent(:destroy) }
   end
 
   describe "validations" do

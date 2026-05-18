@@ -8,6 +8,9 @@ class Course < ApplicationRecord
   NPQ_SENCO = "npq-senco".freeze
 
   belongs_to :course_group, optional: true
+  has_many :course_cohorts, dependent: :destroy
+  has_many :course_cohort_providers, through: :course_cohorts
+  has_many :lead_providers, through: :course_cohort_providers
 
   validates :name, presence: true
   validates :identifier, presence: true, uniqueness: true
