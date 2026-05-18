@@ -38,6 +38,16 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       expect(service.application).to have_received(:reload)
     end
 
+    it "sends an email to the user" do
+      expect(ApplicationAcceptedMailer).to send_mail(:application_accepted_mail)
+        .with_params(to: user.email,
+                     full_name: user.full_name,
+                     provider_name: lead_provider.name,
+                     course_name: course.name,
+                     ecf_id: application.ecf_id)
+      service.accept
+    end
+
     describe "validations" do
       it { is_expected.to validate_presence_of(:application).with_message("The entered '#/application' is missing from your request. Check details and try again.") }
 
