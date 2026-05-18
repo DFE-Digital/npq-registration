@@ -17,17 +17,23 @@ RSpec.describe TeachingRecordSystem::V3::Person do
     }
   end
 
+  let :stub_person_api do
+    stub_request(:get, "#{base_url}/v3/person")
+      .with(
+        headers: {
+          "Authorization" => "Bearer #{access_token}",
+          "X-Api-Version" => "Next",
+        },
+        query: { "include" => "PreviousNames" },
+      )
+  end
+
   describe ".find_with_token" do
+    subject(:call_api) { described_class.find_with_token(access_token:) }
+
     context "when successful" do
       before do
-        stub_request(:get, "#{base_url}/v3/person")
-          .with(
-            headers: {
-              "Authorization" => "Bearer #{access_token}",
-              "X-Api-Version" => "Next",
-            },
-            query: { "include" => "PreviousNames" },
-          )
+        stub_person_api
           .to_return(status: 200, body: teaching_record_response.to_json)
       end
 
@@ -41,61 +47,41 @@ RSpec.describe TeachingRecordSystem::V3::Person do
     end
 
     context "when unauthorized (401)" do
-      before do
-        stub_request(:get, "#{base_url}/v3/person")
-          .with(
-            headers: {
-              "Authorization" => "Bearer #{access_token}",
-              "X-Api-Version" => "Next",
-            },
-            query: { "include" => "PreviousNames" },
-          )
-          .to_return(status: 401)
-      end
+      before { stub_person_api.to_return(status: 401) }
 
       it "raises ApiError with 401" do
         expect {
-          described_class.find_with_token(access_token:)
+          call_api
         }.to raise_error(TeachingRecordSystem::ApiError, "API request failed (HTTP 401)")
       end
     end
 
     context "when timeout occurs" do
-      before do
-        stub_request(:get, "#{base_url}/v3/person")
-          .with(
-            headers: {
-              "Authorization" => "Bearer #{access_token}",
-              "X-Api-Version" => "Next",
-            },
-            query: { "include" => "PreviousNames" },
-          )
-          .to_timeout
-      end
+      before { stub_person_api.to_timeout }
 
       it "raises Timeout::Error" do
         expect {
-          described_class.find_with_token(access_token:)
+          call_api
         }.to raise_error(TeachingRecordSystem::TimeoutError)
       end
     end
 
-    context "when server error (500)" do
-      before do
-        stub_request(:get, "#{base_url}/v3/person")
-          .with(
-            headers: {
-              "Authorization" => "Bearer #{access_token}",
-              "X-Api-Version" => "Next",
-            },
-            query: { "include" => "PreviousNames" },
-          )
-          .to_return(status: 500, body: "Internal Server Error")
+    context "when teaching record does not yet exist (403)" do
+      before { stub_person_api.to_return(status: 403, body: "Forbidden") }
+
+      it "raises a forbidden error" do
+        expect {
+          call_api
+        }.to raise_error TeachingRecordSystem::ApiError, "API request failed (HTTP 403)"
       end
+    end
+
+    context "when server error (500)" do
+      before { stub_person_api.to_return(status: 500, body: "Internal Server Error") }
 
       it "raises ApiError with 500" do
         expect {
-          described_class.find_with_token(access_token:)
+          call_api
         }.to raise_error(TeachingRecordSystem::ApiError, "API request failed (HTTP 500)")
       end
     end
