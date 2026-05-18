@@ -1,5 +1,5 @@
 module TeachingRecordSystem
-  class RefreshAccessToken
+  class RefreshTokens
     class << self
       def refresh!(refresh_token)
         new(refresh_token).refresh!

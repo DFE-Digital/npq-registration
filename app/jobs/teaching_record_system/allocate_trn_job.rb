@@ -10,10 +10,10 @@ module TeachingRecordSystem
         return
       end
 
-      new_access, new_refresh = RefreshAccessToken.refresh!(persisted_token.token)
+      new_access, new_refresh = RefreshTokens.refresh!(persisted_token.token)
       persisted_token.update!(token: new_refresh, last_updated_token_at: Time.zone.now)
 
-      new_trn = ActivateTrnAllocation.activate!(new_access)
+      new_trn = ActivateTrnRequest.activate!(new_access)
       if new_trn.present?
         # Received TRN from API response so don't need to wait for webhook to receive TRN
         user.update!(trn: new_trn, trn_verified: true, trn_auto_verified: true)

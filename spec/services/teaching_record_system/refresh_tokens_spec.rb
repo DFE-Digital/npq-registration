@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe TeachingRecordSystem::RefreshAccessToken do
+RSpec.describe TeachingRecordSystem::RefreshTokens do
   let(:api_url) { "#{ENV.fetch("TEACHER_AUTH_DOMAIN")}oauth2/token" }
   let(:refresh_token) { "VALIDTOKEN" }
   let(:headers) { { "Content-Type" => "application/json" } }

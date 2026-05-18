@@ -4,10 +4,10 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
   subject(:perform_job) { described_class.perform_now(user_id:) }
 
   before do
-    allow(TeachingRecordSystem::RefreshAccessToken)
+    allow(TeachingRecordSystem::RefreshTokens)
       .to receive(:refresh!).and_return %w[NEWACCESS NEWREFRESH]
 
-    allow(TeachingRecordSystem::ActivateTrnAllocation)
+    allow(TeachingRecordSystem::ActivateTrnRequest)
       .to receive(:activate!).and_return allocated_trn
 
     allow(Sentry).to receive(:capture_exception)
@@ -42,8 +42,8 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
           .to change(user.oauth_tokens, :count).from(1).to(0)
           .and not_change(user.reload, :trn)
 
-        expect(TeachingRecordSystem::RefreshAccessToken).not_to have_received(:refresh!)
-        expect(TeachingRecordSystem::ActivateTrnAllocation).not_to have_received(:activate!)
+        expect(TeachingRecordSystem::RefreshTokens).not_to have_received(:refresh!)
+        expect(TeachingRecordSystem::ActivateTrnRequest).not_to have_received(:activate!)
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
 
     context "when refresh API errors" do
       before do
-        allow(TeachingRecordSystem::RefreshAccessToken)
+        allow(TeachingRecordSystem::RefreshTokens)
           .to receive(:refresh!).and_raise(Faraday::ForbiddenError)
       end
 
@@ -79,14 +79,14 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
           .and not_change(user.reload, :trn)
           .and not_change(user.oauth_tokens.first, :token)
 
-        expect(TeachingRecordSystem::ActivateTrnAllocation).not_to have_received(:activate!)
+        expect(TeachingRecordSystem::ActivateTrnRequest).not_to have_received(:activate!)
         expect(Sentry).to have_received(:capture_exception).with(Faraday::ForbiddenError)
       end
     end
 
     context "when activate API errors" do
       before do
-        allow(TeachingRecordSystem::ActivateTrnAllocation)
+        allow(TeachingRecordSystem::ActivateTrnRequest)
           .to receive(:activate!).and_raise(Faraday::ForbiddenError)
       end
 

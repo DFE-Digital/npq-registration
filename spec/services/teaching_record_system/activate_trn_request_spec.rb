@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe TeachingRecordSystem::ActivateTrnAllocation do
+RSpec.describe TeachingRecordSystem::ActivateTrnRequest do
   let(:activation_url) { "#{ENV.fetch("TRS_API_URL")}/v3/trn-request/activate" }
   let(:trn_request_url) { "#{ENV.fetch("TRS_API_URL")}/v3/trn-request" }
   let(:access_token) { "VALIDTOKEN" }

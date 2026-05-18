@@ -1,5 +1,5 @@
 module TeachingRecordSystem
-  class ActivateTrnAllocation
+  class ActivateTrnRequest
     class NoTrnRequestToActivate < RuntimeError; end
 
     TRN_REQUEST_PATH = "/v3/trn-request".freeze
