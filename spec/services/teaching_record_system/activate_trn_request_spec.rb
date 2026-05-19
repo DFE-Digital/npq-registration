@@ -53,12 +53,12 @@ RSpec.describe TeachingRecordSystem::ActivateTrnRequest do
       it { is_expected.to eq trn_request_body }
     end
 
-    context "without dormant trn request" do
+    context "without dormant TRN request" do
       before do
         stub_request(:get, trn_request_url)
           .with(headers: { "Authorization" => "Bearer #{access_token}",
                            "X-Api-Version" => "20260416" })
-          .to_return(status: [404, "Resource Not Found"], headers:)
+          .to_return(status: [400, "Bad Request"], headers:)
       end
 
       it "raises an exception" do
@@ -115,7 +115,7 @@ RSpec.describe TeachingRecordSystem::ActivateTrnRequest do
       it { is_expected.to be_nil }
     end
 
-    context "with pending trn request" do
+    context "with pending TRN request" do
       before do
         stub_activation
           .to_return(status: [200, "Success"],
@@ -126,12 +126,12 @@ RSpec.describe TeachingRecordSystem::ActivateTrnRequest do
       it { is_expected.to be_nil }
     end
 
-    context "without pending trn request" do
+    context "without pending TRN request" do
       let :stub_trn_request do
         stub_request(:get, trn_request_url)
           .with(headers: { "Authorization" => "Bearer #{access_token}",
                            "X-Api-Version" => "20260416" })
-          .to_return(status: [404, "Resource not found"], headers:, body: nil)
+          .to_return(status: [400, "Bad Request"], headers:, body: nil)
       end
 
       it "raises NoTrnRequestToActivate" do

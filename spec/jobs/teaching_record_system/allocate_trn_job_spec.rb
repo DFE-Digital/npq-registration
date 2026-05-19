@@ -51,7 +51,7 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
       context "when activate API does return a TRN" do
         let(:allocated_trn) { "7349349" }
 
-        it "updates user with trn and removes the refresh token" do
+        it "updates user with TRN and removes the refresh token" do
           expect { perform_job }
             .to change { user.reload.trn }.from(nil).to(allocated_trn)
             .and change(user.oauth_tokens, :count).from(1).to(0)
@@ -59,7 +59,7 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
       end
 
       context "when activate API does not return a TRN" do
-        it "does not change trn but removes the refresh token now activation is triggered" do
+        it "does not change TRN but removes the refresh token now activation is triggered" do
           expect { perform_job }
             .to not_change { user.reload.trn }
             .and change(user.oauth_tokens, :count).from(1).to(0)

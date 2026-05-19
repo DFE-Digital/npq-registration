@@ -2,6 +2,7 @@ module TeachingRecordSystem
   class ActivateTrnRequest
     class NoTrnRequestToActivate < RuntimeError; end
 
+    REQUIRED_API_VERSION = "20260416".freeze
     TRN_REQUEST_PATH = "/v3/trn-request".freeze
     ACTIVATE_PATH = "/v3/trn-request/activate".freeze
 
@@ -17,7 +18,7 @@ module TeachingRecordSystem
 
     def trn_request
       @trn_request = trs_api.get(TRN_REQUEST_PATH).body
-    rescue Faraday::ResourceNotFound
+    rescue Faraday::BadRequestError
       raise NoTrnRequestToActivate
     end
 
@@ -36,7 +37,7 @@ module TeachingRecordSystem
       Faraday.new(url: ENV.fetch("TRS_API_URL")) do |conn|
         conn.request :authorization, "Bearer", @access_token
         conn.request :json
-        conn.headers["X-Api-Version"] = "20260416"
+        conn.headers["X-Api-Version"] = REQUIRED_API_VERSION
         conn.response :raise_error
         conn.response :json
         conn.response :logger, Rails.logger if Rails.env.local?
