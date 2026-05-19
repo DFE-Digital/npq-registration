@@ -73,12 +73,21 @@
         )
       %>
       <% if Rails.configuration.x.teacher_auth.enabled %>
+        <br>
         <%=
           render(
             "shared/teacher_auth/redirect_button",
             button_text: "Start now with Teacher Auth"
           )
         %>
+
+      <h2 class="govuk-heading-m">Sign in</h2>
+
+      <span class="govuk-body sign-in-button">
+        You can also
+        <%= govuk_button_to("sign in", user_teacher_auth_omniauth_authorize_path, secondary: true, class: "sign-in-button", form_class: "sign-in-button") %>
+        through GOV.UK One Login to view a previous registration or change your personal details.
+      </span>
       <% end %>
     <% end %>
 

@@ -121,7 +121,7 @@ private
       return new_email_update_path
     end
 
-    return account_path if user.applications.any?
+    return account_path unless request.env["omniauth.params"]["start_now"] == "true"
 
     start_questionnaire_path(user)
   end

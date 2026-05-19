@@ -69,3 +69,13 @@ $admin-template-max-width: 1200px;
     margin-bottom: govuk-spacing(1);
   }
 }
+
+.sign-in-button {
+  form {
+    display: inline;
+  }
+  button {
+    vertical-align: baseline;
+    margin-bottom: govuk-spacing(1);
+  }
+}
