@@ -6,7 +6,7 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, :with_default_sch
   include ApplicationHelper
 
   include_context "with stubbed Teacher Auth OmniAuth responses"
-  include_context "with stubbed Teaching Record System person API"
+  include_context "with stubbed missing Teaching Record System person record"
 
   context "when Teacher Auth returns no TRN" do
     let(:user_trn) { nil }

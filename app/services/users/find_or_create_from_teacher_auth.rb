@@ -91,6 +91,8 @@ module Users
     end
 
     def previous_names
+      return [] if @trn.blank?
+
       @previous_names ||= TeachingRecordSystem::FetchPerson.fetch(access_token:).previous_names
     end
 

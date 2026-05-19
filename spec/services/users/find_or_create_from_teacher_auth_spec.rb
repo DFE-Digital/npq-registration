@@ -29,9 +29,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     })
   end
 
-  before do
-    create(:user, trn:, trn_verified: true, archived_at: 1.day.ago)
-
+  let :stub_person_api do
     stub_request(:get, "#{ENV['TRS_API_URL']}/v3/person")
       .with(
         headers: {
@@ -40,7 +38,17 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         },
         query: { "include" => "PreviousNames" },
       )
-      .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
+  end
+
+  before do
+    create(:user, trn:, trn_verified: true, archived_at: 1.day.ago)
+
+    if trn.present?
+      stub_person_api
+        .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
+    else
+      stub_person_api.to_return(status: 403, body: nil)
+    end
   end
 
   context "when the TRN matches a verified TRN on one user" do
@@ -257,7 +265,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
         it "updates previous_names on the user" do
           subject
-          expect(existing_user.reload.previous_names).to eq(["Sarah Johnson"])
+          expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
         end
       end
 
@@ -266,13 +274,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:,
                                             previous_names: ["Old Previous Name"])
         end
+
         let(:api_previous_names) do
           [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
         end
 
         it "replaces old previous_names with new API data" do
           subject
-          expect(existing_user.reload.previous_names).to eq(["Sarah Johnson"])
+          expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
         end
       end
     end
@@ -337,10 +346,15 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         it "creates the user with previous_names from API" do
           subject
           created_user = User.find_by(provider: "teacher_auth", uid:)
-          expect(created_user.previous_names).to eq([
-            "Sarah Johnson",
-            "Sarah Ann Williams",
-          ])
+
+          if created_user.trn
+            expect(created_user.previous_names).to eq([
+              "Sarah Johnson",
+              "Sarah Ann Williams",
+            ])
+          else
+            expect(created_user.previous_names).to be_empty
+          end
         end
       end
     end

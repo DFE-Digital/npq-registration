@@ -14,8 +14,16 @@ RSpec.shared_context("with stubbed Teaching Record System person API") do
           { "firstName" => "Jane", "middleName" => "", "lastName" => "Doe" },
         ],
       }
-    stub_request(:get, "#{ENV['TRS_API_URL']}/v3/person")
+    stub_request(:get, "#{ENV["TRS_API_URL"]}/v3/person")
       .with(query: { "include" => "PreviousNames" })
       .to_return(status: 200, body: trs_response.to_json)
+  end
+end
+
+RSpec.shared_context("with stubbed missing Teaching Record System person record") do
+  before do
+    stub_request(:get, "#{ENV["TRS_API_URL"]}/v3/person")
+      .with(query: { "include" => "PreviousNames" })
+      .to_return(status: 403, body: nil)
   end
 end
