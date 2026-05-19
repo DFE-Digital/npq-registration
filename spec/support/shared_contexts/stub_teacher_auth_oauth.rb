@@ -45,12 +45,35 @@ RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
     stubbed_callback_response.as_json
   end
 
-  let(:user_attributes_from_stubbed_callback_response) do
+  let(:minimal_user_attributes_from_stubbed_callback_response) do
     {
       "email" => user_email,
       "full_name" => user_full_name,
       "provider" => provider.to_s,
       "trn" => user_trn,
+      "uid" => user_uid,
+    }
+  end
+
+  let(:user_attributes_from_stubbed_callback_response) do
+    {
+      "active_alert" => false,
+      "archived_at" => nil,
+      "archived_email" => nil,
+      "date_of_birth" => user_date_of_birth,
+      "ecf_id" => latest_application_user.ecf_id,
+      "email" => user_email,
+      "full_name" => user_full_name,
+      "get_an_identity_id_synced_to_ecf" => false,
+      "national_insurance_number" => nil,
+      "notify_user_for_future_reg" => false,
+      "preferred_name" => nil,
+      "provider" => provider.to_s,
+      "raw_tra_provider_data" => nil,
+      "trn" => user_trn,
+      "trn_auto_verified" => true,
+      "trn_lookup_status" => nil,
+      "trn_verified" => true,
       "uid" => user_uid,
     }
   end

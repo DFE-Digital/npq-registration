@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.feature "Administering feature flags", :rack_test_driver, type: :feature do
   include Helpers::AdminLogin
-  include_context "Stub Get An Identity Omniauth Responses"
 
   let(:super_admin) { create(:super_admin) }
 

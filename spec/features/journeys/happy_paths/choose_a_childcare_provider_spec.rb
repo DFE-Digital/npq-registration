@@ -5,7 +5,8 @@ RSpec.feature "Choose a childcare provider page", :with_default_schedules, type:
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   before do
     stub_participant_validation_request

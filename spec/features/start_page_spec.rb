@@ -10,7 +10,6 @@ RSpec.feature "Start page", :no_js, type: :feature do
   let(:user) { create(:user, :with_teacher_auth, uid: user_uid) }
   let(:application) { create(:application, user:) }
 
-
   scenario "Navigate to home" do
     visit "/"
 
@@ -21,7 +20,7 @@ RSpec.feature "Start page", :no_js, type: :feature do
   context "when the user has no applications" do
     scenario "Start now button starts journey" do
       visit "/"
-      page.click_button("Start now with Teacher Auth")
+      page.click_button("Start now")
 
       expect_page_to_have(path: "/registration/course-start-date")
     end
@@ -39,7 +38,7 @@ RSpec.feature "Start page", :no_js, type: :feature do
 
     scenario "Start now button starts journey" do
       visit "/"
-      page.click_button("Start now with Teacher Auth")
+      page.click_button("Start now")
 
       expect_page_to_have(path: "/registration/course-start-date")
     end

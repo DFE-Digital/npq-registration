@@ -1,12 +1,13 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey that is blocked from targeted delivery funding because they were previously funded (with JS)") { run_scenario(js: true) }
@@ -91,17 +92,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibili
     expect(User.count).to be(1)
     expect(Application.count).to be(1)
 
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge(
-                                                             "active_alert" => false,
-                                                             "archived_email" => nil,
-                                                             "archived_at" => nil,
-                                                             "ecf_id" => latest_application_user.ecf_id,
-                                                             "get_an_identity_id_synced_to_ecf" => false,
-                                                             "national_insurance_number" => nil,
-                                                             "notify_user_for_future_reg" => false,
-                                                             "trn_auto_verified" => false,
-                                                             "trn_verified" => true,
-                                                           ))
+    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
 
     deep_compare_application_data(
       "accepted_at" => nil,

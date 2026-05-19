@@ -5,8 +5,8 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  # include_context "retrieve latest application data"
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   scenario "unfunded cohort registration journey" do
     stub_participant_validation_request

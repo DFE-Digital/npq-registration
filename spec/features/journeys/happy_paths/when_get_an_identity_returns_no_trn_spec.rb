@@ -6,7 +6,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
   include ApplicationHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   # This controls what is returned from the Get An Identity API
   let(:user_trn) { "" }
@@ -155,20 +156,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_default_school, t
       expect(page).to have_content("Before you start")
     end
 
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge(
-                                                             "active_alert" => false,
-                                                             "archived_email" => nil,
-                                                             "archived_at" => nil,
-                                                             "ecf_id" => latest_application_user.ecf_id,
-                                                             "full_name" => "Jane Smith",
-                                                             "get_an_identity_id_synced_to_ecf" => false,
-                                                             "national_insurance_number" => nil,
-                                                             "notify_user_for_future_reg" => false,
-                                                             "raw_tra_provider_data" => stubbed_callback_response_as_json,
-                                                             "trn" => manually_entered_trn,
-                                                             "trn_auto_verified" => true,
-                                                             "trn_verified" => true,
-                                                           ))
+    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
 
     deep_compare_application_data(
       "accepted_at" => nil,

@@ -5,6 +5,7 @@ RSpec.feature "Back links", :no_js, :with_default_schedules, type: :feature do
   include Helpers::JourneyStepHelper
 
   include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   scenario "back to previous page retains state" do
     visit "/"

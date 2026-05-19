@@ -5,7 +5,8 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, type: :feature do
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   before do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do

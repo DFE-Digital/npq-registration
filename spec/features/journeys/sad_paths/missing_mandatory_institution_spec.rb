@@ -4,7 +4,8 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   # N.B. from this perspective there is no difference between manually
   # navigating and having two browser windows open
