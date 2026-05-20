@@ -1,45 +1,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Register late for a national professional qualification (NPQ)</h1>
-
-    <p class="govuk-body">You’ve been given access to make a late registration for an NPQ whilst the service is closed.</p>
-
-    <p class="govuk-body">You will also need to apply separately with your training provider.</p>
-
-    <h2 class="govuk-heading-m">Before you start</h2>
-
-    <p class="govuk-body">
-      You should have already chosen which NPQ you want to do and who your provider is.
-      If you have not chosen yet,
-      <%= external_link_to("find out about NPQ courses", :find_out_about_npq_courses) %>.
-    </p>
-
-    <p class="govuk-body">
-      You’ll also need a teacher reference number (TRN) to register, even if
-      you’re not a teacher.
-      <%= external_link_to "Learn about TRNs", :learn_about_trns %>
-      including how to request on if you do not have one.
-    </p>
-
-    <p class="govuk-body">
-      If you work in early years or childcare,
-      <%= external_link_to("check if your workplace is registered with Ofsted", :check_if_your_workplace_is_registered_with_ofsted) %>
-      and get their Ofsted unique reference number (URN), if they have one.
-    </p>
-
-    <p class="govuk-body">
-      Before registering for an NPQ you’ll be asked to create a DfE Identity
-      account or sign in to your existing account.
-    </p>
-
-    <p class="govuk-body">
-      By continuing, you agree to our <%= govuk_link_to("privacy notice", PRIVACY_NOTICE) %>.
-    </p>
+    <%= render "registration_wizard/shared/start_page_content" %>
 
     <% if Feature.registration_enabled? %>
       <%=
         render(
-          'shared/get_an_identity/redirect_button',
+          'shared/teacher_auth/redirect_button',
           button_text: "Start now"
         )
       %>
