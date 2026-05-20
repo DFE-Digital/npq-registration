@@ -109,7 +109,7 @@ RSpec.describe TeachingRecordSystem::ActivateTrnRequest do
     context "with valid access token when already activated" do
       before do
         stub_activation
-          .to_return(status: [204, "No Content"], headers:, body: activation_body.to_json)
+          .to_return(status: [204, "No Content"], headers:, body: nil)
       end
 
       it { is_expected.to be_nil }
