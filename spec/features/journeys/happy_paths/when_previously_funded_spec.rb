@@ -30,11 +30,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect(page).not_to have_content("Before you start")
 
-    expect_page_to_have(path: "/account", submit_form: false) do
-      expect(page).to have_text("Your NPQ registrations")
-      page.click_link("Register for another NPQ")
-    end
-
     choose_course_start_date
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
@@ -139,7 +134,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     # 12 previously funded application (one per course) plus one created via the RegistrationWizard
     expect_applicant_reached_end_of_journey(total_number_of_created_applications: 13)
 
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
+    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge("trn_lookup_status" => "Found"))
 
     deep_compare_application_data(
       "accepted_at" => nil,

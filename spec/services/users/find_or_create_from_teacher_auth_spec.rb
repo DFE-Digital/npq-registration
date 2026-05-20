@@ -68,7 +68,12 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     context "when user's details have updated" do
       it "updates the user" do
         subject
-        expect(user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
+        expect(user.reload).to have_attributes(
+          email:,
+          full_name: verified_name.join(" "),
+          date_of_birth: Date.parse("1990-01-01"),
+          trn_auto_verified: true,
+        )
       end
     end
 
@@ -132,7 +137,12 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
       it "sets the uid, provider and trn_verified on the matched user" do
         subject
-        expect(user.reload).to have_attributes(uid:, provider: "teacher_auth", trn_verified: true, trn_auto_verified: true)
+        expect(user.reload).to have_attributes(
+          uid:,
+          provider: "teacher_auth",
+          trn_verified: true,
+          trn_auto_verified: true,
+        )
       end
     end
 
@@ -157,7 +167,13 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           expect { subject }.not_to raise_error
           expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
           expect(clashing_user.archived_at).to be_present
-          expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(email:, trn:, trn_verified: true)
+          expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(
+            email:,
+            trn:,
+            trn_verified: true,
+            date_of_birth: Date.parse("1990-01-01"),
+            trn_auto_verified: true,
+          )
         end
       end
     end
@@ -190,7 +206,11 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
     it "creates participant ID records" do
       subject
-      expect(most_recently_updated_user.participant_id_changes.find_by(from_participant_id: older_user.ecf_id, to_participant_id: most_recently_updated_user.ecf_id)).to be_present
+      expect(
+        most_recently_updated_user.participant_id_changes.find_by(
+          from_participant_id: older_user.ecf_id, to_participant_id: most_recently_updated_user.ecf_id,
+        ),
+      ).to be_present
     end
 
     it "returns the most recently updated user" do
@@ -200,7 +220,12 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     context "when user's details have updated" do
       it "updates the user" do
         subject
-        expect(most_recently_updated_user.reload).to have_attributes(email:, full_name: verified_name.join(" "))
+        expect(most_recently_updated_user.reload).to have_attributes(
+          email:,
+          full_name: verified_name.join(" "),
+          date_of_birth: Date.parse("1990-01-01"),
+          trn_auto_verified: true,
+        )
       end
     end
 

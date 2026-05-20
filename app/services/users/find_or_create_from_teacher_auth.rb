@@ -19,12 +19,11 @@ module Users
 
       if user_matched_using_trn
         user_matched_using_trn.update!(
-          uid:,
-          provider: Omniauth::Strategies::TeacherAuth::NAME,
-          email:,
-          full_name:,
-          feature_flag_id:,
-          previous_names:,
+          always_updated_attributes.merge(
+            email:,
+            uid:,
+            provider: Omniauth::Strategies::TeacherAuth::NAME,
+          ),
         )
         merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
         return user_matched_using_trn
@@ -35,26 +34,22 @@ module Users
       if user_matched_using_uid
         blank_clashing_email_user(except: user_matched_using_uid)
         user_matched_using_uid.update!(
-          email: email,
-          trn:,
-          trn_verified: true,
-          trn_auto_verified: true,
-          full_name:,
-          feature_flag_id:,
-          previous_names:,
+          always_updated_attributes.merge(
+            email:,
+            trn:,
+            trn_verified: true,
+          ),
         )
         return user_matched_using_uid
       end
 
       if unverified_trn_matching_user
         unverified_trn_matching_user.update!(
-          uid:,
-          provider: Omniauth::Strategies::TeacherAuth::NAME,
-          trn_verified: true,
-          trn_auto_verified: true,
-          full_name:,
-          feature_flag_id:,
-          previous_names:,
+          always_updated_attributes.merge(
+            uid:,
+            provider: Omniauth::Strategies::TeacherAuth::NAME,
+            trn_verified: true,
+          ),
         )
         return unverified_trn_matching_user
       end
@@ -73,6 +68,16 @@ module Users
     def unverified_trn_matching_user
       @unverified_trn_matching_user ||=
         User.find_by(provider: Omniauth::Strategies::TraOpenidConnect::NAME, trn:, trn_verified: false, email:, archived_at: nil)
+    end
+
+    def always_updated_attributes
+      {
+        date_of_birth:,
+        feature_flag_id:,
+        full_name:,
+        previous_names:,
+        trn_auto_verified: true,
+      }
     end
 
     def blank_clashing_email_user(except: nil)
@@ -100,14 +105,14 @@ module Users
       User.create!(
         uid:,
         provider: Omniauth::Strategies::TeacherAuth::NAME,
-        email:,
-        trn:,
-        trn_verified: true,
-        trn_auto_verified: true,
-        full_name:,
         date_of_birth:,
+        email:,
         feature_flag_id:,
+        full_name:,
         previous_names:,
+        trn:,
+        trn_auto_verified: true,
+        trn_verified: true,
       )
     end
   end

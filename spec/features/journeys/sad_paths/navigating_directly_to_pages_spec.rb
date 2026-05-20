@@ -22,7 +22,7 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, type: :feature do
     funding-eligibility-maths
     funding-eligibility-senco
     funding-your-npq
-    get-an-identity-callback
+    login-callback
     ineligible-for-funding
     maths-eligibility-teaching-for-mastery
     maths-understanding-of-approach

@@ -20,6 +20,8 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
     WebMock.disable_net_connect!(allow_localhost: previous_webmock_allow_localhost, allow: previous_webmock_allow)
   end
 
+  before { allow(Rails.application.config.x.teacher_auth).to receive(:enabled).and_return(false) }
+
   regenerate_fixtures = false # set to true to regenerate fixtures
 
   let(:fixtures_path) { Rails.root.join("spec/fixtures/omniauth_hashes").freeze }
@@ -104,7 +106,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
       click_button("Start now")
     end
 
-    expect(page).to have_current_path "/registration/teacher-reference-number"
+    expect(page).to have_current_path "/registration/course-start-date"
     expect(User.last.trn).to be_blank
   end
 end

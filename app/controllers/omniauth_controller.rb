@@ -128,7 +128,7 @@ private
 
   def start_questionnaire_path(user)
     wizard = RegistrationWizard.new(
-      current_step: :get_an_identity_callback,
+      current_step: :login_callback,
       store: session["registration_store"],
       params: {},
       request:,
