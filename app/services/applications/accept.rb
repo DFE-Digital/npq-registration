@@ -185,6 +185,7 @@ module Applications
 
     def schedule_trn_allocation!
       return if application.user.trn.present?
+      return unless application.user.teacher_auth_provider?
 
       TeachingRecordSystem::AllocateTrnJob
         .perform_later(user_id: application.user_id)
