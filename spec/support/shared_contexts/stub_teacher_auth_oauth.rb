@@ -6,7 +6,6 @@ RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
   let(:user_email) { "user@example.com" }
   let(:user_uid) { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
   let(:user_date_of_birth) { "1980-12-13" }
-  let(:user_date_of_birth_parsed) { Date.new(1980, 12, 13) }
   let(:user_trn) { "1234567" }
   let(:user_trn_lookup_status) { "Found" }
 
@@ -60,7 +59,7 @@ RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
       "active_alert" => false,
       "archived_at" => nil,
       "archived_email" => nil,
-      "date_of_birth" => user_date_of_birth,
+      "date_of_birth" => nil,
       "ecf_id" => latest_application_user.ecf_id,
       "email" => user_email,
       "full_name" => user_full_name,

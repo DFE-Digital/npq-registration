@@ -85,11 +85,11 @@
 
       <h2 class="govuk-heading-m">Sign in</h2>
 
-      <span class="govuk-body sign-in-button">
-        You can also
-        <%= govuk_button_to("sign in", user_teacher_auth_omniauth_authorize_path, secondary: true, class: "sign-in-button", form_class: "sign-in-button") %>
+      <p class="govuk-body">
+        You can also sign in
         through GOV.UK One Login to view a previous registration or change your personal details.
-      </span>
+      </p>
+      <%= govuk_button_to("Sign in", user_teacher_auth_omniauth_authorize_path, secondary: true, class: "sign-in-button", form_class: "sign-in-button") %>
       <% end %>
     <% end %>
 

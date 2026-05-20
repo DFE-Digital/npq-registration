@@ -9,10 +9,9 @@ module Users
       @email = provider_data.info.email
       @feature_flag_id = feature_flag_id
       @full_name = provider_data.extra.raw_info.verified_name.join(" ")
-      @date_of_birth = Date.parse(provider_data.extra.raw_info.verified_date_of_birth, "%Y-%m-%d")
     end
 
-    attr_reader :access_token, :uid, :trn, :email, :full_name, :date_of_birth, :feature_flag_id
+    attr_reader :access_token, :uid, :trn, :email, :full_name, :feature_flag_id
 
     def call
       user_matched_using_trn = verified_trn_matching_users.first
@@ -72,7 +71,6 @@ module Users
 
     def always_updated_attributes
       {
-        date_of_birth:,
         feature_flag_id:,
         full_name:,
         previous_names:,
@@ -105,7 +103,6 @@ module Users
       User.create!(
         uid:,
         provider: Omniauth::Strategies::TeacherAuth::NAME,
-        date_of_birth:,
         email:,
         feature_flag_id:,
         full_name:,

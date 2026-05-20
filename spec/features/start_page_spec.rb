@@ -27,7 +27,7 @@ RSpec.feature "Start page", :no_js, type: :feature do
 
     scenario "Sign in button goes to account page" do
       visit "/"
-      page.click_button("sign in")
+      page.click_button("Sign in")
 
       expect(page).to have_current_path("/account")
     end
@@ -45,7 +45,7 @@ RSpec.feature "Start page", :no_js, type: :feature do
 
     scenario "Sign in button goes to application details page" do
       visit "/"
-      page.click_button("sign in")
+      page.click_button("Sign in")
 
       expect(page).to have_current_path("/accounts/user_registrations/#{application.id}")
     end
@@ -56,7 +56,7 @@ RSpec.feature "Start page", :no_js, type: :feature do
 
     scenario "Sign in button goes to account page" do
       visit "/"
-      page.click_button("sign in")
+      page.click_button("Sign in")
 
       expect(page).to have_current_path("/account")
     end

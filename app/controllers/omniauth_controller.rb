@@ -121,9 +121,13 @@ private
       return new_email_update_path
     end
 
-    return account_path unless request.env["omniauth.params"]["start_now"] == "true"
+    return account_path unless user_starting_registration?
 
     start_questionnaire_path(user)
+  end
+
+  def user_starting_registration?
+    request.env["omniauth.params"]["start_now"] == "true"
   end
 
   def start_questionnaire_path(user)

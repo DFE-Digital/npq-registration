@@ -13,7 +13,7 @@ Devise.setup do |config|
   oidc_domain = ENV["TRA_OIDC_DOMAIN"].presence
 
   config.omniauth :tra_openid_connect,
-                  allow_authorize_params: %i[request_email_updates start_now],
+                  allow_authorize_params: %i[request_email_updates],
                   callback_path: "/users/auth/tra_openid_connect/callback",
                   client_options: {
                     host: oidc_domain ? URI(oidc_domain).host : nil,
@@ -31,6 +31,7 @@ Devise.setup do |config|
     teacher_auth_domain = Rails.configuration.x.teacher_auth.domain
 
     config.omniauth :teacher_auth,
+                    allow_authorize_params: %i[request_email_updates start_now],
                     callback_path: "/users/auth/teacher_auth/callback",
                     client_options: {
                       host: teacher_auth_domain ? URI(teacher_auth_domain).host : nil,

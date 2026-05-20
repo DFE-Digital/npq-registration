@@ -71,7 +71,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         expect(user.reload).to have_attributes(
           email:,
           full_name: verified_name.join(" "),
-          date_of_birth: Date.parse("1990-01-01"),
           trn_auto_verified: true,
         )
       end
@@ -155,7 +154,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           trn_verified: true,
           trn_auto_verified: true,
           full_name: verified_name.join(" "),
-          date_of_birth: Date.parse("1990-01-01"),
           feature_flag_id:,
         )
       end
@@ -171,7 +169,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
             email:,
             trn:,
             trn_verified: true,
-            date_of_birth: Date.parse("1990-01-01"),
             trn_auto_verified: true,
           )
         end
@@ -223,7 +220,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         expect(most_recently_updated_user.reload).to have_attributes(
           email:,
           full_name: verified_name.join(" "),
-          date_of_birth: Date.parse("1990-01-01"),
           trn_auto_verified: true,
         )
       end
@@ -320,7 +316,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           trn_verified: true,
           trn_auto_verified: true,
           full_name: verified_name.join(" "),
-          date_of_birth: Date.parse("1990-01-01"),
           feature_flag_id:,
         )
       end
