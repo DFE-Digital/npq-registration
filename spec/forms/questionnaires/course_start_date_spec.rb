@@ -37,4 +37,10 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
 
     it { is_expected.to eq(:start) }
   end
+
+  describe "#return_to_regular_flow_on_change?" do
+    subject { instance.return_to_regular_flow_on_change? }
+
+    it { is_expected.to be(true) }
+  end
 end
