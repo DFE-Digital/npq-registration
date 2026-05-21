@@ -10,6 +10,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
     let(:public_key) { Linzer.new_ecdsa_p384_sha384_key(key.material.public_to_pem) }
     let(:content_digest) { "sha-256=:#{Base64.strict_encode64(Digest::SHA256.digest(body))}" }
     let(:components) { %w[@target-uri content-digest content-length ce-id ce-type ce-time] }
+    let(:time_now_iso8601) { Time.zone.now.iso8601 }
 
     let(:headers_to_include) do
       %w[
@@ -44,7 +45,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
         request["ce-id"] = SecureRandom.uuid
         request["ce-type"] = "one_login_user.updated"
         request["ce-source"] = "https://preprod.teacher-qualifications-api.education.gov.uk"
-        request["ce-time"] = Time.zone.now.iso8601
+        request["ce-time"] = time_now_iso8601
         request.content_type = "application/json"
         Linzer.sign!(request, key:, components:, label: "whsig")
       end
@@ -67,6 +68,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
           message_id: example_signed_request["ce-id"],
           message_type: example_signed_request["ce-type"],
           message_source: example_signed_request["ce-source"],
+          sent_at: Time.zone.parse(time_now_iso8601),
           status_comment: nil,
           status: "pending",
           message: JSON.parse(body),

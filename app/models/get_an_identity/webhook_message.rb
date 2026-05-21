@@ -11,6 +11,10 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
     case message_type
     when "UserUpdated"
       GetAnIdentityService::Webhooks::UserUpdatedProcessor
+    when "one_login_user.updated"
+      TeachingRecordSystem::Webhooks::UserUpdatedProcessor
+    when "trn_request.completed"
+      TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor
     end
   end
 
