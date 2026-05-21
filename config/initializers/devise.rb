@@ -31,7 +31,7 @@ Devise.setup do |config|
     teacher_auth_domain = Rails.configuration.x.teacher_auth.domain
 
     config.omniauth :teacher_auth,
-                    allow_authorize_params: %i[request_email_updates start_now],
+                    allow_authorize_params: %i[start_now],
                     callback_path: "/users/auth/teacher_auth/callback",
                     client_options: {
                       host: teacher_auth_domain ? URI(teacher_auth_domain).host : nil,
