@@ -48,13 +48,19 @@ module Questionnaires
       :start
     end
 
+    def return_to_regular_flow_on_change?
+      true
+    end
+
   private
 
     def cohort_exists
       cohort_identifier = course_start_cohort
       cohort = Cohort.find_by(identifier: cohort_identifier)
-      errors.add(QUESTION_NAME, :invalid) unless cohort
-      Sentry.capture_message("Cohort selected by user does not exist: #{cohort_identifier}")
+      unless cohort
+        errors.add(QUESTION_NAME, :invalid)
+        Sentry.capture_message("Cohort selected by user does not exist: #{cohort_identifier}")
+      end
     end
   end
 end

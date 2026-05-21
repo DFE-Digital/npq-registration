@@ -22,6 +22,26 @@ module ApplicationHelper
     bool ? "Yes" : "No"
   end
 
+  def eligibility_tag(eligibility)
+    tag_colour = case eligibility
+                 when :eligible
+                   "green"
+                 when :not_eligible
+                   "red"
+                 when :in_review
+                   "yellow"
+                 else
+                   "grey"
+                 end
+    govuk_tag(text: eligibility.to_s.humanize, colour: tag_colour)
+  end
+
+  def funding_title(eligibility, title: "Funding")
+    tag.div(class: "eligibility-page-header") do
+      tag.h1(class: "govuk-heading-xl govuk-!-margin-0") { title } + eligibility_tag(eligibility)
+    end
+  end
+
   def show_tracking_pixels?
     Rails.configuration.x.tracking_pixels_enabled && cookies["consented-to-cookies"] == "accept"
   end
@@ -40,7 +60,7 @@ module ApplicationHelper
 
   def application_cohort_description(application)
     cohort_option = Questionnaires::CourseStartDate::OPTIONS[application.cohort.identifier]
-    cohort_option ? cohort_option[:cohort_description] : application.cohort.name
+    cohort_option ? cohort_option[:cohort_description] : application.cohort.start_year
   end
 
   def show_otp_code_in_ui(current_env, admin)

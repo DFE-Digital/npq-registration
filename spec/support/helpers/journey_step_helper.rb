@@ -1,6 +1,6 @@
 module Helpers
   module JourneyStepHelper
-    def choose_a_school(js:, name:)
+    def choose_a_school(js:, name:, already_searched_for_workplace: false)
       if js
         navigate_to_page(path: "/registration/choose-school", submit_form: true) do
           within ".npq-js-reveal" do
@@ -11,11 +11,13 @@ module Helpers
         end
       else
         navigate_to_page(path: "/registration/choose-school", submit_form: true) do
-          within ".npq-js-hidden" do
-            page.fill_in "What is the name of your workplace?", with: name
+          unless already_searched_for_workplace
+            within ".npq-js-hidden" do
+              page.fill_in "What is the name of your workplace?", with: name
+            end
+            page.click_button("Continue")
           end
-
-          page.click_button("Continue")
+          expect(page).to have_text("Select your workplace")
           page.choose name
         end
       end
@@ -37,6 +39,7 @@ module Helpers
           end
 
           page.click_button("Continue")
+          expect(page).to have_text("Select your workplace")
           page.choose name
         end
       end

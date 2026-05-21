@@ -11,6 +11,9 @@ RSpec.describe Course do
 
   describe "associations" do
     it { is_expected.to belong_to(:course_group).optional }
+    it { is_expected.to have_many(:course_cohorts).dependent(:destroy) }
+    it { is_expected.to have_many(:course_cohort_providers).through(:course_cohorts) }
+    it { is_expected.to have_many(:lead_providers).through(:course_cohort_providers) }
   end
 
   describe ".ehco" do

@@ -5,4 +5,5 @@ Rails.application.configure do
 
   config.x.teacher_auth.enabled = false
   config.x.api.previous_names = true
+  config.x.api.cohort_suffix = true
 end

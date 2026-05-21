@@ -71,11 +71,11 @@ RSpec.describe Exporters::Contracts do
     subject { described_class.new(cohort: older_cohort).call }
 
     let(:older_cohort) { create(:cohort, start_year: 2022) }
-    let(:older_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true) }
-    let(:older_statement_output_fee_false) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: false) }
-    let(:latest_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true) }
-    let(:latest_statement_output_fee_false) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: false) }
-    let(:future_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true, year: Time.zone.today.year + 1) }
+    let(:older_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true, for_date: 3.months.ago) }
+    let(:older_statement_output_fee_false) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: false, for_date: 2.months.ago) }
+    let(:latest_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true, for_date: 1.month.ago) }
+    let(:latest_statement_output_fee_false) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: false, for_date: 0.months.ago) }
+    let(:future_statement_output_fee_true) { create(:statement, cohort: older_cohort, lead_provider:, output_fee: true, for_date: 1.month.from_now) }
     let(:contract_template_1) { create(:contract_template, service_fee_installments: 50, monthly_service_fee: nil) }
     let(:contract_template_2) { create(:contract_template, service_fee_installments: 24, monthly_service_fee: 10) }
     let(:contract_template_3) { create(:contract_template, service_fee_installments: 0, monthly_service_fee: 0.0) }

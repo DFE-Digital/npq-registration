@@ -28,6 +28,16 @@ PARTICIPANT = {
             nullable: false,
             example: "Isabelle MacDonald",
           },
+          previous_names: {
+            description: "List of previously used names",
+            type: :array,
+            nullable: false,
+            items: {
+              type: :string,
+              example: "Isabelle James",
+              nullable: false,
+            },
+          },
           email: {
             description: "The email address registered for this NPQ participant",
             type: :string,
@@ -122,6 +132,12 @@ PARTICIPANT = {
           nullable: true,
           example: "2022",
         },
+        cohort_suffix: {
+          description: "Differentiator when there are multiple call-off contracts within the same year",
+          type: :string,
+          nullable: false,
+          example: "a",
+        },
         npq_application_id: {
           description: "The ID of the NPQ application that was accepted to create this enrolment",
           type: :string,
@@ -170,7 +186,7 @@ PARTICIPANT = {
     email: {
       description: "The email address registered for this NPQ participant",
       type: :string,
-      nullable: false,
+      nullable: true,
       example: "isabelle.macdonald2@some-school.example.com",
     },
     withdrawal: {

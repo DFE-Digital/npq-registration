@@ -1,8 +1,16 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
+  let(:aso_course) { Course.find_by(identifier: "npq-additional-support-offer") }
+  let(:ehco_course) { Course.find_by(identifier: "npq-early-headship-coaching-offer") }
+  let(:headship_course) { Course.find_by(identifier: "npq-headship") }
+  let(:leading_behaviour_culture_course) { Course.find_by(identifier: "npq-leading-behaviour-culture") }
+  let(:leading_primary_mathematics_course) { Course.find_by(identifier: "npq-leading-primary-mathematics") }
+  let(:leading_teaching_course) { Course.find_by(identifier: "npq-leading-teaching") }
+  let(:senco_course) { Course.find_by(identifier: "npq-senco") }
+
   describe "validations" do
-    let(:valid_course_identifier) { create(:course, :early_headship_coaching_offer).identifier }
+    let(:valid_course_identifier) { ehco_course.identifier }
 
     it { is_expected.to validate_presence_of(:course_identifier) }
 
@@ -21,12 +29,13 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
     subject { instance.next_step }
 
     let(:instance) { described_class.new(course_identifier: course.identifier) }
-    let(:course) { create(:course, :leading_behaviour_culture) }
-    let(:lead_provider) { LeadProvider.for(course:).first }
-    let(:cohort) { create(:cohort, :current) }
+    let(:course) { leading_behaviour_culture_course }
+    let(:lead_provider) { create(:lead_provider) }
+    let(:cohort) { create(:cohort, :next, suffix: "b") }
 
     let(:store) do
       {
+        course_start_cohort: cohort.identifier,
         course_identifier: course.identifier,
         lead_provider_id: lead_provider.id,
       }.stringify_keys
@@ -46,16 +55,10 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
         instance.flag_as_changing_answer
       end
 
-      context "nothing was actually changed" do
-        let(:course) { create(:course, :early_headship_coaching_offer) }
-
-        it { is_expected.to be :check_answers }
-      end
-
       context "when changing to something other than headship" do
-        let(:course) { create(:course, :leading_teaching) }
+        let(:course) { leading_teaching_course }
         let(:school) { create(:school) }
-        let(:previous_course) { create(:course, :headship) }
+        let(:previous_course) { headship_course }
         let(:store) do
           {
             course_start_cohort: cohort.identifier,
@@ -67,31 +70,38 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
         end
 
         context "when lead provider is valid for new course" do
+          let(:cohort) { create(:cohort, :next, :with_all_courses_for_provider, suffix: "b", lead_provider:) }
+
           it { is_expected.to be(:check_answers) }
+
+          context "when nothing was actually changed" do
+            let(:previous_course) { ehco_course }
+            let(:course) { ehco_course }
+
+            it { is_expected.to be :check_answers }
+          end
         end
 
         context "when lead provider is not valid for new course" do
-          let(:lead_provider) { LeadProvider.create(name: :foo) }
-
           it { is_expected.to be :ineligible_for_funding }
         end
       end
     end
 
     context "when the course is EHCO" do
-      let(:course) { create(:course, :early_headship_coaching_offer) }
+      let(:course) { ehco_course }
 
       it { is_expected.to be(:npqh_status) }
     end
 
     context "when the course is NPQLPM" do
-      let(:course) { create(:course, :leading_primary_mathematics) }
+      let(:course) { leading_primary_mathematics_course }
 
       it { is_expected.to be(:maths_eligibility_teaching_for_mastery) }
     end
 
     context "when the course is NPQS" do
-      let(:course) { create(:course, :senco) }
+      let(:course) { senco_course }
 
       it { is_expected.to be(:senco_in_role) }
     end

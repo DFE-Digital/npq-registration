@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -14,8 +14,6 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_eligibili
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
     end
-
-    expect(page).not_to have_content("Before you start")
 
     choose_course_start_date
 

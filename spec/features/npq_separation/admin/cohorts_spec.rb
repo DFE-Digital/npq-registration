@@ -14,6 +14,7 @@ RSpec.feature "Managing cohorts", type: :feature do
 
   before do
     (2026..2028).each { create :cohort, start_year: _1 }
+    create(:cohort, :unfunded, identifier: "2028b", description: "2028 unfunded", start_year: 2028, suffix: "b")
 
     sign_in_as admin
   end
@@ -21,12 +22,11 @@ RSpec.feature "Managing cohorts", type: :feature do
   scenario "listing cohorts" do
     visit_index
 
-    expect(Cohort.count).to eq(3)
-
     expect(page).to have_table(rows: [
-      ["2028 to 2029", "3 April 2028", "capped"],
-      ["2027 to 2028", "3 April 2027", "capped"],
-      ["2026 to 2027", "3 April 2026", "capped"],
+      ["2028b", "2028 unfunded", "3 April 2028", "zero"],
+      ["2028", "2028 to 2029", "3 April 2028", "capped"],
+      ["2027", "2027 to 2028", "3 April 2027", "capped"],
+      ["2026", "2026 to 2027", "3 April 2026", "capped"],
     ])
   end
 
@@ -158,6 +158,6 @@ private
 
   def navigate_to_cohort
     visit_index
-    click_on "2026 to 2027"
+    click_on "2026"
   end
 end

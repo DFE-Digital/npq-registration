@@ -47,6 +47,7 @@ module Questionnaires
             link_errors: index.zero?,
             divider: divider_index == index,
             label: I18n.t("course.name.#{course.identifier}", default: course.name),
+            hint: course.description,
           )
         end
     end
@@ -126,7 +127,8 @@ module Questionnaires
     end
 
     def valid_providers
-      LeadProvider.for(course:)
+      cohort = Cohort.find_by!(identifier: wizard.query_store.course_start_cohort)
+      LeadProvider.for(course:, cohort:)
     end
 
     def courses

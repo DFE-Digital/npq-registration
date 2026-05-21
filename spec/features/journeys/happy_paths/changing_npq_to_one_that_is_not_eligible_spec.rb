@@ -9,6 +9,15 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
   before do
+    cohort = create(:cohort, :next, suffix: "b")
+    provider_bpn = LeadProvider.find_by(name: "Best Practice Network")
+    create(:course_cohort, :with_provider, cohort:, lead_provider: provider_bpn)
+    provider_niot = LeadProvider.find_by(name: "National Institute of Teaching")
+    create(:course_cohort,
+           :with_provider,
+           course: create(:course, :executive_leadership),
+           cohort:,
+           lead_provider: provider_niot)
     create(:school,
            :local_authority_nursery_school,
            name: "open manchester school",
@@ -100,7 +109,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq/change", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Executive leadership", visible: :all)
+      page.choose("Executive leadership", visible: :all) # Needs changing to an early years course once added
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
@@ -118,6 +127,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
+      expect(page).not_to have_text("Best Practice Network")
       page.choose("National Institute of Teaching", visible: :all)
     end
 

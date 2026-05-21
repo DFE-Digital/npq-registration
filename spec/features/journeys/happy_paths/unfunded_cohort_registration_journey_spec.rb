@@ -1,12 +1,16 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  # include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
+
+  before do
+    course_cohort = create(:course_cohort, course: create(:course, :headship), cohort: Cohort.find_by(identifier: "2026a"))
+    create(:course_cohort_provider, course_cohort:, lead_provider: LeadProvider.find_by(name: "LLSE"))
+  end
 
   scenario "unfunded cohort registration journey" do
     stub_participant_validation_request
@@ -47,7 +51,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("Ambition Institute", visible: :all)
+      page.choose("LLSE", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -59,7 +63,7 @@ RSpec.feature "Happy journeys", :no_js, :with_default_schedules, :with_default_s
         {
           "Course start" => "Spring 2026",
           "Course" => "Headship",
-          "Provider" => "Ambition Institute",
+          "Provider" => "LLSE",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My trust is paying",
           "Work setting" => "A school",

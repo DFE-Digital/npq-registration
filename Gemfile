@@ -95,7 +95,7 @@ group :test do
   gem "webmock", "~> 3.26"
 end
 
-group :development, :test, :review, :sandbox do
+group :development, :test, :review, :staging, :sandbox do
   gem "factory_bot_rails"
   gem "faker"
 end

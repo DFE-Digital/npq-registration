@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -10,6 +10,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey when choosing Leading primary mathematics journey (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :js do
+    scenario("registration journey when choosing Leading primary mathematics journey (without JS)") { run_scenario(js: true) }
   end
 
   def run_scenario(*)

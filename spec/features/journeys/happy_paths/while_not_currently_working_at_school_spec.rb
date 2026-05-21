@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -8,11 +8,17 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
-  context "when JavaScript is enabled or disabled" do
-    scenario("registration journey while not currently working at school", :js, :no_js) { run_scenario(js: true) }
+  before do
+    cohort = create(:cohort, :next, suffix: "b")
+    provider = LeadProvider.find_by(name: "Teach First")
+    create(:course_cohort,
+           :with_provider,
+           course: Course.find_by(identifier: "npq-executive-leadership"),
+           cohort:,
+           lead_provider: provider)
   end
 
-  def run_scenario(*)
+  scenario("registration journey while not currently working at school") do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -37,8 +43,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Another setting", visible: :all)
     end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
