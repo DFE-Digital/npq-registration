@@ -48,6 +48,10 @@ module Questionnaires
       :start
     end
 
+    def return_to_regular_flow_on_change?
+      true
+    end
+
   private
 
     def cohort_exists

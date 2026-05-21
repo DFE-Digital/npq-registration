@@ -9,6 +9,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, :with_eligibility_list_
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
+  before do
+    create(:cohort, :next, :with_all_courses_for_provider, suffix: "b", lead_provider: LeadProvider.find_by(name: "Teach First"))
+  end
+
   context "when JavaScript is enabled", :js do
     scenario("registration journey while working at private nursery (with JS)") { run_scenario(js: true) }
   end

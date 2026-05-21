@@ -1,6 +1,8 @@
 namespace :courses do
   desc "Update courses"
   task update: :versioned_environment do
+    Rails.logger = Logger.new($stdout) unless Rails.env.test?
+
     %w[
       leadership
       specialist

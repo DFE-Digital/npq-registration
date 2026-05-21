@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Questionnaires::SencoInRole, type: :model do
   let(:instance) { described_class.new }
   let(:course) { create(:course, :senco) }
-  let(:lead_provider) { LeadProvider.for(course:).first }
+  let(:lead_provider) { create(:lead_provider) }
 
   let(:store) do
     {
@@ -14,6 +14,7 @@ RSpec.describe Questionnaires::SencoInRole, type: :model do
   end
 
   before do
+    create(:course_cohort, :with_provider, course:, cohort: create(:cohort), lead_provider:)
     instance.wizard = RegistrationWizard.new(
       current_step: :senco_in_role,
       store:,

@@ -17,7 +17,7 @@ module CourseService
         Rails.logger.info("Loading Course with ecf_id #{hash[:ecf_id]}") unless silent
 
         course_group = CourseGroup.find_by!(name: hash[:course_group_name])
-        course = Course.find_or_initialize_by(ecf_id: hash[:ecf_id])
+        course = Course.find_or_initialize_by(identifier: hash[:identifier])
 
         course.update!(
           name: hash[:name],

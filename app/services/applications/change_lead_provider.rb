@@ -20,10 +20,10 @@ module Applications
     end
 
     def lead_provider_options
-      current_cohort_lead_providers_offering_the_same_course = LeadProvider.for(course: application.course).pluck(:id)
+      selected_cohort_lead_providers_offering_the_same_course = LeadProvider.for(course: application.course, cohort: application.cohort).pluck(:id)
       LeadProvider.where.not(id: application.lead_provider.id).pluck(:id, :name).map do |id, name|
-        unless current_cohort_lead_providers_offering_the_same_course.include?(id)
-          description = "This provider is not offering #{application.course.identifier} for the latest cohort"
+        unless selected_cohort_lead_providers_offering_the_same_course.include?(id)
+          description = "This provider is not offering #{application.course.identifier} for the chosen cohort"
         end
         OpenStruct.new(id:, name:, description:)
       end
