@@ -35,4 +35,48 @@ FactoryBot.define do
     end
     message { raw["message"] }
   end
+
+  factory :trs_user_updated_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+    transient do
+      user_email { "user@example.com" }
+      user_trn { "0000000" }
+    end
+    message_id { SecureRandom.uuid }
+    message_type { "alert.updated" }
+    status { "pending" }
+    sent_at { Time.zone.now }
+    message do
+      {
+        "oneLoginUser" => {
+          "subject" => "something",
+          "emailAddress" => user_email,
+        },
+        "connectedPerson" => {
+          "trn" => user_trn,
+        },
+      }
+    end
+  end
+
+  factory :trs_trn_request_completed_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+    transient do
+      user_uid { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
+      user_trn { "1234567" }
+    end
+
+    message_id { SecureRandom.uuid }
+    message_type { "trn_request.completed" }
+    status { "pending" }
+    sent_at { Time.zone.now }
+    message do
+      {
+        "trnRequest" => {
+          "trn" => user_trn,
+          "status" => "Completed",
+          "potentialDuplicate" => true,
+          "oneLoginUserSubject" => user_uid,
+        },
+      }
+    end
+  end
 end

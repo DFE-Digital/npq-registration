@@ -11,6 +11,7 @@ module API
                                                   message_id: request.headers["ce-id"],
                                                   message_type: request.headers["ce-type"],
                                                   message_source: request.headers["ce-source"],
+                                                  sent_at: request.headers["ce-time"],
                                                   message: JSON.parse(request.body),
                                                   raw: request.raw_post)
           head :ok
