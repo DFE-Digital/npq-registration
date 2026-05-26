@@ -160,4 +160,42 @@ RSpec.describe ApplicationHelper, type: :helper do
       it { is_expected.to be_nil }
     end
   end
+
+  describe "#service_navigation_items" do
+    include IdentityAccountHelper
+
+    subject { service_navigation_items }
+
+    before { allow(request).to receive(:original_fullpath).and_return "/" }
+
+    context "when not signed in" do
+      let(:current_user) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "when signed in with DfE Identity" do
+      let(:current_user) { create(:user, :with_get_an_identity_id) }
+
+      it { is_expected.to have_attributes length: 2 }
+      it { is_expected.to include({ text: "DfE Identity account", href: identity_link_uri("http://test.host/") }) }
+      it { is_expected.to include({ text: "Sign out", href: "/sign-out" }) }
+
+      context "with an existing application" do
+        before { application }
+
+        let(:application) { create(:application, user: current_user) }
+
+        it { is_expected.to have_attributes length: 3 }
+        it { is_expected.to include({ text: "NPQ account", href: "/accounts/user_registrations/#{application.id}" }) }
+      end
+
+      context "with multiple applications" do
+        before { create_list(:application, 2, user: current_user) }
+
+        it { is_expected.to have_attributes length: 3 }
+        it { is_expected.to include({ text: "NPQ account", href: "/account" }) }
+      end
+    end
+  end
 end
