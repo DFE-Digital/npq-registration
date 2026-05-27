@@ -535,11 +535,9 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       end
 
       context "with a user who does not have a TRN and is a TeacherAuth user" do
-        before do
-          user.oauth_tokens.create(token: "REFRESH", last_updated_token_at: 5.minutes.ago)
+        let :user do
+          create(:user, :without_trn, :with_teacher_auth, :with_fresh_refresh_token)
         end
-
-        let(:user) { create(:user, :without_trn, :with_teacher_auth) }
 
         it "schedules activating the users TRN request" do
           service.accept
@@ -550,10 +548,6 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       end
 
       context "with a user who does not have a TRN and not a TeacherAuth user" do
-        before do
-          user.oauth_tokens.create(token: "REFRESH", last_updated_token_at: 5.minutes.ago)
-        end
-
         let(:user) { create(:user, :without_trn, :with_get_an_identity_id) }
 
         it "schedules activating the users TRN request" do

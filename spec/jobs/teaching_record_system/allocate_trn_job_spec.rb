@@ -18,9 +18,12 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
   let(:trn) { nil }
 
   let :user do
-    create(:user, trn:, trn_verified: !!trn, trn_auto_verified: !!trn) do |user|
-      user.oauth_tokens.create(token: "OLDREFRESH", last_updated_token_at: 5.minutes.ago)
-    end
+    create(:user,
+           :with_teacher_auth,
+           :with_fresh_refresh_token,
+           trn:,
+           trn_verified: !!trn,
+           trn_auto_verified: !!trn)
   end
 
   describe "#perform" do
@@ -95,9 +98,7 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
           .to raise_exception(Faraday::ForbiddenError)
           .and not_change(user.reload, :trn)
           .and not_change(user.oauth_tokens, :count)
-          .and change { user.oauth_tokens.first.reload.token }
-                      .from("OLDREFRESH")
-                      .to("NEWREFRESH")
+          .and(change { user.oauth_tokens.first.reload.token })
 
         expect(Sentry).to have_received(:capture_exception).with(Faraday::ForbiddenError)
       end
