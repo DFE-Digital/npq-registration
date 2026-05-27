@@ -81,13 +81,23 @@ jobs:
          with:
            token: ${{ secrets.GITHUB_TOKEN }}
 
+       - name: Set environment variables
+         shell: bash
+         run: |
+           source global_config/review.sh
+           echo "DOCKER_IMAGE=ghcr.io/dfe-digital/npq-registration:no-tag" >> $GITHUB_ENV
+
        - name: Delete stale review app
          uses: DFE-Digital/github-actions/delete-review-app@master
+         env:
+           PULL_REQUEST_NUMBER: ${{ matrix.pr_number }}
          with:
            azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
            azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
            azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-           terraform-base: ${{ env.TERRAFORM_BASE }}
+           gcp-wip: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
+           gcp-project-id: ecf-bq
+           terraform-base: "terraform/application"
            pr-number: ${{ matrix.pr_number }}
            resource-group-name: ${{ env.RESOURCE_GROUP_NAME }}
            storage-account-name: ${{ env.STORAGE_ACCOUNT_NAME }}
