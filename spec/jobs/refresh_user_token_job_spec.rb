@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe RefreshUserTokenJob do
-  let(:user) { create(:user, :with_token, trn: nil, token: "old-token", token_updated_at: 8.days.ago) }
+  let(:user) { create(:user, :with_refresh_token, trn: nil, token: "old-token", token_updated_at: 8.days.ago) }
 
   describe "#perform" do
     context "when the user has a refresh token and no TRN" do
@@ -14,8 +14,8 @@ RSpec.describe RefreshUserTokenJob do
           described_class.new.perform(user.id)
 
           user.reload
-          expect(user.oauth_token.token).to eq("new-token")
-          expect(user.oauth_token.token_updated_at).to eq(Time.current)
+          expect(user.refresh_token.token).to eq("new-token")
+          expect(user.refresh_token.token_updated_at).to eq(Time.current)
         end
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe RefreshUserTokenJob do
     end
 
     context "when the refresh token has been cleared since enqueue" do
-      before { user.oauth_token.destroy! }
+      before { user.refresh_token.destroy! }
 
       it "does not call the refresh service" do
         expect(TeacherAuth::RefreshAccessToken).not_to receive(:call)

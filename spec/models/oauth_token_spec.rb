@@ -15,6 +15,18 @@ RSpec.describe OauthToken, type: :model do
     end
   end
 
+  describe "scopes" do
+    describe ".needs_refresh" do
+      subject { described_class.needs_refresh }
+
+      let(:expiring_token) { create(:oauth_token, :stale) }
+      let(:recent_token) { create(:oauth_token, :fresh) }
+
+      it { is_expected.to include expiring_token }
+      it { is_expected.not_to include recent_token }
+    end
+  end
+
   describe "validations" do
     subject { create(:oauth_token) }
 
@@ -38,6 +50,45 @@ RSpec.describe OauthToken, type: :model do
 
       expect(raw).not_to include(plaintext)
       expect(raw).to match(/\A\{.*"p":/)
+    end
+  end
+
+  describe "#store!" do
+    subject(:reloaded) { token.reload }
+
+    before do
+      freeze_time
+      token.store!("some-token")
+    end
+
+    let(:user) { create :user }
+
+    context "with new token" do
+      let(:token) { OauthToken.new(user:) }
+
+      it { is_expected.to be_persisted }
+      it { is_expected.to have_attributes changes: be_empty }
+
+      it "saves correct attributes" do
+        expect(reloaded).to have_attributes token: "some-token",
+                                            token_updated_at: Time.current,
+                                            token_type: "refresh_token"
+      end
+    end
+
+    context "with existing token" do
+      let :token do
+        OauthToken.create!(user:, token: "old", token_updated_at: 20.minutes.ago)
+      end
+
+      it { is_expected.to be_persisted }
+      it { is_expected.to have_attributes changes: be_empty }
+
+      it "saves correct attributes" do
+        expect(reloaded).to have_attributes token: "some-token",
+                                            token_updated_at: Time.current,
+                                            token_type: "refresh_token"
+      end
     end
   end
 end

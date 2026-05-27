@@ -58,17 +58,31 @@ FactoryBot.define do
       email { "archived-#{archived_email}" }
     end
 
-    trait :with_token do
+    trait :with_refresh_token do
       transient do
         token { SecureRandom.hex(32) }
         token_updated_at { Time.current }
       end
 
       after(:create) do |user, evaluator|
-        create(:oauth_token,
-               user:,
-               token: evaluator.token,
-               token_updated_at: evaluator.token_updated_at)
+        user.refresh_token.update!(token: evaluator.token,
+                                   token_updated_at: evaluator.token_updated_at)
+      end
+    end
+
+    trait :with_fresh_refresh_token do
+      with_refresh_token
+
+      transient do
+        token_updated_at { (OauthToken::REFRESH_LIFETIME - 2.hours).ago }
+      end
+    end
+
+    trait :with_stale_refresh_token do
+      with_refresh_token
+
+      transient do
+        token_updated_at { (OauthToken::REFRESH_LIFETIME + 2.hours).ago }
       end
     end
   end

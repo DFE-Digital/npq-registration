@@ -89,11 +89,10 @@ module Users
       refresh_token = provider_data.credentials&.refresh_token
 
       if user.trn.blank? && refresh_token.present?
-        token_record = user.oauth_token || user.oauth_tokens.build(token_type: :refresh_token)
-        token_record.update!(token: refresh_token, token_updated_at: Time.current)
+        user.refresh_token.store!(refresh_token)
         true
-      elsif user.trn.present? && user.oauth_token.present?
-        user.oauth_token.destroy!
+      elsif user.trn.present? && user.refresh_token.persisted?
+        user.refresh_token.destroy!
         false
       else
         false
