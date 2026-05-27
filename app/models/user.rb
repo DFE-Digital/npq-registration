@@ -18,6 +18,7 @@ class User < ApplicationRecord
 
   has_paper_trail meta: { note: :version_note }, ignore: %i[raw_tra_provider_data updated_at feature_flag_id]
 
+  has_many :oauth_tokens, dependent: :destroy
   has_many :applications, dependent: :destroy
   has_many :declarations, through: :applications
   has_many :participant_id_changes, -> { order("created_at desc") }
@@ -42,6 +43,20 @@ class User < ApplicationRecord
     where.not(uid: nil)
          .where(provider: Omniauth::Strategies::TraOpenidConnect::NAME)
   }
+
+  scope :needing_token_refresh, lambda {
+    where(trn: nil)
+      .joins(:oauth_tokens)
+      .where(oauth_tokens: { token_type: "refresh_token", token_updated_at: ...7.days.ago })
+  }
+
+  def oauth_token
+    oauth_tokens.refresh_token.first
+  end
+
+  def needs_token_refresh?
+    trn.blank? && oauth_token.present?
+  end
 
   EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
   EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES

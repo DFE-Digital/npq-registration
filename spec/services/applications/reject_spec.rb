@@ -67,5 +67,40 @@ RSpec.describe Applications::Reject, type: :model do
                      ecf_id: application.ecf_id)
       service.reject
     end
+
+    describe "refresh token clearing" do
+      let(:user) { create(:user, :with_token, trn: nil, token: "live-token", token_updated_at: 1.day.ago) }
+      let(:application) { create(:application, :pending, user:) }
+
+      context "when the user has no TRN and this is their only pending application" do
+        it "destroys the refresh token record" do
+          expect { service.reject }.to change { user.reload.oauth_token }.from(an_instance_of(OauthToken)).to(nil)
+        end
+      end
+
+      context "when the user has another pending application" do
+        before { create(:application, :pending, user:) }
+
+        it "leaves the refresh token in place" do
+          expect { service.reject }.not_to(change { user.reload.oauth_token&.token })
+        end
+      end
+
+      context "when the user has a TRN" do
+        let(:user) { create(:user, trn: "1234567") }
+
+        it "does not error" do
+          expect { service.reject }.not_to raise_error
+        end
+      end
+
+      context "when the user has no refresh token" do
+        let(:user) { create(:user, trn: nil) }
+
+        it "does not error" do
+          expect { service.reject }.not_to raise_error
+        end
+      end
+    end
   end
 end

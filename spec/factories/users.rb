@@ -57,5 +57,19 @@ FactoryBot.define do
       archived_at { Time.zone.now }
       email { "archived-#{archived_email}" }
     end
+
+    trait :with_token do
+      transient do
+        token { SecureRandom.hex(32) }
+        token_updated_at { Time.current }
+      end
+
+      after(:create) do |user, evaluator|
+        create(:oauth_token,
+               user:,
+               token: evaluator.token,
+               token_updated_at: evaluator.token_updated_at)
+      end
+    end
   end
 end

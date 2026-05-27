@@ -320,6 +320,31 @@ RSpec.describe User do
     end
   end
 
+  describe ".needing_token_refresh" do
+    it "includes TRN-less users whose refresh token was last updated over 7 days ago" do
+      stale_user = create(:user, :with_token, trn: nil, token: "abc", token_updated_at: 8.days.ago)
+      create(:user, :with_token, trn: nil, token: "def", token_updated_at: 6.days.ago)
+      create(:user, trn: nil)
+      create(:user, :with_token, trn: "1234567", token: "stale-but-trn'd", token_updated_at: 8.days.ago)
+
+      expect(User.needing_token_refresh).to contain_exactly(stale_user)
+    end
+  end
+
+  describe "#needs_token_refresh?" do
+    it "is true when the user has no TRN and a refresh token" do
+      expect(create(:user, :with_token, trn: nil)).to be_needs_token_refresh
+    end
+
+    it "is false when the user has a TRN" do
+      expect(create(:user, :with_token, trn: "1234567")).not_to be_needs_token_refresh
+    end
+
+    it "is false when the user has no refresh token" do
+      expect(create(:user, trn: nil)).not_to be_needs_token_refresh
+    end
+  end
+
   describe ".find_by_get_an_identity_id" do
     let(:uid) { SecureRandom.uuid }
     let!(:user) { create(:user, :with_get_an_identity_id, uid:) }
