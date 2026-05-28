@@ -48,6 +48,7 @@ jobs:
       - uses: DFE-Digital/github-actions/build-docker-image@2669-spike-dockerfile-base-image-repo-switch
         id: build-docker-image
         with:
+          environment: review
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
