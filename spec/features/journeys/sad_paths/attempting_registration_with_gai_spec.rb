@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.feature "Registration whilst already signed in with DfE Identity", :no_js, type: :feature do
   include Helpers::JourneyAssertionHelper
 
+  before { allow(Sentry).to receive(:capture_message) }
+
   let(:user) { User.find_by(email: "user@example.com") }
 
   include_context "Stub Get An Identity Omniauth Responses"
@@ -28,6 +30,8 @@ RSpec.feature "Registration whilst already signed in with DfE Identity", :no_js,
       expect(page).not_to have_link("Sign out")
 
       expect(page).to have_css(".govuk-notification-banner", text: /restart.*registration/i)
+
+      expect(Sentry).to have_received(:capture_message)
     end
   end
 end
