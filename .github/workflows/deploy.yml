@@ -39,10 +39,6 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-24.04
-    with:
-      azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-      azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-      azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     if: github.actor != 'dependabot[bot]' && github.event_name != 'merge_group'
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
@@ -52,6 +48,9 @@ jobs:
       - uses: DFE-Digital/github-actions/build-docker-image@2669-spike-dockerfile-base-image-repo-switch
         id: build-docker-image
         with:
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           docker-repository: ghcr.io/dfe-digital/npq-registration
           github-token: ${{ secrets.GITHUB_TOKEN }}
           snyk-token: ${{ secrets.SNYK_TOKEN }}
