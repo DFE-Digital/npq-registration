@@ -7,6 +7,7 @@ RSpec.describe User do
     it { is_expected.to have_many(:applications).dependent(:destroy) }
     it { is_expected.to have_many(:participant_id_changes).order("created_at desc") }
     it { is_expected.to have_many(:declarations).through(:applications) }
+    it { is_expected.to have_many(:oauth_tokens).dependent(:destroy) }
   end
 
   describe "paper_trail" do
@@ -317,6 +318,51 @@ RSpec.describe User do
       it "can not be added" do
         expect { user.set_closed_registration_feature_flag }.not_to change { Feature.registration_closed?(user) }.from(true)
       end
+    end
+  end
+
+  describe "#refresh_token" do
+    subject { user.refresh_token }
+
+    context "with user who has a refresh token" do
+      let(:user) { create :user, :with_refresh_token }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "refresh_token" }
+      it { is_expected.to be_persisted }
+    end
+
+    context "with a user who does not have a refresh token" do
+      let(:user) { create :user }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "refresh_token" }
+      it { is_expected.to be_new_record }
+    end
+  end
+
+  describe ".needing_token_refresh" do
+    it "includes TRN-less users whose refresh token is older than the refresh lifetime" do
+      stale_user = create(:user, :with_stale_refresh_token, trn: nil, token: "abc")
+      create(:user, :with_fresh_refresh_token, trn: nil, token: "def")
+      create(:user, trn: nil)
+      create(:user, :with_stale_refresh_token, trn: "1234567", token: "stale-but-trn'd")
+
+      expect(User.needing_token_refresh).to contain_exactly(stale_user)
+    end
+  end
+
+  describe "#needs_token_refresh?" do
+    it "is true when the user has no TRN and a refresh token" do
+      expect(create(:user, :with_refresh_token, trn: nil)).to be_needs_token_refresh
+    end
+
+    it "is false when the user has a TRN" do
+      expect(create(:user, :with_refresh_token, trn: "1234567")).not_to be_needs_token_refresh
+    end
+
+    it "is false when the user has no refresh token" do
+      expect(create(:user, trn: nil)).not_to be_needs_token_refresh
     end
   end
 

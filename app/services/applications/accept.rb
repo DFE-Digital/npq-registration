@@ -26,6 +26,7 @@ module Applications
         accept_application!
         create_application_state!
         reject_other_applications_in_same_cohort!
+        schedule_trn_allocation!
       end
 
       application.reload
@@ -180,6 +181,14 @@ module Applications
         lead_provider:,
         state: "active",
       )
+    end
+
+    def schedule_trn_allocation!
+      return if application.user.trn.present?
+      return unless application.user.teacher_auth_provider?
+
+      TeachingRecordSystem::AllocateTrnJob
+        .perform_later(user_id: application.user_id)
     end
   end
 end

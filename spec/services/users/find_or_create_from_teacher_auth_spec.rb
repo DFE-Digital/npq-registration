@@ -9,12 +9,15 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   let(:trn) { "1234567" }
   let(:verified_name) { %w[Test User] }
   let(:api_previous_names) { [] }
+  let(:refresh_token) { nil }
+  let(:user) { create(:user, trn:, trn_verified: true, archived_at: 1.day.ago) }
 
   let(:provider_data) do
     OpenStruct.new({
       uid:,
       credentials: OpenStruct.new({
         token: "123456",
+        refresh_token:,
       }),
       info: OpenStruct.new({
         email:,
@@ -40,8 +43,31 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       )
   end
 
+  shared_examples "storing the refresh token" do
+    context "when there is a refresh token in the provider data" do
+      let(:refresh_token) { "some-refresh-token" }
+
+      it "stores the refresh token for the user" do
+        subject
+        expect(User.last.refresh_token).to be_persisted
+      end
+    end
+  end
+
+  shared_examples "destroying the refresh token" do
+    context "when the user has a persisted refresh token" do
+      before { user.refresh_token.store!("some-refresh-token") }
+
+      it "destroys the persisted refresh token" do
+        expect(user.reload.refresh_token).to be_persisted
+        subject
+        expect(user.reload.refresh_token).not_to be_persisted
+      end
+    end
+  end
+
   before do
-    create(:user, trn:, trn_verified: true, archived_at: 1.day.ago)
+    user
 
     if trn.present?
       stub_person_api
@@ -56,7 +82,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
     before { user }
 
-    it "sets the uid and provider on the user" do
+    it "sets the UID and provider on the user" do
       subject
       expect(user.reload).to have_attributes(uid:, provider: "teacher_auth")
     end
@@ -126,6 +152,8 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         end
       end
     end
+
+    it_behaves_like "destroying the refresh token"
   end
 
   context "when the TRN matches an unverified TRN on one GAI user" do
@@ -134,7 +162,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
       before { user }
 
-      it "sets the uid, provider and trn_verified on the matched user" do
+      it "sets the UID, provider and trn_verified on the matched user" do
         subject
         expect(user.reload).to have_attributes(
           uid:,
@@ -143,6 +171,8 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           trn_auto_verified: true,
         )
       end
+
+      it_behaves_like "destroying the refresh token"
     end
 
     context "when the email does not match a user" do
@@ -180,13 +210,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     let(:most_recently_updated_user) { create(:user, trn:, trn_verified: true) }
     let(:older_user) { create(:user, trn:, trn_verified: true, updated_at: 2.days.ago) }
     let(:application) { create(:application, user: older_user) }
+    let(:user) { most_recently_updated_user }
 
     before do
       travel_to(1.day.ago) { most_recently_updated_user }
       travel_to(2.days.ago) { application }
     end
 
-    it "sets the uid and provider on the most recently updated user" do
+    it "sets the UID and provider on the most recently updated user" do
       subject
       expect(most_recently_updated_user.reload).to have_attributes(uid:, provider: "teacher_auth")
     end
@@ -235,11 +266,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         expect(most_recently_updated_user.reload.previous_names).to eq(["Sarah Johnson"])
       end
     end
+
+    it_behaves_like "destroying the refresh token"
   end
 
   shared_examples "logging in using provider and UID" do
     context "when a user exists with the same provider and UID" do
-      let(:existing_user) { create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:) }
+      let(:existing_user) { create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:, trn: nil) }
+      let(:user) { existing_user }
 
       before { existing_user }
 
@@ -271,10 +305,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       context "when the email clashes with a different existing user" do
         let!(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
 
-        it "blanks the clashing user's email and updates the matched user" do
-          expect { subject }.not_to raise_error
+        it "blanks the clashing user's email" do
+          subject
           expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
           expect(clashing_user.archived_at).to be_present
+        end
+
+        it "updates the matched user" do
+          subject
           expect(existing_user.reload).to have_attributes(email:, archived_at: nil)
         end
       end
@@ -388,5 +426,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     let(:trn) { nil }
 
     it_behaves_like "logging in using provider and UID"
+    it_behaves_like "storing the refresh token"
   end
 end

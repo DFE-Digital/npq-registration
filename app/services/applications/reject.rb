@@ -14,7 +14,11 @@ module Applications
     def reject
       return false unless valid?
 
-      application.update!(lead_provider_approval_status: "rejected", reason_for_rejection:)
+      ApplicationRecord.transaction do
+        application.update!(lead_provider_approval_status: "rejected", reason_for_rejection:)
+        clear_token_if_no_remaining_applications
+      end
+
       application.reload
 
       ApplicationRejectedMailer.application_rejected_mail(
@@ -29,6 +33,15 @@ module Applications
     end
 
   private
+
+    def clear_token_if_no_remaining_applications
+      user = application.user
+      return if user.trn.present?
+      return if user.refresh_token.new_record?
+      return if user.applications.pending_lead_provider_approval_status.where.not(id: application.id).exists?
+
+      user.refresh_token.destroy!
+    end
 
     def not_already_rejected
       return unless application
