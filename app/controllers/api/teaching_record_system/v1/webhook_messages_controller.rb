@@ -5,8 +5,10 @@ module API
         before_action :verify_request
 
         def create
-          # TODO: restrict to only accept requests with ce-types of "alert.updated", and "trn_request.completed"
+          # TODO: restrict to only accept requests with ce-types of "one_login_user.updated", and "trn_request.completed"
           # ce-types documented here: https://github.com/DFE-Digital/teaching-record-system/blob/main/docs/api-designs/webhooks.md
+          # and the schemas for the OneLoginUserUpdatedNotification and TrnRequestInfo are documented here:
+          # https://preprod.teacher-qualifications-api.education.gov.uk/swagger/index.html
           ::GetAnIdentity::WebhookMessage.create!(status: :pending,
                                                   message_id: request.headers["ce-id"],
                                                   message_type: request.headers["ce-type"],

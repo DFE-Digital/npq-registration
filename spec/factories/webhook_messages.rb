@@ -38,17 +38,18 @@ FactoryBot.define do
 
   factory :trs_user_updated_webhook_message, class: "GetAnIdentity::WebhookMessage" do
     transient do
+      user_uid { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
       user_email { "user@example.com" }
       user_trn { "0000000" }
     end
     message_id { SecureRandom.uuid }
-    message_type { "alert.updated" }
+    message_type { "one_login_user.updated" }
     status { "pending" }
     sent_at { Time.zone.now }
     message do
       {
         "oneLoginUser" => {
-          "subject" => "something",
+          "subject" => user_uid,
           "emailAddress" => user_email,
         },
         "connectedPerson" => {
