@@ -16,87 +16,80 @@ module Users
     attr_reader :provider_data, :access_token, :uid, :trn, :email, :full_name, :date_of_birth, :feature_flag_id
 
     def call
-      user_matched_using_trn = verified_trn_matching_users.first
+      user = update_verified_trn_match ||
+        update_uid_match ||
+        update_unverified_trn_match ||
+        create_new_user
 
-      if user_matched_using_trn
-        ApplicationRecord.transaction do
-          user_matched_using_trn.update!(
-            uid:,
-            provider: Omniauth::Strategies::TeacherAuth::NAME,
-            email:,
-            full_name:,
-            feature_flag_id:,
-            previous_names:,
-          )
-          persist_token(user_matched_using_trn, provider_data)
-        end
-
-        merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
-        return user_matched_using_trn
-      end
-
-      user_matched_using_uid = User.find_by(provider: Omniauth::Strategies::TeacherAuth::NAME, uid:)
-
-      if user_matched_using_uid
-        blank_clashing_email_user(except: user_matched_using_uid)
-        ApplicationRecord.transaction do
-          user_matched_using_uid.update!(
-            email: email,
-            trn:,
-            trn_verified: true,
-            trn_auto_verified: true,
-            full_name:,
-            feature_flag_id:,
-            previous_names:,
-          )
-          persist_token(user_matched_using_uid, provider_data)
-        end
-
-        return user_matched_using_uid
-      end
-
-      if unverified_trn_matching_user
-        ApplicationRecord.transaction do
-          unverified_trn_matching_user.update!(
-            uid:,
-            provider: Omniauth::Strategies::TeacherAuth::NAME,
-            trn_verified: true,
-            trn_auto_verified: true,
-            full_name:,
-            feature_flag_id:,
-            previous_names:,
-          )
-          persist_token(unverified_trn_matching_user, provider_data)
-        end
-
-        return unverified_trn_matching_user
-      end
-
-      blank_clashing_email_user
-
-      user = nil
-      ApplicationRecord.transaction do
-        user = create_user_with_provider_data
-        persist_token(user, provider_data)
-      end
-
+      Users::SetRefreshToken.call(user:, refresh_token: provider_data.credentials&.refresh_token)
       user
     end
 
   private
 
-    def persist_token(user, provider_data)
-      refresh_token = provider_data.credentials&.refresh_token
+    def update_verified_trn_match
+      user = verified_trn_matching_users.first
+      return unless user
 
-      if user.trn.blank? && refresh_token.present?
-        token_record = user.oauth_token || user.oauth_tokens.build(token_type: :refresh_token)
-        token_record.update!(token: refresh_token, token_updated_at: Time.current)
-        true
-      elsif user.trn.present? && user.oauth_token.present?
-        user.oauth_token.destroy!
-        false
-      else
-        false
+      ApplicationRecord.transaction do
+        user.update!(
+          uid:,
+          provider: Omniauth::Strategies::TeacherAuth::NAME,
+          email:,
+          full_name:,
+          feature_flag_id:,
+          previous_names:,
+        )
+      end
+
+      merge_and_archive_other_users(user, verified_trn_matching_users[1..])
+      user
+    end
+
+    def update_uid_match
+      user = User.find_by(provider: Omniauth::Strategies::TeacherAuth::NAME, uid:)
+      return unless user
+
+      blank_clashing_email_user(except: user)
+      ApplicationRecord.transaction do
+        user.update!(
+          email:,
+          trn:,
+          trn_verified: true,
+          trn_auto_verified: true,
+          full_name:,
+          feature_flag_id:,
+          previous_names:,
+        )
+      end
+
+      user
+    end
+
+    def update_unverified_trn_match
+      user = unverified_trn_matching_user
+      return unless user
+
+      ApplicationRecord.transaction do
+        user.update!(
+          uid:,
+          provider: Omniauth::Strategies::TeacherAuth::NAME,
+          trn_verified: true,
+          trn_auto_verified: true,
+          full_name:,
+          feature_flag_id:,
+          previous_names:,
+        )
+      end
+
+      user
+    end
+
+    def create_new_user
+      blank_clashing_email_user
+
+      ApplicationRecord.transaction do
+        create_user_with_provider_data
       end
     end
 

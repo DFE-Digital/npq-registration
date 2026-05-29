@@ -369,4 +369,31 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
     it_behaves_like "logging in using provider and UID"
   end
+
+  describe "refresh token persistence" do
+    let(:trn) { nil }
+    let(:provider_data) do
+      OpenStruct.new({
+        uid:,
+        credentials: OpenStruct.new({
+          token: "123456",
+          refresh_token: "rt-abc-123",
+        }),
+        info: OpenStruct.new({ email: }),
+        extra: OpenStruct.new({
+          raw_info: OpenStruct.new({
+            trn:,
+            verified_name:,
+            verified_date_of_birth: "1990-01-01",
+          }),
+        }),
+      })
+    end
+
+    it "persists the refresh token on the returned user via Users::SetRefreshToken" do
+      user = subject
+
+      expect(user.reload.oauth_token).to have_attributes(token: "rt-abc-123")
+    end
+  end
 end
