@@ -176,9 +176,7 @@ RSpec.describe FundingEligibility do
 
   RSpec.shared_examples "school or academy trust policy" do
     context "and the institution is an eligible establishment type" do
-      before do
-        allow(institution).to receive(:eligible_establishment?).and_return(true)
-      end
+      before { allow(institution).to receive(:eligible_establishment?).and_return(true) }
 
       include_examples "funding eligibility status codes by course", {
         additional_support_offer: :funded,
@@ -195,30 +193,24 @@ RSpec.describe FundingEligibility do
       }
 
       context "and the institution is on the RISE list" do
-        before do
-          allow(institution).to receive(:rise?).and_return(true)
-        end
+        before { allow(institution).to receive(:rise?).and_return(true) }
 
         include_examples "funding eligibility status codes by course", all_courses_funded
       end
 
       context "and the institution is on the PP50 list" do
-        before do
-          allow(institution).to receive(:pp50?).and_return(true)
-        end
+        before { allow(institution).to receive(:pp50?).and_return(true) }
 
         include_examples "funding eligibility status codes by course", all_courses_funded
       end
     end
 
     context "and the institution is a non-eligible establishment type" do
-      before do
-        allow(institution).to receive(:eligible_establishment?).and_return(false)
-      end
+      before { allow(institution).to receive(:eligible_establishment?).and_return(false) }
 
-      only_eyl_eligible = {
+      all_courses_ineligible_establishment = {
         additional_support_offer: :ineligible_establishment_type,
-        early_years_leadership: :funded,
+        early_years_leadership: :ineligible_establishment_type,
         executive_leadership: :ineligible_establishment_type,
         headship: :ineligible_establishment_type,
         leading_behaviour_culture: :ineligible_establishment_type,
@@ -230,23 +222,19 @@ RSpec.describe FundingEligibility do
         senior_leadership: :ineligible_establishment_type,
       }
 
-      include_examples "funding eligibility status codes by course", only_eyl_eligible
+      include_examples "funding eligibility status codes by course", all_courses_ineligible_establishment
 
       context "and the institution is on the PP50 list" do
-        before do
-          allow(institution).to receive(:pp50?).and_return(true)
-        end
+        before { allow(institution).to receive(:pp50?).and_return(true) }
 
-        include_examples "funding eligibility status codes by course", only_eyl_eligible
+        include_examples "funding eligibility status codes by course", all_courses_ineligible_establishment
       end
     end
   end
 
   RSpec.shared_examples "16-19 policy" do
     context "and the institution is an eligible establishment type" do
-      before do
-        allow(institution).to receive(:eligible_establishment?).and_return(true)
-      end
+      before { allow(institution).to receive(:eligible_establishment?).and_return(true) }
 
       include_examples "funding eligibility status codes by course", {
         additional_support_offer: :funded,
@@ -263,26 +251,20 @@ RSpec.describe FundingEligibility do
       }
 
       context "and the institution is on the RISE list" do
-        before do
-          allow(institution).to receive(:rise?).and_return(true)
-        end
+        before { allow(institution).to receive(:rise?).and_return(true) }
 
         include_examples "funding eligibility status codes by course", all_courses_funded
       end
 
       context "and the institution is on the PP50 list" do
-        before do
-          allow(institution).to receive(:pp50?).and_return(true)
-        end
+        before { allow(institution).to receive(:pp50?).and_return(true) }
 
         include_examples "funding eligibility status codes by course", all_courses_funded
       end
     end
 
     context "and the institution is a non-eligible establishment type" do
-      before do
-        allow(institution).to receive(:eligible_establishment?).and_return(false)
-      end
+      before { allow(institution).to receive(:eligible_establishment?).and_return(false) }
 
       ineligible = {
         additional_support_offer: :ineligible_establishment_type,
@@ -301,9 +283,7 @@ RSpec.describe FundingEligibility do
       include_examples "funding eligibility status codes by course", ineligible
 
       context "and the institution is on the PP50 list" do
-        before do
-          allow(institution).to receive(:pp50?).and_return(true)
-        end
+        before { allow(institution).to receive(:pp50?).and_return(true) }
 
         include_examples "funding eligibility status codes by course", ineligible
       end
@@ -347,9 +327,7 @@ RSpec.describe FundingEligibility do
         })
 
         context "and the institution is on the LA disadvantaged nursery list" do
-          before do
-            allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
-          end
+          before { allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true) }
 
           include_examples "funding eligibility status codes by course", default_eligibility.merge({
             headship: :funded,
@@ -382,9 +360,7 @@ RSpec.describe FundingEligibility do
         })
 
         context "and the institution is on the childminders list" do
-          before do
-            allow(institution).to receive(:on_childminders_list?).and_return(true)
-          end
+          before { allow(institution).to receive(:on_childminders_list?).and_return(true) }
 
           include_examples "funding eligibility status codes by course", default_eligibility
         end

@@ -132,8 +132,7 @@ class FundingEligibility
 
       case work_setting
       when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
-      when *Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING then a_16_19_policy
-      when Questionnaires::WorkSetting::A_SCHOOL, Questionnaires::WorkSetting::AN_ACADEMY_TRUST then school_or_academy_trust_policy
+      when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
       when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
       when *Questionnaires::WorkSetting::OTHER_SETTINGS then other_settings_policy
       else INELIGIBLE_ESTABLISHMENT_TYPE
@@ -165,16 +164,12 @@ private
     EARLY_YEARS_INVALID_NPQ
   end
 
-  def school_or_academy_trust_policy
-    return FUNDED_ELIGIBILITY_RESULT if course.eyl?
-
-    a_16_19_policy
-  end
-
-  def a_16_19_policy
+  def school_policy
     return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.rise?
 
     return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
+
+    return FUNDED_ELIGIBILITY_RESULT if course.eyl?
 
     if course.only_pp50?
       return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
