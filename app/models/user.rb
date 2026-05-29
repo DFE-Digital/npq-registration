@@ -47,15 +47,15 @@ class User < ApplicationRecord
   scope :needing_token_refresh, lambda {
     where(trn: nil)
       .joins(:oauth_tokens)
-      .where(oauth_tokens: { token_type: "refresh_token", token_updated_at: ...7.days.ago })
+      .merge(OauthToken.needs_refresh)
   }
 
-  def oauth_token
-    oauth_tokens.refresh_token.first
+  def refresh_token
+    oauth_tokens.refresh_token.find_or_initialize_by({})
   end
 
   def needs_token_refresh?
-    trn.blank? && oauth_token.present?
+    trn.blank? && refresh_token.persisted?
   end
 
   EMAIL_UPDATES_STATES = %i[senco other_npq].freeze

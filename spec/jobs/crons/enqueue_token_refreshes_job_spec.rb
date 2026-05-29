@@ -10,8 +10,8 @@ RSpec.describe Crons::EnqueueTokenRefreshesJob do
   end
 
   describe "#perform" do
-    let!(:stale_user) { create(:user, :with_token, trn: nil, token: "old", token_updated_at: 8.days.ago) }
-    let!(:fresh_user) { create(:user, :with_token, trn: nil, token: "ok", token_updated_at: 1.day.ago) }
+    let!(:stale_user) { create(:user, :with_stale_refresh_token, trn: nil, token: "old") }
+    let!(:fresh_user) { create(:user, :with_fresh_refresh_token, trn: nil, token: "ok") }
     let!(:user_without_token) { create(:user, trn: nil) }
 
     it "enqueues a RefreshUserTokenJob for users whose refresh token is older than 7 days" do
