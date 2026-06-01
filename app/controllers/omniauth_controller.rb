@@ -53,6 +53,9 @@ class OmniauthController < Devise::OmniauthCallbacksController
   end
 
   def teacher_auth
+    # Store id_token for OIDC logout (required as id_token_hint parameter)
+    session[:id_token] = provider_data.credentials.id_token
+
     @user = User.find_or_create_from_teacher_auth(
       provider_data:,
       feature_flag_id: session["feature_flag_id"],

@@ -16,14 +16,7 @@ RSpec.describe "Omniauth callbacks", type: :request do
 
         before do
           allow(User).to receive(:find_or_create_from_teacher_auth).and_return(user)
-          OmniAuth.config.mock_auth[:teacher_auth] = OmniAuth::AuthHash.new(
-            "uid" => "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}",
-            "extra" => {
-              "raw_info" => {
-                "trn" => "1234567",
-              },
-            },
-          )
+          OmniAuth.config.mock_auth[:teacher_auth] = create(:omniauth_auth_hash)
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:teacher_auth]
         end
 

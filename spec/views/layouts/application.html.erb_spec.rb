@@ -4,7 +4,7 @@ RSpec.describe "layouts/application.html.erb", type: :view do
   subject { Capybara.string(render) }
 
   let(:service_name) { "Register for a national professional qualification" }
-  let(:dfe_identity_account_link_text) { "DfE Identity account" }
+  let(:onelogin_account_link_text) { "OneLogin account" }
   let(:npq_account_link_text) { "NPQ account" }
   let(:sign_out_link_text) { "Sign out" }
 
@@ -18,17 +18,17 @@ RSpec.describe "layouts/application.html.erb", type: :view do
   describe "service navigation" do
     context "when not logged in" do
       it { is_expected.to have_css(".govuk-service-navigation__container", text: service_name) }
-      it { is_expected.not_to have_link(dfe_identity_account_link_text) }
+      it { is_expected.not_to have_link(onelogin_account_link_text) }
       it { is_expected.not_to have_link(npq_account_link_text) }
       it { is_expected.not_to have_link(sign_out_link_text) }
     end
 
     context "when logged in as a user" do
-      let(:user) { build(:user) }
+      let(:user) { build(:user, :with_teacher_auth) }
 
       context "with no applications" do
         it { is_expected.to have_css(".govuk-service-navigation__container", text: service_name) }
-        it { is_expected.to have_link(dfe_identity_account_link_text) }
+        it { is_expected.to have_link(onelogin_account_link_text) }
         it { is_expected.not_to have_link(npq_account_link_text) }
         it { is_expected.to have_link(sign_out_link_text) }
       end
@@ -37,7 +37,7 @@ RSpec.describe "layouts/application.html.erb", type: :view do
         before { create(:application, user:) }
 
         it { is_expected.to have_css(".govuk-service-navigation__container", text: service_name) }
-        it { is_expected.to have_link(dfe_identity_account_link_text) }
+        it { is_expected.to have_link(onelogin_account_link_text) }
         it { is_expected.to have_link(npq_account_link_text) }
         it { is_expected.to have_link(sign_out_link_text) }
       end
