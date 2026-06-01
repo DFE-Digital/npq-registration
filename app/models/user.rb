@@ -51,11 +51,18 @@ class User < ApplicationRecord
   }
 
   def refresh_token
-    oauth_tokens.refresh_token.find_or_initialize_by({})
+    oauth_tokens.refresh_token.first
+  end
+
+  def store_refresh_token!(token)
+    return if token.blank?
+
+    (refresh_token || oauth_tokens.refresh_token.build)
+      .tap { |t| t.store!(token) }
   end
 
   def needs_token_refresh?
-    trn.blank? && refresh_token.persisted?
+    trn.blank? && refresh_token.present?
   end
 
   EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
