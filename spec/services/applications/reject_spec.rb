@@ -74,7 +74,7 @@ RSpec.describe Applications::Reject, type: :model do
 
       context "when the user has no TRN and this is their only pending application" do
         it "destroys the refresh token record" do
-          expect { service.reject }.to change { user.reload.refresh_token.persisted? }.from(true).to(false)
+          expect { service.reject }.to change { user.reload.refresh_token.present? }.from(true).to(false)
         end
       end
 

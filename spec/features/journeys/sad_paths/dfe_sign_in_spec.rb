@@ -5,7 +5,10 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
 
   let(:user) { User.find_by(email: "user@example.com") }
 
-  before { allow(Rails.application.config.x.teacher_auth).to receive(:enabled).and_return(false) }
+  before do
+    # Needed for DfE Identity access during change over period
+    allow(Feature).to receive(:registration_closed?).and_return(true)
+  end
 
   context "when there is an existing user with the provided DfE Identity UID" do
     let(:existing_user_with_dfe_id) { create(:user, :with_get_an_identity_id, email: "old@example.com", full_name: "old name") }
@@ -18,8 +21,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
       end
 
       scenario "the user should be updated with new email from DfE Identity" do
-        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+        navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+          page.click_button("Sign in to your DfE Identity account")
         end
 
         expect(existing_user_with_dfe_id.reload.email).to eq "user@example.com"
@@ -33,8 +36,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
       end
 
       scenario "the user should log in successfully" do
-        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+        navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+          page.click_button("Sign in to your DfE Identity account")
         end
 
         expect(existing_user_with_dfe_id.reload.email).to eq "old@example.com"
@@ -51,8 +54,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
       let!(:application_for_user_without_dfe_id) { create(:application, :accepted, user: user_without_dfe_id, course: create(:course, :leading_teaching)) }
 
       scenario "the clashing user account should be archived" do
-        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+        navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+          page.click_button("Sign in to your DfE Identity account")
         end
 
         expect(user_without_dfe_id.reload.email).to eq "archived-user@example.com"
@@ -81,8 +84,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
       let!(:existing_user_with_dfe_id) { create(:user, :with_get_an_identity_id, full_name: "old name", email: "old@example.com", provider: "tra_openid_connect") }
 
       scenario "the clashing user account should be archived" do
-        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+        navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+          page.click_button("Sign in to your DfE Identity account")
         end
 
         expect(user_with_same_email_different_dfe_uid.reload.email).to eq "archived-user@example.com"
@@ -109,8 +112,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
       before { create(:application, :accepted, user: user, course: create(:course, :leading_teaching)) }
 
       scenario "the archived account should have its UID blanked, and the non-archived account should be updated with the UID" do
-        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+        navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+          page.click_button("Sign in to your DfE Identity account")
         end
 
         expect(user.reload.uid).to eq existing_user_with_dfe_id.uid
@@ -131,8 +134,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
         end
 
         scenario "the user account should be updated with the UID" do
-          navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-            page.click_button("Start now")
+          navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+            page.click_button("Sign in to your DfE Identity account")
           end
 
           expect(existing_user.reload.uid).to eq uid
@@ -153,8 +156,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
         end
 
         scenario "the clashing user account be updated with the new UID" do # or should it be archived, and a new user created? (way more complex to implement)
-          navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-            page.click_button("Start now")
+          navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+            page.click_button("Sign in to your DfE Identity account")
           end
 
           expect(clashing_user.reload.email).to eq "user@example.com"
@@ -176,11 +179,11 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
       end
 
       scenario "a new user account should be created with the UID and email" do
-        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+        navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+          page.click_button("Sign in to your DfE Identity account")
         end
 
-        expect(page).to have_current_path("/registration/course-start-date")
+        expect(page).to have_current_path("/account")
         expect(new_user_created_with_uid.email).to eq "user@example.com"
         expect(new_user_created_with_uid.provider).to eq "tra_openid_connect"
         expect(new_user_created_with_uid.full_name).to eq "John Doe"

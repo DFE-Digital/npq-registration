@@ -82,9 +82,9 @@ module Users
     def persist_token(user, provider_data)
       refresh_token = provider_data.credentials&.refresh_token
       if user.trn.blank? && refresh_token.present?
-        user.refresh_token.store!(refresh_token)
+        user.store_refresh_token!(refresh_token)
         true
-      elsif user.trn.present? && user.refresh_token.persisted?
+      elsif user.trn.present? && user.refresh_token.present?
         user.refresh_token.destroy!
         false
       else

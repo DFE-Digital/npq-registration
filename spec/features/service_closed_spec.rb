@@ -45,7 +45,8 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
   end
 
   context "when using late registration" do
-    include_context "Stub Get An Identity Omniauth Responses"
+    include_context "with stubbed Teacher Auth OmniAuth responses"
+    include_context "with stubbed Teaching Record System person API"
 
     let(:super_admin) { create(:super_admin) }
     let(:email) { "example@example.com" }
@@ -54,7 +55,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
     before { close_registration! }
 
-    scenario "Allow user to register using DfE Identity" do
+    scenario "Allow user to register using Teacher Auth" do
       visit "/"
       expect(page).to have_content("Registration is temporarily closed")
 

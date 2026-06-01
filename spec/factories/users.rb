@@ -70,8 +70,11 @@ FactoryBot.define do
       end
 
       after(:create) do |user, evaluator|
-        user.refresh_token.update!(token: evaluator.token,
-                                   token_updated_at: evaluator.token_updated_at)
+        user
+          .oauth_tokens
+          .refresh_token
+          .create!(token: evaluator.token,
+                   token_updated_at: evaluator.token_updated_at)
       end
     end
 

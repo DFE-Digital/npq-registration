@@ -20,7 +20,10 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
     WebMock.disable_net_connect!(allow_localhost: previous_webmock_allow_localhost, allow: previous_webmock_allow)
   end
 
-  before { allow(Rails.application.config.x.teacher_auth).to receive(:enabled).and_return(false) }
+  before do
+    # Needed for DfE Identity access during change over period
+    allow(Feature).to receive(:registration_closed?).and_return(true)
+  end
 
   regenerate_fixtures = false # set to true to regenerate fixtures
 
@@ -47,8 +50,8 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
   end
 
   def login_with_email(email)
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      click_button("Start now")
+    navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+      page.click_button("Sign in to your DfE Identity account")
     end
 
     click_link "Sign in"
@@ -69,7 +72,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
   scenario "capture omniauth authentication hash for user with TRN", skip: !regenerate_fixtures do
     login_with_email(email_for_account_with_trn)
 
-    expect(page).to have_current_path "/registration/course-start-date"
+    expect(page).to have_current_path "/account"
     File.open(fixtures_path.join("tra_openid_connect_auth_with_trn.json"), "w") do |file|
       file.write JSON.pretty_generate(strip_pii(User.last.raw_tra_provider_data))
     end
@@ -78,7 +81,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
   scenario "capture omniauth authentication hash for user without TRN", skip: !regenerate_fixtures do
     login_with_email(email_for_account_without_trn)
 
-    expect(page).to have_current_path "/registration/teacher-reference-number"
+    expect(page).to have_current_path "/account"
     File.open(fixtures_path.join("tra_openid_connect_auth_no_trn.json"), "w") do |file|
       file.write JSON.pretty_generate(strip_pii(User.last.raw_tra_provider_data))
     end
@@ -89,11 +92,11 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
     OmniAuth.config.test_mode = true
     OmniAuth.config.add_mock(:tra_openid_connect, stubbed_callback_response)
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      click_button("Start now")
+    navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+      page.click_button("Sign in to your DfE Identity account")
     end
 
-    expect(page).to have_current_path "/registration/course-start-date"
+    expect(page).to have_current_path "/account"
     expect(User.last.trn).not_to be_blank
   end
 
@@ -102,11 +105,11 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
     OmniAuth.config.test_mode = true
     OmniAuth.config.add_mock(:tra_openid_connect, stubbed_callback_response)
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      click_button("Start now")
+    navigate_to_page(path: "/registration_closed", submit_form: false, axe_check: false) do
+      page.click_button("Sign in to your DfE Identity account")
     end
 
-    expect(page).to have_current_path "/registration/course-start-date"
+    expect(page).to have_current_path "/account"
     expect(User.last.trn).to be_blank
   end
 end
