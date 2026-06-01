@@ -44,7 +44,7 @@ FactoryBot.define do
     end
 
     trait :with_previous_names do
-      previous_names { ["Sarah Johnson", "Sarah Ann Williams"] }
+      previous_names { [Faker::Name.name, Faker::Name.name] }
     end
 
     trait :with_application do
