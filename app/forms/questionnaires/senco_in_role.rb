@@ -15,7 +15,7 @@ module Questionnaires
         QuestionTypes::RadioButtonGroup.new(
           name: :senco_in_role,
           options:,
-          style_options: { legend: { size: "xl", tag: "h1" } },
+          style_options: { legend: { size: "l", tag: "h1" } },
         ),
       ]
     end

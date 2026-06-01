@@ -38,7 +38,7 @@ module ApplicationHelper
 
   def funding_title(eligibility, title: "Funding")
     tag.div(class: "eligibility-page-header") do
-      tag.h1(class: "govuk-heading-xl govuk-!-margin-0") { title } + eligibility_tag(eligibility)
+      tag.h1(class: "govuk-heading-l govuk-!-margin-0") { title } + eligibility_tag(eligibility)
     end
   end
 

@@ -41,7 +41,7 @@ module Questionnaires
           name: QUESTION_NAME,
           locale_name: QUESTION_NAME,
           options:,
-          style_options: { legend: { size: "xl", tag: "h1" } },
+          style_options: { legend: { size: "l", tag: "h1" } },
         ),
       ]
     end

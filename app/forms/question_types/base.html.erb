@@ -15,7 +15,7 @@
     <%= form_with model: form, url: helpers.registration_wizard_form_url(form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
       <% if header.present? %>
-        <h1 class="govuk-heading-xl"><%= header %></h1>
+        <h1 class="govuk-heading-l"><%= header %></h1>
       <% end %>
 
       <%= yield f %>

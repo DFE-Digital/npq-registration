@@ -2,7 +2,7 @@ module QuestionTypes
   class RadioButtonGroup < Base
     DEFAULT_STYLES = {
       legend: {
-        size: "xl",
+        size: "l",
         tag: "h1",
       }.freeze,
     }.freeze
