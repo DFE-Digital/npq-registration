@@ -30,24 +30,22 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
   configurationOptions.defaultValue = configurationOptions.selectElement.dataset.selectedInstitutionName || ""
   configurationOptions.displayMenu = "overlay"
 
-  configurationOptions.templates = {
-    inputValue: function(object) {
-      if (object === undefined) {
-        return ""
-      } else {
-        return [object.urn, object.name, object.address].filter(n => n).join(' - ')
-      }
-    },
-    suggestion: function(object) {
-      if (object === undefined) {
-        return ""
-      } else {
-        return [object.urn, object.name, object.address].filter(n => n).join(' - ')
-      }
+  const order = configurationOptions.order || ['name', 'address', 'urn']
+
+  const formatObject = function(object) {
+    if (object === undefined) {
+      return ""
+    } else {
+      return order.map(key => object[key]).filter(Boolean).join(' - ')
     }
   }
 
-  const location = configurationOptions.selectElement.dataset.institutionLocation;
+  configurationOptions.templates = {
+    inputValue: formatObject,
+    suggestion: formatObject
+  }
+
+  const location = configurationOptions.selectElement.getAttribute("data-institution-location")
 
   configurationOptions.source = debounce( async ( query, populateResults ) => {
     const res = await fetchSource(configurationOptions.lookupPath, query, location);

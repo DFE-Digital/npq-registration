@@ -76,6 +76,7 @@ RSpec.feature "Choose a school page", :with_default_schedules, type: :feature do
         expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback"))
         expect(page).to have_content("an open school")
         expect(page).to have_content("another open school")
+        expect(page).to have_content("100000")
 
         page.choose "an open school"
         page.click_button("Continue")

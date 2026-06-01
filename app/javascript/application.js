@@ -36,6 +36,7 @@ if (document.querySelector('#nursery-picker')) {
 if (document.querySelector('#private-childcare-provider-picker')) {
   institutionPicker.enhanceSelectElement({
     selectElement: document.querySelector('#private-childcare-provider-picker'),
-    lookupPath: 'private_childcare_providers'
+    lookupPath: 'private_childcare_providers',
+    order: ['urn', 'name', 'address']
   })
 }
