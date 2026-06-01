@@ -8,7 +8,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  scenario "infinite loop scenario" do
+  scenario "working at a private nursery with no OFSTED URN" do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -31,8 +31,6 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
       page.choose("Early years or childcare", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       expect(page).to have_text("Which early years setting do you work in?")
       page.choose("Private nursery", visible: :all)
@@ -48,22 +46,8 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
       page.choose("Early years leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
-      expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
-      expect(page).to have_text("Your application requires details of your nursery.")
-      page.click_button("Continue")
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      expect(page).to have_text("You’re eligible for scholarship funding for the Early years leadership NPQ")
     end
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early years leadership", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
-      expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
-      expect(page).to have_text("Your application requires details of your nursery.")
-    end
-
-    # this is an infinite loop - the user gets bounced to choose-your-npq and have-ofsted-urn indefinitely
   end
 end

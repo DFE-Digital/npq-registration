@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Account", :no_js, type: :feature do
   include Helpers::JourneyAssertionHelper
+  include ActionView::Helpers::SanitizeHelper
 
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
@@ -27,10 +28,13 @@ RSpec.feature "Account", :no_js, type: :feature do
         end
       end
 
-      scenario "when logged in, it shows the application details" do
+      scenario "it shows the it shows the application details" do
         visit "/account"
-
         expect(page).to have_current_path("/accounts/user_registrations/#{application.id}")
+      end
+
+      scenario "it shows the course start cohort" do
+        visit "/account"
         expect(page).to have_summary_item("Course start", "2025")
       end
 
@@ -43,6 +47,38 @@ RSpec.feature "Account", :no_js, type: :feature do
           expect(page).to have_summary_item("Course start", "Spring 2026")
         end
       end
+
+      # Deliberately written like this
+      #  to pick up if a new funding_eligiblity_status constant is added to FundingEligibility,
+      #  but it is not correctly added to FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS
+      #  and the funding_details locale strings.
+      FundingEligibility.constants
+        .excluding(:MissingMandatoryInstitution,
+                   :FUNDING_STATUS_CODE_DESCRIPTIONS,
+                   :FUNDED_ELIGIBILITY_RESULT,
+                   :SUBJECT_TO_REVIEW).each do |funding_eligiblity_status|
+                     context "when the application funding_eligiblity_status_code is #{funding_eligiblity_status}" do
+                       let(:application) { create(:application, :without_funded_place, user:, cohort:, funding_eligiblity_status_code:) }
+                       let(:funding_eligiblity_status_code) { FundingEligibility.const_get(funding_eligiblity_status) }
+                       let(:funding_details_key) { FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS[funding_eligiblity_status_code] }
+
+                       scenario "it shows scholarship funding details" do
+                         visit "/accounts/user_registrations/#{application.id}"
+
+                         expect(page).to(
+                           have_summary_item(
+                             "Scholarship funding",
+                             strip_tags(
+                               I18n.t(
+                                 "funding_details.#{FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS[funding_eligiblity_status_code]}",
+                                 course_name: "the Senior leadership NPQ",
+                               ),
+                             ),
+                           ),
+                         )
+                       end
+                     end
+                   end
     end
   end
 

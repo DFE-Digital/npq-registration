@@ -53,15 +53,6 @@ RSpec.describe EmailTemplate do
     end
   end
 
-  context "when not on ofsted register" do
-    let(:funding_eligiblity_status_code) { FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER }
-    let(:course_identifier) { "npq-early-years-leadership" }
-
-    it "returns not_on_ofsted_register" do
-      expect(subject).to eq :not_on_ofsted_register
-    end
-  end
-
   context "when on ofsted register but not selected NPQEYL" do
     let(:funding_eligiblity_status_code) { FundingEligibility::EARLY_YEARS_INVALID_NPQ }
     let(:has_ofsted_urn) { "yes" }

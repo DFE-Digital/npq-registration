@@ -5,7 +5,6 @@ module Questionnaires
     NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
     UNFUNDED_COHORT = "unfunded_cohort".freeze
     NOT_IN_ENGLAND = "not_in_england".freeze
-    EARLY_YEARS_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
     LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
 
@@ -49,18 +48,12 @@ module Questionnaires
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::PREVIOUSLY_FUNDED
                                  return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
-                               when FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
-                                 return EARLY_YEARS_INELIGIBLE_ESTABLISHMENT
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
-                               when FundingEligibility::NOT_ENTITLED_EY_INSTITUTION
-                                 return "not_entitled_ey_institution"
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
                                  return "not_a_pp50_institution"
                                when FundingEligibility::NOT_ENTITLED_CHILDMINDER
                                  return "not_entitled_ey_institution"
-                               when FundingEligibility::NO_INSTITUTION
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::UNFUNDED_COHORT

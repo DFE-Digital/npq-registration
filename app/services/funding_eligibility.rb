@@ -6,7 +6,6 @@ class FundingEligibility
   FUNDED_ELIGIBILITY_RESULT = :funded
   SUBJECT_TO_REVIEW = :subject_to_review
 
-  NO_INSTITUTION = :no_institution
   INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
   INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 = :ineligible_establishment_not_a_pp50
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
@@ -17,9 +16,7 @@ class FundingEligibility
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
 
   # Early Years
-  NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
-  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
   NOT_ENTITLED_CHILDMINDER = :not_entitled_childminder
 
   # Lead Mentor
@@ -37,8 +34,6 @@ class FundingEligibility
     NOT_LEAD_MENTOR_COURSE => :ineligible_setting,
     INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => :not_a_pp50,
     INELIGIBLE_ESTABLISHMENT_TYPE => :ineligible_setting,
-    NOT_ON_EARLY_YEARS_REGISTER => :no_ofsted,
-    NOT_ENTITLED_EY_INSTITUTION => :not_entitled_ey_institution,
     NOT_ENTITLED_CHILDMINDER => :not_entitled_childminder,
     NOT_NEW_HEADTEACHER_REQUESTING_EHCO => :not_eligible_ehco,
     PREVIOUSLY_FUNDED => :previously_funded,
@@ -152,27 +147,18 @@ class FundingEligibility
 private
 
   def childcare_policy
+    if course.eyl?
+      return FUNDED_ELIGIBILITY_RESULT unless childminder
+
+      return FUNDED_ELIGIBILITY_RESULT if institution&.on_childminders_list?
+
+      return NOT_ENTITLED_CHILDMINDER
+    end
+
     if institution.try(:local_authority_nursery_school?)
       return EARLY_YEARS_INVALID_NPQ unless course.la_nursery_approved?
-      return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.la_disadvantaged_nursery?
 
       return FUNDED_ELIGIBILITY_RESULT
-    end
-
-    if childminder
-      if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
-
-        return NOT_ENTITLED_CHILDMINDER
-      end
-
-      return EARLY_YEARS_INVALID_NPQ
-    end
-
-    if course.eyl?
-      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
-
-      return NOT_ENTITLED_EY_INSTITUTION
     end
 
     EARLY_YEARS_INVALID_NPQ
@@ -182,6 +168,8 @@ private
     return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.rise?
 
     return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
+
+    return FUNDED_ELIGIBILITY_RESULT if course.eyl?
 
     if course.only_pp50?
       return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
@@ -203,7 +191,7 @@ private
       return NOT_LEAD_MENTOR_COURSE
     end
 
-    if eligible_employment_type? && eligible_course?
+    if eligible_employment_type? && another_setting_eligible_course?
       SUBJECT_TO_REVIEW
     else
       INELIGIBLE_ESTABLISHMENT_TYPE
@@ -225,10 +213,11 @@ private
     employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]
   end
 
-  def eligible_course?
+  def another_setting_eligible_course?
     eligible_course_identifiers = %w[
-      npq-senco
       npq-headship
+      npq-senco
+      npq-senior-leadership
     ]
 
     course.identifier.in?(eligible_course_identifiers)
