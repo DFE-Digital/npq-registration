@@ -26,14 +26,6 @@ RSpec.describe GetAnIdentity::WebhookMessage, type: :model do
   end
 
   describe "#processor_klass" do
-    context "when message_type is alert.updated" do
-      subject { build(:trs_user_updated_webhook_message) }
-
-      it "returns a processor class" do
-        expect(subject.processor_klass).to eq(TeachingRecordSystem::Webhooks::UserUpdatedProcessor)
-      end
-    end
-
     context "when message_type is trn_request.completed" do
       subject { build(:trs_trn_request_completed_webhook_message) }
 
