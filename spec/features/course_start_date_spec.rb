@@ -5,7 +5,8 @@ RSpec.feature "Happy journeys", :no_js, type: :feature do
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   scenario "course start date" do
     stub_participant_validation_request

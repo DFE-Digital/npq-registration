@@ -8,7 +8,8 @@ RSpec.feature "Sad journey", :with_cohorts, :with_default_schedules, type: :feat
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   context "when JavaScript is disabled", :no_js do
     scenario("when going back and changing referred by return to teaching adviser") { run_scenario }

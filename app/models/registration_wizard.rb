@@ -18,9 +18,7 @@ class RegistrationWizard
     provider_check
     change_your_course_or_provider
     choose_an_npq_and_provider
-    get_an_identity_callback
-    teacher_reference_number
-    dont_have_teacher_reference_number
+    login_callback
     qualified_teacher_check
     dqt_mismatch
     npqh_status

@@ -1,10 +1,11 @@
 require "rails_helper"
 
-RSpec.feature "Back links", :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Back links", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   scenario "back to previous page retains state" do
     visit "/"

@@ -1,12 +1,13 @@
 require "rails_helper"
 
-RSpec.feature "Account", type: :feature do
+RSpec.feature "Account", :no_js, type: :feature do
   include Helpers::JourneyAssertionHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
-  let(:user_uid) { SecureRandom.uuid }
-  let(:user) { create(:user, uid: user_uid, email: "user@example.com") }
+  let(:user_uid) { user.uid }
+  let(:user) { create(:user, :with_teacher_auth, email: "user@example.com") }
   let(:cohort) { create(:cohort, start_year: 2025) }
   let(:application) { create(:application, user:, cohort:) }
 

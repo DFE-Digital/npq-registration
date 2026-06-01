@@ -8,6 +8,9 @@ class RegistrationWizardController < PublicPagesController
   rescue_from FundingEligibility::MissingMandatoryInstitution, with: :redirect_to_institution_picker
   rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date
 
+  include Questionnaires::FlowHelper
+  helper_method :first_questionnaire_step
+
   def show
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
@@ -54,7 +57,7 @@ class RegistrationWizardController < PublicPagesController
     session["user_id"] = user.id
     sign_in user
     wizard = RegistrationWizard.new(
-      current_step: :get_an_identity_callback,
+      current_step: :login_callback,
       store: session["registration_store"],
       params: {},
       request:,

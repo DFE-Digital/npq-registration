@@ -35,8 +35,8 @@ RSpec.describe "Omniauth callbacks", type: :request do
           subject
         end
 
-        it "signs in the user and redirects to the start path" do
-          expect(subject).to redirect_to registration_wizard_show_path("course-start-date")
+        it "signs in the user and redirects to the account path" do
+          expect(subject).to redirect_to account_path
         end
 
         context "when user creation fails" do

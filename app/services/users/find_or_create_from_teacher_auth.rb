@@ -10,10 +10,9 @@ module Users
       @email = provider_data.info.email
       @feature_flag_id = feature_flag_id
       @full_name = provider_data.extra.raw_info.verified_name.join(" ")
-      @date_of_birth = Date.parse(provider_data.extra.raw_info.verified_date_of_birth, "%Y-%m-%d")
     end
 
-    attr_reader :provider_data, :access_token, :uid, :trn, :email, :full_name, :date_of_birth, :feature_flag_id
+    attr_reader :provider_data, :access_token, :uid, :trn, :email, :full_name, :feature_flag_id
 
     def call
       user_matched_using_trn = verified_trn_matching_users.first
@@ -21,17 +20,16 @@ module Users
       if user_matched_using_trn
         ApplicationRecord.transaction do
           user_matched_using_trn.update!(
-            uid:,
-            provider: Omniauth::Strategies::TeacherAuth::NAME,
-            email:,
-            full_name:,
-            feature_flag_id:,
-            previous_names:,
+            always_updated_attributes.merge(
+              email:,
+              uid:,
+              provider: Omniauth::Strategies::TeacherAuth::NAME,
+            ),
           )
           persist_token(user_matched_using_trn, provider_data)
         end
-
         merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
+
         return user_matched_using_trn
       end
 
@@ -41,15 +39,13 @@ module Users
         blank_clashing_email_user(except: user_matched_using_uid)
         ApplicationRecord.transaction do
           user_matched_using_uid.update!(
-            email: email,
-            trn:,
-            trn_verified: true,
-            trn_auto_verified: true,
-            full_name:,
-            feature_flag_id:,
-            previous_names:,
+            always_updated_attributes.merge(
+              email:,
+              trn:,
+              trn_verified: true,
+            ),
           )
-          persist_token(user_matched_using_uid, provider_data)
+          persist_token(user_matched_using_uid, provider_data) # TODO: needs testing
         end
 
         return user_matched_using_uid
@@ -58,13 +54,11 @@ module Users
       if unverified_trn_matching_user
         ApplicationRecord.transaction do
           unverified_trn_matching_user.update!(
-            uid:,
-            provider: Omniauth::Strategies::TeacherAuth::NAME,
-            trn_verified: true,
-            trn_auto_verified: true,
-            full_name:,
-            feature_flag_id:,
-            previous_names:,
+            always_updated_attributes.merge(
+              uid:,
+              provider: Omniauth::Strategies::TeacherAuth::NAME,
+              trn_verified: true,
+            ),
           )
           persist_token(unverified_trn_matching_user, provider_data)
         end
@@ -87,7 +81,6 @@ module Users
 
     def persist_token(user, provider_data)
       refresh_token = provider_data.credentials&.refresh_token
-
       if user.trn.blank? && refresh_token.present?
         user.refresh_token.store!(refresh_token)
         true
@@ -107,6 +100,15 @@ module Users
     def unverified_trn_matching_user
       @unverified_trn_matching_user ||=
         User.find_by(provider: Omniauth::Strategies::TraOpenidConnect::NAME, trn:, trn_verified: false, email:, archived_at: nil)
+    end
+
+    def always_updated_attributes
+      {
+        feature_flag_id:,
+        full_name:,
+        previous_names:,
+        trn_auto_verified: true,
+      }
     end
 
     def blank_clashing_email_user(except: nil)
@@ -135,13 +137,12 @@ module Users
         uid:,
         provider: Omniauth::Strategies::TeacherAuth::NAME,
         email:,
-        trn:,
-        trn_verified: true,
-        trn_auto_verified: true,
-        full_name:,
-        date_of_birth:,
         feature_flag_id:,
+        full_name:,
         previous_names:,
+        trn:,
+        trn_auto_verified: true,
+        trn_verified: true,
       )
     end
   end

@@ -7,6 +7,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   context "when JavaScript is enabled", :js do
     scenario("funded EHCO registration journey (with JS)") { run_scenario(js: true) }
@@ -123,17 +125,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     visit "/registration/check-answers"
     expect(page).to have_current_path("/")
 
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge(
-                                                             "active_alert" => false,
-                                                             "archived_email" => nil,
-                                                             "archived_at" => nil,
-                                                             "ecf_id" => latest_application_user.ecf_id,
-                                                             "get_an_identity_id_synced_to_ecf" => false,
-                                                             "national_insurance_number" => nil,
-                                                             "notify_user_for_future_reg" => false,
-                                                             "trn_auto_verified" => false,
-                                                             "trn_verified" => true,
-                                                           ))
+    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
 
     deep_compare_application_data(
       "accepted_at" => nil,

@@ -23,7 +23,7 @@ RSpec.describe Questionnaires::Start do
       context "without TRN" do
         let(:current_user) { create :user, trn: nil }
 
-        it { is_expected.to eq :teacher_reference_number }
+        it { is_expected.to eq :course_start_date }
       end
     end
 

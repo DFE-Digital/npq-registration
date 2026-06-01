@@ -14,13 +14,13 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
     scenario "the registration journey starts" do
       navigate_to_page(path: "/", submit_form: false, axe_check: false) do
         expect(page).to have_text("Before you start")
-        page.click_button("Start now with Teacher Auth")
+        page.click_button("Start now")
       end
 
       choose_course_start_date
 
       expect(User.last.trn).to be_nil
-      expect(User.last.attributes).to include(user_attributes_from_stubbed_callback_response)
+      expect(User.last.attributes).to include(minimal_user_attributes_from_stubbed_callback_response)
 
       expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
         page.choose("Yes", visible: :all)

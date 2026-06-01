@@ -3,10 +3,8 @@
 
 <span <%= "class=govuk-visually-hidden" if hidden %>>
   <%=
-    render GovukComponent::ContinueButtonComponent.new(
-      text: button_text,
-      href: user_tra_openid_connect_omniauth_authorize_path,
-      as_button: true
+    govuk_start_button(
+      text: button_text, href: user_tra_openid_connect_omniauth_authorize_path(start_now: true), as_button: true
     )
   %>
 </span>

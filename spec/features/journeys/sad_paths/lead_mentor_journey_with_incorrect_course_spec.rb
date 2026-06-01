@@ -6,7 +6,8 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   include ApplicationHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course (with JS)") do
@@ -104,8 +105,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       expect(user.full_name).to eql("John Doe")
       expect(user.trn).to eql("1234567")
       expect(user.trn_verified).to be_truthy
-      expect(user.trn_auto_verified).to be_falsey
-      expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
+      expect(user.trn_auto_verified).to be true
       expect(user.national_insurance_number).to be_nil
       expect(user.applications.count).to be(1)
 
@@ -136,17 +136,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       expect(page).to have_content("Before you start")
     end
 
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge(
-                                                             "active_alert" => false,
-                                                             "archived_email" => nil,
-                                                             "archived_at" => nil,
-                                                             "ecf_id" => latest_application_user.ecf_id,
-                                                             "get_an_identity_id_synced_to_ecf" => false,
-                                                             "national_insurance_number" => nil,
-                                                             "notify_user_for_future_reg" => false,
-                                                             "trn_auto_verified" => false,
-                                                             "trn_verified" => true,
-                                                           ))
+    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
 
     deep_compare_application_data(
       "accepted_at" => nil,

@@ -17,7 +17,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include_context "Stub previously funding check for all courses" do
     let(:trn) { user_trn }
   end
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   def run_scenario(js:)
     stub_participant_validation_request(trn: user_trn, response: { trn: user_trn, date_of_birth: "1980-12-13" })
@@ -28,11 +29,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     end
 
     expect(page).not_to have_content("Before you start")
-
-    expect_page_to_have(path: "/account", submit_form: false) do
-      expect(page).to have_text("Your NPQ registrations")
-      page.click_link("Register for another NPQ")
-    end
 
     choose_course_start_date
 
@@ -138,17 +134,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     # 12 previously funded application (one per course) plus one created via the RegistrationWizard
     expect_applicant_reached_end_of_journey(total_number_of_created_applications: 13)
 
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge(
-                                                             "active_alert" => false,
-                                                             "archived_email" => nil,
-                                                             "archived_at" => nil,
-                                                             "ecf_id" => latest_application_user.ecf_id,
-                                                             "get_an_identity_id_synced_to_ecf" => false,
-                                                             "national_insurance_number" => nil,
-                                                             "notify_user_for_future_reg" => false,
-                                                             "trn_auto_verified" => false,
-                                                             "trn_verified" => true,
-                                                           ))
+    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response.merge("trn_lookup_status" => "Found"))
 
     deep_compare_application_data(
       "accepted_at" => nil,

@@ -1,7 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "visiting steps that do not exist", type: :feature do
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   context "when not logged in" do
     scenario "visiting steps that used to exist", :no_js do

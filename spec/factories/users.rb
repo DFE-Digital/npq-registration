@@ -3,7 +3,6 @@ FactoryBot.define do
     sequence(:full_name) { |n| "John Doe #{n}" }
     sequence(:email) { Faker::Internet.email(name: full_name) }
     sequence(:trn) { |n| sprintf("%07i", n % 10_000_000) }
-    date_of_birth { 30.years.ago }
     ecf_id { SecureRandom.uuid }
     significantly_updated_at { Time.zone.now }
 
