@@ -61,6 +61,17 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
           .transform_values(&:first)
       end
 
+      it "calls the webhook receiver service" do
+        expect(TeachingRecordSystem::Webhooks::Receiver).to receive(:call).with(webhook_params: {
+          message_id: headers["ce-id"],
+          message_type: headers["ce-type"],
+          message_source: headers["ce-source"],
+          sent_at: headers["ce-time"],
+          message: JSON.parse(body),
+        })
+        subject
+      end
+
       it "creates a webhook message record" do
         expect { subject }.to change(GetAnIdentity::WebhookMessage, :count).by(1)
         webhook_message = GetAnIdentity::WebhookMessage.last
@@ -72,12 +83,10 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
           status_comment: nil,
           status: "pending",
           message: JSON.parse(body),
-          raw: body,
         )
 
         expect(webhook_message.status_comment).to be_nil
         expect(webhook_message.status).to eq("pending")
-        expect(webhook_message.raw).to eq(body)
       end
 
       context "when the JWKS response does not contain the expected key" do

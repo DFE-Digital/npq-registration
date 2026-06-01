@@ -12,6 +12,7 @@ RSpec.describe TeachingRecordSystem::Webhooks::Receiver do
       {
         message_id:,
         message_type: "trn_request.completed",
+        message_source: "https://preprod.teacher-qualifications-api.education.gov.uk",
         sent_at: sent_at_iso8601,
         message:,
       }
@@ -34,6 +35,7 @@ RSpec.describe TeachingRecordSystem::Webhooks::Receiver do
         expect(GetAnIdentity::WebhookMessage.last).to have_attributes(
           message_id:,
           message_type: "trn_request.completed",
+          message_source: "https://preprod.teacher-qualifications-api.education.gov.uk",
           sent_at: Time.zone.parse(sent_at_iso8601),
           message:,
           status: "pending",

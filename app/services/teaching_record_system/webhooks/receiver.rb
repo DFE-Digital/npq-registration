@@ -13,6 +13,7 @@ module TeachingRecordSystem
         webhook_message = ::GetAnIdentity::WebhookMessage
           .create_with(
             message_type: webhook_params[:message_type],
+            message_source: webhook_params[:message_source],
             sent_at: Time.zone.parse(webhook_params[:sent_at]),
             message: webhook_params[:message],
             status: :pending,
