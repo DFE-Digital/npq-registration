@@ -28,11 +28,13 @@ RSpec.feature "Account", :no_js, type: :feature do
         end
       end
 
-      scenario "it shows the accounts user registration page" do
+      scenario "it shows the it shows the application details" do
+        visit "/account"
         expect(page).to have_current_path("/accounts/user_registrations/#{application.id}")
       end
 
       scenario "it shows the course start cohort" do
+        visit "/account"
         expect(page).to have_summary_item("Course start", "2025")
       end
 
