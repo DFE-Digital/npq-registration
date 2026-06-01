@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Accessibility Statement", type: :feature do
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
 
   scenario "View info about accessibility statement" do
     visit "/"

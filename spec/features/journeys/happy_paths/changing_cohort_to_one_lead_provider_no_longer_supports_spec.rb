@@ -5,7 +5,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
 
   before do
     course_cohort = create(:course_cohort, course: create(:course, :headship), cohort: Cohort.find_by(identifier: "2026a"))

@@ -121,14 +121,18 @@ private
       return new_email_update_path
     end
 
-    return account_path if user.applications.any?
+    return account_path unless user_starting_registration?
 
     start_questionnaire_path(user)
   end
 
+  def user_starting_registration?
+    request.env["omniauth.params"]["start_now"] == "true"
+  end
+
   def start_questionnaire_path(user)
     wizard = RegistrationWizard.new(
-      current_step: :get_an_identity_callback,
+      current_step: :login_callback,
       store: session["registration_store"],
       params: {},
       request:,

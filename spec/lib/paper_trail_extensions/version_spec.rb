@@ -8,7 +8,7 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
   end
 
   context "when a model has paper trail enabled" do
-    let(:user) { create(:user, full_name: "John Doe") }
+    let(:user) { create(:user, full_name: "John Doe", date_of_birth: 30.years.ago) }
     let(:user_name) { "Admin 1" }
 
     context "when a record is created" do
@@ -22,13 +22,13 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
           "note" => nil,
           "object_changes" => %w[
             id
-            email
             created_at
-            ecf_id
-            trn
-            full_name
             date_of_birth
+            ecf_id
+            email
+            full_name
             significantly_updated_at
+            trn
           ],
         }
       end

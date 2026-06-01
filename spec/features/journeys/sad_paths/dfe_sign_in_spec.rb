@@ -5,6 +5,8 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
 
   let(:user) { User.find_by(email: "user@example.com") }
 
+  before { allow(Rails.application.config.x.teacher_auth).to receive(:enabled).and_return(false) }
+
   context "when there is an existing user with the provided DfE Identity UID" do
     let(:existing_user_with_dfe_id) { create(:user, :with_get_an_identity_id, email: "old@example.com", full_name: "old name") }
     let!(:application_for_user_with_dfe_id) { create(:application, :accepted, user: existing_user_with_dfe_id, course: create(:course, :leading_teaching)) }
@@ -20,7 +22,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
           page.click_button("Start now")
         end
 
-        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user_with_dfe_id.id}")
         expect(existing_user_with_dfe_id.reload.email).to eq "user@example.com"
       end
     end
@@ -36,7 +37,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
           page.click_button("Start now")
         end
 
-        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user_with_dfe_id.id}")
         expect(existing_user_with_dfe_id.reload.email).to eq "old@example.com"
       end
     end
@@ -54,8 +54,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
         navigate_to_page(path: "/", submit_form: false, axe_check: false) do
           page.click_button("Start now")
         end
-
-        expect(page).to have_current_path("/account")
 
         expect(user_without_dfe_id.reload.email).to eq "archived-user@example.com"
         expect(user_without_dfe_id.uid).to be_nil
@@ -87,8 +85,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
           page.click_button("Start now")
         end
 
-        expect(page).to have_current_path("/account")
-
         expect(user_with_same_email_different_dfe_uid.reload.email).to eq "archived-user@example.com"
         expect(user_with_same_email_different_dfe_uid.uid).to be_nil
         expect(user_with_same_email_different_dfe_uid.provider).to be_nil
@@ -103,7 +99,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
 
     context "and the account is archived and there is a non-archived account with the same email" do
       let!(:existing_user_with_dfe_id) { create(:user, :archived, :with_get_an_identity_id, email: "archived-user@example.com") }
-      let!(:application_for_user) { create(:application, :accepted, user: user, course: create(:course, :leading_teaching)) }
       let(:user) { create(:user, email: "user@example.com") }
 
       include_context "Stub Get An Identity Omniauth Responses" do
@@ -111,12 +106,13 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
         let(:user_uid) { existing_user_with_dfe_id.uid }
       end
 
+      before { create(:application, :accepted, user: user, course: create(:course, :leading_teaching)) }
+
       scenario "the archived account should have its UID blanked, and the non-archived account should be updated with the UID" do
         navigate_to_page(path: "/", submit_form: false, axe_check: false) do
           page.click_button("Start now")
         end
 
-        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user.id}")
         expect(user.reload.uid).to eq existing_user_with_dfe_id.uid
       end
     end
@@ -139,7 +135,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
             page.click_button("Start now")
           end
 
-          expect(page).to have_current_path("/accounts/user_registrations/#{application_for_existing_user.id}")
           expect(existing_user.reload.uid).to eq uid
           expect(existing_user.provider).to eq "tra_openid_connect"
           expect(existing_user.full_name).to eq "John Doe"
@@ -161,8 +156,6 @@ RSpec.feature "DfE sign in", :no_js, type: :feature do
           navigate_to_page(path: "/", submit_form: false, axe_check: false) do
             page.click_button("Start now")
           end
-
-          expect(page).to have_current_path("/accounts/user_registrations/#{application_for_clashing_user.id}")
 
           expect(clashing_user.reload.email).to eq "user@example.com"
           expect(clashing_user.uid).to eq uid

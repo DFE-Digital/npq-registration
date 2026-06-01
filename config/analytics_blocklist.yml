@@ -90,6 +90,14 @@ shared:
     - archived_email
     - raw_tra_provider_data
     - previous_names
+  :oauth_tokens:
+    - id
+    - user_id
+    - token_type
+    - token
+    - token_updated_at
+    - created_at
+    - updated_at
   :applications:
     - raw_application_data
     - DEPRECATED_school_urn

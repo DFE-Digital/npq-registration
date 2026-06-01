@@ -1,40 +1,47 @@
 require "rails_helper"
 
-RSpec.feature "Service is closed", type: :feature do
+RSpec.feature "Service is closed", :no_js, type: :feature do
   include Helpers::AdminLogin
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
-  include_context "Stub Get An Identity Omniauth Responses"
+  context "when registration is closed" do
+    include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "Service close date has passed" do
-    close_registration!
+    before { close_registration! }
 
-    visit "/"
-    expect(page).to have_content("Registration is temporarily closed")
-    expect(page).to be_accessible
+    scenario "Service prompts to register for email updates using DfE Identity login" do
+      visit "/"
+      expect(page).to have_content("Registration is temporarily closed")
+      expect(page).to be_accessible
 
-    page.click_button("Sign up for email updates")
+      page.click_button("Sign up for email updates")
 
-    expect(page).to have_current_path(new_email_update_path)
-    expect(page).to have_content("Get email updates about registration opening")
-    expect(page).to be_accessible
+      expect(page).to have_current_path(new_email_update_path)
+      expect(page).to have_content("Get email updates about registration opening")
+      expect(page).to be_accessible
+    end
   end
 
-  scenario "Services closes while registration in progress" do
-    open_registration!
+  context "when registration is open" do
+    include_context "with stubbed Teacher Auth OmniAuth responses"
+    include_context "with stubbed Teaching Record System person API"
 
-    visit "/"
-    expect(page).to have_text("Before you start")
-    page.click_button("Start now")
+    before { open_registration! }
 
-    choose_course_start_date
+    scenario "Services closes while registration in progress" do
+      visit "/"
+      expect(page).to have_text("Before you start")
+      page.click_button("Start now")
 
-    # Registration is now closed
-    close_registration!
-    page.click_button("Continue")
+      choose_course_start_date
 
-    expect(page).to have_content("Registration has closed temporarily")
+      # Registration is now closed
+      close_registration!
+      page.click_button("Continue")
+
+      expect(page).to have_content("Registration has closed temporarily")
+    end
   end
 
   context "when using late registration" do
@@ -47,7 +54,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     before { close_registration! }
 
-    scenario "Allow user to register" do
+    scenario "Allow user to register using DfE Identity" do
       visit "/"
       expect(page).to have_content("Registration is temporarily closed")
 
@@ -152,12 +159,14 @@ RSpec.feature "Service is closed", type: :feature do
   end
 
   context "when using email updates" do
+    include_context "Stub Get An Identity Omniauth Responses"
+
     before { close_registration! }
 
     scenario "Register to email and unsubscribe" do
       visit "/"
       click_button "Sign in to your DfE Identity account"
-      click_button "Request email updates"
+      click_link "Request email updates"
       page.choose("Yes", visible: :all)
       click_button "Request email updates"
 

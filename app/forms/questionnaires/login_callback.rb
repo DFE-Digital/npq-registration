@@ -1,5 +1,5 @@
 module Questionnaires
-  class GetAnIdentityCallback < Base
+  class LoginCallback < Base
     def skip_step?
       true
     end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sessions: integration with GAI", type: :feature do
+RSpec.feature "Sessions: integration with GAI", :no_js, type: :feature do
   include Helpers::JourneyHelper
 
   include_context "Stub Get An Identity Omniauth Responses"
