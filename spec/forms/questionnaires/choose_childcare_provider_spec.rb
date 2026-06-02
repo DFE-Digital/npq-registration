@@ -150,4 +150,26 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
       expect(subject.next_step).to be(:choose_your_npq)
     end
   end
+
+  describe "#before_render" do
+    subject { instance.before_render }
+
+    let(:identifier) { "some-identifier" }
+    let(:name) { "some-name" }
+
+    it "clears previous institution choice" do
+      subject
+      expect(instance.childcare_identifier).to be_nil
+      expect(instance.childcare_name).to be_nil
+    end
+
+    context "when the wizard is submitted" do
+      before { store["submitted"] = true }
+
+      it "clears the store" do
+        subject
+        expect(store).to be_empty
+      end
+    end
+  end
 end

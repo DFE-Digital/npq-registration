@@ -23,6 +23,11 @@ module Questionnaires
       super(...) && institution_identifier.present? && institution_identifier != "other"
     end
 
+    def before_render
+      super
+      clear_previous_institution_choice
+    end
+
     def next_step
       if institution.in_england?
         :choose_your_npq
@@ -85,6 +90,11 @@ module Questionnaires
       if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && institution_name.present?
         errors.add(:institution_name, :no_results, name: institution_name)
       end
+    end
+
+    def clear_previous_institution_choice
+      self.institution_identifier = nil
+      self.institution_name = nil
     end
   end
 end

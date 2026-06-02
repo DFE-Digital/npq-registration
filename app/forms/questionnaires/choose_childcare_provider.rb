@@ -18,6 +18,11 @@ module Questionnaires
       ]
     end
 
+    def before_render
+      super
+      clear_previous_childcare_provider_choice
+    end
+
     def questions
       [
         QuestionTypes::AutoCompleteInstitution.new(
@@ -91,6 +96,11 @@ module Questionnaires
       if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank? && childcare_name.present?
         errors.add(:childcare_name, :no_results, name: childcare_name)
       end
+    end
+
+    def clear_previous_childcare_provider_choice
+      self.childcare_identifier = nil
+      self.childcare_name = nil
     end
   end
 end

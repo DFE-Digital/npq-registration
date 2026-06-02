@@ -102,7 +102,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
       page.choose("A school", visible: :all)
     end
 
-    choose_a_school(js:, name: "open", already_searched_for_workplace: true)
+    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       page.choose("Headship", visible: :all)
