@@ -147,4 +147,26 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   describe "#previous_step" do
     it { expect(subject.previous_step).to be(:have_ofsted_urn) }
   end
+
+  describe "#before_render" do
+    subject { instance.before_render }
+
+    let(:identifier) { "some-identifier" }
+    let(:name) { "some-name" }
+
+    it "clears previous institution choice" do
+      subject
+      expect(instance.private_childcare_name).to be_nil
+      expect(instance.private_childcare_name).to be_nil
+    end
+
+    context "when the wizard is submitted" do
+      before { store["submitted"] = true }
+
+      it "clears the store" do
+        subject
+        expect(store).to be_empty
+      end
+    end
+  end
 end

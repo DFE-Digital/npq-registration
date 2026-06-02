@@ -16,6 +16,11 @@ module Questionnaires
       ]
     end
 
+    def before_render
+      super
+      clear_previous_private_childcare_provider_choice
+    end
+
     # In the no js scenario we want the step to loop, showing a different screen
     # the second time but without showing an error - hence a negative response to
     # #valid? preventing saving but without appending errors
@@ -81,6 +86,11 @@ module Questionnaires
       return if institution.present?
 
       errors.add(:private_childcare_identifier, :no_results, urn: private_childcare_identifier.split("-").last)
+    end
+
+    def clear_previous_private_childcare_provider_choice
+      self.private_childcare_identifier = nil
+      self.private_childcare_name = nil
     end
   end
 end
