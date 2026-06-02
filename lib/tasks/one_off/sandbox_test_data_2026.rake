@@ -25,14 +25,8 @@ namespace :one_off do
                                   registration_start_date: "2025-09-01",
                                   description: "2025 Autumn")
 
-      # Setup / update cohorts
       spring = Cohort.find_by!(identifier: "2026a")
-      spring.update_attribute!(:funding, "zero") # bypass validation
-      spring.update_attribute!(:registration_start_date, "2026-06-01") # bypass validation
-
       autumn = Cohort.find_by!(identifier: "2026b")
-      autumn.update_attribute!(:funding, "capped") # bypass validation
-      autumn.update_attribute!(:registration_start_date, "2026-06-01") # bypass validation
 
       # Setup schedules
       {
