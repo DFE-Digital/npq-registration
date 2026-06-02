@@ -4,8 +4,10 @@ helpers            = Class.new { include ActiveSupport::Testing::TimeHelpers }.n
 lead_providers     = LeadProvider.alphabetical.limit(2) # it's very slow to do this for all lead providers
 application_count  = 1
 
+cohorts = Cohort.where(start_year: ..2025, suffix: "a").to_a
+
 lead_providers.each do |lead_provider|
-  Schedule.find_each do |schedule|
+  Schedule.where(cohort: cohorts).find_each do |schedule|
     schedule.courses.each do |course|
       application_count.times do
         eligible_for_funding = schedule.cohort.funding != "unfunded"

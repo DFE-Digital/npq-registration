@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 all_courses = Course.all.to_a
-funded_cohorts = Cohort.capped_funding.or(Cohort.full_funding).to_a
+funded_cohorts = Cohort.capped_funding.or(Cohort.full_funding).where(start_year: ..2025, suffix: "a").to_a
 
 LeadProvider.find_each do |lead_provider|
   quantity = { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)
