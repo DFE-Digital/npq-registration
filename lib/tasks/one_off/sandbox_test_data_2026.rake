@@ -1,7 +1,7 @@
 namespace :one_off do
   desc "Setup some test data in Sandbox"
   task :sandbox_test_data_2026, %i[dry_run] => :versioned_environment do |_t, args|
-    raise "Wrong environment" unless Rails.env.local? || Rails.env.sandbox?
+    raise "Wrong environment" unless Rails.env.local? || Rails.env.sandbox? || Rails.env.review?
 
     dry_run = args[:dry_run] != "false"
     records_to_create = Rails.env.test? ? 3 : 10
