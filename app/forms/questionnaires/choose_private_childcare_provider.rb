@@ -43,6 +43,7 @@ module Questionnaires
             name: :private_childcare_name,
             locale_name: :choose_private_childcare_provider_search,
           ),
+          data_attributes: { "selected-institution-name": selected_institution },
         ),
       ]
     end
@@ -63,6 +64,10 @@ module Questionnaires
       ::Registration::Institution.fetch(identifier: private_childcare_identifier,
                                         works_in_school: false,
                                         works_in_childcare: true)
+    end
+
+    def selected_institution
+      [institution.name, institution.address].compact.join(" - ") if institution
     end
 
     def validate_private_childcare_provider_name_returns_results

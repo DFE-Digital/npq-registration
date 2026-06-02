@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -55,7 +55,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
       page.choose("Yes", visible: :all)
     end
 
-    choose_a_private_childcare_provider(js:, urn: "EY487263", name: "searchable childcare provider")
+    choose_a_private_childcare_provider(js:, urn: default_nursery.provider_urn, name: default_nursery.name)
 
     eyl_course = ["Early years leadership"]
     ehco_course = ["Early headship coaching offer"]

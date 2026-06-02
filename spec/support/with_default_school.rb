@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with default school", shared_context: :metadata do
+  let(:default_school) { School.find_by(urn: 100_000) }
+
   before do
     unless School.where(urn: 100_000).exists?
       School.create!(
