@@ -115,6 +115,14 @@ RSpec.describe Cohort, type: :model do
         end
       end
     end
+
+    describe "creating new cohort when there are existing cohort-less applications" do
+      before { create(:application, :without_funded_place, cohort: nil) }
+
+      let(:cohort) { create(:cohort, :with_funding_cap) }
+
+      it { expect(cohort).to be_persisted }
+    end
   end
 
   describe ".order_by_latest" do
