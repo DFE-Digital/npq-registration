@@ -417,7 +417,7 @@ GEM
       logger
       rack (>= 2.2.3)
       rack-protection
-    omniauth-rails_csrf_protection (1.0.2)
+    omniauth-rails_csrf_protection (2.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     omniauth_openid_connect (0.8.0)
@@ -806,7 +806,7 @@ DEPENDENCIES
   method_source
   oj
   omniauth
-  omniauth-rails_csrf_protection
+  omniauth-rails_csrf_protection (~> 2.0)
   omniauth_openid_connect
   pagy
   paper_trail
