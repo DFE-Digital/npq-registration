@@ -84,7 +84,7 @@ terraform-init: composed-variables set-azure-account
 	$(eval export TF_VAR_docker_image=$(DOCKER_IMAGE))
 
 terraform-plan: terraform-init
-	terraform -chdir=terraform/application plan -var-file "config/${CONFIG}.tfvars.json"
+	terraform -chdir=terraform/application plan ${DETAILED_EXITCODE} -var-file "config/${CONFIG}.tfvars.json"
 
 terraform-apply: terraform-init
 	terraform -chdir=terraform/application apply -var-file "config/${CONFIG}.tfvars.json" ${AUTO_APPROVE}
@@ -133,7 +133,7 @@ domains-infra-init: domains domains-composed-variables domains set-azure-account
 		-backend-config=key=domains_infrastructure.tfstate
 
 domains-infra-plan: domains domains-infra-init
-	terraform -chdir=terraform/domains/infrastructure plan -var-file config/zones.tfvars.json
+	terraform -chdir=terraform/domains/infrastructure plan ${DETAILED_EXITCODE} -var-file config/zones.tfvars.json
 
 domains-infra-apply: domains domains-infra-init
 	terraform -chdir=terraform/domains/infrastructure apply -var-file config/zones.tfvars.json ${AUTO_APPROVE}
@@ -148,7 +148,7 @@ domains-init: domains domains-composed-variables set-azure-account
 		-backend-config=key=${ENVIRONMENT}.tfstate
 
 domains-plan: domains-init
-	terraform -chdir=terraform/domains/environment_domains plan -var-file config/${CONFIG}.tfvars.json
+	terraform -chdir=terraform/domains/environment_domains plan ${DETAILED_EXITCODE} -var-file config/${CONFIG}.tfvars.json
 
 domains-apply: domains-init
 	terraform -chdir=terraform/domains/environment_domains apply -var-file config/${CONFIG}.tfvars.json ${AUTO_APPROVE}
