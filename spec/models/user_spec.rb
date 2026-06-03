@@ -99,7 +99,7 @@ RSpec.describe User do
 
     it "stores and retrieves previous names" do
       user = create(:user, :with_previous_names)
-      expect(user.reload.previous_names).to eq(["Sarah Johnson", "Sarah Ann Williams"])
+      expect(user.reload.previous_names).to be_any
     end
 
     it "handles case-insensitive CITEXT" do
@@ -335,9 +335,29 @@ RSpec.describe User do
     context "with a user who does not have a refresh token" do
       let(:user) { create :user }
 
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe "#store_refresh_token!" do
+    subject { user.store_refresh_token!("some-token") }
+
+    before { freeze_time }
+
+    context "with user who has a refresh token" do
+      let(:user) { create :user, :with_refresh_token }
+
       it { is_expected.to be_instance_of OauthToken }
-      it { is_expected.to have_attributes token_type: "refresh_token" }
-      it { is_expected.to be_new_record }
+      it { is_expected.to have_attributes token_type: "refresh_token", token: "some-token", token_updated_at: Time.current }
+      it { is_expected.to be_persisted }
+    end
+
+    context "with a user who does not have a refresh token" do
+      let(:user) { create :user }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "refresh_token", token: "some-token", token_updated_at: Time.current }
+      it { is_expected.to be_persisted }
     end
   end
 

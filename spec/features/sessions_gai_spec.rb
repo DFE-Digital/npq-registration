@@ -6,7 +6,7 @@ RSpec.feature "Sessions: integration with GAI", :no_js, type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
   before do
-    allow(User).to receive(:find_by).and_return(FactoryBot.create(:user))
+    allow(User).to receive(:find_by).and_return(FactoryBot.create(:user, :with_get_an_identity_id))
   end
 
   scenario "GAI header links are only visible for logged-in users" do

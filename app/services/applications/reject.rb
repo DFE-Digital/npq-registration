@@ -37,7 +37,7 @@ module Applications
     def clear_token_if_no_remaining_applications
       user = application.user
       return if user.trn.present?
-      return if user.refresh_token.new_record?
+      return if user.refresh_token.blank?
       return if user.applications.pending_lead_provider_approval_status.where.not(id: application.id).exists?
 
       user.refresh_token.destroy!

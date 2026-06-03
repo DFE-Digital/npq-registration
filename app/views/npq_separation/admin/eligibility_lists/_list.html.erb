@@ -1,3 +1,7 @@
+<% if local_assigns.fetch(:no_longer_used, false) %>
+  <%= govuk_warning_text(text: "This eligibility list is no longer used") %>
+<% end %>
+
 <%=
   govuk_summary_list do |sl|
     sl.with_row do |row|

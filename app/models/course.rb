@@ -38,19 +38,13 @@ class Course < ApplicationRecord
     npq-leading-literacy
     npq-leading-teaching
     npq-leading-teaching-development
-    npq-senior-leadership
     npq-executive-leadership
-    npq-early-years-leadership
-  ].freeze
-
-  EYL_DISADVANTAGED = %w[
-    npq-early-years-leadership
   ].freeze
 
   LA_NURSERY_APPROVED = %w[
     npq-senco
     npq-headship
-    npq-early-years-leadership
+    npq-senior-leadership
   ].freeze
 
   def schedule_for(cohort:, schedule_date: Date.current)
@@ -105,10 +99,6 @@ class Course < ApplicationRecord
 
   def la_nursery_approved?
     LA_NURSERY_APPROVED.include?(identifier)
-  end
-
-  def eyl_disadvantaged?
-    EYL_DISADVANTAGED.include?(identifier)
   end
 
   def rebranded_alternative_courses

@@ -111,7 +111,7 @@ module ApplicationHelper
     return [] unless current_user
 
     [
-      { href: identity_link_uri(request.original_url), text: "DfE Identity account" },
+      auth_provider_navigation_item(current_user),
       npq_account_navigation_item,
       { href: sign_out_user_path, text: "Sign out" },
     ].compact
@@ -124,5 +124,15 @@ module ApplicationHelper
       href: application_count_based_account_url,
       text: "NPQ account",
     }
+  end
+
+  def auth_provider_navigation_item(current_user)
+    onelogin_home_uri = Rails.configuration.x.teacher_auth.onelogin_home_uri
+
+    if current_user.teacher_auth_provider? && onelogin_home_uri.present?
+      { href: onelogin_home_uri, text: "OneLogin account" }
+    elsif current_user.get_an_identity_provider?
+      { href: identity_link_uri(request.original_url), text: "DfE Identity account" }
+    end
   end
 end

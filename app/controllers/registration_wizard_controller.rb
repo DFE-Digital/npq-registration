@@ -4,6 +4,7 @@ class RegistrationWizardController < PublicPagesController
   before_action :set_form
   before_action :check_end_of_journey, only: %i[update]
   before_action :check_course_defined, only: %i[show]
+  before_action :check_teacher_auth_user
 
   rescue_from FundingEligibility::MissingMandatoryInstitution, with: :redirect_to_institution_picker
   rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date
@@ -130,5 +131,18 @@ private
     return {} if Feature.registration_closed?(current_user)
 
     params.fetch(:registration_wizard, {}).permit(RegistrationWizard.permitted_params_for_step(params[:step].underscore))
+  end
+
+  def check_teacher_auth_user
+    return unless Rails.configuration.x.teacher_auth.enabled
+    return if params[:step].to_s == "start"
+    return if current_user&.teacher_auth_provider?
+
+    Sentry.capture_message("User attempted registration from GAI")
+
+    sign_out_all_scopes
+    flash[:error] = "Please restart your registration"
+
+    redirect_to(root_path)
   end
 end

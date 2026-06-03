@@ -11,7 +11,10 @@ RSpec.describe RegistrationWizardController do
 
   let(:current_user) { create(:user) }
 
-  before { session["user_id"] = current_user.id }
+  before do
+    allow(Rails.configuration.x.teacher_auth).to receive(:enabled).and_return(false)
+    session["user_id"] = current_user.id
+  end
 
   subject(:page_response) { make_request && response }
 

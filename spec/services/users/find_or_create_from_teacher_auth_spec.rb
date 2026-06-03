@@ -56,12 +56,12 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
   shared_examples "destroying the refresh token" do
     context "when the user has a persisted refresh token" do
-      before { user.refresh_token.store!("some-refresh-token") }
+      before { user.store_refresh_token!("some-refresh-token") }
 
       it "destroys the persisted refresh token" do
         expect(user.reload.refresh_token).to be_persisted
         subject
-        expect(user.reload.refresh_token).not_to be_persisted
+        expect(user.reload.refresh_token).to be_nil
       end
     end
   end

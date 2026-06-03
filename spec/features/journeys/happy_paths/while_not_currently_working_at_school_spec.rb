@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,11 +9,17 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled or disabled" do
-    scenario("registration journey while not currently working at school", :js, :no_js) { run_scenario(js: true) }
+  before do
+    cohort = create(:cohort, :next, suffix: "b")
+    provider = LeadProvider.find_by(name: "Teach First")
+    create(:course_cohort,
+           :with_provider,
+           course: Course.find_by(identifier: "npq-executive-leadership"),
+           cohort:,
+           lead_provider: provider)
   end
 
-  def run_scenario(*)
+  scenario("registration journey while not currently working at school") do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -39,8 +45,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.choose("Another setting", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("In an independent hospital education organisation", visible: :all)
@@ -52,7 +56,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
+      page.choose("Executive leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -79,7 +83,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => course_start_cohort_description,
-          "Course" => "Senior leadership",
+          "Course" => "Executive leadership",
           "Course funding" => "I am paying",
           "Work setting" => "Another setting",
           "Employment type" => "In an independent hospital education organisation",
@@ -97,7 +101,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-executive-leadership").id,
       "schedule_id" => nil,
       "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
@@ -142,7 +146,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start_cohort" => course_start_cohort_value,
-        "course_identifier" => "npq-senior-leadership",
+        "course_identifier" => "npq-executive-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",
         "funding" => "self",

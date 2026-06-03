@@ -44,7 +44,7 @@ FactoryBot.define do
     end
 
     trait :with_previous_names do
-      previous_names { ["Sarah Johnson", "Sarah Ann Williams"] }
+      previous_names { [Faker::Name.name, Faker::Name.name] }
     end
 
     trait :with_application do
@@ -70,8 +70,11 @@ FactoryBot.define do
       end
 
       after(:create) do |user, evaluator|
-        user.refresh_token.update!(token: evaluator.token,
-                                   token_updated_at: evaluator.token_updated_at)
+        user
+          .oauth_tokens
+          .refresh_token
+          .create!(token: evaluator.token,
+                   token_updated_at: evaluator.token_updated_at)
       end
     end
 
