@@ -57,6 +57,18 @@ FactoryBot.define do
         },
       }
     end
+
+    trait :no_connected_person do
+      message do
+        {
+          "oneLoginUser" => {
+            "subject" => user_uid,
+            "emailAddress" => user_email,
+          },
+          "connectedPerson" => nil,
+        }
+      end
+    end
   end
 
   factory :trs_trn_request_completed_webhook_message, class: "GetAnIdentity::WebhookMessage" do
