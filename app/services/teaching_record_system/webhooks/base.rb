@@ -30,15 +30,15 @@ private
   end
 
   def no_user_found_failure
-    record_error("No user found with uid: #{user_uid}")
+    record_error("No user found with uid: #{user_uid}", send_to_sentry: false)
   end
 
-  def record_error(message)
+  def record_error(message, send_to_sentry: true)
     webhook_message.update!(
       status: :failed,
       status_comment: message,
       processed_at: Time.zone.now,
     )
-    Sentry.capture_message("[#{self.class::WEBHOOK_NAME}] #{message}")
+    Sentry.capture_message("[#{self.class::WEBHOOK_NAME}] #{message}") if send_to_sentry
   end
 end
