@@ -37,7 +37,7 @@
   <%=
     form.govuk_radio_buttons_fieldset(
       question.name,
-      legend: { size: 'xl', text: fallback_question_text, tag: "h1" }
+      legend: { size: 'l', text: fallback_question_text, tag: "h1" }
     ) do
   %>
     <% question.options.each_with_index do |institution, index| %>
