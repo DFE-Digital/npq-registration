@@ -435,22 +435,6 @@ en:
           attributes:
             referred_by_return_to_teaching_adviser:
               blank: Select 'Yes' or 'No'
-        questionnaires/qualified_teacher_check:
-          attributes:
-            trn:
-              blank: Teacher reference number cannot be blank
-              wrong_length: Teacher reference number is %{count} digits long
-              invalid: Teacher reference number must only contain numbers
-              not_real: You must enter a valid teacher reference number (TRN)
-            full_name:
-              blank: Full name cannot be blank
-            date_of_birth:
-              blank: Date of birth cannot be blank
-              in_future: Date of birth must be in the past
-              invalid: Date of birth must be a valid date
-            national_insurance_number:
-              too_long: National Insurance number is too long (maximum is %{count} characters)
-              blank: National Insurance number cannot be blank
         questionnaires/choose_your_npq:
           attributes:
             course_identifier:
@@ -997,7 +981,6 @@ en:
         possible_funding: "You may qualify for DfE scholarship funding"
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
-        dqt_mismatch: "We cannot find your details"
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
         employment_role: "What is your role?"
         employer_name: "What organisation are you employed by?"
@@ -1042,7 +1025,6 @@ en:
         lead_provider_id: "Select your provider"
         chosen_provider: "Have you chosen an NPQ and provider?"
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
-        qualified_teacher_check: "Check your details"
         date_of_birth: "Date of birth"
         email_updates_status: "Are you interested in the special educational needs co-ordinator (SENCO) NPQ?"
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"

@@ -3,10 +3,6 @@
 # Throttle general requests by IP
 class Rack::Attack
   PROTECTED_ROUTES = [
-    "/registration/qualified_teacher_check",
-    "/registration/qualified_teacher_check/change",
-    "/registration/qualified-teacher-check",
-    "/registration/qualified-teacher-check/change",
     "/session/sign_in",
     "/session/sign_in_code",
     "/session/sign-in",
