@@ -15,6 +15,8 @@ RSpec.feature "Start page", :no_js, type: :feature do
 
     expect(page).to be_accessible
     expect(page).to have_text("Before you start")
+    expect(page).to have_text("check if you’re eligible for DfE scholarship funding")
+    expect(page).to have_text("To check your funding eligibility, you’ll need:")
   end
 
   context "when the user has no applications" do
