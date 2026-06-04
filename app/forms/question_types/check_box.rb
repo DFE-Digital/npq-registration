@@ -11,7 +11,7 @@ module QuestionTypes
     def default_styles
       {
         legend: {
-          size: "xl",
+          size: "l",
           tag: "h1",
         },
         hint: nil,

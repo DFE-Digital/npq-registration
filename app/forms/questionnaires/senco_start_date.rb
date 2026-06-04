@@ -32,7 +32,7 @@ module Questionnaires
       [
         QuestionTypes::DateField.new(
           name: :senco_start_date,
-          style_options: { omit_day: true, legend: { size: "xl", tag: "h1" } },
+          style_options: { omit_day: true, legend: { size: "l", tag: "h1" } },
         ),
       ]
     end

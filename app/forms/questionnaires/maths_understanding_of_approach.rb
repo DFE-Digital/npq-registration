@@ -15,7 +15,7 @@ module Questionnaires
         QuestionTypes::RadioButtonGroup.new(
           name: :maths_understanding_of_approach,
           options:,
-          style_options: { legend: { size: "xl", tag: "h" } },
+          style_options: { legend: { size: "l", tag: "h1" } },
         ),
       ]
     end

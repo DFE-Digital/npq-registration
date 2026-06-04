@@ -3,7 +3,7 @@
     <%= form_with model: @notification_form, url: registration_interest_sign_up_path do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_email_field :email,
-             label: { text: "What’s your email address?", tag: "h1", size: "xl" },
+             label: { text: "What’s your email address?", tag: "h1", size: "l" },
              hint: { text: "We’ll email you when registration reopens." },
              width: "three-quarters" %>
       <%= f.govuk_submit "Confirm" %>

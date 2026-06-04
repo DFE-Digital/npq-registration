@@ -4,7 +4,7 @@ module QuestionTypes
     def default_styles
       {
         width: "full",
-        label: header.present? ? {} : { size: "xl", tag: "h1" },
+        label: header.present? ? {} : { size: "l", tag: "h1" },
       }
     end
 
