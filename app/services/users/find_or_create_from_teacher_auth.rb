@@ -98,7 +98,7 @@ module Users
           .where(trn:, trn_verified: true, archived_at: nil)
           .where.not(trn: nil)
           .order(updated_at: :desc)
-          .all.to_a
+          .to_a
     end
 
     def unverified_trn_matching_user
