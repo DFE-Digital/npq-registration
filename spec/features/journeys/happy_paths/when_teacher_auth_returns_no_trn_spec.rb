@@ -72,7 +72,12 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
 
       expect_applicant_reached_end_of_journey
 
-      expect(retrieve_latest_application_user_data).to include(user_attributes_from_stubbed_callback_response)
+      expect(retrieve_latest_application_user_data).to include(
+        user_attributes_from_stubbed_callback_response.merge(
+          "trn_verified" => false,
+          "trn_auto_verified" => false,
+        ),
+      )
     end
   end
 end

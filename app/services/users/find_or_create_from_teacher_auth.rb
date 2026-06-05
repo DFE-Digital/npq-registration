@@ -94,12 +94,18 @@ module Users
 
     def verified_trn_matching_users
       @verified_trn_matching_users ||=
-        User.where(trn:, trn_verified: true, archived_at: nil).order(updated_at: :desc).all.to_a
+        User
+          .where(trn:, trn_verified: true, archived_at: nil)
+          .where.not(trn: nil)
+          .order(updated_at: :desc)
+          .to_a
     end
 
     def unverified_trn_matching_user
       @unverified_trn_matching_user ||=
-        User.find_by(provider: Omniauth::Strategies::TraOpenidConnect::NAME, trn:, trn_verified: false, email:, archived_at: nil)
+        User
+          .where.not(trn: nil)
+          .find_by(provider: Omniauth::Strategies::TraOpenidConnect::NAME, trn:, trn_verified: false, email:, archived_at: nil)
     end
 
     def always_updated_attributes
@@ -141,8 +147,8 @@ module Users
         full_name:,
         previous_names:,
         trn:,
-        trn_auto_verified: true,
-        trn_verified: true,
+        trn_auto_verified: trn.present?,
+        trn_verified: trn.present?,
       )
     end
   end

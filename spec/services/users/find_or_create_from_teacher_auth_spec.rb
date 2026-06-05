@@ -10,13 +10,12 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   let(:verified_name) { %w[Test User] }
   let(:api_previous_names) { [] }
   let(:refresh_token) { nil }
-  let(:user) { create(:user, trn:, trn_verified: true, archived_at: 1.day.ago) }
 
   let(:provider_data) do
     OpenStruct.new({
       uid:,
       credentials: OpenStruct.new({
-        token: "123456",
+        token: "some-token",
         refresh_token:,
       }),
       info: OpenStruct.new({
@@ -36,7 +35,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     stub_request(:get, "#{ENV['TRS_API_URL']}/v3/person")
       .with(
         headers: {
-          "Authorization" => "Bearer 123456",
+          "Authorization" => "Bearer some-token",
           "X-Api-Version" => "Next",
         },
         query: { "include" => "PreviousNames" },
@@ -67,7 +66,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   end
 
   before do
-    user
+    create(:user, trn:, trn_verified: true, archived_at: 1.day.ago)
 
     if trn.present?
       stub_person_api
@@ -351,8 +350,8 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(
           email:,
           trn:,
-          trn_verified: true,
-          trn_auto_verified: true,
+          trn_verified: trn.present?,
+          trn_auto_verified: trn.present?,
           full_name: verified_name.join(" "),
           feature_flag_id:,
         )
@@ -425,7 +424,32 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   context "when no TRN is specified" do
     let(:trn) { nil }
 
+    before { create(:user, :with_teacher_auth, trn: nil) }
+
     it_behaves_like "logging in using provider and UID"
     it_behaves_like "storing the refresh token"
+
+    it "does not mark the nil TRN as verified" do
+      subject
+      expect(User.last).to have_attributes(trn: nil, trn_verified: false, trn_auto_verified: false)
+    end
+
+    context "when there is a user with a nil TRN, marked as verified" do
+      # users were created like this before NPQ-3783
+      # keeping this test, as there isn't a database constraint to stop this scenario
+      before { create(:user, :with_teacher_auth, trn: nil, trn_verified: true) }
+
+      it "does not match users with nil TRNs, but instead creates a new user" do
+        expect { subject }.to change(User, :count).by(1)
+      end
+    end
+
+    context "when there is a GAI user with a nil TRN but matching email" do
+      before { create(:user, :with_get_an_identity_id, email:, trn: nil, trn_verified: false) }
+
+      it "does not match the user with nil TRNs, but instead creates a new user" do
+        expect { subject }.to change(User, :count).by(1)
+      end
+    end
   end
 end
