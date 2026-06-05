@@ -31,11 +31,20 @@ RSpec.feature "Sad journeys", :no_js, :with_default_schedules, type: :feature do
     senco-start-date
   ]
 
+  steps_that_require_closed_registration = %w[
+    closed
+  ]
+
   RegistrationWizard::VALID_REGISTRATION_STEPS
     .excluding(:choose_your_npq)
     .map { |step| step.to_s.dasherize }.each do |step|
     scenario "Navigating directly to the #{step} page does not raise an error" do
+      if steps_that_require_closed_registration.include?(step)
+        Flipper.disable(Feature::REGISTRATION_OPEN)
+      end
+
       visit "/registration/#{step}"
+
       if steps_that_require_course.include?(step)
         expect(page).to have_current_path("/registration/course-start-date")
       else
