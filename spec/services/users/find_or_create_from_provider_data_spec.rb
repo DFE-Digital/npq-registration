@@ -297,6 +297,23 @@ RSpec.describe Users::FindOrCreateFromProviderData do
       end
     end
 
+    context "when the user with email is a Teacher Auth user" do
+      let!(:teacher_auth_user) { create(:user, :with_teacher_auth, email: provider_data_email) }
+
+      it "raises an error refusing to take over the account" do
+        expect { subject }.to raise_error(described_class::TeacherAuthAccountExistsError)
+      end
+
+      it "does not change the Teacher Auth user's provider or uid" do
+        original_uid = teacher_auth_user.uid
+
+        expect { subject }.to raise_error(described_class::TeacherAuthAccountExistsError)
+
+        expect(teacher_auth_user.reload.provider).to eq("teacher_auth")
+        expect(teacher_auth_user.uid).to eq(original_uid)
+      end
+    end
+
     context "when user with email does not exist" do
       it "creates a new user with the UID and email" do
         expect(subject.uid).to eq provider_data_uid

@@ -2,6 +2,8 @@
 
 module Users
   class FindOrCreateFromProviderData
+    class TeacherAuthAccountExistsError < StandardError; end
+
     def initialize(provider_data:, feature_flag_id:)
       @provider_data = provider_data
       @feature_flag_id = feature_flag_id
@@ -20,6 +22,12 @@ module Users
         Rails.logger.info("[GAI] User not found using UID, UID=#{provider_data.uid}, using email to find user")
         check_if_supplied_uid_matches_archived_account # CPDNPQ-2647
         user = User.find_or_initialize_by(email: provider_email, archived_at: nil)
+
+        if user.teacher_auth_provider?
+          raise TeacherAuthAccountExistsError,
+                "GAI sign-in matched a Teacher Auth user by email (user_id=#{user.id}); refusing to take over the account"
+        end
+
         user.assign_attributes(provider: provider_data.provider, uid: provider_data.uid)
       end
 
