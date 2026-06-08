@@ -73,8 +73,7 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        trn: wizard.query_store.trn,
-        get_an_identity_id: wizard.query_store.get_an_identity_id,
+        user_ecf_id: query_store.current_user.ecf_id,
         query_store: wizard.query_store,
       )
     end

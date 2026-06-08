@@ -222,7 +222,6 @@ private
            :employment_type_hospital_school?,
            :employment_type_other?,
            :formatted_date_of_birth,
-           :get_an_identity_id,
            :has_ofsted_urn?,
            :inside_catchment?,
            :itt_provider,
@@ -260,8 +259,7 @@ private
       institution: institution_from_store,
       approved_itt_provider: approved_itt_provider?,
       inside_catchment: inside_catchment?,
-      trn:,
-      get_an_identity_id:,
+      user_ecf_id: query_store.user_ecf_id,
       query_store:,
     )
   end
