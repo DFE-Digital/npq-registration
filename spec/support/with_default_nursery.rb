@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context "with default school", shared_context: :metadata do
+RSpec.shared_context "with default nursery", shared_context: :metadata do
   let(:default_nursery) do
     create(:private_childcare_provider,
            provider_urn: "EY487263",
@@ -14,5 +14,5 @@ RSpec.shared_context "with default school", shared_context: :metadata do
 end
 
 RSpec.configure do |config|
-  config.include_context "with default school", :with_default_nursery
+  config.include_context "with default nursery", :with_default_nursery
 end
