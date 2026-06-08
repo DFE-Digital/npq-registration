@@ -44,9 +44,8 @@ class FundingEligibility
   attr_reader :cohort,
               :institution,
               :course,
-              :trn,
               :approved_itt_provider,
-              :get_an_identity_id,
+              :user_ecf_id,
               :inside_catchment,
               :new_headteacher,
               :employment_type,
@@ -58,8 +57,7 @@ class FundingEligibility
     def new_from_query_store(institution:,
                              course:,
                              inside_catchment:,
-                             trn:,
-                             get_an_identity_id:,
+                             user_ecf_id:,
                              approved_itt_provider: false,
                              query_store: nil)
       cohort = Cohort.find_by(identifier: query_store.course_start_cohort)
@@ -68,8 +66,7 @@ class FundingEligibility
           institution:,
           course:,
           inside_catchment:,
-          trn:,
-          get_an_identity_id:,
+          user_ecf_id:,
           approved_itt_provider:,
           new_headteacher: query_store.new_headteacher?,
           employment_type: query_store.employment_type,
@@ -84,8 +81,7 @@ class FundingEligibility
                  institution:,
                  course:,
                  inside_catchment:,
-                 trn:,
-                 get_an_identity_id:,
+                 user_ecf_id:,
                  approved_itt_provider:,
                  new_headteacher:,
                  employment_type:,
@@ -98,8 +94,7 @@ class FundingEligibility
     @inside_catchment = inside_catchment
     @new_headteacher = new_headteacher
     @approved_itt_provider = approved_itt_provider
-    @get_an_identity_id = get_an_identity_id
-    @trn = trn
+    @user_ecf_id = user_ecf_id
     @employment_type = employment_type
     @childminder = childminder
     @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
@@ -231,35 +226,19 @@ private
     end
   end
 
-  def users
-    get_an_identity_id_users.or(trn_users).distinct
-  end
-
-  def get_an_identity_id_users
-    return User.none if get_an_identity_id.blank?
-
-    User.with_get_an_identity_id.where(uid: get_an_identity_id)
-  end
-
-  def trn_users
-    return User.none if trn.blank?
-
-    User.where(trn:)
+  def user
+    User.find_by(ecf_id: user_ecf_id)
   end
 
   def accepted_applications
-    @accepted_applications ||= begin
-      application_ids = users.flat_map do |user|
-        user.applications
-            .where(course: course.rebranded_alternative_courses)
-            .accepted
-            .eligible_for_funding
-            .where(funded_place: [nil, true])
-            .pluck(:id)
-      end
+    return [] unless user
 
-      Application.where(id: application_ids)
-    end
+    @accepted_applications ||=
+      user.applications
+      .where(course: course.rebranded_alternative_courses)
+      .accepted
+      .eligible_for_funding
+      .where(funded_place: [nil, true])
   end
 
   def mandatory_institution

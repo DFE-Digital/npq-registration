@@ -17,8 +17,8 @@ class RegistrationQueryStore
     ::IttProvider.currently_approved.find_by(legal_name: itt_provider).present?
   end
 
-  def get_an_identity_id
-    current_user.get_an_identity_id
+  def user_ecf_id
+    current_user.ecf_id
   end
 
   def trn_set_via_fallback_verification_question?

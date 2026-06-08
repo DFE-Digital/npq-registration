@@ -6,8 +6,7 @@ RSpec.describe FundingEligibility do
                         institution:,
                         course:,
                         inside_catchment:,
-                        trn: "1234567",
-                        get_an_identity_id: SecureRandom.uuid,
+                        user_ecf_id: user.ecf_id,
                         approved_itt_provider:,
                         new_headteacher: (new_headteacher == "yes"),
                         employment_type:,
@@ -40,6 +39,7 @@ RSpec.describe FundingEligibility do
   let(:referred_by_return_to_teaching_adviser) { nil }
   let(:new_headteacher) { "no" }
   let(:query_store) { RegistrationQueryStore.new(store:) }
+  let(:user) { build(:user, :with_teacher_auth) }
 
   before do
     unfunded_cohort
@@ -65,20 +65,17 @@ RSpec.describe FundingEligibility do
       described_class.new_from_query_store(institution:,
                                            course:,
                                            inside_catchment:,
-                                           trn: "1234567",
-                                           get_an_identity_id:,
+                                           user_ecf_id: user.ecf_id,
                                            approved_itt_provider:,
                                            query_store:)
     end
 
     let(:course) { build(:course, :headship) }
-    let(:get_an_identity_id) { SecureRandom.uuid }
 
     it { is_expected.to have_attributes institution: }
     it { is_expected.to have_attributes course: }
     it { is_expected.to have_attributes inside_catchment: }
-    it { is_expected.to have_attributes trn: "1234567" }
-    it { is_expected.to have_attributes get_an_identity_id: }
+    it { is_expected.to have_attributes user_ecf_id: user.ecf_id }
     it { is_expected.to have_attributes approved_itt_provider: }
     it { is_expected.to have_attributes new_headteacher: false }
     it { is_expected.to have_attributes employment_type: }
@@ -141,7 +138,6 @@ RSpec.describe FundingEligibility do
 
     context "and the applicant has previously received funding" do
       before do
-        user = build(:user, :with_get_an_identity_id, uid: funding_eligibility.get_an_identity_id)
         create(:application, :with_funded_place, :accepted, user:, course:)
       end
 

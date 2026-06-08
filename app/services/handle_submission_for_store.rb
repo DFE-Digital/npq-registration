@@ -170,8 +170,7 @@ private
       institution: query_store.institution,
       approved_itt_provider:,
       inside_catchment: inside_catchment?,
-      trn: query_store.trn,
-      get_an_identity_id: query_store.get_an_identity_id,
+      user_ecf_id: query_store.user_ecf_id,
       query_store:,
     )
   end
