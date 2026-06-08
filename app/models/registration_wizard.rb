@@ -19,8 +19,6 @@ class RegistrationWizard
     change_your_course_or_provider
     choose_an_npq_and_provider
     login_callback
-    qualified_teacher_check
-    dqt_mismatch
     npqh_status
     ehco_unavailable
     ehco_headteacher
@@ -129,16 +127,6 @@ class RegistrationWizard
   def answers
     array = []
 
-    if trn_set_via_fallback_verification_question?
-      array << Answer.new("Full name", store["full_name"], :qualified_teacher_check)
-      array << Answer.new("Teacher reference number (TRN)", trn, :qualified_teacher_check)
-      array << Answer.new("Date of birth", formatted_date_of_birth, :qualified_teacher_check)
-
-      if form_for_step(:qualified_teacher_check).national_insurance_number.present?
-        array << Answer.new("National Insurance number", store["national_insurance_number"], :qualified_teacher_check)
-      end
-    end
-
     array << Answer.new("Course start", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]][:cohort_description], :course_start_date)
     array << Answer.new("Workplace in England", teacher_catchment_humanized, :teacher_catchment)
 
@@ -245,7 +233,6 @@ private
            :new_headteacher?,
            :teacher_catchment_humanized,
            :trn,
-           :trn_set_via_fallback_verification_question?,
            :works_in_another_setting?,
            :works_in_childcare?,
            :works_in_other?,
