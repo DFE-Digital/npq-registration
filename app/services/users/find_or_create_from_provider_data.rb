@@ -12,7 +12,7 @@ module Users
     attr_reader :provider_data, :feature_flag_id
 
     def call
-      user = User.find_by(provider: provider_data.provider, uid: provider_data.uid, archived_at: nil)
+      user = User.not_archived.find_by(provider: provider_data.provider, uid: provider_data.uid)
       provider_email = provider_data.info.email.downcase
 
       if user
@@ -21,7 +21,7 @@ module Users
       else
         Rails.logger.info("[GAI] User not found using UID, UID=#{provider_data.uid}, using email to find user")
         check_if_supplied_uid_matches_archived_account # CPDNPQ-2647
-        user = User.find_or_initialize_by(email: provider_email, archived_at: nil)
+        user = User.not_archived.find_or_initialize_by(email: provider_email)
 
         if user.teacher_auth_provider?
           raise TeacherAuthAccountExistsError,

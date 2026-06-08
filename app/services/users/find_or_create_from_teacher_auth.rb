@@ -95,7 +95,8 @@ module Users
     def verified_trn_matching_users
       @verified_trn_matching_users ||=
         User
-          .where(trn:, trn_verified: true, archived_at: nil)
+          .not_archived
+          .where(trn:, trn_verified: true)
           .where.not(trn: nil)
           .order(updated_at: :desc)
           .to_a
@@ -104,8 +105,9 @@ module Users
     def unverified_trn_matching_user
       @unverified_trn_matching_user ||=
         User
+          .not_archived
           .where.not(trn: nil)
-          .find_by(provider: Omniauth::Strategies::TraOpenidConnect::NAME, trn:, trn_verified: false, email:, archived_at: nil)
+          .find_by(provider: Omniauth::Strategies::TraOpenidConnect::NAME, trn:, trn_verified: false, email:)
     end
 
     def always_updated_attributes
@@ -118,7 +120,7 @@ module Users
     end
 
     def blank_clashing_email_user(except: nil)
-      scope = User.where(email:).where(archived_at: nil)
+      scope = User.not_archived.where(email:)
       scope = scope.where.not(id: except.id) if except
       clashing = scope.first
       return unless clashing

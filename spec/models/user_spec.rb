@@ -81,6 +81,65 @@ RSpec.describe User do
     end
   end
 
+  describe "scopes" do
+    describe ".with_get_an_identity_id" do
+      let(:gai_user) { create(:user, :with_get_an_identity_id) }
+
+      before do
+        create(:user)
+        gai_user
+      end
+
+      it "returns only GAI users" do
+        expect(User.with_get_an_identity_id).to contain_exactly(gai_user)
+      end
+    end
+
+    describe ".needing_token_refresh" do
+      let(:user_with_token_needing_refresh) { create(:user, :with_stale_refresh_token, trn: nil) }
+
+      before do
+        create(:user, :with_fresh_refresh_token, trn: nil)
+        create(:user, trn: nil)
+        create(:user, :with_stale_refresh_token, trn: "1234567")
+        user_with_token_needing_refresh
+      end
+
+      it "returns only users without a TRN and with a stale refresh token" do
+        expect(User.needing_token_refresh).to contain_exactly(user_with_token_needing_refresh)
+      end
+    end
+
+    describe ".not_archived" do
+      let(:user) { create(:user) }
+
+      before do
+        create(:user, :archived)
+        user
+      end
+
+      it "returns only users that are not archived" do
+        expect(User.not_archived).to contain_exactly(user)
+      end
+    end
+
+    describe ".with_trn" do
+      let(:user_with_verified_trn) { create(:user, trn: "1234567", trn_verified: true) }
+      let(:user_with_unverified_trn) { create(:user, trn: "7654321", trn_verified: false) }
+      let(:user_without_trn) { create(:user, trn: nil, trn_verified: false) }
+
+      before do
+        user_with_verified_trn
+        user_with_unverified_trn
+        user_without_trn
+      end
+
+      it "returns only users with a verified TRN" do
+        expect(User.with_trn("1234567")).to contain_exactly(user_with_verified_trn)
+      end
+    end
+  end
+
   describe "enums" do
     it {
       expect(subject).to define_enum_for(:email_updates_status).with_values(
