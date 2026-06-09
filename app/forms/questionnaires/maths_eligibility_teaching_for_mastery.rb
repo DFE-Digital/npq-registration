@@ -61,7 +61,7 @@ module Questionnaires
       )
     end
 
-    delegate :inside_catchment?, :approved_itt_provider?, :lead_mentor_for_accredited_itt_provider?, :trn,
+    delegate :inside_catchment?, :approved_itt_provider?, :lead_mentor_for_accredited_itt_provider?,
              :course, to: :query_store
   end
 end

@@ -73,7 +73,7 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        user_ecf_id: query_store.current_user.ecf_id,
+        user_ecf_id: query_store.user_ecf_id,
         query_store: wizard.query_store,
       )
     end

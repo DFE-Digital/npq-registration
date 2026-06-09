@@ -89,7 +89,6 @@ module Questionnaires
              :course,
              :inside_catchment?,
              :new_headteacher?,
-             :trn,
              to: :query_store
 
     def validate_lead_provider_valid
