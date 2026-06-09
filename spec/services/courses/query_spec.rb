@@ -11,8 +11,7 @@ RSpec.describe Courses::Query do
 
     it "orders courses by name in ascending order" do
       query = Courses::Query.new
-      course_names = query.courses.map(&:name)
-      expect(course_names).to eq(course_names.sort)
+      expect(query.courses).to eq(Course.order(name: :asc))
     end
   end
 
