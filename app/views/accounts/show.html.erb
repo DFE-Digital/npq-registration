@@ -7,9 +7,6 @@
   <% else %>
     <h1 class="govuk-heading-l"><%= title ||= t(".pural_title") %></h1>
   <% end %>
-  <div class="govuk-inset-text">
-    <%= link_to_identity_account(request.original_url, text: "Visit your DfE Identity account") %> to check or change your personal details.
-  </div>
 <% end %>
 
 <% if Time.zone.now > Time.zone.local(2024, 4, 2) %>
