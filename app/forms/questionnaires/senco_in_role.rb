@@ -61,6 +61,6 @@ module Questionnaires
     end
 
     delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
-             :approved_itt_provider?, :works_in_another_setting?, :referred_by_return_to_teaching_adviser?, :trn, to: :query_store
+             :approved_itt_provider?, :works_in_another_setting?, :referred_by_return_to_teaching_adviser?, to: :query_store
   end
 end

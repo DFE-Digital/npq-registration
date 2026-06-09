@@ -59,7 +59,6 @@ module Questionnaires
     delegate :approved_itt_provider?,
              :course,
              :inside_catchment?,
-             :trn,
              to: :query_store
 
     def new_headteacher?

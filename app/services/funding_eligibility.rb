@@ -227,7 +227,7 @@ private
   end
 
   def user
-    User.find_by(ecf_id: user_ecf_id)
+    @user ||= User.find_by(ecf_id: user_ecf_id)
   end
 
   def accepted_applications
