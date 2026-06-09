@@ -12,35 +12,50 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
     scenario "Service prompts to register for email updates using DfE Identity login" do
       visit "/"
+      expect(page).to have_current_path(registration_closed_path)
       expect(page).to have_content("Registration is temporarily closed")
       expect(page).to be_accessible
 
       page.click_button("Sign up for email updates")
-
       expect(page).to have_current_path(new_email_update_path)
       expect(page).to have_content("Get email updates about registration opening")
       expect(page).to be_accessible
     end
+
+    context "when registration reopens" do
+      before { open_registration! }
+
+      scenario "registration closed page redirects to home page" do
+        visit registration_closed_path
+        expect(page).to have_current_path("/")
+      end
+    end
   end
 
-  context "when registration is open" do
+  context "when registration closes whilst in the middle of a registration journey" do
     include_context "with stubbed Teacher Auth OmniAuth responses"
     include_context "with stubbed Teaching Record System person API"
 
-    before { open_registration! }
-
-    scenario "Services closes while registration in progress" do
+    before do
       visit "/"
-      expect(page).to have_text("Before you start")
       page.click_button("Start now")
-
       choose_course_start_date
-
-      # Registration is now closed
       close_registration!
       page.click_button("Continue")
+    end
 
+    scenario "the registration closed step is shown" do
+      expect(page).to have_current_path(registration_wizard_show_path(:closed))
       expect(page).to have_content("Registration has closed temporarily")
+    end
+
+    context "when registration reopens" do
+      before { open_registration! }
+
+      scenario "registration closed step redirects to home page" do
+        visit registration_wizard_show_path(:closed)
+        expect(page).to have_current_path("/")
+      end
     end
   end
 
@@ -68,19 +83,15 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
       expect(page).to have_content("Added #{email}")
 
       click_link("Sign out")
-
       visit "/closed_registration_exception"
-
       click_on("Start now")
 
       expect(page).to have_content("Registration has closed temporarily")
 
       Flipper.enable(Feature::CLOSED_REGISTRATION_ENABLED)
-
       visit "/closed_registration_exception"
       click_on("Start now")
-
-      choose_course_start_date
+      expect(page).to have_current_path("/registration/course-start-date")
     end
 
     scenario "When user is deleted" do
@@ -156,6 +167,23 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
       click_on("Start now")
 
       expect_page_to_have(path: "/registration/closed")
+    end
+
+    context "when registration reopens" do
+      before do
+        visit "/"
+        sign_in_as(super_admin)
+        visit "/npq-separation/admin/registration-closed/closed-registration-users"
+        fill_in("Email address", with: email)
+        click_on("Add user")
+        click_link("Sign out")
+        open_registration!
+      end
+
+      scenario "the late registration page redirects to the home page" do
+        visit "/closed_registration_exception"
+        expect(page).to have_current_path("/")
+      end
     end
   end
 
