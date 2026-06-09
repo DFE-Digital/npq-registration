@@ -13,6 +13,7 @@ RSpec.describe FundingEligibility, :eligibility_scenarios do
       new_headteacher: false,
       employment_type:,
       childminder:,
+      preschool_class_as_part_of_school:,
       referred_by_return_to_teaching_adviser:,
       work_setting:,
     )
@@ -50,6 +51,7 @@ RSpec.describe FundingEligibility, :eligibility_scenarios do
         let(:expected_eligibility) { scenario["Expected eligibility value"] }
         let(:employment_type) { nil }
         let(:childminder) { nil }
+        let(:preschool_class_as_part_of_school) { nil }
         let(:referred_by_return_to_teaching_adviser) { nil }
         let(:institution) { build(:school, :funding_eligible_establishment_type_code) }
         let(:user) { build(:user, :with_teacher_auth) }
@@ -92,6 +94,7 @@ RSpec.describe FundingEligibility, :eligibility_scenarios do
           let(:work_setting) { "early_years_or_childcare" }
           let(:institution) { build(:private_childcare_provider) }
         when ["early years or childcare", "pre-school class or nursery that's part of a school"]
+          let(:preschool_class_as_part_of_school) { true }
           let(:work_setting) { "early_years_or_childcare" }
         when ["academy trust"]
           let(:work_setting) { Questionnaires::WorkSetting::AN_ACADEMY_TRUST }
@@ -119,7 +122,7 @@ RSpec.describe FundingEligibility, :eligibility_scenarios do
           let(:institution) { nil }
           let(:referred_by_return_to_teaching_adviser) { false }
         else
-          raise "Unknown work setting type and work setting combination: #{work_setting_type}, #{work_setting}"
+          fail "Unknown work setting type and work setting combination: #{work_setting_type}, #{work_setting}"
         end
 
         before do
@@ -148,7 +151,7 @@ RSpec.describe FundingEligibility, :eligibility_scenarios do
           when "no"
             expect(funding_eligibility.funded?).to be false
           else
-            raise "unexpected eligibility value in CSV: >>#{expected_eligibility}<<"
+            fail "unexpected eligibility value in CSV: #{expected_eligibility}"
           end
         end
       end

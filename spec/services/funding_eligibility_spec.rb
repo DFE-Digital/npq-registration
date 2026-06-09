@@ -11,6 +11,7 @@ RSpec.describe FundingEligibility do
                         new_headteacher: (new_headteacher == "yes"),
                         employment_type:,
                         childminder: (kind_of_nursery == "childminder"),
+                        preschool_class_as_part_of_school: (kind_of_nursery == "preschool_class_as_part_of_school"),
                         referred_by_return_to_teaching_adviser: (referred_by_return_to_teaching_adviser == "yes"),
                         work_setting:)
   end
@@ -80,6 +81,7 @@ RSpec.describe FundingEligibility do
     it { is_expected.to have_attributes new_headteacher: false }
     it { is_expected.to have_attributes employment_type: }
     it { is_expected.to have_attributes childminder: false }
+    it { is_expected.to have_attributes preschool_class_as_part_of_school: false }
     it { is_expected.to have_attributes work_setting: }
     it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: false }
     it { is_expected.not_to respond_to :lead_mentor }
@@ -102,6 +104,12 @@ RSpec.describe FundingEligibility do
       before { store["kind_of_nursery"] = "childminder" }
 
       it { is_expected.to have_attributes childminder: true }
+    end
+
+    context "with preschool class as part of school" do
+      before { store["kind_of_nursery"] = "preschool_class_as_part_of_school" }
+
+      it { is_expected.to have_attributes preschool_class_as_part_of_school: true }
     end
 
     context "with new headteacher" do
@@ -333,7 +341,7 @@ RSpec.describe FundingEligibility do
         end
       end
 
-      context "and the institution is a pre-school or nursery" do
+      context "and the institution is a pre-school or nursery that is part of a school" do
         let(:kind_of_nursery) { "preschool_class_as_part_of_school" }
         let(:institution) { build(:school) }
 
