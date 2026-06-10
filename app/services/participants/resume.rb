@@ -25,6 +25,8 @@ module Participants
     end
 
     def send_email
+      return if application.user.email.blank?
+
       ApplicationResumedMailer.application_resumed_mail(
         to: application.user.email,
         full_name: application.user.full_name,

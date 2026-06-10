@@ -49,6 +49,15 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       service.accept
     end
 
+    context "when the user has no email address" do
+      let(:user) { create(:user, :with_verified_trn, :archived, email: nil) }
+
+      it "does not send an email" do
+        expect(ApplicationAcceptedMailer).not_to send_mail(:application_accepted_mail)
+        service.accept
+      end
+    end
+
     describe "validations" do
       it { is_expected.to validate_presence_of(:application).with_message("The entered '#/application' is missing from your request. Check details and try again.") }
 

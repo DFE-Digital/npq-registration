@@ -68,6 +68,16 @@ RSpec.describe Applications::Reject, type: :model do
       service.reject
     end
 
+    context "when the user has no email address" do
+      let(:user) { create(:user, :archived, email: nil) }
+      let(:application) { create(:application, :pending, user:) }
+
+      it "does not send an email" do
+        expect(ApplicationRejectedMailer).not_to send_mail(:application_rejected_mail)
+        service.reject
+      end
+    end
+
     describe "refresh token clearing" do
       let(:user) { create(:user, :with_fresh_refresh_token, trn: nil, token: "live-token") }
       let(:application) { create(:application, :pending, user:) }

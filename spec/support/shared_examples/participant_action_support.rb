@@ -118,6 +118,21 @@ RSpec.shared_examples "a participant state transition" do |action, from_states, 
                          ecf_id: application.ecf_id)
           perform_action
         end
+
+        context "when the participant has no email address" do
+          before do
+            application.user.update_columns(
+              email: nil,
+              archived_email: "archived@example.com",
+              archived_at: Time.zone.now,
+            )
+          end
+
+          it "does not send a notification email" do
+            expect(mailers[to_state][:mailer]).not_to send_mail(mailers[to_state][:mailer_action])
+            perform_action
+          end
+        end
       end
     end
 
