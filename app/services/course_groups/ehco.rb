@@ -28,6 +28,8 @@ module CourseGroups
     end
 
     def cohort_with_multiple_schedules?
+      return false if cohort.identifier == "2026a" # 2026 Spring non-scholarship cohort
+
       (2022..).include?(cohort.start_year)
     end
 

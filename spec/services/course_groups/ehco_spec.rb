@@ -8,15 +8,21 @@ RSpec.describe CourseGroups::Ehco do
   subject { described_class.new(course_group:, cohort:, schedule_date:) }
 
   describe "#schedule" do
-    let!(:november_schedule) { create(:schedule, :npq_ehco_november, course_group:, cohort:) }
-    let!(:december_schedule) { create(:schedule, :npq_ehco_december, course_group:, cohort:) }
-    let!(:march_schedule) { create(:schedule, :npq_ehco_march, course_group:, cohort:) }
-    let!(:june_schedule) { create(:schedule, :npq_ehco_june, course_group:, cohort:) }
+    before { schedules }
+
+    let :schedules do
+      {
+        november: create(:schedule, :npq_ehco_november, course_group:, cohort:),
+        december: create(:schedule, :npq_ehco_december, course_group:, cohort:),
+        march: create(:schedule, :npq_ehco_march, course_group:, cohort:),
+        june: create(:schedule, :npq_ehco_june, course_group:, cohort:),
+      }
+    end
 
     context "when date is between September and November of cohort start year" do
       it "returns NPQ EHCO November schedule" do
         travel_to Date.new(cohort.start_year, 9, 1) do
-          expect(subject.schedule).to eq(november_schedule)
+          expect(subject.schedule).to eq(schedules[:november])
         end
       end
     end
@@ -24,7 +30,7 @@ RSpec.describe CourseGroups::Ehco do
     context "when date is between December of cohort start year and February of the next year" do
       it "returns NPQ EHCO December schedule" do
         travel_to Date.new(cohort.start_year, 12, 1) do
-          expect(subject.schedule).to eq(december_schedule)
+          expect(subject.schedule).to eq(schedules[:december])
         end
       end
     end
@@ -32,7 +38,7 @@ RSpec.describe CourseGroups::Ehco do
     context "when date is between March and May of the next year" do
       it "returns NPQ EHCO March schedule" do
         travel_to Date.new(cohort.start_year + 1, 3, 1) do
-          expect(subject.schedule).to eq(march_schedule)
+          expect(subject.schedule).to eq(schedules[:march])
         end
       end
     end
@@ -40,7 +46,7 @@ RSpec.describe CourseGroups::Ehco do
     context "when date is between June and September of the next year" do
       it "returns NPQ EHCO June schedule" do
         travel_to Date.new(cohort.start_year + 1, 6, 1) do
-          expect(subject.schedule).to eq(june_schedule)
+          expect(subject.schedule).to eq(schedules[:june])
         end
       end
     end
@@ -48,7 +54,7 @@ RSpec.describe CourseGroups::Ehco do
     context "when date range exceeds the current cohort" do
       it "returns default schedule for cohort" do
         travel_to Date.new(cohort.start_year + 1, 10, 1) do
-          expect(subject.schedule).to eq(june_schedule)
+          expect(subject.schedule).to eq(schedules[:june])
         end
       end
     end
@@ -61,6 +67,20 @@ RSpec.describe CourseGroups::Ehco do
 
       it "returns NPQ EHCO June schedule" do
         expect(subject.schedule).to eq(june_schedule_2021)
+      end
+    end
+
+    context "when selected cohort is non-scholarship funded 2026 spring cohort" do
+      let(:cohort) { create(:cohort, start_year: 2026, suffix: "a") }
+
+      let :schedules do
+        {
+          march: create(:schedule, :npq_ehco_march, course_group:, cohort:),
+        }
+      end
+
+      it "returns NPQ EHCO March schedule" do
+        expect(subject.schedule).to eq(schedules[:march])
       end
     end
   end
