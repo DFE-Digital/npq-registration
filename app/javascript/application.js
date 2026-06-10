@@ -3,6 +3,7 @@ require.context('govuk-frontend/dist/govuk/assets');
 
 import Rails from 'rails-ujs';
 import accessibleAutocomplete from 'accessible-autocomplete';
+import { initCrossServiceHeader } from '@govuk-one-login/service-header/dist/scripts/service-header';
 
 import institutionPicker from "./institution-picker";
 import ittProviderPicker from "./itt-provider-picker.js";
@@ -17,6 +18,7 @@ window.GOVUKFrontend = GOVUKFrontend;
 
 window.onload = function init() {
   window.GOVUKFrontend.initAll();
+  initCrossServiceHeader();
 };
 
 if (document.querySelector('#school-picker')) {

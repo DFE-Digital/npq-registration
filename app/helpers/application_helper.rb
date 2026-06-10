@@ -110,6 +110,10 @@ module ApplicationHelper
   def service_navigation_items
     return [] unless current_user
 
+    if current_user.teacher_auth_provider?
+      return [npq_account_navigation_item].compact
+    end
+
     [
       auth_provider_navigation_item(current_user),
       npq_account_navigation_item,
@@ -127,11 +131,7 @@ module ApplicationHelper
   end
 
   def auth_provider_navigation_item(current_user)
-    onelogin_home_uri = Rails.configuration.x.teacher_auth.onelogin_home_uri
-
-    if current_user.teacher_auth_provider? && onelogin_home_uri.present?
-      { href: onelogin_home_uri, text: "OneLogin account" }
-    elsif current_user.get_an_identity_provider?
+    if current_user.get_an_identity_provider?
       { href: identity_link_uri(request.original_url), text: "DfE Identity account" }
     end
   end
