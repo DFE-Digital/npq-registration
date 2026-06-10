@@ -46,7 +46,7 @@
           question.name,
           institution.identifier,
           label: { text: institution.display_name },
-          hint: { text: institution.address_string },
+          hint: { text: [institution.address_string, institution.urn].reject(&:blank?).join(" - ") },
           link_errors: index.zero?,
         )
       %>

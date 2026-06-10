@@ -25,8 +25,20 @@ RSpec.describe InstitutionsController do
 
       parsed_response = JSON.parse(response.body)
 
-      expect(parsed_response.sample.keys).to eql(%w[identifier name address])
+      expect(parsed_response.sample.keys).to eql(%w[identifier urn name address])
       expect(parsed_response.sample["address"]).to be_a(String)
+    end
+
+    it "includes the urn for schools and nil for local authorities" do
+      get "/institutions.json?location=&name=hea"
+
+      parsed_response = JSON.parse(response.body)
+
+      school_result = parsed_response.find { |i| i["identifier"].start_with?("School-") }
+      local_authority_result = parsed_response.find { |i| i["identifier"].start_with?("LocalAuthority-") }
+
+      expect(school_result["urn"]).to be_present
+      expect(local_authority_result["urn"]).to be_nil
     end
 
     it "searches using a postcode" do
@@ -34,7 +46,7 @@ RSpec.describe InstitutionsController do
 
       parsed_response = JSON.parse(response.body)
 
-      expect(parsed_response.sample.keys).to eql(%w[identifier name address])
+      expect(parsed_response.sample.keys).to eql(%w[identifier urn name address])
       expect(parsed_response.sample["address"]).to be_a(String)
     end
   end

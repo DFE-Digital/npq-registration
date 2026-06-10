@@ -79,6 +79,7 @@ RSpec.feature "Choose a childcare provider page", :with_default_schedules, type:
         expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_childcare_provider_fallback"))
         expect(page).to have_content("an open school")
         expect(page).to have_content("another open school")
+        expect(page).to have_content("100000")
         page.choose "an open school"
       end
     end
