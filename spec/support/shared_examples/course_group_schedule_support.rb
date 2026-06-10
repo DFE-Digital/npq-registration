@@ -42,6 +42,44 @@ RSpec.shared_examples "leadership and specialist #schedule" do
     it { is_expected.to eq(autumn_schedule) }
   end
 
+  context "when cohort is 2026a" do
+    before { spring_schedule }
+
+    let(:cohort) { create(:cohort, start_year: 2026, suffix: "a") }
+    let(:spring_schedule) { create(:schedule, spring_schedule_identifier, course_group:, cohort:) }
+
+    context "when date is summer 2026" do
+      let(:date) { Date.new(2026, 7, 1) }
+
+      it { is_expected.to eq(spring_schedule) }
+    end
+
+    context "when date is early 2027" do
+      let(:date) { Date.new(2027, 2, 1) }
+
+      it { is_expected.to eq(spring_schedule) }
+    end
+  end
+
+  context "when cohort is 2026b" do
+    before { autumn_schedule }
+
+    let(:cohort) { create(:cohort, start_year: 2026, suffix: "b") }
+    let(:autumn_schedule) { create(:schedule, autumn_schedule_identifier, course_group:, cohort:) }
+
+    context "when date is summer 2026" do
+      let(:date) { Date.new(2026, 7, 1) }
+
+      it { is_expected.to eq(autumn_schedule) }
+    end
+
+    context "when date is early 2027" do
+      let(:date) { Date.new(2027, 2, 1) }
+
+      it { is_expected.to eq(autumn_schedule) }
+    end
+  end
+
   context "when course is in both autumn and spring schedules (like 2021-2023 cohorts)" do
     let!(:spring_schedule) { create(:schedule, spring_schedule_identifier, course_group:, cohort:) }
     let!(:autumn_schedule) { create(:schedule, autumn_schedule_identifier, course_group:, cohort:) }
