@@ -46,35 +46,27 @@ module Helpers
     end
 
     def choose_a_private_childcare_provider(js:, urn:, name:)
-      provider = PrivateChildcareProvider.create!(
-        provider_urn: urn,
-        provider_name: name,
-        address_1: "street 1",
-        town: "manchester",
-        early_years_individual_registers: %w[CCR VCR EYR],
-      )
-
       if js
         expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
           expect(page).to have_text("Enter your or your employer’s unique reference number (URN)")
 
           within ".npq-js-reveal" do
-            page.fill_in "private-childcare-provider-picker", with: provider.urn
+            page.fill_in "private-childcare-provider-picker", with: urn
           end
 
-          expect(page).to have_content("#{provider.urn} - #{provider.name} - #{provider.address_1}, #{provider.town}")
+          expect(page).to have_content("#{urn} - #{name} - ")
 
           page.find("#private-childcare-provider-picker__option--0").click
         end
       else
         expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
           within(".npq-js-hidden") do
-            page.fill_in("Enter your or your employer’s unique reference number (URN)", with: provider.urn)
+            page.fill_in("Enter your or your employer’s unique reference number (URN)", with: urn)
           end
         end
 
         expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
-          page.choose([provider.urn, provider.name].compact.join(" - "))
+          page.choose([urn, name].compact.join(" - "))
         end
       end
     end

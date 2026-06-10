@@ -30,6 +30,7 @@ module Questionnaires
             name: :childcare_name,
             locale_name: :choose_childcare_provider_search,
           ),
+          data_attributes: { "selected-institution-name": selected_institution },
         ),
       ]
     end
@@ -85,6 +86,10 @@ module Questionnaires
 
     def institution_location
       wizard.store["institution_location"]
+    end
+
+    def selected_institution
+      [institution.name, institution.address].compact.join(" - ") if institution
     end
 
     def validate_childcare_provider_name_returns_results

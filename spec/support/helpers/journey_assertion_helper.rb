@@ -56,5 +56,29 @@ module Helpers
       expect(back_steps.reverse).to eq @steps_visited
       visit starting_path
     end
+
+    def expect_school_picker_to_have_selected(js:, school:)
+      if js
+        expect(page.find("#school-picker").value).to eq [school.name, school.address].join(" - ")
+      else
+        expect(page).to have_checked_field(school.name)
+      end
+    end
+
+    def expect_childcare_provider_picker_to_have_selected(js:, nursery:)
+      if js
+        expect(page.find("#nursery-picker").value).to eq [nursery.name, nursery.address].join(" - ")
+      else
+        expect(page).to have_checked_field(nursery.name)
+      end
+    end
+
+    def expect_private_childcare_provider_picker_to_have_selected(js:, nursery:)
+      if js
+        expect(page.find("#private-childcare-provider-picker").value).to eq [nursery.name, nursery.address].join(" - ")
+      else
+        expect(page).to have_checked_field(nursery.name)
+      end
+    end
   end
 end

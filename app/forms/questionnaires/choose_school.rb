@@ -47,6 +47,7 @@ module Questionnaires
             name: :institution_name,
             locale_name: :choose_school_search,
           ),
+          data_attributes: { "selected-institution-name": selected_institution },
         ),
       ]
     end
@@ -79,6 +80,10 @@ module Questionnaires
       ::Registration::Institution.fetch(identifier: institution_identifier,
                                         works_in_school: true,
                                         works_in_childcare: false)
+    end
+
+    def selected_institution
+      [institution.name, institution.address].compact.join(" - ") if institution
     end
 
     def validate_school_name_returns_results

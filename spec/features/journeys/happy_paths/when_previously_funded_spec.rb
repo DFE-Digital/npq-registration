@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -58,7 +58,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.choose("Yes", visible: :all)
     end
 
-    choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
+    choose_a_private_childcare_provider(js:, urn: default_nursery.provider_urn, name: default_nursery.name)
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -124,7 +124,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
           "First 5 years of headship" => "Yes",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
-          "Ofsted unique reference number (URN)" => "EY123456 – searchable childcare provider – street 1, manchester",
+          "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Early years setting" => "Private nursery",
           "Workplace in England" => "Yes",
         },
@@ -157,7 +157,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "kind_of_nursery" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
-      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY123456").id,
+      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY487263").id,
       "referred_by_return_to_teaching_adviser" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
@@ -191,8 +191,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "ehco_new_headteacher" => "yes",
         "funding_eligiblity_status_code" => "previously_funded",
         "has_ofsted_urn" => "yes",
-        "private_childcare_identifier" => "PrivateChildcareProvider-EY123456",
-        "private_childcare_name" => js ? "" : "EY123456",
+        "private_childcare_identifier" => "PrivateChildcareProvider-EY487263",
+        "private_childcare_name" => js ? "" : "EY487263",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
