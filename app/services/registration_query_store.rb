@@ -154,6 +154,10 @@ class RegistrationQueryStore
     store["kind_of_nursery"] == "childminder"
   end
 
+  def preschool_class_as_part_of_school?
+    store["kind_of_nursery"] == "preschool_class_as_part_of_school"
+  end
+
   def work_setting
     store["work_setting"]
   end

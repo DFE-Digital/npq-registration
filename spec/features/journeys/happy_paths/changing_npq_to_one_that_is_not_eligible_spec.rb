@@ -62,7 +62,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Early years or childcare", visible: :all)
     end
 
-    public_kind_of_nursery_key = Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
+    public_kind_of_nursery_key = Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.first
     public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
