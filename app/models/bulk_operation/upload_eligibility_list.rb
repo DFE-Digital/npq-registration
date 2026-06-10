@@ -5,10 +5,14 @@ class BulkOperation::UploadEligibilityList < BulkOperation
     ActiveRecord::Base.transaction do
       eligibility_list_type_class.delete_all
       csv_from_active_storage.each do |row|
-        eligibility_list_type_class.find_or_create_by!(identifier: identifier(row).strip)
+        identifier = identifier(row)&.strip
+        eligibility_list_type_class.find_or_create_by!(identifier:) if identifier.present?
       end
       update!(finished_at: Time.zone.now)
     end
+  rescue StandardError => e
+    update!(finished_at: Time.zone.now, result: "There was an unexpected error processing the file: #{e.message}")
+    Sentry.capture_exception(e)
   end
 
 private

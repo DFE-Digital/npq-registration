@@ -130,4 +130,21 @@ RSpec.feature "Updating eligibility lists", :no_js, type: :feature do
 
     expect(page).to have_content "Uploaded file is wrong format"
   end
+
+  context "when there is an unexpected error" do
+    before do
+      allow(EligibilityList::Pp50School).to receive(:find_or_create_by!).and_raise(StandardError.new("Unexpected error"))
+      travel_to Time.zone.local(2026, 6, 4, 15, 23)
+    end
+
+    scenario "it shows the error message and finished_at time" do
+      within "div#pp50-schools" do
+        attach_file "bulk_operation_upload_eligibility_list_pp50_school[file]", pp50_schools_csv_file.path
+        perform_enqueued_jobs { click_button "Update eligibility list" }
+      end
+
+      expect(page).to have_content "Failed processing at 4 Jun 2026 3:23pm - There was an unexpected error processing the file: Unexpected error"
+      expect(page).to have_button "Update eligibility list"
+    end
+  end
 end

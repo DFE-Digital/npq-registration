@@ -165,5 +165,28 @@ RSpec.describe BulkOperation::UploadEligibilityList, type: :model do
         expect(EligibilityList::DisadvantagedEarlyYearsSchool.where(identifier: urn, identifier_type: :urn).count).to eq 1
       end
     end
+
+    context "when there are blank lines in the CSV file" do
+      let(:file) { tempfile_with_bom("#{EligibilityList::Pp50School::IDENTIFIER_CSV_HEADERS.first}\n100001\n\n100003\n").open }
+
+      it "ignores blank lines and creates new records" do
+        subject
+        expect(EligibilityList::Pp50School.pluck(:identifier)).to contain_exactly("100001", "100003")
+      end
+    end
+
+    context "when there is an unexpected error processing the file" do
+      before do
+        allow(EligibilityList::Pp50School).to receive(:find_or_create_by!).and_raise(StandardError.new("Something went wrong"))
+      end
+
+      it "updates the bulk operation with an error message" do
+        subject
+        expect(bulk_operation).to have_attributes(
+          finished_at: be_present,
+          result: "There was an unexpected error processing the file: Something went wrong",
+        )
+      end
+    end
   end
 end
