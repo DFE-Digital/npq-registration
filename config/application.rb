@@ -81,7 +81,7 @@ module NpqRegistration
     config.skylight.environments += %w[review sandbox staging]
 
     # TeacherAuth configuration
-    config.x.teacher_auth.enabled = Rails.env.local?
+    config.x.teacher_auth.enabled = true
     config.x.teacher_auth.domain = ENV["TEACHER_AUTH_DOMAIN"]
     config.x.teacher_auth.client_id = ENV["TEACHER_AUTH_CLIENT_ID"]
     config.x.teacher_auth.client_secret = ENV["TEACHER_AUTH_CLIENT_SECRET"]
