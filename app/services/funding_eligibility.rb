@@ -50,6 +50,7 @@ class FundingEligibility
               :new_headteacher,
               :employment_type,
               :childminder,
+              :preschool_class_as_part_of_school,
               :work_setting,
               :referred_by_return_to_teaching_adviser
 
@@ -71,6 +72,7 @@ class FundingEligibility
           new_headteacher: query_store.new_headteacher?,
           employment_type: query_store.employment_type,
           childminder: query_store.childminder?,
+          preschool_class_as_part_of_school: query_store.preschool_class_as_part_of_school?,
           referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
           work_setting: query_store.work_setting)
     end
@@ -86,6 +88,7 @@ class FundingEligibility
                  new_headteacher:,
                  employment_type:,
                  childminder:,
+                 preschool_class_as_part_of_school:,
                  referred_by_return_to_teaching_adviser:,
                  work_setting:)
     @cohort = cohort
@@ -97,6 +100,7 @@ class FundingEligibility
     @user_ecf_id = user_ecf_id
     @employment_type = employment_type
     @childminder = childminder
+    @preschool_class_as_part_of_school = preschool_class_as_part_of_school
     @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
     @work_setting = work_setting
   end
@@ -143,6 +147,8 @@ private
 
   def childcare_policy
     if course.eyl?
+      return FUNDED_ELIGIBILITY_RESULT if preschool_class_as_part_of_school
+
       return FUNDED_ELIGIBILITY_RESULT unless childminder
 
       return FUNDED_ELIGIBILITY_RESULT if institution&.on_childminders_list?
