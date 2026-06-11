@@ -2,7 +2,17 @@
 
 If you have any questions or comments about these notes, please contact DfE via Microsoft Teams or email.
 
+## 2026 API changes released to production
+
+### 11 June 2026
+
+<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
+
+The `cohort_suffix` and `previous_names` API changes previously released to `sandbox`
+are now included in our production APIs.
+
 ## API changes for 2026 reopening
+
 ### 13 May 2026
 
 <strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
