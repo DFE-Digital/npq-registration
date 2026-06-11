@@ -25,6 +25,20 @@ RSpec.describe OauthToken, type: :model do
       it { is_expected.to include expiring_token }
       it { is_expected.not_to include recent_token }
     end
+
+    describe ".overdue_refresh" do
+      subject { described_class.overdue_refresh }
+
+      let(:overdue_token) do
+        create(:oauth_token, token_updated_at: (described_class::REFRESH_LIFETIME + described_class::REFRESH_OVERDUE_GRACE + 1.hour).ago)
+      end
+      let(:within_grace_token) do
+        create(:oauth_token, token_updated_at: (described_class::REFRESH_LIFETIME + 2.hours).ago)
+      end
+
+      it { is_expected.to include overdue_token }
+      it { is_expected.not_to include within_grace_token }
+    end
   end
 
   describe "validations" do

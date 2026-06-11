@@ -1,5 +1,6 @@
 class OauthToken < ApplicationRecord
   REFRESH_LIFETIME = 72.hours.freeze
+  REFRESH_OVERDUE_GRACE = 8.hours.freeze
 
   belongs_to :user
 
@@ -9,6 +10,9 @@ class OauthToken < ApplicationRecord
 
   scope :needs_refresh,
         -> { refresh_token.where(token_updated_at: ...REFRESH_LIFETIME.ago) }
+
+  scope :overdue_refresh,
+        -> { refresh_token.where(token_updated_at: ...(REFRESH_LIFETIME + REFRESH_OVERDUE_GRACE).ago) }
 
   encrypts :token
 
