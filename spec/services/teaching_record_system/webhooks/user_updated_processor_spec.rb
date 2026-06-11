@@ -77,12 +77,19 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       let(:webhook_message) { create(:trs_user_updated_webhook_message, user_uid: user_uid, user_trn: user.trn) }
       let(:user_uid) { "nonexistent-uid" }
 
-      it "marks the webhook message as failed" do
+      it "marks the webhook message as processed" do
         subject
         expect(webhook_message.reload).to have_attributes(
-          status: "failed",
-          status_comment: "No user found with uid: #{user_uid}",
+          status: "processed",
         )
+      end
+    end
+
+    context "when the user UID is blank" do
+      let(:webhook_message) { create(:trs_user_updated_webhook_message, user_uid: nil, user_trn: user.trn) }
+
+      it "marks the webhook message as processed" do
+        expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
       end
     end
   end

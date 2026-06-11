@@ -9,9 +9,8 @@ class TeachingRecordSystem::Webhooks::Base
 
   def call
     return incorrect_format_failure unless correct_format?
-    return no_user_found_failure unless user
 
-    process!
+    process! if user
     webhook_message.make_processed!
   end
 
@@ -27,10 +26,6 @@ private
 
   def incorrect_format_failure
     record_error("Invalid message format")
-  end
-
-  def no_user_found_failure
-    record_error("No user found with uid: #{user_uid}", send_to_sentry: false)
   end
 
   def record_error(message, send_to_sentry: true)
