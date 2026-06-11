@@ -8,7 +8,7 @@ RSpec.describe "accounts/show.html.erb", type: :view do
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :with_teacher_auth) }
   let(:applications) { create_list :application, 2, user: }
 
   it { is_expected.to have_content "Register for another NPQ" }
@@ -31,5 +31,11 @@ RSpec.describe "accounts/show.html.erb", type: :view do
     it { is_expected.to have_css ".govuk-summary-card", count: 2 }
     it { is_expected.to have_link "View details", href: accounts_user_registration_path(active) }
     it { is_expected.not_to have_link "View details", href: accounts_user_registration_path(expired) }
+  end
+
+  context "when signed in via Get an Identity" do
+    let(:user) { create(:user, :with_get_an_identity_id) }
+
+    it { is_expected.not_to have_content "Register for another NPQ" }
   end
 end
