@@ -55,13 +55,12 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        trn:,
-        get_an_identity_id:,
+        user_ecf_id: query_store.user_ecf_id,
         query_store:,
       )
     end
 
     delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
-             :approved_itt_provider?, :get_an_identity_id, :works_in_another_setting?, :referred_by_return_to_teaching_adviser?, :trn, to: :query_store
+             :approved_itt_provider?, :works_in_another_setting?, :referred_by_return_to_teaching_adviser?, to: :query_store
   end
 end

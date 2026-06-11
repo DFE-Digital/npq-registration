@@ -51,8 +51,7 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        trn:,
-        get_an_identity_id:,
+        user_ecf_id: query_store.user_ecf_id,
         query_store:,
       )
     end
@@ -60,8 +59,6 @@ module Questionnaires
     delegate :approved_itt_provider?,
              :course,
              :inside_catchment?,
-             :trn,
-             :get_an_identity_id,
              to: :query_store
 
     def new_headteacher?
