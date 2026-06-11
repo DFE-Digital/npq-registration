@@ -18,7 +18,7 @@ RSpec.feature "Account", :no_js, type: :feature do
     scenario "when not logged in, it redirects to sign in" do
       visit "/account"
       expect(page).to be_accessible
-      expect(page).to have_current_path("/sign-in")
+      expect(page).to have_current_path("/")
     end
 
     context "when logged in" do
@@ -86,7 +86,7 @@ RSpec.feature "Account", :no_js, type: :feature do
     scenario "when not logged in, it redirects to sign in" do
       visit(accounts_user_registration_path(application.id))
 
-      expect(page).to have_current_path("/sign-in")
+      expect(page).to have_current_path("/")
     end
   end
 end
