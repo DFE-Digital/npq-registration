@@ -640,7 +640,7 @@ GEM
       sass (~> 3.5, >= 3.5.5)
     scss_lint-govuk (0.2.0)
       scss_lint
-    secure_headers (7.2.0)
+    secure_headers (7.3.0)
       cgi (>= 0.1)
     securerandom (0.4.1)
     semantic_logger (4.17.0)
