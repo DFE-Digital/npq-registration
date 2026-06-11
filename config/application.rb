@@ -88,7 +88,7 @@ module NpqRegistration
     config.x.teacher_auth.onelogin_home_uri = ENV["TEACHER_AUTH_ONELOGIN_HOME_URI"]
 
     # API configuration
-    config.x.api.previous_names = Rails.env.local?
-    config.x.api.cohort_suffix = Rails.env.local?
+    config.x.api.previous_names = true
+    config.x.api.cohort_suffix = true
   end
 end
