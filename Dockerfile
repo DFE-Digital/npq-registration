@@ -1,5 +1,5 @@
 # Build compilation image
-FROM ruby:3.4.9-alpine3.23 AS builder
+FROM s189d01tsccluster4dockerhub.azurecr.io/dockerhub/library/ruby:3.4.9-alpine3.23 AS builder
 
 # The application runs from /app
 WORKDIR /app
@@ -54,7 +54,7 @@ RUN rm -rf node_modules log/* tmp/* /tmp && \
     find /usr/local/bundle/gems -name "*.html" -delete
 
 # Build runtime image
-FROM ruby:3.4.9-alpine3.23 AS production
+FROM s189d01tsccluster4dockerhub.azurecr.io/dockerhub/library/ruby:3.4.9-alpine3.23 AS production
 
 # The application runs from /app
 WORKDIR /app
