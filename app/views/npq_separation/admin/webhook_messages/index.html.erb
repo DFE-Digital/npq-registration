@@ -3,6 +3,40 @@
 
     <h1 class="govuk-heading-l">Webhook messages</h1>
 
+    <div class="admin-search-box">
+      <%= form_with method: :get do |f| %>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            <%=
+              f.govuk_collection_select(
+                :message_type,
+                @message_types,
+                :to_s,
+                :to_s,
+                options: { selected: params[:message_type], include_blank: "All" },
+                label: { text: "Message type", size: "s" },
+              )
+            %>
+          </div>
+
+          <div class="govuk-grid-column-one-half">
+            <%=
+              f.govuk_collection_select(
+                :status,
+                GetAnIdentity::WebhookMessage.statuses.keys,
+                :to_s,
+                :humanize,
+                options: { selected: params[:status], include_blank: "All" },
+                label: { text: "Status", size: "s" },
+              )
+            %>
+          </div>
+        </div>
+
+        <%= f.govuk_submit "Search" %>
+      <% end %>
+    </div>
+
     <%=
       govuk_table do |table|
         table.with_head do |head|
@@ -28,7 +62,7 @@
             end
           else
             body.with_row do |row|
-              row.with_cell(text: "No Webhook messages received yet")
+              row.with_cell(text: "No webhook messages found")
               row.with_cell
               row.with_cell
               row.with_cell
