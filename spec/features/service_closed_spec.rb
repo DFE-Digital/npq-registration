@@ -185,6 +185,17 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
         expect(page).to have_current_path("/")
       end
     end
+
+    context "when teacher auth is deactivated" do
+      before do
+        allow(Rails.configuration.x.teacher_auth).to receive(:enabled).and_return(false)
+      end
+
+      scenario "the late registration page redirects to the home page" do
+        visit "/closed_registration_exception"
+        expect(page).to have_current_path("/registration_closed")
+      end
+    end
   end
 
   context "when using email updates" do
