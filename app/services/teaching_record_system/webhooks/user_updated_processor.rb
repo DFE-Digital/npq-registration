@@ -32,8 +32,7 @@ module TeachingRecordSystem
       end
 
       def correct_format?
-        message["oneLoginUser"].present? &&
-          message["oneLoginUser"]["subject"].present?
+        message["oneLoginUser"].present?
       end
     end
   end
