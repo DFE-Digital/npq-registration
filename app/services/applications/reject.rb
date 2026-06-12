@@ -20,14 +20,7 @@ module Applications
       end
 
       application.reload
-
-      ApplicationRejectedMailer.application_rejected_mail(
-        to: application.user.email,
-        full_name: application.user.full_name,
-        provider_name: application.lead_provider.name,
-        course_name: application.course.name,
-        ecf_id: application.ecf_id,
-      ).deliver_later
+      send_email
 
       true
     end
@@ -55,6 +48,18 @@ module Applications
       return unless application.declarations.billable_or_changeable.any?
 
       errors.add(:application, :cannot_reject_with_declarations)
+    end
+
+    def send_email
+      return if application.user.email.blank?
+
+      ApplicationRejectedMailer.application_rejected_mail(
+        to: application.user.email,
+        full_name: application.user.full_name,
+        provider_name: application.lead_provider.name,
+        course_name: application.course.name,
+        ecf_id: application.ecf_id,
+      ).deliver_later
     end
   end
 end

@@ -94,6 +94,8 @@ module ParticipantOutcomes
     end
 
     def send_email_notification(outcome)
+      return if participant.email.blank?
+
       mail_params = {
         to: participant.email,
         full_name: participant.full_name,

@@ -341,6 +341,22 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
         create_outcome
       end
 
+      context "when the participant has no email address" do
+        before do
+          completed_declaration.user.update_columns(
+            email: nil,
+            archived_email: "archived@example.com",
+            archived_at: Time.zone.now,
+          )
+        end
+
+        it "does not send an email to the user" do
+          expect(ParticipantOutcomePassedMailer).not_to send_mail(:passed_mail)
+          expect(ParticipantOutcomeFailedMailer).not_to send_mail(:failed_mail)
+          create_outcome
+        end
+      end
+
       it "sets the created_outcome to the newly created outcome" do
         create_outcome
         expect(created_outcome).to have_attributes({
