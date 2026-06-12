@@ -25,5 +25,6 @@
   <h2 class="govuk-heading-m">Recently added</h2>
 
   <%= render "users", users: @users %>
+  <%= govuk_pagination(pagy: @pagy) %>
 <% end %>
 

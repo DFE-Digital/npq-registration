@@ -1,5 +1,6 @@
 class NpqSeparation::Admin::UsersController < NpqSeparation::AdminController
   MIN_SEARCH_LENGTH = 2
+  RECENT_USERS_PAGES = 10
 
   def index
     @performing_search = params.key?(:q)
@@ -7,9 +8,9 @@ class NpqSeparation::Admin::UsersController < NpqSeparation::AdminController
     @valid_search = search_term.present? && search_term.length >= MIN_SEARCH_LENGTH
 
     if @performing_search
-      @pagy, @users = pagy(scope) if @valid_search
+      @pagy, @users = pagy(search_scope) if @valid_search
     else
-      @users = User.order(created_at: :desc, id: :desc).limit(Pagy::DEFAULT[:limit])
+      @pagy, @users = pagy(recent_users_scope)
     end
   end
 
@@ -20,7 +21,13 @@ class NpqSeparation::Admin::UsersController < NpqSeparation::AdminController
 
 private
 
-  def scope
+  def search_scope
     AdminService::UsersSearch.new(q: params[:q]).call
+  end
+
+  def recent_users_scope
+    User
+      .order(created_at: :desc, id: :desc)
+      .limit(Pagy::DEFAULT[:limit] * RECENT_USERS_PAGES)
   end
 end
