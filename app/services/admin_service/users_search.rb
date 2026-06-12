@@ -31,7 +31,7 @@ private
   end
 
   def default_scope
-    User.left_joins(:applications).order(created_at: :desc)
+    User.left_joins(:applications).order(created_at: :desc, id: :desc)
   end
 
   def find_private_childcare_providers

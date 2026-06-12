@@ -5,30 +5,57 @@ RSpec.feature "User administration", :no_js, type: :feature do
 
   let(:users_per_page) { Pagy::DEFAULT[:limit] }
   let(:user) { User.first }
+  let(:users) { create_list(:user, users_per_page, :with_get_an_identity_id) }
 
   before do
-    create_list(:user, users_per_page, :with_get_an_identity_id)
+    users
     user.update!(national_insurance_number: "QQ123456C", preferred_name: "Jonny D")
     sign_in_as(create(:admin))
   end
 
   feature "listing users" do
+    let(:another_user) { create(:user, :with_teacher_auth, full_name: "Dave J") }
+
     scenario "viewing the list of users" do
+      another_user
+
       visit(npq_separation_admin_users_path)
 
       expect(page).to have_css("h1", text: "Users")
+      expect(page).to have_css("h2", text: "Recently added")
+      expect(page).to have_css("tbody tr:first-of-type td", text: another_user.trn)
+      expect(page).to have_css("tbody tr", count: users_per_page)
+      expect(page).to have_css("nav.govuk-pagination")
+
+      within("nav.govuk-pagination") do
+        click_on("2")
+      end
+
+      expect(page).to have_css("h1", text: "Users")
+      expect(page).to have_css("h2", text: "Recently added")
+      expect(page).to have_css("tbody tr", count: 1)
+    end
+
+    scenario "searching for users" do
+      visit(npq_separation_admin_users_path)
+
+      fill_in("Find a user", with: "J")
+      click_on("Search")
+      expect(page).to have_css(".govuk-inset-text", text: "at least 2")
 
       fill_in("Find a user", with: "Jo")
       click_on("Search")
+      expect(page).to have_css("h2", text: "Search results")
+      expect(page).to have_css("tbody tr", count: users_per_page)
 
-      User.all.find_each do |user|
+      User.find_each do |user|
         expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
         expect(page).to have_css("td", text: user.trn)
         expect(page).to have_css("td", text: user.created_at.to_date.to_formatted_s(:govuk))
       end
     end
 
-    scenario "navigating to the second page of users" do
+    scenario "navigating to the second page of search results" do
       create :user, :with_get_an_identity_id # exceed pagination threshold
 
       visit(npq_separation_admin_users_path)
