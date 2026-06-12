@@ -198,36 +198,26 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
 
-    context "when signed in with TeacherAuth" do
+    context "when signed in with TeacherAuth (One Login)" do
       let(:current_user) { create(:user, :with_teacher_auth) }
 
-      it { is_expected.to have_attributes length: 2 }
-      it { is_expected.to include({ text: "OneLogin account", href: "https://home.integration.account.gov.uk" }) }
-      it { is_expected.to include({ text: "Sign out", href: "/sign-out" }) }
-
-      context "without OneLogin home being set" do
-        before do
-          allow(Rails.configuration.x.teacher_auth)
-            .to receive(:onelogin_home_uri).and_return("")
-        end
-
-        it { is_expected.to have_attributes length: 1 }
-        it { is_expected.to include({ text: "Sign out", href: "/sign-out" }) }
-      end
+      it { is_expected.to be_empty }
+      it { is_expected.not_to include({ text: "OneLogin account", href: "https://home.integration.account.gov.uk" }) }
+      it { is_expected.not_to include({ text: "Sign out", href: "/sign-out" }) }
 
       context "with an existing application" do
         before { application }
 
         let(:application) { create(:application, user: current_user) }
 
-        it { is_expected.to have_attributes length: 3 }
+        it { is_expected.to have_attributes length: 1 }
         it { is_expected.to include({ text: "NPQ account", href: "/accounts/user_registrations/#{application.id}" }) }
       end
 
       context "with multiple applications" do
         before { create_list(:application, 2, user: current_user) }
 
-        it { is_expected.to have_attributes length: 3 }
+        it { is_expected.to have_attributes length: 1 }
         it { is_expected.to include({ text: "NPQ account", href: "/account" }) }
       end
     end

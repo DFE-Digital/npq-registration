@@ -15,7 +15,11 @@
 
     <a tabindex="0" href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <%= govuk_header %>
+    <% if current_user&.teacher_auth_provider? %>
+      <%= render partial: "layouts/shared/one_login_header" %>
+    <% else %>
+      <%= govuk_header %>
+    <% end %>
 
     <%=
       govuk_service_navigation(
