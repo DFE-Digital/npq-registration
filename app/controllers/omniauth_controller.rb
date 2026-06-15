@@ -76,8 +76,8 @@ class OmniauthController < Devise::OmniauthCallbacksController
     send_error_to_sentry(
       "Omniauth login failure",
       contexts: {
-        "Strategy" => { name: request.env["omniauth.error.strategy"].name },
-        "Error" => { "omniauth.error.type" => Base64.encode64(request.env["omniauth.error.type"].to_s) },
+        "Strategy" => { name: strategy_name },
+        "Error" => { "error.type" => request.env["omniauth.error.type"].to_s },
       },
     )
 
@@ -155,5 +155,14 @@ private
     request.env["omniauth.error.type"]
   rescue StandardError
     "unknown-error-type"
+  end
+
+  def strategy_name
+    # Anything with the word auth in gets filtered in Sentry
+    if request.env["omniauth.error.strategy"]&.name&.to_s == "teacher_auth"
+      return "onelogin"
+    end
+
+    request.env["omniauth.error.strategy"].name
   end
 end
