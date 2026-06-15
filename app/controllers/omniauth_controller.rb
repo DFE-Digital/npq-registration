@@ -45,6 +45,9 @@ class OmniauthController < Devise::OmniauthCallbacksController
       flash[:error] = failure_message
       redirect_to failed_sign_in_path
     end
+  rescue Users::FindOrCreateFromProviderData::TeacherAuthAccountExistsError
+    flash[:error] = "Your account is now registered with One Login. Please sign in using your One Login account."
+    redirect_to root_path(one_login: true)
   rescue StandardError => e
     id = @user.try(:id)
     Rails.logger.info("[GAI] #{e} raised, user_id=#{id} uid=#{try_to_extract_user_uid}")
