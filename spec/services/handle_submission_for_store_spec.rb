@@ -336,6 +336,24 @@ RSpec.describe HandleSubmissionForStore do
       it "enqueues SendApplicationSubmissionEmailJob" do
         expect { subject.call }.to have_enqueued_job(SendApplicationSubmissionEmailJob).exactly(:once).on_queue("default")
       end
+
+      context "when the application is for the Spring 2026 cohort" do
+        let(:cohort) { create(:cohort, start_year: 2026, suffix: "a") }
+
+        it "enqueues the email with the Spring 2026 template" do
+          expect { subject.call }.to have_enqueued_job(SendApplicationSubmissionEmailJob)
+            .with(hash_including(email_template: ApplicationSubmissionMailer::SPRING_2026_TEMPLATE_ID))
+        end
+      end
+
+      context "when the application is for a non-Spring-2026 cohort" do
+        let(:cohort) { create(:cohort, start_year: 2026, suffix: "b") }
+
+        it "enqueues the email with the default template" do
+          expect { subject.call }.to have_enqueued_job(SendApplicationSubmissionEmailJob)
+            .with(hash_including(email_template: ApplicationSubmissionMailer::TEMPLATE_ID))
+        end
+      end
     end
 
     context "when teacher catchment is not in the UK catchment area" do
