@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_05_115737) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_142546) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -392,6 +392,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_115737) do
     t.string "status", default: "pending"
     t.string "status_comment"
     t.datetime "updated_at", null: false
+    t.index ["message_type"], name: "index_get_an_identity_webhook_messages_on_message_type"
+    t.index ["status"], name: "index_get_an_identity_webhook_messages_on_status"
   end
 
   create_table "itt_providers", force: :cascade do |t|

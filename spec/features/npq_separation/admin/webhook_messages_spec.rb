@@ -18,6 +18,33 @@ RSpec.feature "Webhook messages", :no_js, type: :feature do
     expect(page).to have_content(webhook_message.status)
   end
 
+  scenario "filtering webhook messages by message type and status" do
+    other_webhook_message = create(:trs_user_updated_webhook_message)
+
+    visit(npq_separation_admin_webhook_messages_path)
+
+    expect(page).to have_content(webhook_message.message_id)
+    expect(page).to have_content(other_webhook_message.message_id)
+
+    select "UserUpdated", from: "Message type"
+    click_button "Search"
+
+    expect(page).to have_content(webhook_message.message_id)
+    expect(page).not_to have_content(other_webhook_message.message_id)
+
+    select "one_login_user.updated", from: "Message type"
+    select "Pending", from: "Status"
+    click_button "Search"
+
+    expect(page).to have_content(other_webhook_message.message_id)
+    expect(page).not_to have_content(webhook_message.message_id)
+
+    select "Failed", from: "Status"
+    click_button "Search"
+
+    expect(page).to have_content("No webhook messages found")
+  end
+
   scenario "viewing a webhook message" do
     visit(npq_separation_admin_webhook_messages_path)
     click_link "View"
