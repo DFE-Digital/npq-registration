@@ -35,6 +35,8 @@ RSpec.describe Users::Archiver do
     end
 
     context "when blank_email: true" do
+      before { allow(Sentry).to receive(:capture_message) }
+
       it "archives user with nil email" do
         travel_to archive_time do
           subject.archive!(blank_email: true)
@@ -48,23 +50,31 @@ RSpec.describe Users::Archiver do
         expect(user).to be_archived
       end
 
-      it "sends a Sentry message with the user's ecf_id" do
-        allow(Sentry).to receive(:capture_message)
-
+      it "does not send Sentry a message" do
         subject.archive!(blank_email: true)
 
-        expect(Sentry).to have_received(:capture_message).with(
-          "Blanked email on the user due to reuse when used by a later participant",
-          hash_including(level: :info, extra: { ecf_id: user.ecf_id }),
-        )
+        expect(Sentry).not_to have_received(:capture_message)
       end
 
-      it "does not touch the user's applications" do
-        application = create(:application, user:)
+      context "when user has applications" do
+        before { application }
 
-        subject.archive!(blank_email: true)
+        let(:application) { create(:application, user:) }
 
-        expect(application.reload.user).to eq(user)
+        it "sends a Sentry message with the user's ecf_id" do
+          subject.archive!(blank_email: true)
+
+          expect(Sentry).to have_received(:capture_message).with(
+            "Blanked email on the user due to reuse when used by a later participant",
+            hash_including(level: :info, extra: { ecf_id: user.ecf_id }),
+          )
+        end
+
+        it "does not touch the user's applications" do
+          subject.archive!(blank_email: true)
+
+          expect(application.reload.user).to eq(user)
+        end
       end
     end
 

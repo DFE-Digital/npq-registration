@@ -358,7 +358,10 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
 
       context "when the email clashes with a different existing user" do
-        let!(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
+        before { application }
+
+        let(:application) { create(:application, user: clashing_user) }
+        let(:clashing_user) { create(:user, :with_get_an_identity_id, email:) }
 
         it "blanks the clashing user's email and creates the new user" do
           expect { subject }.not_to raise_error
@@ -368,7 +371,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         end
 
         it "does not move applications from the clashing user" do
-          application = create(:application, user: clashing_user)
           subject
           expect(application.reload.user).to eq(clashing_user)
         end
