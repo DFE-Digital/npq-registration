@@ -17,7 +17,10 @@ module Users
       user.provider = nil
       user.save!
 
-      send_sentry_capture_message if blank_email
+      # If we're archiving a user who still has applications then we want to
+      # know about it otherwise its a user account for expression of interest,
+      # or from a past incomplete registration
+      send_sentry_capture_message if blank_email && user.applications.any?
     end
 
     def set_uid_to_nil!
