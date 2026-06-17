@@ -1,14 +1,15 @@
 // Entry point for the build script in your package.json
-require.context('govuk-frontend/dist/govuk/assets');
-
+// GOV.UK Frontend fonts and images are served by Sprockets (see
+// config/initializers/assets.rb), so they do not need bundling here.
 import Rails from 'rails-ujs';
 import accessibleAutocomplete from 'accessible-autocomplete';
 import { initCrossServiceHeader } from '@govuk-one-login/service-header/dist/scripts/service-header';
 
 import institutionPicker from "./institution-picker";
-import ittProviderPicker from "./itt-provider-picker.js";
-import cookieBanner from "./cookie-banner";
-import print from "./print";
+// These modules run on import for their side effects and export nothing.
+import "./itt-provider-picker.js";
+import "./cookie-banner";
+import "./print";
 
 Rails.start();
 import * as GOVUKFrontend from 'govuk-frontend'
