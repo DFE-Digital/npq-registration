@@ -22,6 +22,24 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
       expect(page).to be_accessible
     end
 
+    context "when a user has a teacher auth account" do
+      include_context "with stubbed Teacher Auth OmniAuth responses"
+      include_context "with stubbed Teaching Record System person API"
+
+      before do
+        create(:user, :with_teacher_auth, :with_verified_trn, email: "user@example.com", trn: "1234567")
+      end
+
+      scenario "Service prompts to log in with One Login" do
+        visit "/"
+        click_button("Sign in to your DfE Identity account")
+        expect(page).to have_content "Your account is now registered with One Login. Please sign in using your One Login account."
+        expect(page).to have_current_path "/registration_closed?one_login=true"
+        click_button("Sign in to your One Login account")
+        expect(page).to have_current_path account_path
+      end
+    end
+
     context "when registration reopens" do
       before { open_registration! }
 

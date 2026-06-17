@@ -44,13 +44,24 @@
       <li>course outcome, if you have completed your course</li>
     </ul>
 
-    <%=
-      render GovukComponent::ContinueButtonComponent.new(
-        text: "Sign in to your DfE Identity account",
-        href: user_tra_openid_connect_omniauth_authorize_path,
-        classes: "govuk-button--secondary",
-        as_button: true,
-      )
-    %>
+    <% if @one_login %>
+      <%=
+        render GovukComponent::ContinueButtonComponent.new(
+          text: "Sign in to your One Login account",
+          href: user_teacher_auth_omniauth_authorize_path,
+          classes: "govuk-button--secondary",
+          as_button: true,
+        )
+      %>
+    <% else %>
+      <%=
+        render GovukComponent::ContinueButtonComponent.new(
+          text: "Sign in to your DfE Identity account",
+          href: user_tra_openid_connect_omniauth_authorize_path,
+          classes: "govuk-button--secondary",
+          as_button: true,
+        )
+      %>
+    <% end %>
   </div>
 </div>

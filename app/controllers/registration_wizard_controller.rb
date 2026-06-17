@@ -116,7 +116,7 @@ private
 
     if Feature.registration_closed?(current_user)
       if params[:step] == "start"
-        redirect_to registration_closed_path
+        redirect_to registration_closed_path(one_login: params[:one_login])
       else
         redirect_to registration_wizard_show_path(:closed)
       end
