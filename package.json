@@ -4,27 +4,21 @@
     "yarn": "^1.22.0"
   },
   "dependencies": {
-    "@babel/core": "^7.29.6",
-    "@babel/plugin-transform-class-properties": "^7.25.4",
-    "@babel/plugin-transform-runtime": "^7.29.0",
-    "@babel/preset-env": "^7.29.7",
     "@govuk-one-login/service-header": "^6.0.0",
     "@ministryofjustice/frontend": "^9.0.0",
     "accessible-autocomplete": "^3.0.1",
-    "babel-loader": "^10.1.1",
-    "file-loader": "^6.2.0",
+    "esbuild": "^0.25.0",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^6.0",
+    "lodash.debounce": "^4.0.8",
     "rails-ujs": "^5.2.8",
     "sass": "^1.99.0",
-    "swagger-ui-dist": "^5.32.6",
-    "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2"
+    "swagger-ui-dist": "^5.32.6"
   },
   "devDependencies": {},
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "node esbuild.config.js",
     "build:css": "sass ./app/assets/stylesheets/swagger-ui.scss:./app/assets/builds/swagger-ui.css ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css ./app/assets/stylesheets/print.scss:./app/assets/builds/print.css --no-source-map --load-path=. --load-path=node_modules"
   }
 }
