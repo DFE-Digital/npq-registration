@@ -41,3 +41,5 @@ jobs:
           teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL_INFRA }}
           gcp-wip: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
           gcp-project-id: ecf-bq
+          docker-repo: true
+          service-name: npq-registration
