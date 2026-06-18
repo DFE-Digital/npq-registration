@@ -25,6 +25,26 @@ RSpec.describe GetAnIdentity::WebhookMessage, type: :model do
     end
   end
 
+  describe "#ignored_message_type?" do
+    subject { build(:trs_user_updated_webhook_message, message_type:) }
+
+    before do
+      stub_const("GetAnIdentity::WebhookMessage::IGNORED_MESSAGE_TYPES", %w[ignore_me])
+    end
+
+    context "when the message_type is on the ignore list" do
+      let(:message_type) { "ignore_me" }
+
+      it { is_expected.to be_ignored_message_type }
+    end
+
+    context "when the message_type is not on the ignore list" do
+      let(:message_type) { "one_login_user.updated" }
+
+      it { is_expected.not_to be_ignored_message_type }
+    end
+  end
+
   describe "#processor_klass" do
     context "when message_type is one_login_user.updated" do
       subject { build(:trs_user_updated_webhook_message) }
