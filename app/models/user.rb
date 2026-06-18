@@ -42,6 +42,8 @@ class User < ApplicationRecord
          .where(provider: Omniauth::Strategies::TraOpenidConnect::NAME)
   }
 
+  scope :with_teacher_auth, -> { where(provider: Omniauth::Strategies::TeacherAuth::NAME) } # TODO: test
+
   scope :needing_token_refresh, lambda {
     where(trn: nil)
       .joins(:oauth_tokens)
@@ -49,6 +51,7 @@ class User < ApplicationRecord
   }
 
   scope :not_archived, -> { where(archived_at: nil) }
+  scope :archived, -> { where.not(archived_at: nil) }
   scope :with_trn, ->(trn) { where(trn:, trn_verified: true).where.not(trn: nil) }
 
   def refresh_token

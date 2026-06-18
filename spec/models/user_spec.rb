@@ -87,11 +87,26 @@ RSpec.describe User do
 
       before do
         create(:user)
+        create(:user, :with_teacher_auth)
         gai_user
       end
 
       it "returns only GAI users" do
         expect(User.with_get_an_identity_id).to contain_exactly(gai_user)
+      end
+    end
+
+    describe ".with_teacher_auth" do
+      let(:teacher_auth_user) { create(:user, :with_teacher_auth) }
+
+      before do
+        create(:user)
+        create(:user, :with_get_an_identity_id)
+        teacher_auth_user
+      end
+
+      it "returns only teacher auth users" do
+        expect(User.with_teacher_auth).to contain_exactly(teacher_auth_user)
       end
     end
 
@@ -107,6 +122,19 @@ RSpec.describe User do
 
       it "returns only users without a TRN and with a stale refresh token" do
         expect(User.needing_token_refresh).to contain_exactly(user_with_token_needing_refresh)
+      end
+    end
+
+    describe ".archived" do
+      let(:user) { create(:user, :archived) }
+
+      before do
+        create(:user)
+        user
+      end
+
+      it "returns only users that are archived" do
+        expect(User.archived).to contain_exactly(user)
       end
     end
 
