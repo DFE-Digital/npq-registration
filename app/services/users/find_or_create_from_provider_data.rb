@@ -28,6 +28,16 @@ module Users
                 "GAI sign-in matched a Teacher Auth user by email (user_id=#{user.id}); refusing to take over the account"
         end
 
+        teacher_auth_user_with_same_trn = User.find_by(
+          trn: provider_data.extra.raw_info.trn,
+          trn_verified: true,
+          provider: Omniauth::Strategies::TeacherAuth::NAME,
+        )
+        if teacher_auth_user_with_same_trn
+          raise TeacherAuthAccountExistsError,
+            "Teacher Auth account exists with the same TRN (user_id=#{teacher_auth_user_with_same_trn.id}); refusing to create a new account"
+        end
+
         user.assign_attributes(provider: provider_data.provider, uid: provider_data.uid)
       end
 
