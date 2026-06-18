@@ -15,6 +15,10 @@
     "sass": "^1.99.0",
     "swagger-ui": "^5.32.6"
   },
+  "resolutions": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
   "devDependencies": {},
   "license": "MIT",
   "scripts": {
