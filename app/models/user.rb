@@ -49,7 +49,7 @@ class User < ApplicationRecord
   }
 
   scope :not_archived, -> { where(archived_at: nil) }
-  scope :with_trn, ->(trn) { where(trn:, trn_verified: true) }
+  scope :with_trn, ->(trn) { where(trn:, trn_verified: true).where.not(trn: nil) }
 
   def refresh_token
     oauth_tokens.refresh_token.first

@@ -96,8 +96,7 @@ module Users
       @verified_trn_matching_users ||=
         User
           .not_archived
-          .where(trn:, trn_verified: true)
-          .where.not(trn: nil)
+          .with_trn(trn)
           .order(updated_at: :desc)
           .to_a
     end
