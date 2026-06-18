@@ -42,7 +42,7 @@ class User < ApplicationRecord
          .where(provider: Omniauth::Strategies::TraOpenidConnect::NAME)
   }
 
-  scope :with_teacher_auth, -> { where(provider: Omniauth::Strategies::TeacherAuth::NAME) } # TODO: test
+  scope :with_teacher_auth, -> { where(provider: Omniauth::Strategies::TeacherAuth::NAME) }
 
   scope :needing_token_refresh, lambda {
     where(trn: nil)

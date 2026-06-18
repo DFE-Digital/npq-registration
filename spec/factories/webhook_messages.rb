@@ -114,5 +114,16 @@ FactoryBot.define do
         },
       }
     end
+
+    trait :no_merged_with_person do
+      message do
+        {
+          "deactivatedPerson" => {
+            "trn" => deactivated_trn,
+          },
+          "mergedWithPerson" => nil,
+        }
+      end
+    end
   end
 end

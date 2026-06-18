@@ -4,7 +4,7 @@ module TeachingRecordSystem
       WEBHOOK_NAME = "Person deactivated webhook".freeze
 
       def process!
-        return unless merge_into
+        return unless merge_into && merged_with_trn
 
         update_trns!
         merge_and_archive_users(users_to_merge:, merge_into:)
@@ -21,7 +21,7 @@ module TeachingRecordSystem
       end
 
       def merged_with_trn
-        webhook_message.message["mergedWithPerson"]["trn"]
+        webhook_message.message["mergedWithPerson"] && webhook_message.message["mergedWithPerson"]["trn"]
       end
 
       def users_matching_merged_with_person
@@ -65,9 +65,7 @@ module TeachingRecordSystem
 
       def correct_format?
         message["deactivatedPerson"].present? &&
-          message["deactivatedPerson"]["trn"].present? &&
-          message["mergedWithPerson"].present? &&
-          message["mergedWithPerson"]["trn"].present?
+          message["deactivatedPerson"]["trn"].present?
       end
     end
   end

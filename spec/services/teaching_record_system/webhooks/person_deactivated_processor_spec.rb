@@ -6,7 +6,7 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
 
     let(:deactivated_trn) { "2000000" }
     let(:merged_with_trn) { "3000000" }
-    let(:webhook_message) { create(:trs_person_deactivated_webhook_message, deactivated_trn: deactivated_trn, merged_with_trn:) }
+    let(:webhook_message) { create(:trs_person_deactivated_webhook_message, deactivated_trn:, merged_with_trn:) }
 
     context "when there is a teacher auth user matching the deactivated person" do
       let(:user_matching_deactivated_trn) { create(:user, :with_teacher_auth, trn: deactivated_trn) }
@@ -18,6 +18,23 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
         it "updates the TRN on the matching deactivated person users" do
           subject
           expect(user_matching_deactivated_trn.reload.trn).to eq(merged_with_trn)
+        end
+
+        it "marks the webhook message as processed" do
+          expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+        end
+      end
+
+      context "when the merged with person is null" do
+        let(:webhook_message) { create(:trs_person_deactivated_webhook_message, :no_merged_with_person, deactivated_trn:) }
+
+        it "does not change any users" do
+          subject
+          expect(user_matching_deactivated_trn.reload.trn).to eq deactivated_trn
+        end
+
+        it "marks the webhook message as processed" do
+          expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
         end
       end
 
