@@ -66,8 +66,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   end
 
   before do
-    create(:user, trn:, trn_verified: true, archived_at: 1.day.ago)
-
     if trn.present?
       stub_person_api
         .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
@@ -79,7 +77,10 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   context "when the TRN matches a verified TRN on one user" do
     let(:user) { create(:user, trn:, trn_verified: true) }
 
-    before { user }
+    before do
+      create(:user, :archived, trn:, trn_verified: true) # create archived user first, to test this user is not used
+      user
+    end
 
     it "sets the UID and provider on the user" do
       subject
@@ -201,6 +202,37 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
             trn_auto_verified: true,
           )
         end
+      end
+    end
+  end
+
+  context "when the TRN matches a verified TRN on one archived GAI user" do
+    let(:user) { create(:user, :archived, trn:, trn_verified: true) }
+
+    before { user }
+
+    it "sets the UID and provider on the user" do
+      subject
+      expect(user.reload).to have_attributes(uid:, provider: "teacher_auth")
+    end
+
+    it "unarchives the user" do
+      subject
+      expect(user.reload).not_to be_archived
+    end
+
+    it "returns the user" do
+      expect(subject).to eq(user)
+    end
+
+    context "when user's details have updated" do
+      it "updates the user" do
+        subject
+        expect(user.reload).to have_attributes(
+          email:,
+          full_name: verified_name.join(" "),
+          trn_auto_verified: true,
+        )
       end
     end
   end

@@ -29,6 +29,7 @@ module Users
           persist_token(user_matched_using_trn, provider_data)
         end
         merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
+        user_matched_using_trn.unarchive!
 
         return user_matched_using_trn
       end
@@ -95,9 +96,8 @@ module Users
     def verified_trn_matching_users
       @verified_trn_matching_users ||=
         User
-          .not_archived
           .with_trn(trn)
-          .order(updated_at: :desc)
+          .order(updated_at: :desc, archived_at: :desc)
           .to_a
     end
 
@@ -129,7 +129,7 @@ module Users
 
     def merge_and_archive_other_users(user_to_keep, users_to_merge)
       users_to_merge.each do |user_to_merge|
-        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
+        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false, allow_archived_users: true)
       end
     end
 
