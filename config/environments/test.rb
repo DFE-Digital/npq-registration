@@ -57,6 +57,8 @@ Rails.application.configure do
   config.active_job.queue_adapter = :test
 
   config.after_initialize do
+    OmniAuth.config.logger = Logger.new(File::NULL)
+
     Bullet.enable                       = true
     Bullet.bullet_logger                = true
     Bullet.raise                        = true # Raise an error if n+1 query occurs
