@@ -18,7 +18,7 @@ module Users
       user_matched_using_trn = verified_teacher_auth_matching_users.first || verified_trn_matching_users.first
 
       if user_matched_using_trn
-        merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
+        merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users.excluding(user_matched_using_trn))
         blank_clashing_email_user(except: user_matched_using_trn)
 
         ApplicationRecord.transaction do

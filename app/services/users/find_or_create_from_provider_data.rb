@@ -35,7 +35,7 @@ module Users
         )
         if teacher_auth_user_with_same_trn
           raise TeacherAuthAccountExistsError,
-            "Teacher Auth account exists with the same TRN (user_id=#{teacher_auth_user_with_same_trn.id}); refusing to create a new account"
+                "Teacher Auth account exists with the same TRN (user_id=#{teacher_auth_user_with_same_trn.id}); refusing to create a new account"
         end
 
         user.assign_attributes(provider: provider_data.provider, uid: provider_data.uid)
