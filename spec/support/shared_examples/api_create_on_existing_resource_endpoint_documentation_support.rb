@@ -6,7 +6,7 @@ RSpec.shared_examples "an API create on existing resource endpoint documentation
       tags tag
       consumes "application/json"
       produces "application/json"
-      security [api_key: []]
+      security [{ api_key: [] }]
 
       parameter name: :id,
                 in: :path,

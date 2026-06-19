@@ -6,7 +6,7 @@ RSpec.shared_examples "an API show endpoint documentation", :exceptions_app do |
       tags tag
       consumes "application/json"
       produces "application/json"
-      security [api_key: []]
+      security [{ api_key: [] }]
 
       parameter name: :id,
                 in: :path,

@@ -50,7 +50,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature d
         expect(summary_list).to have_summary_item("Number of providers assigned", 1)
       end
 
-      expect(page).to have_table(with_rows: ["Provider" => LeadProvider.first.name, "Cohort" => cohort.description])
+      expect(page).to have_table(with_rows: [{ "Provider" => LeadProvider.first.name, "Cohort" => cohort.description }])
     end
 
     scenario "it allows creating a new delivery partner" do

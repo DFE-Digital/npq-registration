@@ -80,14 +80,14 @@ namespace :delivery_partners do
         csv << ["Lead Provider ECF Id", "Cohort", "Delivery Partner ECF Id"]
 
         DeliveryPartnership
-            .order(id: :asc)
-            .includes(:lead_provider, :cohort, :delivery_partner)
-            .find_each(batch_size: 500) do |partnership|
-              csv << [
-                partnership.lead_provider.ecf_id,
-                partnership.cohort.identifier,
-                partnership.delivery_partner.ecf_id,
-              ]
+          .order(id: :asc)
+          .includes(:lead_provider, :cohort, :delivery_partner)
+          .find_each(batch_size: 500) do |partnership|
+            csv << [
+              partnership.lead_provider.ecf_id,
+              partnership.cohort.identifier,
+              partnership.delivery_partner.ecf_id,
+            ]
         end
       end
     end
