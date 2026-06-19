@@ -136,7 +136,7 @@ private
   def check_teacher_auth_user
     return unless Rails.configuration.x.teacher_auth.enabled
     return if params[:step].to_s == "start"
-    return if current_user&.teacher_auth_provider?
+    return unless current_user&.get_an_identity_provider?
 
     Sentry.capture_message("User attempted registration from GAI")
 
