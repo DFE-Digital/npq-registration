@@ -144,24 +144,8 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
     end
 
     context "when serializing `cohort_suffix` in enrolments" do
-      context "when the config flag is enabled" do
-        before do
-          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(true)
-        end
-
-        it "includes `cohort_suffix` in the enrolment" do
-          expect(attributes["npq_enrolments"][0]["cohort_suffix"]).to eq(application.cohort.suffix)
-        end
-      end
-
-      context "when the config flag is disabled" do
-        before do
-          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(false)
-        end
-
-        it "does not include `cohort_suffix` in the enrolment" do
-          expect(attributes["npq_enrolments"][0]).not_to have_key("cohort_suffix")
-        end
+      it "includes `cohort_suffix` in the enrolment" do
+        expect(attributes["npq_enrolments"][0]["cohort_suffix"]).to eq(application.cohort.suffix)
       end
     end
 

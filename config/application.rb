@@ -89,6 +89,5 @@ module NpqRegistration
 
     # API configuration
     config.x.api.previous_names = true
-    config.x.api.cohort_suffix = true
   end
 end

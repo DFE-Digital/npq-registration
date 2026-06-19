@@ -9,5 +9,4 @@ Rails.application.configure do
   end
 
   config.x.api.previous_names = true
-  config.x.api.cohort_suffix = true
 end
