@@ -1,11 +1,12 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
+  around_action :add_session_id_to_logs
   around_action :set_time_zone
   before_action :clear_null_user_sessions
   before_action :set_cache_headers
   before_action :authenticate_user!
-  before_action :set_sentry_user
+  before_action :set_sentry_context
   before_action :initialize_store
 
   include DfE::Analytics::Requests
@@ -26,13 +27,25 @@ private
   end
   helper_method :feature_flag_id
 
+  # A identifier per session attached to every log line and Sentry event so a
+  # user's whole navigation in the service can be reconstructed from a single Sentry error.
+  # To not expose in the logs the real user session value, a new UUID is generated.
+  def log_session_id
+    session[:log_session_id] ||= SecureRandom.uuid
+  end
+
   def current_user
     logged_in_user
   end
   helper_method :current_user
 
-  def set_sentry_user
+  def set_sentry_context
     Sentry.set_user(id: current_user.id) if current_user
+    Sentry.set_tags(session_id: log_session_id)
+  end
+
+  def add_session_id_to_logs(&block)
+    SemanticLogger.tagged(session_id: log_session_id, &block)
   end
 
   # Use current_user instead!
