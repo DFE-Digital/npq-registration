@@ -14,7 +14,8 @@
       render GovukComponent::ContinueButtonComponent.new(
         text: "Request email updates",
         href: user_tra_openid_connect_omniauth_authorize_path(request_email_updates: "true"),
-        as_button: true
+        as_button: true,
+        html_attributes: { data: { "prevent-double-click": true } }
       )
     %>
   </div>

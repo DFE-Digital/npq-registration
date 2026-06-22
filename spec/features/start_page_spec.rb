@@ -19,6 +19,13 @@ RSpec.feature "Start page", :no_js, type: :feature do
     expect(page).to have_text("To check your funding eligibility, you’ll need:")
   end
 
+  scenario "omniauth buttons prevent double clicks" do
+    visit "/"
+
+    expect(find_button("Start now")["data-prevent-double-click"]).to eq("true")
+    expect(find_button("Sign in")["data-prevent-double-click"]).to eq("true")
+  end
+
   context "when the user has no applications" do
     scenario "Start now button starts journey" do
       visit "/"
