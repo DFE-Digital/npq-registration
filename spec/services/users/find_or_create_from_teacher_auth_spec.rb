@@ -278,7 +278,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
 
     context "when one of the matching users by TRN already holds the incoming email" do
-      let(:older_user) { create(:user, trn:, trn_verified: true, updated_at: 2.days.ago, email:) }
+      let!(:older_user) { create(:user, trn:, trn_verified: true, updated_at: 2.days.ago, email:) }
 
       it "frees the email by merging and sets it on the kept user" do
         expect { subject }.not_to raise_error
