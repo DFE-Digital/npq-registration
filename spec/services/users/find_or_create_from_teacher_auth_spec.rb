@@ -309,6 +309,10 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
       before { existing_user }
 
+      it "returns the user" do
+        expect(subject).to eq existing_user
+      end
+
       context "when users details have updated" do
         it "updates the user" do
           subject
@@ -374,6 +378,21 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           subject
           expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
         end
+      end
+    end
+
+    context "when an archived user with a blank email exists with the same provider and UID" do
+      let(:existing_user) { create(:user, :with_teacher_auth, :archived, email: nil, uid:, trn: nil) }
+
+      before { existing_user }
+
+      it "returns the user" do
+        expect(subject).to eq existing_user
+      end
+
+      it "unarchives the user" do
+        subject
+        expect(existing_user.reload).not_to be_archived
       end
     end
 
@@ -453,7 +472,23 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   end
 
   context "when the TRN doesn't match a user" do
+    let(:user) { User.last }
+
     it_behaves_like "logging in using provider and UID"
+
+    context "when a user exists with the same provider and UID" do
+      let(:existing_user) { create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:, trn: nil) }
+
+      before { existing_user }
+
+      it_behaves_like "destroying the refresh token"
+
+      context "when the TRN is different" do
+        let(:existing_user) { create(:user, :with_teacher_auth, email:, uid:, trn: "2345678") }
+
+        it_behaves_like "destroying the refresh token"
+      end
+    end
   end
 
   context "when no TRN is specified" do

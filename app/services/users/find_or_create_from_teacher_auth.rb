@@ -46,7 +46,8 @@ module Users
               trn_verified: true,
             ),
           )
-          persist_token(user_matched_using_uid, provider_data) # TODO: needs testing
+          persist_token(user_matched_using_uid, provider_data)
+          user_matched_using_uid.unarchive!
         end
 
         return user_matched_using_uid
@@ -82,6 +83,7 @@ module Users
 
     def persist_token(user, provider_data)
       refresh_token = provider_data.credentials&.refresh_token
+
       if user.trn.blank? && refresh_token.present?
         user.store_refresh_token!(refresh_token)
         true
