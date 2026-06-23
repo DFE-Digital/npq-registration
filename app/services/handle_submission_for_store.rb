@@ -1,4 +1,7 @@
 class HandleSubmissionForStore
+  # Spring 2026 cohort uses a dedicated Notify template (see NPQ-3818)
+  SPRING_2026_COHORT_IDENTIFIER = "2026a".freeze
+
   attr_reader :store, :application
 
   def initialize(store:)
@@ -185,7 +188,11 @@ private
   end
 
   def email_template
-    EmailTemplateLookup.call(store["email_template"])
+    if cohort.identifier == SPRING_2026_COHORT_IDENTIFIER
+      ApplicationSubmissionMailer::SPRING_2026_TEMPLATE_ID
+    else
+      ApplicationSubmissionMailer::TEMPLATE_ID
+    end
   end
 
   delegate :ineligible_institution_type?,
