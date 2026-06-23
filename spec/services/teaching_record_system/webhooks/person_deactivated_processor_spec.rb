@@ -195,20 +195,20 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
             application_on_merged_with_user_2
           end
 
-          it "merges the users matching the deactivated person into the most recent verified GAI user matching the merged-with person" do
+          it "merges the users matching the deactivated person into the most recent teacher auth user matching the merged-with person" do
             subject
             expect(archived_teacher_auth_user_matching_deactivated_trn.reload).to be_archived
             expect(archived_teacher_auth_user_matching_deactivated_trn_2.reload).to be_archived
-            expect(application_on_deactivated_user.reload.user).to eq(gai_user_matching_merged_with_trn_2)
-            expect(application_on_deactivated_user_2.reload.user).to eq(gai_user_matching_merged_with_trn_2)
+            expect(application_on_deactivated_user.reload.user).to eq(archived_teacher_auth_user_matching_deactivated_trn_2)
+            expect(application_on_deactivated_user_2.reload.user).to eq(archived_teacher_auth_user_matching_deactivated_trn_2)
           end
 
-          it "merges the verified GAI users matching the merged-with person into the most recent verified GAI user matching the merged-with person" do
+          it "merges the verified GAI users matching the merged-with person into the most recent teacher auth user matching the merged-with person" do
             subject
             expect(gai_user_matching_merged_with_trn.reload).to be_archived
-            expect(gai_user_matching_merged_with_trn_2.reload).not_to be_archived
-            expect(application_on_merged_with_user.reload.user).to eq(gai_user_matching_merged_with_trn_2)
-            expect(application_on_merged_with_user_2.reload.user).to eq(gai_user_matching_merged_with_trn_2)
+            expect(gai_user_matching_merged_with_trn_2.reload).to be_archived
+            expect(application_on_merged_with_user.reload.user).to eq(archived_teacher_auth_user_matching_deactivated_trn_2)
+            expect(application_on_merged_with_user_2.reload.user).to eq(archived_teacher_auth_user_matching_deactivated_trn_2)
           end
 
           it "marks the webhook message as processed" do
