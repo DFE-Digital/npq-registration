@@ -4,7 +4,10 @@
 <span <%= "class=govuk-visually-hidden" if hidden %>>
   <%=
     govuk_start_button(
-      text: button_text, href: user_teacher_auth_omniauth_authorize_path(start_now: true), as_button: true
+      text: button_text,
+      href: user_teacher_auth_omniauth_authorize_path(start_now: true),
+      as_button: true,
+      html_attributes: { data: { "prevent-double-click": true } }
     )
   %>
 </span>

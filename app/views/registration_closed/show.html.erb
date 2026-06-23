@@ -28,7 +28,8 @@
         render GovukComponent::ContinueButtonComponent.new(
           text: "Sign up for email updates",
           href: user_tra_openid_connect_omniauth_authorize_path(request_email_updates: "true"),
-          as_button: true
+          as_button: true,
+          html_attributes: { data: { "prevent-double-click": true } }
         )
       %>
     <% end %>
@@ -51,6 +52,7 @@
           href: user_teacher_auth_omniauth_authorize_path,
           classes: "govuk-button--secondary",
           as_button: true,
+          html_attributes: { data: { "prevent-double-click": true } }
         )
       %>
     <% else %>
@@ -60,6 +62,7 @@
           href: user_tra_openid_connect_omniauth_authorize_path,
           classes: "govuk-button--secondary",
           as_button: true,
+          html_attributes: { data: { "prevent-double-click": true } }
         )
       %>
     <% end %>
