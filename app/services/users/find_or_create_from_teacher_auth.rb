@@ -97,7 +97,7 @@ module Users
       @verified_trn_matching_users ||=
         User
           .with_trn(trn)
-          .order(updated_at: :desc, archived_at: :desc)
+          .order(archived_at: :desc, updated_at: :desc)
           .to_a
     end
 

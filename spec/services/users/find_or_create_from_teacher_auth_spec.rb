@@ -80,6 +80,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     before do
       create(:user, :archived, trn:, trn_verified: true) # create archived user first, to test this user is not used
       user
+      create(:user, :archived, trn:, trn_verified: true) # create another archived user last, to test this user is not used
     end
 
     it "sets the UID and provider on the user" do
