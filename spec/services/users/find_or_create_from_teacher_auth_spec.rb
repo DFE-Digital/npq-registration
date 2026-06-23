@@ -152,6 +152,17 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
     end
 
+    context "when the incoming email clashes with a different existing user" do
+      let!(:clashing_user) { create(:user, :with_get_an_identity_id, trn: "7654321", trn_verified: true, email:) }
+
+      it "blanks the clashing user's email and takes over the matched account" do
+        expect { subject }.not_to raise_error
+        expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
+        expect(clashing_user).to be_archived
+        expect(user.reload).to have_attributes(email:, uid:, provider: "teacher_auth", archived_at: nil)
+      end
+    end
+
     it_behaves_like "destroying the refresh token"
   end
 
@@ -263,6 +274,16 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       it "stores previous_names on the kept user" do
         subject
         expect(most_recently_updated_user.reload.previous_names).to eq(["Sarah Johnson"])
+      end
+    end
+
+    context "when one of the matching users by TRN already holds the incoming email" do
+      let(:older_user) { create(:user, trn:, trn_verified: true, updated_at: 2.days.ago, email:) }
+
+      it "frees the email by merging and sets it on the kept user" do
+        expect { subject }.not_to raise_error
+        expect(older_user.reload).to be_archived
+        expect(most_recently_updated_user.reload).to have_attributes(email:, uid:, provider: "teacher_auth")
       end
     end
 
