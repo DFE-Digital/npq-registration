@@ -300,6 +300,23 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
 
     it_behaves_like "destroying the refresh token"
+
+    context "when unarchiving fails" do
+      let(:refresh_token) { "some-refresh-token" }
+
+      before do
+        user.store_refresh_token!(refresh_token)
+        allow_any_instance_of(User).to receive(:unarchive!).and_raise("error unarchiving user")
+      end
+
+      it "rolls back all changes" do
+        expect(older_user).not_to be_archived
+        expect(user.refresh_token).to be_persisted
+        expect { subject }.to raise_error("error unarchiving user")
+        expect(user.reload.refresh_token).to be_persisted
+        expect(older_user.reload).not_to be_archived
+      end
+    end
   end
 
   shared_examples "logging in using provider and UID" do

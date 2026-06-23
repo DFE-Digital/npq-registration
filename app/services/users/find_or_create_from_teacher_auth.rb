@@ -27,9 +27,9 @@ module Users
             ),
           )
           persist_token(user_matched_using_trn, provider_data)
+          merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
+          user_matched_using_trn.unarchive!
         end
-        merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
-        user_matched_using_trn.unarchive!
 
         return user_matched_using_trn
       end
