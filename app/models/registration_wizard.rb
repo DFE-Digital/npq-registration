@@ -60,8 +60,13 @@ class RegistrationWizard
     about_npq
     choosen_start_date
     confirmation
+    dont_have_teacher_reference_number
+    dqt_mismatch
     find_school
     find_childcare_provider
+    get_an_identity_callback
+    qualified_teacher_check
+    teacher_reference_number
   ].freeze
 
   attr_reader :current_step, :params, :store, :request, :current_user
