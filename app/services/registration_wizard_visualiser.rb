@@ -2,8 +2,8 @@ require "method_source"
 
 class RegistrationWizardVisualiser
   class << self
-    def call(generate_image: true)
-      new.call(generate_image:)
+    def call
+      new.call
     end
   end
 
@@ -83,12 +83,12 @@ class RegistrationWizardVisualiser
     margin: "25,15",
   }.freeze
 
-  def call(generate_image: true)
+  def call
     Rails.logger.debug("Generating .dot file")
 
     make_output_dir
     save_graphviz_output
-    generate_png_output if generate_image
+    generate_png_output
   end
 
 private
@@ -110,21 +110,21 @@ private
   end
 
   def output_dot_filename
-    output_dir.join("registration_wizard_visualisation.dot")
+    output_dir.join("registration_wizard_visualisation.dot").to_s
   end
 
   def output_png_filename
-    output_dir.join("registration_wizard_visualisation.png")
+    output_dir.join("registration_wizard_visualisation.png").to_s
   end
 
   def generate_png_output
     Rails.logger.debug("Generating #{output_png_filename}")
-    generate_png_command = "dot -Tpng #{output_dot_filename} -o #{output_png_filename}"
+    generate_png_command_array = "dot", "-Tpng", output_dot_filename, "-o", output_png_filename
 
-    Rails.logger.debug(generate_png_command)
-    system(generate_png_command)
+    Rails.logger.debug(generate_png_command_array.join(" "))
+    result = system(*generate_png_command_array)
 
-    raise "Graph generation failed" unless $CHILD_STATUS.exitstatus.zero?
+    raise "Graph generation failed" unless result
   end
 
   def save_file(name, content)
