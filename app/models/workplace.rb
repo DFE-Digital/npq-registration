@@ -28,7 +28,7 @@ class Workplace < ApplicationRecord
     def school_scope
       School
         .select(:name, id: :source_id, urn: :urn)
-        .select("'#{School.name}' AS source_type")
+        .select(sanitize_sql_for_conditions(["? AS source_type", School.name]))
         .arel
     end
 
@@ -36,14 +36,14 @@ class Workplace < ApplicationRecord
       LocalAuthority
         .select(:name, id: :source_id)
         .select("NULL AS urn")
-        .select("'#{LocalAuthority.name}' AS source_type")
+        .select(sanitize_sql_for_conditions(["? AS source_type", LocalAuthority.name]))
         .arel
     end
 
     def private_childcare_provider_scope
       PrivateChildcareProvider
         .select(provider_name: :name, id: :source_id, provider_urn: :urn)
-        .select("'#{PrivateChildcareProvider.name}' as source_type")
+        .select(sanitize_sql_for_conditions(["? AS source_type", PrivateChildcareProvider.name]))
         .arel
     end
   end
