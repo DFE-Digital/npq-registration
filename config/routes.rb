@@ -25,6 +25,8 @@ Rails.application.routes.draw do
 
   root "registration_wizard#show", step: "start"
 
+  get "/registration", to: redirect("/")
+
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
   get "/registration/:step/change", to: "registration_wizard#show", as: "registration_wizard_show_change", changing_answer: "1"
   patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
