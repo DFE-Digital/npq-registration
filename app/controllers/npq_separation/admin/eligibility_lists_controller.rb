@@ -17,6 +17,15 @@ class NpqSeparation::Admin::EligibilityListsController < NpqSeparation::AdminCon
 
 private
 
+  BULK_OPERATION_MAPPING = {
+    "EligibilityList::Childminder" => BulkOperation::UploadEligibilityList::Childminder,
+    "EligibilityList::DisadvantagedEarlyYearsSchool" => BulkOperation::UploadEligibilityList::DisadvantagedEarlyYearsSchool,
+    "EligibilityList::LocalAuthorityNursery" => BulkOperation::UploadEligibilityList::LocalAuthorityNursery,
+    "EligibilityList::Pp50FurtherEducation" => BulkOperation::UploadEligibilityList::LocalAuthorityNursery::Pp50FurtherEducation,
+    "EligibilityList::Pp50School" => BulkOperation::UploadEligibilityList::LocalAuthorityNursery::Pp50School,
+    "EligibilityList::RiseSchool" => BulkOperation::UploadEligibilityList::RiseSchool,
+  }.freeze
+
   def set_bulk_operations
     bulk_operation_classes = BulkOperation::UploadEligibilityList.subclasses
     @bulk_operations = bulk_operation_classes.index_with do |bulk_operation_class|
@@ -30,7 +39,7 @@ private
   def set_bulk_operation
     @param_key = params.keys.select { |key| key.starts_with?("bulk_operation_upload_eligibility_list_") }.first
     eligibility_list_type = params.dig(@param_key, :eligibility_list_type)
-    bulk_operation_class = eligibility_list_type.constantize::BULK_OPERATION_CLASS
+    bulk_operation_class = BULK_OPERATION_MAPPING[eligibility_list_type]
     @bulk_operation = @bulk_operations[bulk_operation_class]
   end
 
