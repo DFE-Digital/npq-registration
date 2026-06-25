@@ -26,7 +26,7 @@ module SessionWizardSteps
       if user.blank?
         errors.add(:code, :incorrect)
       elsif OtpCodeGenerator.matches?(entered_code: code, stored_code: user.otp_hash)
-        if user.otp_expires_at < Time.zone.now
+        if OtpCodeGenerator.expired?(user.otp_expires_at)
           errors.add(:code, :expired)
         end
       else

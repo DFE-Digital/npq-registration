@@ -47,4 +47,18 @@ RSpec.describe OtpCodeGenerator do
       expect(described_class.matches?(entered_code: nil, stored_code: "ABCD2345")).to be(false)
     end
   end
+
+  describe ".expired?" do
+    it "is false when the expiry is in the future" do
+      expect(described_class.expired?(described_class::VALIDITY_PERIOD.from_now)).to be(false)
+    end
+
+    it "is true when the expiry is in the past" do
+      expect(described_class.expired?(1.minute.ago)).to be(true)
+    end
+
+    it "is true when the expiry is nil" do
+      expect(described_class.expired?(nil)).to be(true)
+    end
+  end
 end
