@@ -66,5 +66,35 @@ RSpec.describe SessionWizardSteps::SignInCode, type: :model do
         expect(subject.errors).to be_of_kind(:code, :incorrect)
       end
     end
+
+    context "when the user has no stored code" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: nil, otp_expires_at: nil) }
+      let(:code) { "ABCD2345" }
+
+      it "is incorrect and does not raise" do
+        expect { subject.valid? }.not_to raise_error
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
+      end
+    end
+
+    context "when the stored code is a legacy 6 digit value" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
+      let(:code) { "ABCD2345" }
+
+      it "is incorrect and does not raise" do
+        expect { subject.valid? }.not_to raise_error
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
+      end
+    end
+
+    context "when the stored code has no expiry" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "ABCD2345", otp_expires_at: nil) }
+      let(:code) { "ABCD2345" }
+
+      it "is incorrect and does not raise" do
+        expect { subject.valid? }.not_to raise_error
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
+      end
+    end
   end
 end
