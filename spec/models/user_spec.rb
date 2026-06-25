@@ -103,7 +103,7 @@ RSpec.describe User do
   end
 
   describe "database constraints" do
-    it "rejects a blank trn marked as verified" do
+    it "rejects a blank TRN marked as verified" do
       expect {
         create(:user, trn: nil).update_column(:trn_verified, true)
       }.to raise_error(ActiveRecord::StatementInvalid, /users_trn_present_when_verified/)
