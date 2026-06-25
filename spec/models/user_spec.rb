@@ -96,7 +96,7 @@ RSpec.describe User do
       expect(user).not_to be_valid
     end
 
-    it "allows a blank trn when it is not verified" do
+    it "allows a blank TRN when it is not verified" do
       user = build(:user, trn: nil, trn_verified: false)
       expect(user).to be_valid
     end
