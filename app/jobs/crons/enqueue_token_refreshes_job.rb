@@ -1,6 +1,7 @@
 class Crons::EnqueueTokenRefreshesJob < CronJob
   include Sentry::Cron::MonitorCheckIns
 
+  # run every hour at 0 minutes past
   self.cron_expression = "0 * * * *"
 
   sentry_monitor_check_ins slug: "enqueue-token-refreshes"

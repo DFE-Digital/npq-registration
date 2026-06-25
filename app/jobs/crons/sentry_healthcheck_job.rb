@@ -2,7 +2,9 @@
 class Crons::SentryHealthcheckJob < CronJob
   include Sentry::Cron::MonitorCheckIns
 
-  # run every hour
+  self.production_only = true
+
+  # run every hour at midnight
   self.cron_expression = "0 * * * *"
 
   sentry_monitor_check_ins slug: "sentry-healthcheck"
