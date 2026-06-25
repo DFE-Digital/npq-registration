@@ -91,7 +91,7 @@ RSpec.describe User do
       expect(user.errors[:trn_verified]).to include("TRN cannot be marked as verified when it is blank")
     end
 
-    it "does not allow trn_verified when the trn is blank" do
+    it "does not allow trn_verified when the TRN is blank" do
       user = build(:user, :with_verified_trn, trn: "")
       expect(user).not_to be_valid
     end
