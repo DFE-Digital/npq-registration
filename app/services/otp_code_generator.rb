@@ -3,9 +3,14 @@ class OtpCodeGenerator
   # See https://www.crockford.com/base32.html
   CROCKFORD_BASE32 = "0123456789ABCDEFGHJKMNPQRSTVWXYZ".chars.freeze
   CODE_LENGTH = 8
+  VALIDITY_PERIOD = 5.minutes
 
   def call
     Array.new(CODE_LENGTH) { CROCKFORD_BASE32[SecureRandom.random_number(CROCKFORD_BASE32.size)] }.join
+  end
+
+  def self.expired?(expires_at)
+    expires_at.nil? || expires_at < Time.zone.now
   end
 
   def self.matches?(entered_code:, stored_code:)
