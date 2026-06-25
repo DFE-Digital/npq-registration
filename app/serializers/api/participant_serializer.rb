@@ -7,7 +7,7 @@ module API
       exclude :id
 
       field(:full_name)
-      field(:previous_names, if: ->(_field_name, _object, _options) { Rails.configuration.x.api.previous_names })
+      field(:previous_names)
       field(:teacher_reference_number) do |object, _options|
         object.trn if object.trn_verified
       end
@@ -22,7 +22,7 @@ module API
             course_identifier: application.course.identifier,
             schedule_identifier: application&.schedule&.identifier,
             cohort: application.cohort&.start_year&.to_s,
-            **({ cohort_suffix: application.cohort&.suffix } if Rails.configuration.x.api.cohort_suffix),
+            cohort_suffix: application.cohort&.suffix,
             npq_application_id: application.ecf_id,
             eligible_for_funding: application.eligible_for_funding,
             training_status: application.training_status,

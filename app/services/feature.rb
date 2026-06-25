@@ -15,7 +15,6 @@ class Feature
     CLOSED_REGISTRATION_ENABLED,
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
-    USE_SUFFIXED_COHORTS,
   ].freeze
 
   class << self
@@ -53,10 +52,6 @@ class Feature
 
     def dfe_analytics_enabled?
       Flipper.enabled?(DFE_ANALYTICS_ENABLED)
-    end
-
-    def suffixed_cohorts?
-      Flipper.enabled?(USE_SUFFIXED_COHORTS)
     end
 
   private

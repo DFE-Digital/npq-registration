@@ -86,9 +86,5 @@ module NpqRegistration
     config.x.teacher_auth.client_id = ENV["TEACHER_AUTH_CLIENT_ID"]
     config.x.teacher_auth.client_secret = ENV["TEACHER_AUTH_CLIENT_SECRET"]
     config.x.teacher_auth.onelogin_home_uri = ENV["TEACHER_AUTH_ONELOGIN_HOME_URI"].presence || "https://home.account.gov.uk"
-
-    # API configuration
-    config.x.api.previous_names = true
-    config.x.api.cohort_suffix = true
   end
 end
