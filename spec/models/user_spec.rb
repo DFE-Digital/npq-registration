@@ -80,7 +80,7 @@ RSpec.describe User do
       expect(user).not_to be_valid
     end
 
-    it "allows a verified trn when the trn is present" do
+    it "allows trn_verified when the TRN is present" do
       user = build(:user, :with_verified_trn, trn: "1234567")
       expect(user).to be_valid
     end
