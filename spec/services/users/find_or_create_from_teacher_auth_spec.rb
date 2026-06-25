@@ -66,6 +66,8 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   end
 
   before do
+    create(:user, trn:, trn_verified: trn.present?, archived_at: 1.day.ago)
+
     if trn.present?
       stub_person_api
         .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
@@ -343,7 +345,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
         it "updates the verified TRN on the user" do
           subject
-          expect(existing_user.reload).to have_attributes(trn:, trn_verified: true, trn_auto_verified: true)
+          expect(existing_user.reload).to have_attributes(trn:, trn_verified: trn.present?, trn_auto_verified: true)
         end
       end
 
@@ -520,16 +522,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     it "does not mark the nil TRN as verified" do
       subject
       expect(User.last).to have_attributes(trn: nil, trn_verified: false, trn_auto_verified: false)
-    end
-
-    context "when there is a user with a nil TRN, marked as verified" do
-      # users were created like this before NPQ-3783
-      # this test can be removed when database constraint added (NPQ-3786)
-      before { create(:user, :with_teacher_auth, trn: nil, trn_verified: true) }
-
-      it "does not match users with nil TRNs, but instead creates a new user" do
-        expect { subject }.to change(User, :count).by(1)
-      end
     end
 
     context "when there is a GAI user with a nil TRN but matching email" do

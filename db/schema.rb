@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_12_142546) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_24_114120) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -689,6 +689,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_12_142546) do
     t.index ["significantly_updated_at"], name: "index_users_on_significantly_updated_at"
     t.index ["trn"], name: "index_users_on_trn"
     t.index ["uid"], name: "index_users_on_uid", unique: true
+    t.check_constraint "NOT trn_verified OR trn IS NOT NULL AND trn <> ''::text", name: "users_trn_present_when_verified"
     t.check_constraint "email IS NOT NULL OR archived_email IS NOT NULL AND archived_at IS NOT NULL", name: "users_email_null_only_when_archived"
   end
 

@@ -34,6 +34,7 @@ class User < ApplicationRecord
 
   validates :uid, uniqueness: { allow_blank: true }
   validates :ecf_id, uniqueness: { case_sensitive: false }
+  validates :trn_verified, absence: true, if: -> { trn.blank? }
 
   after_commit :touch_significantly_updated_at
 

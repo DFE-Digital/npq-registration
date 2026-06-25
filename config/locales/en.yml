@@ -326,6 +326,8 @@ en:
               taken: "Email address must be unique"
             ecf_id:
               *ecf_id
+            trn_verified:
+              present: "TRN cannot be marked as verified when it is blank"
   activemodel:
     attributes:
       questionnaires/funding_your_npq:
