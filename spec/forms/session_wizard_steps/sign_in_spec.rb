@@ -27,7 +27,7 @@ RSpec.describe SessionWizardSteps::SignIn, type: :model do
     end
 
     it "sets the OTP expiration time" do
-      expect { subject }.to change { Admin.find(admin.id).otp_expires_at }.from(nil).to(10.minutes.from_now)
+      expect { subject }.to change { Admin.find(admin.id).otp_expires_at }.from(nil).to(5.minutes.from_now)
     end
 
     it "sends an email with the OTP code" do
