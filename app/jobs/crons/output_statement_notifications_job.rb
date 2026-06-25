@@ -1,6 +1,8 @@
 class Crons::OutputStatementNotificationsJob < CronJob
   include Sentry::Cron::MonitorCheckIns
 
+  self.production_only = true
+
   # run on the 1st of every month at 8:30 AM
   self.cron_expression = "30 8 1 * *"
 
