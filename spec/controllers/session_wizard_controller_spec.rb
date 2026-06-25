@@ -21,11 +21,11 @@ RSpec.describe SessionWizardController do
 
   describe "#update" do
     context "when signing in successfully" do
-      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "ABCD2345", otp_expires_at: 10.minutes.from_now) }
 
       it "sets admin_id in session" do
         session["session_store"] = { "email" => admin.email }
-        patch :update, params: { step: "sign-in-code", session_wizard: { code: "123456" } }
+        patch :update, params: { step: "sign-in-code", session_wizard: { code: "ABCD2345" } }
         expect(session["admin_id"]).to be_present
       end
 
@@ -33,7 +33,7 @@ RSpec.describe SessionWizardController do
         allow(controller).to receive(:reset_session)
 
         session["session_store"] = { "email" => admin.email }
-        patch :update, params: { step: "sign-in-code", session_wizard: { code: "123456" } }
+        patch :update, params: { step: "sign-in-code", session_wizard: { code: "ABCD2345" } }
 
         expect(controller).to have_received(:reset_session)
       end
