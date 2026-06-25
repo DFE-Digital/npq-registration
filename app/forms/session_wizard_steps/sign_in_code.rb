@@ -3,7 +3,7 @@ module SessionWizardSteps
     attr_accessor :code
 
     validates :code, presence: true, length: { is: 8 }
-    validate :validate_correct_code
+    validate :otp_validation
 
     def self.permitted_params
       [
@@ -22,16 +22,16 @@ module SessionWizardSteps
 
   private
 
-    def validate_correct_code
-      if user.blank?
-        errors.add(:code, :incorrect)
-      elsif OtpCodeGenerator.matches?(entered_code: code, stored_code: user.otp_hash)
-        if OtpCodeGenerator.expired?(user.otp_expires_at)
-          errors.add(:code, :expired)
-        end
-      else
-        errors.add(:code, :incorrect)
-      end
+    def otp
+      return unless OTP.valid_code?(user&.otp_hash) && user.otp_expires_at.present?
+
+      @otp ||= OTP.from(code: user.otp_hash, expires_at: user.otp_expires_at)
+    end
+
+    def otp_validation
+      return errors.add(:code, :incorrect) unless otp&.matches?(code)
+
+      errors.add(:code, :expired) if otp.expired?
     end
   end
 end

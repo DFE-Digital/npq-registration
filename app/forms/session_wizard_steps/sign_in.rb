@@ -24,10 +24,9 @@ module SessionWizardSteps
       admin = Admin.find_by(email:)
 
       if admin
-        # TODO: extract out
-        code = OtpCodeGenerator.new.call
-        admin.update!(otp_hash: code, otp_expires_at: OtpCodeGenerator::VALIDITY_PERIOD.from_now)
-        ConfirmEmailMailer.confirmation_code_mail(to: email, code:).deliver_now
+        otp = OTP.generate
+        admin.update!(otp_hash: otp.code, otp_expires_at: otp.expires_at)
+        ConfirmEmailMailer.confirmation_code_mail(to: email, code: otp.code).deliver_now
       end
     end
   end
