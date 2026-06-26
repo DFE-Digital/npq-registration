@@ -41,7 +41,7 @@ module NpqSeparation::Admin::BulkOperations
     end
 
     def bulk_operations
-      bulk_operation_class.all.includes([file_attachment: :blob]).order(created_at: :desc, id: :desc)
+      bulk_operation_class.all.includes([{ file_attachment: :blob }]).order(created_at: :desc, id: :desc)
     end
 
     def set_bulk_operations

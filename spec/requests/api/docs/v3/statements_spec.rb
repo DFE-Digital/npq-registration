@@ -10,7 +10,7 @@ RSpec.describe "Statements endpoint", :exceptions_app, openapi_spec: "v3/swagger
     get "Retrieve financial statements" do
       tags "Statements"
       produces "application/json"
-      security [api_key: []]
+      security [{ api_key: [] }]
 
       parameter name: :filter,
                 in: :query,
@@ -47,7 +47,7 @@ RSpec.describe "Statements endpoint", :exceptions_app, openapi_spec: "v3/swagger
     get "Retrieve a specific financial statement" do
       tags "Statements"
       produces "application/json"
-      security [api_key: []]
+      security [{ api_key: [] }]
 
       parameter name: :id,
                 in: :path,
