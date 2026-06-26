@@ -35,6 +35,9 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
         click_button("Sign in to your DfE Identity account")
         expect(page).to have_content "Your account is now registered with One Login. Please sign in using your One Login account."
         expect(page).to have_current_path "/registration_closed?one_login=true"
+        expect(page).not_to have_content "Sign up for email updates to find out when registration reopens."
+        expect(page).not_to have_button "Sign up for email updates"
+
         click_button("Sign in to your One Login account")
         expect(page).to have_current_path account_path
       end

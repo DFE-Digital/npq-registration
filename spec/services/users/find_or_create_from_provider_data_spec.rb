@@ -314,6 +314,17 @@ RSpec.describe Users::FindOrCreateFromProviderData do
       end
     end
 
+    context "when there is a teacher auth user with the same TRN" do
+      let!(:teacher_auth_user) { create(:user, :with_teacher_auth, :with_verified_trn, trn: provider_data_trn) }
+
+      it "raises an error refusing to create a new account" do
+        expect { subject }.to raise_error(
+          described_class::TeacherAuthAccountExistsError,
+          "Teacher Auth account exists with the same TRN (user_id=#{teacher_auth_user.id}); refusing to create a new account",
+        )
+      end
+    end
+
     context "when user with email does not exist" do
       it "creates a new user with the UID and email" do
         expect(subject.uid).to eq provider_data_uid
