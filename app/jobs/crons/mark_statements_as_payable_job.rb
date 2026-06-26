@@ -1,7 +1,7 @@
 class Crons::MarkStatementsAsPayableJob < CronJob
   include Sentry::Cron::MonitorCheckIns
 
-  # run at 12AM every day
+  # run every day at midnight
   self.cron_expression = "0 0 * * *"
 
   sentry_monitor_check_ins slug: "mark-statements-as-payable"

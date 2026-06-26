@@ -1,6 +1,9 @@
 class Crons::CheckAnalyticsEntity < CronJob
   include Sentry::Cron::MonitorCheckIns
 
+  self.production_only = true
+
+  # run every day at 2 AM
   self.cron_expression = "0 2 * * *"
 
   sentry_monitor_check_ins slug: "check-analytics-entity"

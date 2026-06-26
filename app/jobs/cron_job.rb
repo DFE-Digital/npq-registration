@@ -12,6 +12,7 @@
 # https://github.com/codez/delayed_cron_job#custom-cronjob-superclass
 class CronJob < ApplicationJob
   class_attribute :cron_expression
+  class_attribute :production_only, default: false
 
   class << self
     # Schedules the cron job, ensuring that it is not rescheduled while already in progress.
