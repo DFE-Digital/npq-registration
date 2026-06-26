@@ -79,6 +79,35 @@ RSpec.describe User do
       user = build(:user, email: nil)
       expect(user).not_to be_valid
     end
+
+    it "allows trn_verified when the TRN is present" do
+      user = build(:user, :with_verified_trn, trn: "1234567")
+      expect(user).to be_valid
+    end
+
+    it "does not allow trn_verified when the TRN is nil" do
+      user = build(:user, :with_verified_trn, trn: nil)
+      expect(user).not_to be_valid
+      expect(user.errors[:trn_verified]).to include("TRN cannot be marked as verified when it is blank")
+    end
+
+    it "does not allow trn_verified when the TRN is blank" do
+      user = build(:user, :with_verified_trn, trn: "")
+      expect(user).not_to be_valid
+    end
+
+    it "allows a blank TRN when it is not verified" do
+      user = build(:user, trn: nil, trn_verified: false)
+      expect(user).to be_valid
+    end
+  end
+
+  describe "database constraints" do
+    it "rejects a blank TRN marked as verified" do
+      expect {
+        create(:user, trn: nil).update_column(:trn_verified, true)
+      }.to raise_error(ActiveRecord::StatementInvalid, /users_trn_present_when_verified/)
+    end
   end
 
   describe "scopes" do
@@ -164,17 +193,6 @@ RSpec.describe User do
 
       it "returns only users with a verified TRN" do
         expect(User.with_trn("1234567")).to contain_exactly(user_with_verified_trn)
-      end
-
-      # can be removed when constraint added (NPQ-3786)
-      context "when the TRN is blank" do
-        let(:user_with_blank_trn) { create(:user, trn: nil, trn_verified: true) }
-
-        before { user_with_blank_trn }
-
-        it "does not retrun users with a blank TRN" do
-          expect(User.with_trn(nil)).to be_empty
-        end
       end
     end
   end

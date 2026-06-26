@@ -44,7 +44,7 @@ module Users
             always_updated_attributes.merge(
               email:,
               trn:,
-              trn_verified: true,
+              trn_verified: trn.present?,
             ),
           )
           persist_token(user_matched_using_uid, provider_data) # TODO: needs testing
