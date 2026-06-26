@@ -37,18 +37,22 @@ class User < ApplicationRecord
 
   after_commit :touch_significantly_updated_at
 
-  scope :admins, -> { where(admin: true) }
-
   scope :with_get_an_identity_id, lambda {
     where.not(uid: nil)
          .where(provider: Omniauth::Strategies::TraOpenidConnect::NAME)
   }
+
+  scope :with_teacher_auth, -> { where(provider: Omniauth::Strategies::TeacherAuth::NAME) }
 
   scope :needing_token_refresh, lambda {
     where(trn: nil)
       .joins(:oauth_tokens)
       .merge(OauthToken.needs_refresh)
   }
+
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :archived, -> { where.not(archived_at: nil) }
+  scope :with_trn, ->(trn) { where(trn:, trn_verified: true).where.not(trn: nil) }
 
   def refresh_token
     oauth_tokens.refresh_token.first
@@ -126,7 +130,7 @@ class User < ApplicationRecord
   end
 
   def archived?
-    archived_email.present?
+    archived_at.present?
   end
 
   def set_closed_registration_feature_flag

@@ -11,7 +11,7 @@ module Users
     attribute :logger, default: -> { Rails.logger }
     private :user_to_merge, :user_to_keep, :set_uid
 
-    def call(dry_run: true)
+    def call(dry_run: true, allow_archived_users: false)
       logger.info "Dry Run" if dry_run
 
       ApplicationRecord.transaction do
@@ -21,7 +21,7 @@ module Users
         uid_to_keep = user_to_merge.uid if user_to_merge.uid.present? && user_to_keep.uid.blank?
 
         logger.info("Archiving user ID=#{user_to_merge.id}")
-        Users::Archiver.new(user: user_to_merge.reload).archive!
+        archive_user(user: user_to_merge, allow_archived_users:)
 
         if uid_to_keep && set_uid
           logger.info("Setting UID=#{uid_to_keep} on user ID=#{user_to_keep.id}")
@@ -53,6 +53,12 @@ module Users
           end
         end
       end
+    end
+
+    def archive_user(user:, allow_archived_users:)
+      return if allow_archived_users && user.reload.archived?
+
+      Users::Archiver.new(user: user_to_merge.reload).archive!
     end
   end
 end

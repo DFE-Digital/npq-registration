@@ -26,6 +26,7 @@ FactoryBot.define do
 
       uid { teacher_auth_uid }
       provider { "teacher_auth" }
+      trn_verified { trn.present? }
     end
 
     trait :with_random_name do

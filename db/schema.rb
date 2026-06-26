@@ -681,6 +681,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_12_142546) do
     t.string "uid"
     t.datetime "updated_at", null: false
     t.datetime "updated_from_tra_at", precision: nil
+    t.index ["archived_at"], name: "index_users_on_archived_at"
     t.index ["created_at"], name: "index_users_on_created_at_desc", order: :desc
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

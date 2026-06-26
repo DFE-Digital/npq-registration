@@ -121,5 +121,21 @@ RSpec.describe Users::MergeAndArchive do
         expect { subject }.not_to(change { Application.all.pluck(:user_id) })
       end
     end
+
+    context "when allow_archived_users is true" do
+      subject { described_class.new(user_to_merge:, user_to_keep:).call(dry_run: false, allow_archived_users: true) }
+
+      context "when the user to merge is already archived" do
+        before { user_to_merge.update!(archived_at: Time.zone.now) }
+
+        it "does not raise an error" do
+          expect { subject }.not_to raise_error
+        end
+
+        it "does not change the archived_at timestamp of the user to merge" do
+          expect { subject }.not_to(change { user_to_merge.reload.archived_at })
+        end
+      end
+    end
   end
 end

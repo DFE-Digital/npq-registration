@@ -459,7 +459,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
     context "when there is a user with a nil TRN, marked as verified" do
       # users were created like this before NPQ-3783
-      # keeping this test, as there isn't a database constraint to stop this scenario
+      # this test can be removed when database constraint added (NPQ-3786)
       before { create(:user, :with_teacher_auth, trn: nil, trn_verified: true) }
 
       it "does not match users with nil TRNs, but instead creates a new user" do

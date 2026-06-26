@@ -92,4 +92,38 @@ FactoryBot.define do
       }
     end
   end
+
+  factory :trs_person_deactivated_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+    transient do
+      deactivated_trn { "1234567" }
+      merged_with_trn { "3456789" }
+    end
+
+    message_id { SecureRandom.uuid }
+    message_type { "person.deactivated" }
+    status { "pending" }
+    sent_at { Time.zone.now }
+
+    message do
+      {
+        "deactivatedPerson" => {
+          "trn" => deactivated_trn,
+        },
+        "mergedWithPerson" => {
+          "trn" => merged_with_trn,
+        },
+      }
+    end
+
+    trait :no_merged_with_person do
+      message do
+        {
+          "deactivatedPerson" => {
+            "trn" => deactivated_trn,
+          },
+          "mergedWithPerson" => nil,
+        }
+      end
+    end
+  end
 end
