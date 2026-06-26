@@ -37,6 +37,22 @@ RSpec.describe ApplicationSubmissionMailer, type: :mailer do
 
     it { is_expected.to use_template(ApplicationSubmissionMailer::TEMPLATE_ID) }
 
+    context "when a template id is given" do
+      subject(:mail) do
+        described_class.application_submitted_mail(
+          ApplicationSubmissionMailer::SPRING_2026_TEMPLATE_ID,
+          to:,
+          full_name:,
+          provider_name:,
+          course_name:,
+          amount:,
+          ecf_id:,
+        )
+      end
+
+      it { is_expected.to use_template(ApplicationSubmissionMailer::SPRING_2026_TEMPLATE_ID) }
+    end
+
     it_behaves_like "a mailer with redacted logs"
   end
 end

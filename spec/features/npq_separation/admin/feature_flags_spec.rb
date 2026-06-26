@@ -31,6 +31,20 @@ RSpec.feature "Administering feature flags", :rack_test_driver, type: :feature d
     expect(Flipper.enabled?(Feature::REGISTRATION_OPEN)).to be(false)
   end
 
+  scenario "the 'Closed registration enabled' feature flag page links to the closed registration users page" do
+    sign_in_as_super_admin
+
+    visit npq_separation_admin_features_path
+    within("tr", text: "Closed registration enabled") do
+      page.click_link("View")
+    end
+
+    expect(page).to have_link(
+      "Closed registration users",
+      href: "/npq-separation/admin/registration-closed/closed-registration-users",
+    )
+  end
+
   scenario "check all feature flag pages are not missing translations" do
     sign_in_as_super_admin
 

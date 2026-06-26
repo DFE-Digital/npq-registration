@@ -1,4 +1,6 @@
 class OmniauthController < Devise::OmniauthCallbacksController
+  OMNIAUTH_ERROR_STRATEGY_KEY = "omniauth.error.strategy".freeze
+
   skip_before_action :verify_authenticity_token, only: [
     Omniauth::Strategies::TraOpenidConnect::NAME, Omniauth::Strategies::TeacherAuth::NAME
   ]
@@ -73,7 +75,15 @@ class OmniauthController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    redirect_to after_sign_in_path_for(current_user) and return if logged_in_user.present?
+    if logged_in_user.present?
+      if signed_in_with_attempted_provider?
+        return redirect_to after_sign_in_path_for(current_user)
+      elsif current_user.get_an_identity_provider? && attempted_strategy_name == Omniauth::Strategies::TeacherAuth::NAME.to_s
+        redirect_path = post_gai_failure_path
+        reset_session
+        return redirect_to redirect_path
+      end
+    end
 
     Rails.logger.info("[GAI][omniauth_failure] uid=#{try_to_extract_user_uid} error=#{try_to_extract_error_type}")
     send_error_to_sentry(
@@ -133,7 +143,24 @@ private
   end
 
   def user_starting_registration?
-    request.env["omniauth.params"]["start_now"] == "true"
+    request.env["omniauth.params"]&.fetch("start_now", nil) == "true"
+  end
+
+  def attempted_strategy_name
+    request.env[OMNIAUTH_ERROR_STRATEGY_KEY]&.name&.to_s
+  end
+
+  def signed_in_with_attempted_provider?
+    attempted_strategy_name.present? && current_user.provider == attempted_strategy_name
+  end
+
+  def post_gai_failure_path
+    if Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED) &&
+        !Flipper.enabled?(Feature::REGISTRATION_OPEN)
+      closed_registration_exception_path
+    else
+      root_path
+    end
   end
 
   def start_questionnaire_path(user)
@@ -162,10 +189,10 @@ private
 
   def strategy_name
     # Anything with the word auth in gets filtered in Sentry
-    if request.env["omniauth.error.strategy"]&.name&.to_s == "teacher_auth"
+    if request.env[OMNIAUTH_ERROR_STRATEGY_KEY]&.name&.to_s == "teacher_auth"
       return "onelogin"
     end
 
-    request.env["omniauth.error.strategy"].name
+    request.env[OMNIAUTH_ERROR_STRATEGY_KEY].name
   end
 end

@@ -34,36 +34,14 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
     end
 
     context "when serializing `previous_names`" do
-      context "when the config flag is enabled" do
-        let(:user) { create(:user, previous_names: ["Ben Smith", "Ben Doe"]) }
+      let(:user) { create(:user, previous_names: ["Ben Smith", "Ben Doe"]) }
 
-        before do
-          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(true)
-        end
-
-        it "serializes the `previous_names` array" do
-          expect(attributes["previous_names"]).to eq(["Ben Smith", "Ben Doe"])
-        end
-      end
-
-      context "when the config flag is disabled" do
-        let(:user) { create(:user, previous_names: ["Ben Smith", "Ben Doe"]) }
-
-        before do
-          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(false)
-        end
-
-        it "does not include the field" do
-          expect(attributes).not_to have_key("previous_names")
-        end
+      it "serializes the `previous_names` array" do
+        expect(attributes["previous_names"]).to eq(["Ben Smith", "Ben Doe"])
       end
 
       context "when the participant has no previous names" do
         let(:user) { create(:user, previous_names: []) }
-
-        before do
-          allow(Rails.configuration.x.api).to receive(:previous_names).and_return(true)
-        end
 
         it "serializes an empty array" do
           expect(attributes["previous_names"]).to eq([])
@@ -144,24 +122,8 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
     end
 
     context "when serializing `cohort_suffix` in enrolments" do
-      context "when the config flag is enabled" do
-        before do
-          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(true)
-        end
-
-        it "includes `cohort_suffix` in the enrolment" do
-          expect(attributes["npq_enrolments"][0]["cohort_suffix"]).to eq(application.cohort.suffix)
-        end
-      end
-
-      context "when the config flag is disabled" do
-        before do
-          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(false)
-        end
-
-        it "does not include `cohort_suffix` in the enrolment" do
-          expect(attributes["npq_enrolments"][0]).not_to have_key("cohort_suffix")
-        end
+      it "includes `cohort_suffix` in the enrolment" do
+        expect(attributes["npq_enrolments"][0]["cohort_suffix"]).to eq(application.cohort.suffix)
       end
     end
 

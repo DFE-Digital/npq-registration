@@ -19,6 +19,9 @@ module Users
 
       if user_matched_using_trn
         ApplicationRecord.transaction do
+          merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
+          blank_clashing_email_user(except: user_matched_using_trn)
+
           user_matched_using_trn.update!(
             always_updated_attributes.merge(
               email:,
@@ -27,7 +30,6 @@ module Users
             ),
           )
           persist_token(user_matched_using_trn, provider_data)
-          merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
           user_matched_using_trn.unarchive!
         end
 

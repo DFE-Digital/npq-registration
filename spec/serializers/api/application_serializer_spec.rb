@@ -255,30 +255,14 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
     end
 
     describe "cohort_suffix serialization" do
-      context "when the config flag is enabled" do
-        before do
-          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(true)
-        end
-
-        it "serializes the `cohort_suffix`" do
-          expect(attributes["cohort_suffix"]).to eq(cohort.suffix)
-        end
-
-        context "when `cohort` is `nil`" do
-          let(:cohort) { nil }
-
-          it { expect(attributes["cohort_suffix"]).to be_nil }
-        end
+      it "serializes the `cohort_suffix`" do
+        expect(attributes["cohort_suffix"]).to eq(cohort.suffix)
       end
 
-      context "when the config flag is disabled" do
-        before do
-          allow(Rails.configuration.x.api).to receive(:cohort_suffix).and_return(false)
-        end
+      context "when `cohort` is `nil`" do
+        let(:cohort) { nil }
 
-        it "does not include the field" do
-          expect(attributes).not_to have_key("cohort_suffix")
-        end
+        it { expect(attributes["cohort_suffix"]).to be_nil }
       end
     end
 

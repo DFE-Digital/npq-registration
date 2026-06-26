@@ -7,6 +7,12 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
     unhandled_message_type: "unhandled_message_type",
   }, suffix: true
 
+  IGNORED_MESSAGE_TYPES = %w[].freeze
+
+  def ignored_message_type?
+    IGNORED_MESSAGE_TYPES.include?(message_type)
+  end
+
   def processor_klass
     case message_type
     when "UserUpdated"

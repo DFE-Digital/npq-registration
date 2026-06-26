@@ -34,4 +34,22 @@ RSpec.feature "Registration whilst already signed in with DfE Identity", :no_js,
       expect(Sentry).to have_received(:capture_message)
     end
   end
+
+  scenario "visiting course page whilst not being signed in" do
+    allow(Feature).to receive(:registration_closed?).and_return(false)
+
+    visit("/registration/course-start-date")
+
+    expect_page_to_have(path: "/")
+    expect(Sentry).not_to have_received(:capture_message)
+  end
+
+  scenario "visiting course page directly whilst not being signed in and registration is closed" do
+    allow(Feature).to receive(:registration_closed?).and_return(true)
+
+    visit("/registration/course_start_date")
+
+    expect_page_to_have(path: "/registration/closed")
+    expect(Sentry).not_to have_received(:capture_message)
+  end
 end

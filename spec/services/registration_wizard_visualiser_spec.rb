@@ -1,14 +1,30 @@
 require "rails_helper"
 
 RSpec.describe RegistrationWizardVisualiser do
-  before { FileUtils.rm_rf Rails.root.join("tmp/visualisations_test") }
+  let(:dot_file) { Rails.root.join("tmp/visualisations_test/registration_wizard_visualisation.dot") }
+  let(:png_file) { Rails.root.join("tmp/visualisations_test/registration_wizard_visualisation.png") }
 
-  let :dot_file do
-    Rails.root.join("tmp/visualisations_test/registration_wizard_visualisation.dot")
+  before do
+    FileUtils.rm_rf dot_file
+    allow_any_instance_of(Object).to receive(:system).and_return(true)
   end
 
-  it "generates an dot graph of the wizard" do
-    expect { described_class.call(generate_image: false) }
-      .to change(dot_file, :exist?).from(false).to(true)
+  describe ".call" do
+    subject { described_class.call }
+
+    it "generates an dot graph of the wizard" do
+      expect { subject }.to change(dot_file, :exist?).from(false).to(true)
+    end
+
+    it "generates a PNG of the wizard" do
+      expect_any_instance_of(Object).to receive(:system).with(
+        "dot",
+        "-Tpng",
+        dot_file.to_s,
+        "-o",
+        png_file.to_s,
+      )
+      subject
+    end
   end
 end

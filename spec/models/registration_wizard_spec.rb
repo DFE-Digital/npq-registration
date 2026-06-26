@@ -1,29 +1,41 @@
 require "rails_helper"
 
 RSpec.describe RegistrationWizard do
-  subject { described_class.new(current_step:, store:, request:, current_user: user) }
+  subject(:registration_wizard) { described_class.new(current_step:, store:, request:, current_user: user) }
 
   let(:store) { {} }
   let(:session) { {} }
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
   let(:user) { create(:user) }
-  let(:current_step) { "share_provider" }
+  let(:current_step) { :share_provider }
   let(:cohort) { create(:cohort, :next) }
 
   before { create(:course, :additional_support_offer) }
 
   describe "#current_step" do
+    subject { described_class.new(current_step:, store:, request:, current_user: user).current_step }
+
     it "returns current step" do
-      expect(subject.current_step).to be(:share_provider)
+      expect(subject).to be(:share_provider)
     end
 
-    context "when invalid step" do
-      subject { described_class.new(current_step: "i_do_not_exist", store:, request:, current_user: user) }
+    context "when an invalid step" do
+      let(:current_step) { :i_do_not_exist }
 
       it "raises an error" do
-        expect {
-          subject.current_step
-        }.to raise_error(RegistrationWizard::InvalidStep)
+        expect { subject }.to raise_error(
+          RegistrationWizard::InvalidStep, "Could not find step: i_do_not_exist"
+        )
+      end
+    end
+
+    context "when a removed step" do
+      let(:current_step) { RegistrationWizard::REMOVED_REGISTRATION_STEPS.last }
+
+      it "raises an error" do
+        expect { subject }.to raise_error(
+          RegistrationWizard::RemovedStep, "This step has been removed: #{current_step}"
+        )
       end
     end
   end

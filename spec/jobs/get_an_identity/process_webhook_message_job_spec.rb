@@ -14,11 +14,26 @@ RSpec.describe GetAnIdentity::ProcessWebhookMessageJob do
 
     let(:sent_at) { Time.zone.now }
 
-    context "when webhook message is unhandled" do
+    context "when the message type is unknown" do
       let(:message_type) { "UserMerged" }
       let(:message) { {} }
 
-      it "updates the webhook message status to unhandled_message_type" do
+      it "raises an exception so the job retries and we are notified" do
+        expect {
+          described_class.perform_now(webhook_message:)
+        }.to raise_error(described_class::UnknownMessageTypeError, /No processor found for webhook message type: UserMerged/)
+      end
+    end
+
+    context "when the message type is on the ignore list" do
+      let(:message_type) { "UserMerged" }
+      let(:message) { {} }
+
+      before do
+        stub_const("GetAnIdentity::WebhookMessage::IGNORED_MESSAGE_TYPES", %w[UserMerged])
+      end
+
+      it "silently ignores it by setting the status to unhandled_message_type" do
         expect {
           described_class.perform_now(webhook_message:)
         }.to change(webhook_message, :status).from("pending").to("unhandled_message_type")

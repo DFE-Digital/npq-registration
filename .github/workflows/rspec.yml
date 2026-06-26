@@ -59,6 +59,25 @@ jobs:
         run: |-
           bundle exec rake lint:scss
 
+  brakeman:
+    name: Brakeman Security Analysis
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v6
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+          bundler-cache: true
+
+      - name: Run Brakeman
+        run: bundle exec brakeman --quiet --no-pager
+
   rspec:
     name: Run Rspec
 

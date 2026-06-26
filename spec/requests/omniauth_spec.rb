@@ -40,15 +40,112 @@ RSpec.describe "Omniauth callbacks", type: :request do
           end
         end
       end
+    end
+  end
 
-      context "when there is an omniauth failure" do
-        before { OmniAuth.config.mock_auth[:teacher_auth] = :failure }
+  describe "failure" do
+    before { OmniAuth.config.test_mode = true }
 
-        it "redirects to the failed sign in path with an error message" do
-          expect(subject).to redirect_to registration_wizard_show_path(:start)
-          expect(flash[:error]).to eq "There was an error. Please try again in a few moments. " \
-            "If this problem persists, contact us at continuing-professional-development@digital.education.gov.uk"
+    subject(:trigger_teacher_auth_failure) do
+      OmniAuth.config.mock_auth[:teacher_auth] = :failure
+      post "/users/auth/teacher_auth/callback"
+    end
+
+    def sign_in(user)
+      allow(User).to receive(:find_by).and_call_original
+      allow(User).to receive(:find_by).with(id: anything).and_return(user)
+    end
+
+    let(:error_message) do
+      "There was an error. Please try again in a few moments. " \
+        "If this problem persists, contact us at continuing-professional-development@digital.education.gov.uk"
+    end
+
+    context "when the user is already signed in via the provider they were attempting" do
+      let(:user) { create(:user, :with_teacher_auth) }
+
+      before { sign_in(user) }
+
+      it "keeps the user signed in and redirects as per a normal sign in" do
+        trigger_teacher_auth_failure
+
+        expect(response).to redirect_to(account_path)
+        expect(flash[:error]).to be_nil
+      end
+
+      it "does not report the failure to Sentry" do
+        expect(Sentry).not_to receive(:capture_exception)
+        trigger_teacher_auth_failure
+      end
+    end
+
+    context "when the user is signed in via GAI but attempting TeacherAuth" do
+      let(:user) { create(:user, :with_get_an_identity_id) }
+
+      before { sign_in(user) }
+
+      context "when closed registration is enabled and registration is not open for the user" do
+        before do
+          Flipper.enable(Feature::CLOSED_REGISTRATION_ENABLED)
+
+          Flipper.disable(Feature::REGISTRATION_OPEN)
         end
+
+        it "redirects to the closed registration exception page" do
+          trigger_teacher_auth_failure
+
+          expect(response).to redirect_to(closed_registration_exception_path)
+          expect(flash[:error]).to be_nil
+        end
+      end
+
+      context "when closed registration is not enabled" do
+        it "redirects to the home route" do
+          trigger_teacher_auth_failure
+
+          expect(response).to redirect_to(root_path)
+          expect(flash[:error]).to be_nil
+        end
+      end
+
+      context "when registration is open globally" do
+        before do
+          Flipper.enable(Feature::CLOSED_REGISTRATION_ENABLED)
+          Flipper.enable(Feature::REGISTRATION_OPEN)
+        end
+
+        it "redirects to the home route" do
+          trigger_teacher_auth_failure
+
+          expect(response).to redirect_to(root_path)
+        end
+      end
+    end
+
+    context "when the user is not signed in" do
+      it "reports to Sentry, sets an error and redirects to the failed sign in path" do
+        expect(Sentry).to receive(:capture_exception)
+
+        trigger_teacher_auth_failure
+
+        expect(response).to redirect_to(registration_wizard_show_path(:start))
+        expect(flash[:error]).to eq(error_message)
+      end
+    end
+
+    context "when signed in via GAI but attempting GAI (same provider mismatch on TeacherAuth path)" do
+      let(:user) { create(:user, :with_teacher_auth) }
+
+      before { sign_in(user) }
+
+      it "falls through to the error branch when providers do not match and it is not GAI->TeacherAuth" do
+        user.update!(provider: "some_other_provider")
+        expect(Sentry).to receive(:capture_exception)
+
+        trigger_teacher_auth_failure
+
+        expect(response).to redirect_to(registration_wizard_show_path(:start))
+        expect(flash[:error]).to eq(error_message)
       end
     end
   end
