@@ -1,13 +1,13 @@
-import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-bundle'
+import SwaggerUI from 'swagger-ui'
 
 const version = document.getElementById('swagger-ui').dataset.version
 
 document.addEventListener('DOMContentLoaded', () => {
-  SwaggerUIBundle({
+  SwaggerUI({
     url: `/api/docs/${version}/swagger.yaml`,
     dom_id: '#swagger-ui',
     deepLinking: true,
-    presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
-    plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+    presets: [SwaggerUI.presets.apis],
+    plugins: [SwaggerUI.plugins.DownloadUrl],
   });
 });
