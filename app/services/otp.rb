@@ -25,7 +25,7 @@ class OTP
       code.to_s.upcase.tr("OIL", "011")
     end
 
-    def valid_code?(code)
+    def valid_code_format?(code)
       code.to_s.match?(CODE_PATTERN)
     end
 
@@ -37,7 +37,7 @@ class OTP
   end
 
   def initialize(code:, expires_at:)
-    raise Invalid, "#{code.inspect} is not a valid OTP code" unless self.class.valid_code?(code)
+    raise Invalid, "#{code.inspect} is not a valid OTP code" unless self.class.valid_code_format?(code)
     raise Invalid, "#{expires_at.inspect} is not a valid expiry time" unless expires_at.acts_like?(:time)
 
     @code = code

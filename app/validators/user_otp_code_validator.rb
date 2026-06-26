@@ -11,7 +11,7 @@ class UserOTPCodeValidator < ActiveModel::EachValidator
 private
 
   def user_otp(user)
-    if user && OTP.valid_code?(user.otp_hash) && user.otp_expires_at.present?
+    if user && OTP.valid_code_format?(user.otp_hash) && user.otp_expires_at.present?
       OTP.from(code: user.otp_hash, expires_at: user.otp_expires_at)
     end
   end
