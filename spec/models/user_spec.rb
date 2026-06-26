@@ -194,17 +194,6 @@ RSpec.describe User do
       it "returns only users with a verified TRN" do
         expect(User.with_trn("1234567")).to contain_exactly(user_with_verified_trn)
       end
-
-      # can be removed when constraint added (NPQ-3786)
-      context "when the TRN is blank" do
-        let(:user_with_blank_trn) { create(:user, trn: nil, trn_verified: true) }
-
-        before { user_with_blank_trn }
-
-        it "does not retrun users with a blank TRN" do
-          expect(User.with_trn(nil)).to be_empty
-        end
-      end
     end
   end
 
