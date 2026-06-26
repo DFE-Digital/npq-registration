@@ -412,6 +412,18 @@ RSpec.describe User do
       end
     end
 
+    context "with different case email addresses" do
+      before { ClosedRegistrationUser.create!(email: email.downcase) }
+
+      let(:email) { "UPPER.CASE@example.example" }
+      let(:user) { create(:user, email:) }
+
+      it "matches anyway" do
+        expect { user.set_closed_registration_feature_flag }
+          .to change { Feature.registration_closed?(user) }.from(true).to(false)
+      end
+    end
+
     context "when user is not on the ClosedRegistrationUser list" do
       it "can not be added" do
         expect { user.set_closed_registration_feature_flag }.not_to change { Feature.registration_closed?(user) }.from(true)
