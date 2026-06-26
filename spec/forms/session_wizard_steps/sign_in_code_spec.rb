@@ -26,11 +26,20 @@ RSpec.describe SessionWizardSteps::SignInCode, type: :model do
       it { is_expected.to validate_presence_of(:code) }
     end
 
-    it { is_expected.to validate_length_of(:code).is_equal_to(6) }
+    it { is_expected.to validate_length_of(:code).is_equal_to(8) }
 
     context "when correct code given" do
-      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
-      let(:code) { "123456" }
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "ABCD2345", otp_expires_at: 10.minutes.from_now) }
+      let(:code) { "ABCD2345" }
+
+      it "passes" do
+        expect(subject).to be_valid
+      end
+    end
+
+    context "when correct code given in lower case" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "ABCD2345", otp_expires_at: 10.minutes.from_now) }
+      let(:code) { "abcd2345" }
 
       it "passes" do
         expect(subject).to be_valid
@@ -38,8 +47,8 @@ RSpec.describe SessionWizardSteps::SignInCode, type: :model do
     end
 
     context "when code expired" do
-      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 1.minute.ago) }
-      let(:code) { "123456" }
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "ABCD2345", otp_expires_at: 1.minute.ago) }
+      let(:code) { "ABCD2345" }
 
       it "fails" do
         subject.valid?
@@ -48,12 +57,42 @@ RSpec.describe SessionWizardSteps::SignInCode, type: :model do
     end
 
     context "when incorrect code given" do
-      let(:admin) { FactoryBot.create(:admin, otp_hash: "222222", otp_expires_at: 1.minute.ago) }
-      let(:code) { "111111" }
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "WXYZ6789", otp_expires_at: 1.minute.ago) }
+      let(:code) { "ABCD2345" }
 
       it "fails" do
         subject.valid?
 
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
+      end
+    end
+
+    context "when the user has no stored code" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: nil, otp_expires_at: nil) }
+      let(:code) { "ABCD2345" }
+
+      it "is incorrect and does not raise" do
+        expect { subject.valid? }.not_to raise_error
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
+      end
+    end
+
+    context "when the stored code is a legacy 6 digit value" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
+      let(:code) { "ABCD2345" }
+
+      it "is incorrect and does not raise" do
+        expect { subject.valid? }.not_to raise_error
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
+      end
+    end
+
+    context "when the stored code has no expiry" do
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "ABCD2345", otp_expires_at: nil) }
+      let(:code) { "ABCD2345" }
+
+      it "is incorrect and does not raise" do
+        expect { subject.valid? }.not_to raise_error
         expect(subject.errors).to be_of_kind(:code, :incorrect)
       end
     end
