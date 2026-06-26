@@ -12,25 +12,28 @@ class OTP
 
   attr_reader :code, :expires_at
 
-  def self.from(code:, expires_at:)
-    new(code:, expires_at:)
-  end
+  class << self
+    def from(code:, expires_at:)
+      new(code:, expires_at:)
+    end
 
-  def self.generate
-    from(code: random_code, expires_at: VALIDITY_PERIOD.from_now)
-  end
+    def generate
+      from(code: random_code, expires_at: VALIDITY_PERIOD.from_now)
+    end
 
-  def self.normalize(code)
-    code.to_s.upcase.tr("OIL", "011")
-  end
+    def normalize(code)
+      code.to_s.upcase.tr("OIL", "011")
+    end
 
-  def self.random_code
-    Array.new(CODE_LENGTH) { CROCKFORD_BASE32[SecureRandom.random_number(CROCKFORD_BASE32.size)] }.join
-  end
-  private_class_method :random_code
+    def valid_code?(code)
+      code.to_s.match?(CODE_PATTERN)
+    end
 
-  def self.valid_code?(code)
-    code.to_s.match?(CODE_PATTERN)
+  private
+
+    def random_code
+      Array.new(CODE_LENGTH) { CROCKFORD_BASE32[SecureRandom.random_number(CROCKFORD_BASE32.size)] }.join
+    end
   end
 
   def initialize(code:, expires_at:)
