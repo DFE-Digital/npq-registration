@@ -57,21 +57,21 @@ RSpec.describe OTP do
     end
   end
 
-  describe ".valid_code?" do
+  describe ".valid_code_format?" do
     it "is true for 8 characters from the alphabet" do
-      expect(described_class.valid_code?("ABCD2345")).to be(true)
+      expect(described_class.valid_code_format?("ABCD2345")).to be(true)
     end
 
     it "is false for nil" do
-      expect(described_class.valid_code?(nil)).to be(false)
+      expect(described_class.valid_code_format?(nil)).to be(false)
     end
 
     it "is false for the wrong length" do
-      expect(described_class.valid_code?("ABCD234")).to be(false)
+      expect(described_class.valid_code_format?("ABCD234")).to be(false)
     end
 
     it "is false for characters outside the alphabet" do
-      expect(described_class.valid_code?("ABCDILO1")).to be(false)
+      expect(described_class.valid_code_format?("ABCDILO1")).to be(false)
     end
   end
 
