@@ -48,6 +48,11 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
         expect(TeachingRecordSystem::RefreshTokens).not_to have_received(:refresh!)
         expect(TeachingRecordSystem::ActivateTrnRequest).not_to have_received(:activate!)
       end
+
+      it "does not send a TRN allocated email" do
+        expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail, deliver_now: true)
+        perform_job
+      end
     end
 
     context "with user without TRN" do
@@ -59,6 +64,14 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
             .to change { user.reload.trn }.from(nil).to(allocated_trn)
             .and change(user.oauth_tokens, :count).from(1).to(0)
         end
+
+        it "sends a TRN allocated email" do
+          expect(TrnAllocatedMailer).to send_mail(:trn_allocated_mail, deliver_now: true)
+            .with_params(to: user.email,
+                         full_name: user.full_name,
+                         trn: allocated_trn)
+          perform_job
+        end
       end
 
       context "when activate API does not return a TRN" do
@@ -66,6 +79,11 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
           expect { perform_job }
             .to not_change { user.reload.trn }
             .and change(user.oauth_tokens, :count).from(1).to(0)
+        end
+
+        it "does not send a TRN allocated email" do
+          expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail, deliver_now: true)
+          perform_job
         end
       end
     end

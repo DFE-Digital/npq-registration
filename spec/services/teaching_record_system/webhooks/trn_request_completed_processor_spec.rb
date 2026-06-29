@@ -17,6 +17,14 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
       )
     end
 
+    it "sends a TRN allocated email" do
+      expect(TrnAllocatedMailer).to send_mail(:trn_allocated_mail)
+        .with_params(to: user.email,
+                     full_name: user.full_name,
+                     trn: new_trn)
+      subject
+    end
+
     it "marks the webhook message as processed" do
       expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
     end
