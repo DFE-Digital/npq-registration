@@ -18,10 +18,10 @@ module Users
       user_matched_using_trn = verified_teacher_auth_matching_users.first || verified_trn_matching_users.first
 
       if user_matched_using_trn
-        merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users.excluding(user_matched_using_trn))
-        blank_clashing_email_user(except: user_matched_using_trn)
-
         ApplicationRecord.transaction do
+          merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users.excluding(user_matched_using_trn))
+          blank_clashing_email_user(except: user_matched_using_trn)
+
           user_matched_using_trn.update!(
             always_updated_attributes.merge(
               email:,
@@ -30,6 +30,7 @@ module Users
             ),
           )
           persist_token(user_matched_using_trn, provider_data)
+          user_matched_using_trn.unarchive!
         end
 
         return user_matched_using_trn
@@ -47,7 +48,8 @@ module Users
               trn_verified: true,
             ),
           )
-          persist_token(user_matched_using_uid, provider_data) # TODO: needs testing
+          persist_token(user_matched_using_uid, provider_data)
+          user_matched_using_uid.unarchive!
         end
 
         return user_matched_using_uid
@@ -83,6 +85,7 @@ module Users
 
     def persist_token(user, provider_data)
       refresh_token = provider_data.credentials&.refresh_token
+
       if user.trn.blank? && refresh_token.present?
         user.store_refresh_token!(refresh_token)
         true
@@ -104,9 +107,8 @@ module Users
     def verified_trn_matching_users
       @verified_trn_matching_users ||=
         User
-          .not_archived
           .with_trn(trn)
-          .order(updated_at: :desc)
+          .order(archived_at: :desc, updated_at: :desc)
           .to_a
     end
 
@@ -138,7 +140,7 @@ module Users
 
     def merge_and_archive_other_users(user_to_keep, users_to_merge)
       users_to_merge.each do |user_to_merge|
-        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
+        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false, allow_archived_users: true)
       end
     end
 

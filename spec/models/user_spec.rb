@@ -378,7 +378,7 @@ RSpec.describe User do
 
   describe "#archived?" do
     context "when user is archived" do
-      subject(:user) { build(:user, :archived) }
+      let(:user) { build(:user, :archived) }
 
       it "returns true" do
         expect(user.archived?).to be(true)
@@ -386,10 +386,30 @@ RSpec.describe User do
     end
 
     context "when user is not archived" do
-      subject(:user) { build(:user) }
+      let(:user) { build(:user) }
 
       it "returns false" do
         expect(user.archived?).to be(false)
+      end
+    end
+  end
+
+  describe "#unarchive!" do
+    subject { user.unarchive! }
+
+    context "when the user is not archived" do
+      let(:user) { build(:user) }
+
+      it "does not update the user" do
+        expect { subject }.not_to change(user, :updated_at)
+      end
+    end
+
+    context "when the user is archived" do
+      let(:user) { create(:user, :archived) }
+
+      it "unarchives the user" do
+        expect { subject }.to change(user, :archived_at).to(nil).and change(user, :archived_email).to(nil)
       end
     end
   end
