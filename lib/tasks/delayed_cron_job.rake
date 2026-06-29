@@ -41,7 +41,7 @@ private
       cron_job = cron_job_class_constant(cron_job_class)
 
       if cron_job
-        next unless cron_job.cron_expression != delayed_job.cron
+        next if cron_job.cron_expression == delayed_job.cron
 
         logger.info "delayed job found with out-of-date cron expression - rescheduling cron job: #{cron_job_class}"
         delayed_job.destroy!
