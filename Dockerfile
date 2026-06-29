@@ -22,8 +22,6 @@ RUN gem install bundler:2.5.15 --no-document
 # Install gems defined in Gemfile
 COPY .ruby-version Gemfile Gemfile.lock ./
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
 ARG BUNDLE_WITHOUT="development test"
 # Install gems and remove gem cache
 RUN bundler -v && \
@@ -33,7 +31,7 @@ RUN bundler -v && \
     bundle install --retry=5 && \
     rm -rf /usr/local/bundle/cache
 
-# Install node packages defined in package.json, including webpack
+# Install node packages defined in package.json, including esbuild
 COPY package.json yarn.lock ./
 RUN yarn install --immutable --ignore-scripts
 

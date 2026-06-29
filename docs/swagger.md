@@ -46,8 +46,8 @@ Once updates are made to the schemas, you will need to run the `rswag:specs:swag
 
 ## Swagger UI
 
-We currently have a simple controller that renders out a custom layout to pull in a JS pack containing `swagger-ui-dist`. This will boot Swagger UI using the version of the yaml file in the path, so `/api/docs/v3` will render `/api/docs/v3/swagger.yaml`.
+We currently have a simple controller that renders out a custom layout to pull in a JS pack containing `swagger-ui`. This will boot Swagger UI using the version of the yaml file in the path, so `/api/docs/v3` will render `/api/docs/v3/swagger.yaml`.
 
-We have to use `swagger-ui-dist` instead of `swagger-ui` as the latter didn't transpile properly with the outdated version of webpacker/webpack we used to have.
+We force React v18 in `package.json`. `swagger-ui` still uses `ReactDOM.render`, which React 19 removed, so with React 19 the docs page was blank. Do not bump React to 19 until `swagger-ui` supports it. React is only used by `swagger-ui`, so nothing else should be affected.
 
 We plan on replacing Swagger UI with a more accessible/custom documentation solution in the future.
