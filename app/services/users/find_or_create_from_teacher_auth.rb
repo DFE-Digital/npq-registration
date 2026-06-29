@@ -15,11 +15,11 @@ module Users
     attr_reader :provider_data, :access_token, :uid, :trn, :email, :full_name, :feature_flag_id
 
     def call
-      user_matched_using_trn = verified_trn_matching_users.first
+      user_matched_using_trn = verified_teacher_auth_matching_users.first || verified_trn_matching_users.first
 
       if user_matched_using_trn
         ApplicationRecord.transaction do
-          merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users[1..])
+          merge_and_archive_other_users(user_matched_using_trn, verified_trn_matching_users.excluding(user_matched_using_trn))
           blank_clashing_email_user(except: user_matched_using_trn)
 
           user_matched_using_trn.update!(
@@ -95,6 +95,13 @@ module Users
       else
         false
       end
+    end
+
+    def verified_teacher_auth_matching_users
+      User
+        .where(trn:, trn_verified: true, archived_at: nil, provider: Omniauth::Strategies::TeacherAuth::NAME)
+        .where.not(trn: nil)
+        .order(updated_at: :desc)
     end
 
     def verified_trn_matching_users

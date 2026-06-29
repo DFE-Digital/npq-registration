@@ -530,4 +530,29 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
     end
   end
+
+  context "when there is an existing GAI account with the same TRN (NPQ-3823)" do
+    let(:trn) { "1234567" }
+    let(:email) { personal_email }
+    let(:personal_email) { "personal@example.com" }
+    let(:work_email) { "work@example.com" }
+
+    let(:existing_teacher_auth_account) { create(:user, :with_teacher_auth, :with_verified_trn, trn:, uid:, email: personal_email) }
+    let(:application) { create(:application, user: existing_teacher_auth_account) }
+    let(:old_gai_account) { create(:user, :with_get_an_identity_id, :with_verified_trn, trn:, email: work_email) }
+
+    before do
+      # teacher auth account is deliberately older than the GAI account to simulate the bug,
+      # as it is a GAI account that was created first, then updated to be a teacher auth account
+      existing_teacher_auth_account
+      old_gai_account
+    end
+
+    it "archives the clashing GAI account" do
+      subject
+      expect(old_gai_account.reload).to be_archived
+      expect(existing_teacher_auth_account.reload).not_to be_archived
+      expect(application.reload.user).to eq(existing_teacher_auth_account)
+    end
+  end
 end
