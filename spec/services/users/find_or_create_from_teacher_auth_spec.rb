@@ -66,8 +66,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
   end
 
   before do
-    create(:user, trn:, trn_verified: trn.present?, archived_at: 1.day.ago)
-
     if trn.present?
       stub_person_api
         .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
