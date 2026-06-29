@@ -41,13 +41,19 @@ private
       cron_job = cron_job_class_constant(cron_job_class)
 
       if cron_job
+        if cron_job.production_only && !Rails.env.production?
+          logger.info "delayed job has changed to production only - deleting delayed job: #{cron_job_class}"
+          delayed_job.destroy!
+          next
+        end
+
         next if cron_job.cron_expression == delayed_job.cron
 
         logger.info "delayed job found with out-of-date cron expression - rescheduling cron job: #{cron_job_class}"
         delayed_job.destroy!
         cron_job.schedule
       else
-        logger.info "delayed job found for deleted cron job - deleting delayed job"
+        logger.info "delayed job found for deleted cron job - deleting delayed job: #{cron_job_class}"
         delayed_job.destroy!
       end
     end

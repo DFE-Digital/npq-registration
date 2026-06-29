@@ -115,6 +115,26 @@ RSpec.describe "Delayed::Cron::Job tasks" do
       end
     end
 
+    context "when a cron job is changed from 'all environments allowed' to production-only" do
+      let(:current_cron_jobs) { [ScheduledCronJob] }
+
+      before do
+        scheduled_job = Delayed::Job.enqueue ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper.new("job_class" => ScheduledCronJob.to_s)
+        scheduled_job.update!(cron: "31 1 * * *")
+        stub_const("ScheduledCronJob", production_only_cron_job_class)
+      end
+
+      it_behaves_like "using an advisory lock"
+
+      it "deletes the delayed job for the deleted cron job" do
+        expect { run_task }.to change(cron_delayed_jobs, :count).from(1).to(0)
+      end
+
+      it "does not re-schedule to cron job" do
+        expect { run_task }.not_to have_enqueued_job
+      end
+    end
+
     context "when the cron schedule changes on an existing cron job" do
       let(:current_cron_jobs) { [ScheduledCronJob] }
 
