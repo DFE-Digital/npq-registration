@@ -1628,8 +1628,9 @@ components:
                   type: boolean
                   example: true
                 schedule_identifier:
-                  description: The new schedule of the participant
-                  nullable: false
+                  description: The new schedule of the application - if it is not
+                    specified a default schedule will be set
+                  nullable: true
                   type: string
                   example: npq-aso-march
                   enum:
