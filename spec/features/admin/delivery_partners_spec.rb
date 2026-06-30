@@ -1,0 +1,217 @@
+require "rails_helper"
+
+RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature do
+  include Helpers::AdminLogin
+
+  let(:admin) { create(:admin) }
+
+  context "when not logged in" do
+    scenario "delivery partners interface is inaccessible" do
+      visit admin_delivery_partners_path
+      expect(page).to have_current_path(sign_in_path)
+    end
+  end
+
+  context "when logged in as admin" do
+    before { sign_in_as_admin }
+
+    scenario "it displays the list of delivery partners" do
+      delivery_partners = create_list(:delivery_partner, 11).sort_by(&:name)
+
+      visit admin_delivery_partners_path
+
+      expect(page).to have_content("Delivery partners")
+
+      # Test delivery partner pagination
+      delivery_partners[0..9].each do |delivery_partner|
+        expect(page).to have_content(delivery_partner.name)
+        expect(page).to have_link("View", href: admin_delivery_partner_path(delivery_partner))
+      end
+
+      page.find("[rel=next]").click
+
+      delivery_partners[10..].each do |delivery_partner|
+        expect(page).to have_content(delivery_partner.name)
+        expect(page).to have_link("View", href: admin_delivery_partner_path(delivery_partner))
+      end
+    end
+
+    scenario "it allows viewing a delivery partner's details" do
+      delivery_partner = create(:delivery_partner)
+      cohort = create(:cohort)
+      create(:delivery_partnership, delivery_partner:, lead_provider: LeadProvider.first, cohort:)
+
+      visit admin_delivery_partners_path
+      click_link "View"
+
+      within(".govuk-summary-list") do |summary_list|
+        expect(summary_list).to have_summary_item("Name", delivery_partner.name)
+        expect(summary_list).to have_summary_item("Delivery partner ID", delivery_partner.ecf_id)
+        expect(summary_list).to have_summary_item("Number of providers assigned", 1)
+      end
+
+      expect(page).to have_table(with_rows: [{ "Provider" => LeadProvider.first.name, "Cohort" => cohort.description }])
+    end
+
+    scenario "it allows creating a new delivery partner" do
+      visit admin_delivery_partners_path
+      click_link "Add a delivery partner"
+
+      expect(page).to have_css("h1", text: "Add a delivery partner")
+
+      expect {
+        fill_in "Enter the delivery partner's name", with: "New Test Partner"
+        click_button "Save"
+      }.to change(DeliveryPartner, :count).by(1)
+
+      expect(page).to have_content("Delivery partners")
+      expect(page).to have_content("Delivery partner created")
+      expect(page).to have_content("New Test Partner")
+    end
+
+    context "when creating a delivery partner with a similar name to an existing delivery partner" do
+      before do
+        create(:delivery_partner, name: "Acme Teaching School Hub")
+      end
+
+      scenario "it shows similarly named delivery partners" do
+        visit new_admin_delivery_partner_path
+        fill_in "Enter the delivery partner's name", with: "Acme TSH"
+        click_button "Save"
+
+        expect(page).to have_css("h1", text: "We found similar delivery partners")
+        expect(page).to have_content("Acme Teaching School Hub")
+
+        click_button "Continue"
+        expect(page).to have_content("There is a problem")
+
+        choose "No", visible: :all
+        click_button "Continue"
+        expect(page).to have_current_path(admin_delivery_partners_path)
+
+        click_link "Add a delivery partner"
+        fill_in "Enter the delivery partner's name", with: "Acme TSH"
+        click_button "Save"
+        choose "Yes", visible: :all
+        click_button "Continue"
+        expect(page).to have_content("Delivery partner created")
+        expect(page).to have_content("Acme TSH")
+        expect(DeliveryPartner.where(name: "Acme TSH").count).to eq(1)
+      end
+    end
+
+    scenario "when creating a delivery partner with invalid data, it shows validation errors" do
+      visit admin_delivery_partners_path
+      click_link(href: new_admin_delivery_partner_path)
+
+      fill_in "Enter the delivery partner's name", with: ""
+      click_button "Save"
+
+      expect(page).to have_content("Add a delivery partner")
+      expect(page).to have_content("can't be blank")
+    end
+
+    scenario "it allows updating an existing delivery partner" do
+      create(:delivery_partner, name: "Original Partner Name")
+
+      visit admin_delivery_partners_path
+      click_link "View"
+      click_link "Change name"
+
+      expect(page).to have_content("Change delivery partner name")
+      expect(page).to have_content("Original Partner Name")
+
+      fill_in "Enter the delivery partner's name", with: "Updated Partner Name"
+      click_button "Save"
+
+      expect(page).to have_content("Delivery partners")
+      expect(page).to have_content("Delivery partner updated")
+      expect(page).to have_content("Updated Partner Name")
+      expect(page).not_to have_content("Original Partner Name")
+    end
+
+    context "when updating a delivery partner with a similar name to an existing delivery partner" do
+      before do
+        create(:delivery_partner, name: "Teaching")
+        create(:delivery_partner, name: "Learning")
+      end
+
+      scenario "it shows similarly named delivery partners" do
+        visit admin_delivery_partners_path
+        within("tr", text: "Learning") do
+          click_link "View"
+        end
+        click_link "Change name"
+        fill_in "Enter the delivery partner's name", with: "Teaching TSH"
+        click_button "Save"
+
+        expect(page).to have_css("h1", text: "We found similar delivery partners")
+        expect(page).to have_content("Teaching")
+
+        click_button "Continue"
+        expect(page).to have_content("There is a problem")
+
+        choose "No", visible: :all
+        click_button "Continue"
+        expect(page).to have_current_path(admin_delivery_partners_path)
+
+        within("tr", text: "Learning") do
+          click_link "View"
+        end
+        click_link "Change name"
+        fill_in "Enter the delivery partner's name", with: "Teaching TSH"
+        click_button "Save"
+        choose "Yes", visible: :all
+        click_button "Continue"
+        expect(page).to have_content("Delivery partner updated")
+        expect(page).to have_content("Teaching TSH")
+        expect(DeliveryPartner.where(name: "Teaching TSH").count).to eq(1)
+      end
+    end
+
+    scenario "when updating a delivery partner with invalid data, it shows validation errors" do
+      create(:delivery_partner, name: "Original Partner Name")
+
+      visit admin_delivery_partners_path
+      click_link "View"
+      click_link "Change name"
+
+      fill_in "Enter the delivery partner's name", with: ""
+      click_button "Save"
+
+      expect(page).to have_content("Change delivery partner name")
+      expect(page).to have_content("can't be blank")
+    end
+
+    scenario "cancel button on new form redirects back to index page" do
+      visit new_admin_delivery_partner_path
+
+      click_link "Cancel"
+      expect(page).to have_current_path(admin_delivery_partners_path)
+    end
+
+    scenario "cancel button on edit form redirects back to delivery partner page" do
+      delivery_partner = create(:delivery_partner)
+
+      visit edit_admin_delivery_partner_path(delivery_partner)
+
+      click_link "Cancel"
+      expect(page).to have_current_path(admin_delivery_partner_path(delivery_partner))
+    end
+
+    scenario "searching for a delivery partner" do
+      create_list(:delivery_partner, 10)
+      create(:delivery_partner, name: "A different delivery partner")
+
+      visit admin_delivery_partners_path
+      fill_in("Find a delivery partner", with: "different")
+      click_button("Search")
+
+      expect(page).to have_css("tbody tr.govuk-table__row", count: 1)
+
+      within first("tbody tr.govuk-table__row") do |row|
+        expect(row.find("td:nth-child(1)").text).to eq("A different delivery partner")
+      end
+    end
+  end
+end

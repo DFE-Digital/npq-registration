@@ -1,0 +1,97 @@
+<%= render "applications_side_navigation" %>
+
+<h1 class="govuk-heading-l">Applications</h1>
+
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :q,
+        value: params[:q],
+        label: { text: "Find an application", size: "m" },
+        hint: { text: "Search by name, application ID or declaration ID", size: "s" },
+      )
+    %>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :training_status,
+            Application.training_statuses.keys,
+            :to_s,
+            :humanize,
+            options: { selected: params[:training_status], include_blank: "All" },
+            label: { text: "Application status", size: "s" },
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :lead_provider_approval_status,
+            Application.lead_provider_approval_statuses.keys,
+            :to_s,
+            :humanize,
+            options: { selected: params[:lead_provider_approval_status], include_blank: "All" },
+            label: { text: "Provider approval status", size: "s" },
+          )
+        %>
+      </div>
+    </div>
+
+    <%=
+      f.govuk_collection_select(
+        :cohort_id,
+        [OpenStruct.new(id: "all", description: "All")] + Cohort.all.order_by_latest.to_a,
+        :id,
+        :description,
+        options: { selected: params[:cohort_id].presence || default_cohort&.id },
+        label: { text: "Year of application", size: "s" }
+      )
+    %>
+
+    <%=
+      f.govuk_collection_select(
+        :work_setting,
+        Application.distinct(:work_setting).pluck(:work_setting).compact.sort,
+        :to_s,
+        :humanize,
+        options: { selected: params[:work_setting], include_blank: "All" },
+        label: { text: "Work setting", size: "s" }
+      )
+    %>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Submitted")
+        row.with_cell(text: "Name")
+        row.with_cell(text: "Workplace")
+        row.with_cell(text: "Actions")
+      end
+    end
+
+    table.with_body do |body|
+      @applications.each do |application|
+        body.with_row do |row|
+          row.with_cell(text: application.created_at.to_fs(:govuk_short))
+          row.with_cell(text: application.user.full_name)
+          row.with_cell(text: application.employer_name_to_display)
+          row.with_cell(text: govuk_link_to("View", admin_application_path(application.id)))
+        end
+      end
+    end
+  end
+%>
+
+<% if @applications.none? %>
+  <p class="govuk-body">No applications match the search and filters.</p>
+<% end %>
+
+<%= govuk_pagination(pagy: @pagy) %>

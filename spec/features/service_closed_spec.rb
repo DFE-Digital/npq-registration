@@ -97,7 +97,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/registration-closed/closed-registration-users"
+      visit "/admin/registration-closed/closed-registration-users"
       fill_in("Email address", with: email)
       click_on("Add user")
 
@@ -124,7 +124,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/registration-closed/closed-registration-users"
+      visit "/admin/registration-closed/closed-registration-users"
       fill_in("Email", with: email)
       click_on("Add user")
 
@@ -136,7 +136,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
       choose_course_start_date
 
-      visit "/npq-separation/admin/registration-closed/closed-registration-users"
+      visit "/admin/registration-closed/closed-registration-users"
 
       click_link("Remove access")
       click_link("Remove access")
@@ -159,7 +159,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/registration-closed/closed-registration-users"
+      visit "/admin/registration-closed/closed-registration-users"
       fill_in("Email", with: other_email)
       click_on("Add user")
 
@@ -194,7 +194,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
       before do
         visit "/"
         sign_in_as(super_admin)
-        visit "/npq-separation/admin/registration-closed/closed-registration-users"
+        visit "/admin/registration-closed/closed-registration-users"
         fill_in("Email address", with: email)
         click_on("Add user")
         click_link("Sign out")

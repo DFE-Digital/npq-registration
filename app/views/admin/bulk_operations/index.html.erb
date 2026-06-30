@@ -1,0 +1,9 @@
+<h1 class="govuk-heading-l">Bulk changes</h1>
+
+<ul class="govuk-list govuk-list--bullet">
+  <%= tag.li( govuk_link_to("Revert applications to pending", admin_bulk_operations_revert_applications_to_pending_index_path, no_visited_state: true,)) %>
+  <%= tag.li( govuk_link_to("Reject applications", admin_bulk_operations_reject_applications_path, no_visited_state: true,)) %>
+  <%= tag.li( govuk_link_to("Update and verify TRNs", admin_bulk_operations_update_and_verify_trns_path, no_visited_state: true,)) %>
+  <%= tag.li( govuk_link_to("Submit declarations for providers", admin_bulk_operations_submit_declarations_path, no_visited_state: true,)) %>
+  <%= tag.li( govuk_link_to("Backfill declaration delivery partners", admin_bulk_operations_backfill_declaration_delivery_partners_path, no_visited_state: true,)) %>
+</ul>

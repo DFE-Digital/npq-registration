@@ -775,6 +775,101 @@ en:
         sync_log: "ECF Sync Log"
         tabs: "Tabs"
         applications: "Applications"
+    admins:
+      new:
+        title: "Add a new admin"
+      index:
+        super_admins:
+          summary_text: "What's the difference between super admins and regular admins?"
+          text_html: |
+            Regular admins are capable of logging into the admin interface to view the dashboard, users, applications, along with triggering syncs of unsynced data.
+            <br>
+            <br>
+            Super Admins also have the ability to add and remove other admins, create new super admins, and manage feature flags.
+        admin_type:
+          super_admin: Super Admin
+          admin: Admin
+        buttons:
+          delete: "Delete"
+          elevate: "Make Super Admin"
+        confirm:
+          elevate: "Are you sure you want to make this user a super admin? This will give them access to all admin features and the ability to make other users super admins. It cannot be reverted without developer intervention."
+          delete: "This record will be permenantly deleted."
+    super_admins:
+      update:
+        success: Super admin permissions granted to %{email}
+        failure: Failed to grant super admin permissions to %{email}, please contact technical support if this problem persists.
+    features:
+      show:
+        registration_open_html: |
+          <p class="govuk-body">When this feature is turned on, registration is open. Users can register for an NPQ as normal.</p>
+          <p class="govuk-body">When this feature is turned off, registration is closed. Users cannot register for an NPQ, unless the <a href="/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature is turned on to allow certain users to register late.</p>
+        closed_registration_enabled_html: |
+          <p class="govuk-body">When this feature is turned on, specified users can register for an NPQ even when the service is closed to the general public.</p>
+          <p class="govuk-body">Use the <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> feature flag if you need to close the service to the general public.
+          <p class="govuk-body">To view or manage who can register while the service is closed, visit <a href="/admin/registration-closed/closed-registration-users" class="govuk-link">Closed registration users</a>.</p>
+          <p class="govuk-body">When both the Registration open and Closed registration enabled feature flags are turned off, no one will be able to register.</p>
+        declarations_require_delivery_partner_html: |
+          <p class="govuk-body">When this feature is turned on, submitting a declaration for the 2024 cohort onwards will require the delivery partner to be included.</p>
+          <p class="govuk-body">When this feature is turned off, submitting a declaration does not require a delivery partner, but will still accept a declaration with a delivery partner.</p>
+        maintenance_banner_html: |
+          <p class="govuk-body">When this feature is turned on, a banner will be displayed at the top of every page to inform users that the service is down for maintenance.</p>
+        dfe_analytics_enabled_html: |
+          <p class="govuk-body">When this feature is turned on, events will be sent to DfE Analytics.</p>
+    course_payment_overview_component:
+      course_total: Course total
+      output_payment: Output payment
+      users: Users
+      payment_per_participant: Payment per participant
+      payment_type: Payment type
+      service_fee: Service fee
+      targeted_delivery_funding: Targeted delivery funding
+      total_declarations: Total declarations
+      total_not_eligible_for_funding: Total not eligible for funding
+      total: Total
+    statement_details_component:
+      clawbacks: Clawbacks
+      cut_off_date: Output payment cut off date
+      output_payment: Output payment
+      service_fee: Service fee
+      targeted_delivery_funding: Targeted delivery funding
+      total_completed: Total completed
+      total_net_vat: Total net VAT
+      total_retained: Total retained
+      total_starts: Total starts
+      total_voids: Total voids
+      totals: Totals
+      view: View
+    adjustments_table_component:
+      description: Description
+      amount: Amount
+      actions: Actions
+      edit: Edit
+      remove: Remove
+      total: Total
+    finance:
+      statements:
+        payment_authorisations:
+          new:
+            title: "Check %{statement_name} statement details before authorising for payment"
+            button: "Authorise for payment"
+            checks_done_legend: Have all necessary assurance checks been done?
+          tag:
+            content: "Authorised for payment at %{statement_marked_as_paid_at}"
+          banner:
+            title: "Authorising for payment"
+            content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
+    webhook_messages:
+      show:
+        title: "Webhook message"
+        message_id: "Message ID"
+        message_type: "Message Type"
+        status: "Status"
+        sent_at: "Sent at"
+        created_at: "Received at"
+        processed_at: "Processed at"
+        status_comment: "Status Comment"
+        message: "Message"
 
   course:
     embedded_sentence:
@@ -811,104 +906,6 @@ en:
     outcome:
       passed_html: "<a href=\"https://access-your-teaching-qualifications.education.gov.uk/qualifications/start\" class=\"govuk-link\">Access your teaching qualifications</a> to get your certificate."
       failed: "If you think this is mistake or need to appeal this outcome, contact your training provider."
-
-  npq_separation:
-    admin:
-      admins:
-        new:
-          title: "Add a new admin"
-        index:
-          super_admins:
-            summary_text: "What's the difference between super admins and regular admins?"
-            text_html: |
-              Regular admins are capable of logging into the admin interface to view the dashboard, users, applications, along with triggering syncs of unsynced data.
-              <br>
-              <br>
-              Super Admins also have the ability to add and remove other admins, create new super admins, and manage feature flags.
-          admin_type:
-            super_admin: Super Admin
-            admin: Admin
-          buttons:
-            delete: "Delete"
-            elevate: "Make Super Admin"
-          confirm:
-            elevate: "Are you sure you want to make this user a super admin? This will give them access to all admin features and the ability to make other users super admins. It cannot be reverted without developer intervention."
-            delete: "This record will be permenantly deleted."
-      super_admins:
-        update:
-          success: Super admin permissions granted to %{email}
-          failure: Failed to grant super admin permissions to %{email}, please contact technical support if this problem persists.
-      features:
-        show:
-          registration_open_html: |
-            <p class="govuk-body">When this feature is turned on, registration is open. Users can register for an NPQ as normal.</p>
-            <p class="govuk-body">When this feature is turned off, registration is closed. Users cannot register for an NPQ, unless the <a href="/npq-separation/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature is turned on to allow certain users to register late.</p>
-          closed_registration_enabled_html: |
-            <p class="govuk-body">When this feature is turned on, specified users can register for an NPQ even when the service is closed to the general public.</p>
-            <p class="govuk-body">Use the <a href="/npq-separation/admin/features/Registration%20open" class="govuk-link">Registration open</a> feature flag if you need to close the service to the general public.
-            <p class="govuk-body">To view or manage who can register while the service is closed, visit <a href="/npq-separation/admin/registration-closed/closed-registration-users" class="govuk-link">Closed registration users</a>.</p>
-            <p class="govuk-body">When both the Registration open and Closed registration enabled feature flags are turned off, no one will be able to register.</p>
-          declarations_require_delivery_partner_html: |
-            <p class="govuk-body">When this feature is turned on, submitting a declaration for the 2024 cohort onwards will require the delivery partner to be included.</p>
-            <p class="govuk-body">When this feature is turned off, submitting a declaration does not require a delivery partner, but will still accept a declaration with a delivery partner.</p>
-          maintenance_banner_html: |
-            <p class="govuk-body">When this feature is turned on, a banner will be displayed at the top of every page to inform users that the service is down for maintenance.</p>
-          dfe_analytics_enabled_html: |
-            <p class="govuk-body">When this feature is turned on, events will be sent to DfE Analytics.</p>
-      course_payment_overview_component:
-        course_total: Course total
-        output_payment: Output payment
-        users: Users
-        payment_per_participant: Payment per participant
-        payment_type: Payment type
-        service_fee: Service fee
-        targeted_delivery_funding: Targeted delivery funding
-        total_declarations: Total declarations
-        total_not_eligible_for_funding: Total not eligible for funding
-        total: Total
-      statement_details_component:
-        clawbacks: Clawbacks
-        cut_off_date: Output payment cut off date
-        output_payment: Output payment
-        service_fee: Service fee
-        targeted_delivery_funding: Targeted delivery funding
-        total_completed: Total completed
-        total_net_vat: Total net VAT
-        total_retained: Total retained
-        total_starts: Total starts
-        total_voids: Total voids
-        totals: Totals
-        view: View
-      adjustments_table_component:
-        description: Description
-        amount: Amount
-        actions: Actions
-        edit: Edit
-        remove: Remove
-        total: Total
-      finance:
-        statements:
-          payment_authorisations:
-            new:
-              title: "Check %{statement_name} statement details before authorising for payment"
-              button: "Authorise for payment"
-              checks_done_legend: Have all necessary assurance checks been done?
-            tag:
-              content: "Authorised for payment at %{statement_marked_as_paid_at}"
-            banner:
-              title: "Authorising for payment"
-              content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
-      webhook_messages:
-        show:
-          title: "Webhook message"
-          message_id: "Message ID"
-          message_type: "Message Type"
-          status: "Status"
-          sent_at: "Sent at"
-          created_at: "Received at"
-          processed_at: "Processed at"
-          status_comment: "Status Comment"
-          message: "Message"
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."

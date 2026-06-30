@@ -21,7 +21,7 @@
         current_path: request.path,
         navigation_items: admin_service_navigation_items,
         service_name: "Manage NPQs",
-        service_url: npq_separation_admin_path,
+        service_url: admin_path,
       )
     %>
 
@@ -32,7 +32,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter" id="side-navigation">
             <%=
-              render NpqSeparation::SubNavigationComponent.new(
+              render SubNavigationComponent.new(
                 request.path,
                 structure: admin_navigation_structure.sub_structure(request.path, default_to_first_section: true),
               )
