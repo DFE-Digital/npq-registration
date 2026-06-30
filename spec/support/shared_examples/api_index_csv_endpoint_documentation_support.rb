@@ -5,7 +5,7 @@ RSpec.shared_examples "an API index Csv endpoint documentation" do |url, tag, re
     get "Retrieve all #{resource_description} in CSV format" do
       tags tag
       produces "text/csv"
-      security [api_key: []]
+      security [{ api_key: [] }]
 
       if filter_schema_ref
         parameter name: :filter,

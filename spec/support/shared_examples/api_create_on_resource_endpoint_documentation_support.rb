@@ -6,7 +6,7 @@ RSpec.shared_examples "an API create on resource endpoint documentation", :excep
       tags tag
       consumes "application/json"
       produces "application/json"
-      security [api_key: []]
+      security [{ api_key: [] }]
 
       if request_schema_ref
         parameter name: :params,
