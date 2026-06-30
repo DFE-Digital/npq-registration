@@ -7,7 +7,7 @@
     "@govuk-one-login/service-header": "^6.0.0",
     "@ministryofjustice/frontend": "^9.0.0",
     "accessible-autocomplete": "^3.0.1",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.1",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^6.0",
     "lodash.debounce": "^4.0.8",
