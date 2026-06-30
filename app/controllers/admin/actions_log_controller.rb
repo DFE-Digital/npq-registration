@@ -1,0 +1,22 @@
+class Admin::ActionsLogController < AdminController
+  def search
+    if params[:admin_id].blank?
+      redirect_to admin_actions_log_index_path
+    else
+      redirect_to admin_actions_log_path(params[:admin_id])
+    end
+  end
+
+  def index
+    @admins = Admin.active.order(:full_name) + Admin.archived.order(:full_name)
+  end
+
+  def show
+    @admin = Admin.find(params[:id])
+    versions = PaperTrail::Version
+      .includes(:item)
+      .where(item_type: "Application", whodunnit: "Admin #{@admin.id}")
+      .order(created_at: :desc)
+    @pagy, @versions = pagy(versions)
+  end
+end

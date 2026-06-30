@@ -1,0 +1,142 @@
+<%= render "application_side_navigation" %>
+
+<span class="govuk-caption-m">
+  <%= @application.user.full_name %>,
+  <%= @application.course.name %>,
+  <%= @application.created_at.to_date.to_fs(:govuk_short) %>
+</span>
+
+<h1 class="govuk-heading-l">Application details</h1>
+
+<%=
+  govuk_summary_list(card: { title: "Overview" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Name")
+      row.with_value(text: @application.user.full_name)
+      row.with_action(text: "View user", href: admin_user_path(@application.user))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Application ID")
+      row.with_value(text: @application.ecf_id)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "User ID")
+      row.with_value(text: @application.user.ecf_id)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Course")
+      row.with_value(text: @application.course.name)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Course identifier")
+      row.with_value(text: @application.course.identifier)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Provider")
+      row.with_value(text: @application.lead_provider.name)
+      row.with_action(text: "Transfer", href: admin_applications_change_lead_provider_path(@application))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Provider approval status")
+      row.with_value(text: @application.lead_provider_approval_status.try(:humanize))
+      unless @application.pending_lead_provider_approval_status?
+        row.with_action(
+          text: "Change",
+          href: new_admin_applications_revert_to_pending_path(@application))
+      end
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Training status")
+      row.with_value(text: @application.lead_provider_approval_status == 'pending' ? '-' : @application.training_status.try(:humanize))
+      unless @application.lead_provider_approval_status == 'pending'
+        row.with_action(text: "Change", href: new_admin_applications_change_training_status_path(@application))
+      end
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Received")
+      row.with_value(text: @application.created_at.to_fs(:govuk_short))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Last updated")
+      row.with_value(text: @application.updated_at.to_fs(:govuk_short))
+    end
+  end
+%>
+
+<%=
+  govuk_summary_list(card: { title: "Funding eligibility" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Eligible for funding")
+      row.with_value(text: @application.eligible_for_funding ? "Yes" : "No")
+      row.with_action(text: "Change", href: new_admin_applications_change_funding_eligibility_path(@application))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Funded place")
+      row.with_value(text: @application.funded_place ? "Yes" : "No")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Status code")
+      row.with_value(text: @application.funding_eligiblity_status_code.presence || "-")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Schedule cohort")
+      row.with_value(text: @application.cohort&.name)
+      row.with_action(text: "Change", href: admin_applications_change_cohort_path(@application))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Schedule identifier")
+      row.with_value(text: @application.schedule&.identifier || "-" )
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Funding choice")
+      row.with_value(text: @application.funding_choice.try(:humanize))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Notes")
+      row.with_value(text: @application.notes.presence || "No notes")
+      link_text = @application.notes.present? ? "Edit note" : "Add note"
+      row.with_action(text: link_text, href: edit_admin_applications_notes_path(@application))
+    end
+  end
+%>
+
+<%=
+  govuk_summary_list(card: { title: "Workplace" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Name")
+      if @application.employer_urn.present?
+        row.with_value(text: govuk_link_to(@application.employer_name_to_display, admin_schools_path(q: @application.employer_urn)))
+      else
+        row.with_value(text: @application.employer_name_to_display)
+      end
+    end
+    sl.with_row do |row|
+      row.with_key(text: "UK Provider Reference Number (UKPRN)")
+      row.with_value(text: @application.ukprn)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Unique reference number (URN)")
+      row.with_value(text: @application.employer_urn)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Headteacher status")
+      row.with_value(text: @application.headteacher_status.try(:humanize))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Employment type")
+      row.with_value(text: @application.employment_type.try(:humanize).presence || "-")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "ITT Lead mentor")
+      row.with_value(text: @application.lead_mentor ? "Yes" : "No")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "ITT provider")
+      row.with_value(text: @application.itt_provider.try(:operating_name).presence || "N/A")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Country")
+      row.with_value(text: @application.teacher_catchment_country.presence || "-")
+    end
+  end
+%>
