@@ -1,0 +1,7 @@
+<%= govuk_back_link href: admin_finance_statement_path(@statement) %>
+
+<%= render partial: "admin/finance/statements/adjustments/adjustment_form",
+  locals: {
+    url: admin_finance_statement_adjustment_path( @statement, @adjustment.id, show_all_adjustments: @show_all_adjustments),
+    cancel_url: @cancel_url,
+    method: :put} %>

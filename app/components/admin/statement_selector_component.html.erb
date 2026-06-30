@@ -1,0 +1,63 @@
+<%= form_with url: admin_finance_statements_path, method: :get do |f| %>
+  <h2 class="govuk-heading-m">Filter statements by:</h2>
+
+  <div class="govuk-grid-row">
+    <% unless format_for_sidebar %>
+      <div class="<%= grid_column_class %>">
+        <%= f.govuk_collection_select :payment_status,
+          ['Paid', 'Unpaid'],
+          :downcase,
+          :to_s,
+          options: { selected: payment_status, include_blank: 'All' },
+          label: { text: "Status", size: "s" }
+        %>
+      </div>
+    <% end %>
+
+    <div class="<%= grid_column_class %>">
+      <%= f.govuk_collection_select :statement,
+        statements,
+        :value,
+        :name,
+        label: { text: "Statement date", size: "s" },
+        options: { selected: selected_statement }
+      %>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="<%= grid_column_class %>">
+      <%= f.govuk_collection_select :lead_provider_id,
+        lead_providers,
+        :id,
+        :name,
+        label: { text: "Provider", size: "s" },
+        options: { selected: lead_provider_id, include_blank: "All" }
+      %>
+    </div>
+
+    <div class="<%= grid_column_class %>">
+      <%= f.govuk_collection_select :cohort_id,
+        cohorts,
+        :id,
+        :name,
+        label: { text: "Cohort", size: "s" },
+        options: { selected: cohort_id, include_blank: "All" }
+      %>
+    </div>
+  </div>
+
+  <% unless format_for_sidebar %>
+    <div class="govuk-grid-row">
+      <div class="<%= grid_column_class %>">
+        <%= f.govuk_select :output_fee,
+          options_for_select({ "Yes" => true, "No" => false }, output_fee),
+          options: { include_blank: 'All' },
+          label: { text: "Payment run", size: "s" }
+        %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= f.govuk_submit submit_button_text %>
+<% end %>

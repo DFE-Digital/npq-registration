@@ -1,0 +1,19 @@
+<% content_for :side_navigation do %>
+  <%=
+    render SubNavigationComponent.new(
+      request.path,
+      structure: [
+        NavigationStructure::Node.new(
+          name: "Application details",
+          href: admin_application_review_path(@application),
+          prefix: %r{/admin/applications/reviews/\d+$},
+        ),
+        NavigationStructure::Node.new(
+          name: "Application history",
+          href: admin_applications_reviews_history_path(@application),
+          prefix: %r{/admin/applications/reviews/\d+/history$},
+        ),
+      ],
+    )
+  %>
+<% end %>

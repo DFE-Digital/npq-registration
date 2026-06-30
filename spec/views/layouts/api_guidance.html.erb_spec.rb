@@ -4,7 +4,7 @@ RSpec.describe "layouts/api_guidance.html.erb", type: :view do
   subject { Capybara.string(render) }
 
   let(:expected_items) do
-    structure = NpqSeparation::NavigationStructures::GuidanceNavigationStructure.new
+    structure = NavigationStructures::GuidanceNavigationStructure.new
     structure.primary_structure.map(&:name)
   end
 

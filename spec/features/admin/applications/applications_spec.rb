@@ -1,0 +1,453 @@
+require "rails_helper"
+
+RSpec.feature "Listing and viewing applications", :no_js, type: :feature do
+  include Helpers::AdminLogin
+  include Helpers::MailHelper
+
+  RSpec::Matchers.define :have_application do |expected|
+    match do |_actual|
+      within("td:nth-child(1)") do
+        expect(page).to have_text(expected.user.full_name)
+      end
+    end
+  end
+
+  let(:applications_per_page) { Pagy::DEFAULT[:limit] }
+  let(:applications_in_order) { Application.order(created_at: :desc, id: :desc) }
+
+  before do
+    create_list(:application, applications_per_page + 1)
+    sign_in_as(create(:admin))
+  end
+
+  scenario "viewing the list of applications" do
+    visit(admin_applications_path)
+
+    expect(page).to have_css("h1", text: "Applications")
+
+    applications_in_order.limit(applications_per_page).each do |application|
+      expect(page).to have_text(application.user.full_name)
+      expect(page).to have_text(application.employer_name_to_display)
+      expect(page).to have_link("View", href: admin_application_path(application.id))
+    end
+
+    expect(page).to have_css(".govuk-pagination__item--current", text: 1)
+  end
+
+  scenario "navigating to the second page of applications" do
+    visit(admin_applications_path)
+
+    click_on("Next")
+
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_css(".govuk-pagination__item--current", text: "2")
+  end
+
+  scenario "searching applications" do
+    visit(admin_applications_path)
+
+    fill_in "Find an application", with: applications_in_order[0].ecf_id
+    click_on "Search"
+
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_application(applications_in_order[0])
+  end
+
+  scenario "filtering applications by application status" do
+    application = applications_in_order.last
+    application.update! training_status: :deferred
+
+    visit(admin_applications_path)
+    select "Deferred", from: "Application status"
+    click_on "Search"
+
+    expect(page).to have_select("Application status", selected: "Deferred")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_application(application)
+  end
+
+  scenario "filtering applications by provider approval status" do
+    application = applications_in_order.last
+    application.update! lead_provider_approval_status: :accepted, funded_place: false
+
+    visit(admin_applications_path)
+    select "Accepted", from: "Provider approval status"
+    click_on "Search"
+
+    expect(page).to have_select("Provider approval status", selected: "Accepted")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_application(application)
+  end
+
+  scenario "defaults to showing applications from the current cohort" do
+    old_cohort = create(:cohort, start_year: 2022)
+    old_application = create(:application, cohort: old_cohort)
+
+    visit(admin_applications_path)
+
+    current_cohort = Cohort.current
+    expect(page).to have_select("Year of application", selected: current_cohort.description)
+    expect(page).not_to have_text(old_application.user.full_name)
+    applications_in_order.where(cohort: current_cohort).limit(applications_per_page).each do |application|
+      expect(page).to have_text(application.user.full_name)
+    end
+  end
+
+  scenario "filtering applications by year of application" do
+    cohort = create(:cohort, start_year: 2022)
+    application = applications_in_order.last
+    application.update!(cohort:)
+
+    visit(admin_applications_path)
+    select "2022 to 2023", from: "Year of application"
+    click_on "Search"
+
+    expect(page).to have_select("Year of application", selected: "2022 to 2023")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_application(application)
+  end
+
+  scenario "filtering applications by all cohorts" do
+    old_cohort = create(:cohort, start_year: 2022)
+    old_application = create(:application, cohort: old_cohort)
+
+    visit(admin_applications_path)
+    select "All", from: "Year of application"
+    click_on "Search"
+
+    expect(page).to have_select("Year of application", selected: "All")
+    expect(page).to have_text(old_application.user.full_name)
+  end
+
+  scenario "filtering applications by work setting" do
+    application = applications_in_order.last
+    application.update!(work_setting: "a_school")
+
+    visit(admin_applications_path)
+    select "A school", from: "Work setting"
+    click_on "Search"
+
+    expect(page).to have_select("Work setting", selected: "A school")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_application(application)
+  end
+
+  scenario "simultaneously filtering and searching applications" do
+    application = applications_in_order.last
+
+    search_with_results = application.user.full_name
+    approval_status_with_results = "Pending"
+    search_without_results = "no-match"
+    approval_status_without_results = "Accepted"
+
+    visit(admin_applications_path)
+
+    fill_in "Find an application", with: search_with_results
+    select approval_status_without_results, from: "Provider approval status"
+    click_on "Search"
+    expect(page).to have_text("No applications match the search and filters")
+
+    fill_in "Find an application", with: search_without_results
+    select approval_status_with_results, from: "Provider approval status"
+    click_on "Search"
+    expect(page).to have_text("No applications match the search and filters")
+
+    fill_in "Find an application", with: search_with_results
+    select approval_status_with_results, from: "Provider approval status"
+    click_on "Search"
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_application(application)
+  end
+
+  scenario "viewing application details" do
+    visit(admin_applications_path)
+
+    application = applications_in_order.first
+    application.update!(
+      eligible_for_funding: true,
+      funded_place: true,
+      lead_provider_approval_status: :accepted,
+      funding_eligiblity_status_code: 123,
+      employment_type: :hospital_school,
+      employer_name: "Employer name",
+      employment_role: :headteacher,
+    )
+
+    within("tr", text: application.user.full_name) do
+      click_link("View")
+    end
+
+    summary_lists = all(".govuk-summary-list")
+
+    expect(page).to have_css(
+      ".govuk-caption-m",
+      text: "#{application.user.full_name}, #{application.course.name}, #{application.created_at.to_date.to_fs(:govuk_short)}",
+    )
+    expect(page).to have_css("h1", text: "Application details")
+    expect(page).to have_css("h2", text: "Overview")
+
+    within(summary_lists[0]) do |summary_list|
+      expect(summary_list).to have_summary_item("Name", application.user.full_name)
+      expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
+      expect(summary_list).to have_summary_item("Course", application.course.name)
+      expect(summary_list).to have_summary_item("Course identifier", application.course.identifier)
+      expect(summary_list).to have_summary_item("Provider", application.lead_provider.name)
+      expect(summary_list).to have_summary_item("Provider approval status", application.lead_provider_approval_status.humanize)
+      expect(summary_list).to have_summary_item("Training status", application.training_status)
+      expect(summary_list).to have_summary_item("Received", application.created_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Last updated", application.updated_at.to_fs(:govuk_short))
+    end
+
+    expect(page).to have_css("h2", text: "Funding eligibility")
+
+    within(summary_lists[1]) do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
+      expect(summary_list).to have_summary_item("Funded place", "")
+      expect(summary_list).to have_summary_item("Status code", application.funding_eligiblity_status_code.humanize)
+      expect(summary_list).to have_summary_item("Schedule cohort", application.cohort.name)
+      expect(summary_list).to have_summary_item("Schedule identifier", "-")
+      expect(summary_list).to have_summary_item("Funding choice", application.funding_choice&.capitalize)
+      expect(summary_list).to have_summary_item("Notes", "No notes")
+    end
+
+    expect(page).to have_css("h2", text: "Workplace")
+
+    within(summary_lists[2]) do |summary_list|
+      expect(summary_list).to have_summary_item("Name", application.employer_name)
+      expect(summary_list).to have_summary_item("UK Provider Reference Number (UKPRN)", application.ukprn)
+      expect(summary_list).to have_summary_item("Unique reference number (URN)", application.school_urn)
+      expect(summary_list).to have_summary_item("Headteacher status", application.headteacher_status.humanize)
+      expect(summary_list).to have_summary_item("Employment type", application.employment_type.humanize)
+      expect(summary_list).to have_summary_item("ITT Lead mentor", application.lead_mentor? ? "Yes" : "No")
+      expect(summary_list).to have_summary_item("ITT provider", application.itt_provider.operating_name)
+      expect(summary_list).to have_summary_item("Country", application.teacher_catchment_country)
+    end
+  end
+
+  scenario "viewing participant details" do
+    visit(admin_applications_path)
+
+    user = applications_in_order.first.user
+
+    expect(page).to have_text(user.full_name)
+  end
+
+  scenario "viewing user details" do
+    application = create(:application, :accepted)
+
+    visit admin_application_path(application)
+
+    within(".govuk-summary-card", text: "Overview") do
+      within(".govuk-summary-list__row", text: "Name") do
+        expect(page).to have_text(application.user.full_name)
+        click_link("View user")
+      end
+    end
+
+    expect(page).to have_current_path(admin_user_path(application.user))
+    expect(page).to have_css("h1", text: application.user.full_name)
+
+    within(".govuk-summary-card", text: application.course.name) do
+      click_link("View full application")
+    end
+
+    expect(page).to have_current_path(admin_application_path(application))
+
+    within(first(".govuk-summary-list__row", text: "Name")) do
+      expect(page).to have_text(application.user.full_name)
+    end
+  end
+
+  scenario "changing lead provider approval status" do
+    application = create(:application, :accepted)
+
+    visit admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application details")
+
+    within(".govuk-summary-list__row", text: "Provider approval status") do |summary_list_row|
+      expect(summary_list_row).to have_text "Accepted"
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: "Are you sure you want to change the status to Pending?")
+    click_button "Change status to Pending"
+
+    expect(page).to have_css(".govuk-error-message", text: "Confirm you wish to change the status to Pending")
+    choose "Yes", visible: :all
+    click_button "Change status to Pending"
+
+    expect(page).to have_css("h1", text: "Application details")
+    within(".govuk-summary-list__row", text: "Provider approval status") do |summary_list_row|
+      expect(summary_list_row).to have_text "Pending"
+      expect(summary_list_row).not_to have_link("Change")
+    end
+  end
+
+  scenario "changing training status" do
+    application = create(:application, :accepted)
+    create(:declaration, application:)
+
+    visit admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application details")
+
+    within(".govuk-summary-list__row", text: "Training status") do |summary_list|
+      expect(summary_list).to have_text "Active"
+      click_on "Change"
+    end
+
+    expect(page).to have_css("h1", text: "Change training status")
+    choose "Defer", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css(".govuk-error-message", text: "Choose a valid reason for the training status change")
+    select Applications::ChangeTrainingStatus::REASON_OPTIONS["deferred"].first
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application details")
+    within(".govuk-summary-list__row", text: "Training status") do |summary_list|
+      expect(summary_list).to have_text "Deferred"
+      click_on "Change"
+    end
+
+    expect(page).to have_css("h1", text: "Change training status")
+    choose "Active", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application details")
+    within(".govuk-summary-list__row", text: "Training status") do |summary_list|
+      expect(summary_list).to have_text "Active"
+    end
+  end
+
+  scenario "changing lead provider" do
+    application = create(:application)
+
+    visit admin_application_path(application)
+    expect(page).to have_css("h1", text: "Application details")
+
+    within(".govuk-summary-list__row", text: application.lead_provider.name) do
+      click_link("Transfer")
+    end
+
+    expect(page).to have_css("h1", text: "Transfer provider")
+
+    click_button "Continue"
+    expect(page).to have_css(".govuk-error-message", text: "Choose a provider")
+
+    choose "Best Practice Network", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application details")
+    expect(page).to have_summary_item("Provider", "Best Practice Network")
+  end
+
+  scenario "changing eligibility for funding" do
+    application = create(:application, :accepted)
+
+    visit admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application details")
+    within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
+      expect(summary_list_row).to have_text "No"
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: "Is #{application.user.full_name} eligible for funding?")
+    expect(page.find_field("No", visible: :all)).to be_checked
+    choose "Yes", visible: :all
+
+    perform_enqueued_jobs { click_button "Continue" }
+
+    expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
+
+    expect(page).to have_css("h1", text: "Application details")
+    expect(page).to have_content("Funding eligibility has been changed to ‘Yes’")
+    within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
+      expect(summary_list_row).to have_text "Yes"
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: application.user.full_name)
+    choose "No", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application details")
+    within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
+      expect(summary_list_row).to have_text "No"
+    end
+  end
+
+  scenario "changing schedule cohort" do
+    future_cohort = create(:cohort, start_year: 3.years.from_now.year)
+    application = create(:application, cohort: Cohort.first)
+    create(:schedule, :npq_leadership_autumn, cohort: application.cohort)
+    create(:schedule, :npq_leadership_spring, cohort: future_cohort)
+
+    visit admin_application_path(application)
+
+    within(".govuk-summary-list__row", text: "Schedule cohort") do
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: "Choose a cohort")
+
+    click_button "Continue"
+    expect(page).to have_css(".govuk-error-message", text: "Choose a cohort")
+
+    choose future_cohort.start_year.to_s, visible: :all
+    click_button "Continue"
+
+    within(".govuk-summary-list__row", text: "Schedule cohort") do |row|
+      expect(row).to have_text(future_cohort.start_year.to_s)
+    end
+  end
+
+  scenario "adding and editing notes" do
+    visit(admin_applications_path)
+
+    application = applications_in_order.first
+
+    within("tr", text: application.user.full_name) do
+      click_link("View")
+    end
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Add note"
+    end
+
+    # check cancel
+    click_on "Cancel"
+    expect(page).to have_current_path(admin_application_path(application))
+
+    # change for real
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Add note"
+    end
+
+    fill_in "Add a note about the changes to this registration", with: "Some notes"
+    click_on "Add note"
+
+    expect(page).to have_current_path(admin_application_path(application))
+    within(".govuk-summary-list__row", text: "Notes") do
+      expect(page).to have_text("Some notes")
+    end
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Edit note"
+    end
+    fill_in "Edit the note about the changes to this registration", with: "Different notes"
+    click_on "Edit note"
+
+    expect(page).to have_current_path(admin_application_path(application))
+    within(".govuk-summary-list__row", text: "Notes") do
+      expect(page).to have_text("Different notes")
+    end
+
+    # check going straight to the note edit page
+    visit(edit_admin_applications_notes_path(application))
+    click_on "Cancel"
+    expect(page).to have_current_path(admin_application_path(application))
+  end
+end

@@ -1,0 +1,39 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<% content_for :side_navigation do %>
+  <%=
+    render SubNavigationComponent.new(
+      request.path,
+      structure:
+        Cohort.order_by_latest.map do |cohort|
+          NavigationStructure::Node.new(
+            name: "Cohort #{cohort.description}",
+            href: admin_lead_provider_cohort_path(@lead_provider, cohort),
+            prefix: "/admin/providers/#{@lead_provider.id}/cohort/#{cohort.id}"
+          )
+        end
+    )
+  %>
+<% end %>
+
+<span class="govuk-caption-l"><%= @lead_provider.name %></span>
+<%= tag.h1("Cohort #{@cohort.description}", class: "govuk-heading-l") %>
+
+<p class="govuk-body">Delivery partners linked to <%= @lead_provider.name %> for this cohort.</p>
+
+<%= govuk_table do |table|
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(text: "Delivery partner")
+        end
+      end
+      table.with_body do |body|
+        @delivery_partners.each do |delivery_partner|
+          body.with_row do |row|
+            row.with_cell(text: delivery_partner.name)
+          end
+        end
+      end
+    end
+%>
+<%= govuk_pagination(pagy: @pagy) %>
