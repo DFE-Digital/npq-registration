@@ -16,7 +16,9 @@ module TeachingRecordSystem
       if new_trn.present?
         # Received TRN from API response so don't need to wait for webhook to receive TRN
         user.update!(trn: new_trn, trn_verified: true, trn_auto_verified: true)
-        TrnAllocatedMailer.trn_allocated_mail(to: user.email, full_name: user.full_name, trn: new_trn).deliver_now
+        if user.email.present?
+          TrnAllocatedMailer.trn_allocated_mail(to: user.email, full_name: user.full_name, trn: new_trn).deliver_now
+        end
       end
 
       user.refresh_token.destroy!

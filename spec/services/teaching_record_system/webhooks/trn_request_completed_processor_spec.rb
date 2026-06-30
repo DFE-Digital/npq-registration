@@ -38,6 +38,15 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
                        trn: new_trn)
         subject
       end
+
+      context "when the user's email is nil" do
+        let(:user) { create(:user, :with_teacher_auth, :archived, trn: nil, email: nil) }
+
+        it "does not send a TRN allocated email" do
+          expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
+          subject
+        end
+      end
     end
 
     context "when the message format is incorrect" do
