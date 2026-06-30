@@ -21,6 +21,8 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
       TeachingRecordSystem::Webhooks::UserUpdatedProcessor
     when "trn_request.completed"
       TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor
+    when "person.deactivated"
+      TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor
     end
   end
 

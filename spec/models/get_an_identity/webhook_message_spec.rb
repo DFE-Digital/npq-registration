@@ -61,5 +61,13 @@ RSpec.describe GetAnIdentity::WebhookMessage, type: :model do
         expect(subject.processor_klass).to eq(TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor)
       end
     end
+
+    context "when message_type is person.deactivated" do
+      subject { build(:trs_person_deactivated_webhook_message) }
+
+      it "returns a processor class" do
+        expect(subject.processor_klass).to eq(TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor)
+      end
+    end
   end
 end
