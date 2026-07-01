@@ -2,9 +2,10 @@
 
 all_courses = Course.all.to_a
 funded_cohorts = Cohort.capped_funding.or(Cohort.full_funding).to_a
+multiplier = Rails.configuration.x.db_seeding_multiplier
 
 LeadProvider.find_each do |lead_provider|
-  quantity = { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)
+  quantity = { "review" => multiplier * 4, "development" => multiplier }.fetch(Rails.env, 0)
 
   quantity.times do
     # users with one application each
@@ -157,7 +158,7 @@ course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
   { employment_type: :other },
   { referred_by_return_to_teaching_adviser: "yes" },
 ].each do |application_attrs|
-  FactoryBot.create(:application, :manual_review, **application_attrs.merge(course:))
+  FactoryBot.create_list(:application, multiplier, :manual_review, **application_attrs.merge(course:))
 end
 
 Application.order(id: :desc).each.with_index do |a, i|
