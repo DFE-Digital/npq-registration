@@ -79,6 +79,10 @@ ApplicationRecord.descendants.each(&:reset_column_information)
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   ApplicationRecord.transaction do
-    load_base_file(seed_file)
+    if seed_file == "add_applications.rb" && Rails.configuration.x.large_scale_seeding
+      load_base_file("add_applications_no_factorybot.rb")
+    else
+      load_base_file(seed_file)
+    end
   end
 end
