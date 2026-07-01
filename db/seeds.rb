@@ -13,19 +13,6 @@ def load_base_file(file)
   load(base_file)
 end
 
-def with_versioning
-  was_enabled = PaperTrail.enabled?
-  was_enabled_for_request = PaperTrail.request.enabled?
-  PaperTrail.enabled = true
-  PaperTrail.request.enabled = true
-  begin
-    yield
-  ensure
-    PaperTrail.enabled = was_enabled
-    PaperTrail.request.enabled = was_enabled_for_request
-  end
-end
-
 def load_csv(file, model_class)
   CSV.read(Rails.root.join(file), headers: true).tap do |data|
     import_count = 0
