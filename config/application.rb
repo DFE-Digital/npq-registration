@@ -86,5 +86,8 @@ module NpqRegistration
     config.x.teacher_auth.client_id = ENV["TEACHER_AUTH_CLIENT_ID"]
     config.x.teacher_auth.client_secret = ENV["TEACHER_AUTH_CLIENT_SECRET"]
     config.x.teacher_auth.onelogin_home_uri = ENV["TEACHER_AUTH_ONELOGIN_HOME_URI"].presence || "https://home.account.gov.uk"
+
+    # Seeding config
+    config.x.large_scale_seeding = ENV["LARGE_SEEDING"] == "true"
   end
 end

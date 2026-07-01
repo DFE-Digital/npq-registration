@@ -7,6 +7,8 @@ module PaperTrailExtensions
   private
 
     def send_to_dfe_analytics
+      return if Rails.configuration.x.large_scale_seeding
+
       StreamVersionsToBigQueryJob.perform_later(attributes["whodunnit"], analytics_data)
     end
 
