@@ -1,4 +1,6 @@
 class Admin < ApplicationRecord
+  include OTPAuthenticatable
+
   has_many :bulk_operations
 
   validates :full_name, presence: true, length: { maximum: 64 }

@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Admin, type: :model do
+  it_behaves_like "an OTP authenticatable model"
+
   describe "validation" do
     describe "full_name" do
       it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }

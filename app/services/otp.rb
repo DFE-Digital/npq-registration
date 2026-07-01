@@ -13,12 +13,8 @@ class OTP
   attr_reader :code, :expires_at
 
   class << self
-    def from(code:, expires_at:)
-      new(code:, expires_at:)
-    end
-
     def generate
-      from(code: random_code, expires_at: VALIDITY_PERIOD.from_now)
+      new(code: random_code, expires_at: VALIDITY_PERIOD.from_now)
     end
 
     def normalize(code)

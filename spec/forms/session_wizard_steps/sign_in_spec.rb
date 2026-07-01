@@ -35,5 +35,13 @@ RSpec.describe SessionWizardSteps::SignIn, type: :model do
       expect(mailer_double).to receive(:deliver_now)
       subject
     end
+
+    context "when the admin had failed attempts from a previous code" do
+      let(:admin) { create(:admin, otp_failed_attempts: 3) }
+
+      it "resets the failed attempts counter" do
+        expect { subject }.to change { admin.reload.otp_failed_attempts }.from(3).to(0)
+      end
+    end
   end
 end
