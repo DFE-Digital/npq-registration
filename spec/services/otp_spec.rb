@@ -27,33 +27,33 @@ RSpec.describe OTP do
     end
   end
 
-  describe ".from" do
+  describe "initialisation" do
     it "uses the code it was given" do
-      expect(described_class.from(code:, expires_at:).code).to eq(code)
+      expect(described_class.new(code:, expires_at:).code).to eq(code)
     end
 
     it "uses the expiry it was given" do
-      expect(described_class.from(code:, expires_at:).expires_at).to eq(expires_at)
+      expect(described_class.new(code:, expires_at:).expires_at).to eq(expires_at)
     end
 
     it "rejects a nil code" do
-      expect { described_class.from(code: nil, expires_at:) }.to raise_error(OTP::Invalid)
+      expect { described_class.new(code: nil, expires_at:) }.to raise_error(OTP::Invalid)
     end
 
     it "rejects a code that is not 8 characters" do
-      expect { described_class.from(code: "ABCD234", expires_at:) }.to raise_error(OTP::Invalid)
+      expect { described_class.new(code: "ABCD234", expires_at:) }.to raise_error(OTP::Invalid)
     end
 
     it "rejects a code with characters outside the alphabet" do
-      expect { described_class.from(code: "ABCDILO1", expires_at:) }.to raise_error(OTP::Invalid)
+      expect { described_class.new(code: "ABCDILO1", expires_at:) }.to raise_error(OTP::Invalid)
     end
 
     it "rejects a nil expiry" do
-      expect { described_class.from(code:, expires_at: nil) }.to raise_error(OTP::Invalid)
+      expect { described_class.new(code:, expires_at: nil) }.to raise_error(OTP::Invalid)
     end
 
     it "rejects an expiry that is not a time" do
-      expect { described_class.from(code:, expires_at: "soon") }.to raise_error(OTP::Invalid)
+      expect { described_class.new(code:, expires_at: "soon") }.to raise_error(OTP::Invalid)
     end
   end
 
@@ -76,7 +76,7 @@ RSpec.describe OTP do
   end
 
   describe "#matches?" do
-    subject(:otp) { described_class.from(code:, expires_at:) }
+    subject(:otp) { described_class.new(code:, expires_at:) }
 
     it "matches when the entered code is identical" do
       expect(otp.matches?(code)).to be(true)
@@ -97,7 +97,7 @@ RSpec.describe OTP do
       it "treats '#{typed}' as '#{digit}'" do
         stored = "#{digit}BCD2345"
         entered = "#{typed}BCD2345"
-        expect(described_class.from(code: stored, expires_at:).matches?(entered)).to be(true)
+        expect(described_class.new(code: stored, expires_at:).matches?(entered)).to be(true)
       end
     end
 
@@ -112,11 +112,11 @@ RSpec.describe OTP do
 
   describe "#expired?" do
     it "is false when the expiry is in the future" do
-      expect(described_class.from(code:, expires_at: 5.minutes.from_now).expired?).to be(false)
+      expect(described_class.new(code:, expires_at: 5.minutes.from_now).expired?).to be(false)
     end
 
     it "is true when the expiry is in the past" do
-      expect(described_class.from(code:, expires_at: 1.minute.ago).expired?).to be(true)
+      expect(described_class.new(code:, expires_at: 1.minute.ago).expired?).to be(true)
     end
   end
 end

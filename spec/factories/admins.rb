@@ -6,6 +6,12 @@ FactoryBot.define do
     trait :archived do
       archived_at { Time.current }
     end
+
+    trait :otp_locked do
+      otp_hash { nil }
+      otp_expires_at { nil }
+      otp_failed_attempts { Admin::MAX_OTP_FAILED_ATTEMPTS }
+    end
   end
 
   factory :super_admin, class: "Admin" do

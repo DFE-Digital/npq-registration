@@ -560,6 +560,8 @@ en:
             code:
               blank: Code can’t be blank
               incorrect: Code is not correct. Please try again
+              expired: This code has expired. Please request a new code to sign in
+              locked: Too many failed attempts. Please request a new code to sign in
         participants/resume:
           attributes:
             course_identifier:

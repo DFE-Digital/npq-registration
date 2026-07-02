@@ -64,6 +64,7 @@ shared:
     - super_admin
     - otp_hash
     - otp_expires_at
+    - otp_failed_attempts
     - created_at
     - updated_at
     - archived_at

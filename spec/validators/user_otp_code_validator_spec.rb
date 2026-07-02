@@ -8,7 +8,8 @@ RSpec.describe UserOTPCodeValidator do
   let(:stored_code) { "ABCD2345" }
   let(:expires_at) { 5.minutes.from_now }
   let(:entered_code) { stored_code }
-  let(:user) { instance_double(Admin, otp_hash: stored_code, otp_expires_at: expires_at) }
+  let(:otp) { OTP.new(code: stored_code, expires_at:) }
+  let(:user) { instance_double(Admin, otp:, otp_locked?: false) }
 
   before do
     stub_const("TestModel", Class.new).class_eval do
@@ -58,17 +59,18 @@ RSpec.describe UserOTPCodeValidator do
     end
   end
 
-  context "when the stored code is not a valid OTP" do
-    let(:user) { instance_double(Admin, otp_hash: "123456", otp_expires_at: expires_at) }
+  context "when the user is locked" do
+    let(:user) { instance_double(Admin, otp:, otp_locked?: true) }
 
-    it "adds an incorrect error and does not raise" do
-      expect { model.valid? }.not_to raise_error
-      expect(model.errors).to be_of_kind(:code, :incorrect)
+    it "adds a locked error and does not check the code" do
+      model.valid?
+      expect(model.errors).to be_of_kind(:code, :locked)
+      expect(model.errors).not_to be_of_kind(:code, :incorrect)
     end
   end
 
-  context "when the stored expiry is missing" do
-    let(:user) { instance_double(Admin, otp_hash: stored_code, otp_expires_at: nil) }
+  context "when the user has no usable OTP" do
+    let(:user) { instance_double(Admin, otp: nil, otp_locked?: false) }
 
     it "adds an incorrect error and does not raise" do
       expect { model.valid? }.not_to raise_error

@@ -4,6 +4,8 @@ module SessionWizardSteps
 
     validates :code, presence: true, length: { is: 8 }, user_otp_code: true
 
+    after_validation :register_otp_attempt
+
     def self.permitted_params
       [
         :code,
@@ -18,5 +20,11 @@ module SessionWizardSteps
       @admin ||= Admin.find_by(email: wizard.store["email"])
     end
     alias_method :user, :admin
+
+  private
+
+    def register_otp_attempt
+      admin&.register_otp_attempt!(success: errors.none?) if code.present?
+    end
   end
 end
