@@ -31,18 +31,27 @@ class Rack::Attack
     request.path.starts_with?("/api/v1/get_an_identity/webhook_messages")
   end
 
+  def self.teacher_auth_webhook_path?(request)
+    request.path.starts_with?("/api/teaching-record-system/v1/webhook_messages")
+  end
+
   def self.auth_token(request)
     request.get_header("HTTP_AUTHORIZATION")
   end
 
-  # Throttle protected routes by IP (5rpm)
-  throttle("protected routes (hitting external services)", limit: 10, period: 2.minutes) do |request|
+  # Throttle protected routes by IP (10 requests per 5 minutes)
+  throttle("protected routes (hitting external services)", limit: 10, period: 5.minutes) do |request|
     request.ip if protected_path?(request)
   end
 
-  # Throttle /api/v1/get_an_identity/webhook_messages requests by IP (1000 requests per 5 minutes)
-  throttle("API get an identity webhook message requests by ip", limit: 1000, period: 5.minutes) do |request|
+  # Throttle /api/v1/get_an_identity/webhook_messages requests by IP (100 requests per 5 minutes)
+  throttle("API get an identity webhook message requests by ip", limit: 100, period: 5.minutes) do |request|
     request.ip if get_an_identity_webhook_path?(request)
+  end
+
+  # Throttle /api/teaching-record-system/v1/webhook_messages requests by IP (100 requests per 5 minutes)
+  throttle("API TeacherAuth webhook message requests by ip", limit: 100, period: 5.minutes) do |request|
+    request.ip if teacher_auth_webhook_path?(request)
   end
 
   # Throttle private /api requests by auth token (1000 requests per 5 minutes)

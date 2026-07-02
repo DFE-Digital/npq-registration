@@ -63,6 +63,20 @@ RSpec.describe "Rate limiting" do
     end
   end
 
+  it_behaves_like "a rate limited endpoint", "API TeacherAuth webhook message requests by ip" do
+    before { allow(Linzer).to receive(:verify!).and_return(true) }
+
+    def perform_request
+      post api_teaching_record_system_v1_webhook_messages_path,
+           params: { message: "test" }.to_json,
+           headers: { "ce-time" => Time.current.to_s }
+    end
+
+    def change_condition
+      set_request_ip(other_ip)
+    end
+  end
+
   it_behaves_like "a rate limited endpoint", "API requests by auth token" do
     let(:lead_provider) { create(:lead_provider) }
     let(:other_lead_provider) { create(:lead_provider) }
