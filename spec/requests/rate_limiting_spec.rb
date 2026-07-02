@@ -114,6 +114,36 @@ RSpec.describe "Rate limiting" do
     end
   end
 
+  describe "throttle configuration" do
+    it "limits protected routes to 10 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["protected routes (hitting external services)"]).to have_attributes(limit: 10, period: 5.minutes)
+    end
+
+    it "limits API get an identity webhook messages to 100 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["API get an identity webhook message requests by ip"]).to have_attributes(limit: 100, period: 5.minutes)
+    end
+
+    it "limits API TeacherAuth webhook messages to 100 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["API TeacherAuth webhook message requests by ip"]).to have_attributes(limit: 100, period: 5.minutes)
+    end
+
+    it "limits API requests by auth token to 1000 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["API requests by auth token"]).to have_attributes(limit: 1000, period: 5.minutes)
+    end
+
+    it "limits public API requests by ip to 300 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["public API requests by ip"]).to have_attributes(limit: 300, period: 5.minutes)
+    end
+
+    it "limits non-API requests by ip to 300 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["non-API requests by ip"]).to have_attributes(limit: 300, period: 5.minutes)
+    end
+
+    it "limits catch all requests by ip to 1500 requests per 5 minutes" do
+      expect(Rack::Attack.throttles["catch all requests by ip"]).to have_attributes(limit: 1500, period: 5.minutes)
+    end
+  end
+
   def set_request_ip(request_ip)
     default_headers[:REMOTE_ADDR] = request_ip
   end
