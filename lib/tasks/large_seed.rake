@@ -1,7 +1,7 @@
 namespace :large_seed do
   desc "Load large-scale application seeds in background"
   task background: :versioned_environment do
-    SeedingJob.perform_later
+    SeedingJob.perform_later(times: 2)
   end
 
   desc "Load large-scale application seeds in foreground"
@@ -32,6 +32,8 @@ namespace :large_seed do
       puts "Locked at: #{job.locked_at}" if job.locked_at
       scheduled_or_running = job.run_at.future? ? " (scheduled)" : " (running)"
       puts "Run at: #{job.run_at}#{scheduled_or_running}"
+      iterations_left = job.payload_object.job_data["arguments"].first["times"]
+      puts "Iterations left: #{iterations_left}"
 
       next unless job.failed_at
 

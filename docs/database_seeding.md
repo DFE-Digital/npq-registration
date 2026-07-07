@@ -7,15 +7,14 @@ By default, this will create ~1300 applications, ~1500 declarations, and ~1200 u
 
 ## Large-scale seeding
 
-To seed a database iwth a large number of applications - approx ~? applications, ~? declarations, and ~? users.
-
-Run the following rake task using the web pod (`make review aks-web-ssh`)(the worker pod does not have enough memory):
+To seed a database with a large number of applications - approx ~19,000 applications, ~6,000 declarations, and ~17,000 users,
+run the following rake task:
 
 ```bash
   rake 'large_seed:background'
 ```
 
 This will set off a background job, to repeatedly run our application and declaration seeds,
-which should result in ~20,000 applications and ~20,000 declarations, and ~? users being created in the database.
+which should result in ~20,000 applications and ~20,000 declarations, and ~17,000 users being created in the database.
 
 To check on the progress of the background job, run the task `rake large_seed:check`.

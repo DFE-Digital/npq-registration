@@ -4,8 +4,9 @@ class SeedingJob < ApplicationJob
 
   queue_as :default
 
-  def perform
+  def perform(times: 1)
     return unless Rails.env.in?(%w[development review staging sandbox])
+    return unless times.positive?
 
     PaperTrail.enabled = false
     Faker::Config.locale = "en-GB"
@@ -14,6 +15,8 @@ class SeedingJob < ApplicationJob
       SeedAddApplications.new.load(multiplier: 30)
       SeedAddDeclarations.new.load(multiplier: 30)
     end
+
+    SeedingJob.perform_later(times: times - 1) if times > 1
   end
 
   def max_attempts

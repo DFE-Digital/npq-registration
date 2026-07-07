@@ -16,16 +16,35 @@ RSpec.describe SeedingJob do
       allow(Rails).to receive(:env) { environment.inquiry }
     end
 
-    context "when the repetitions argument is not used" do
-      subject(:run_job) { described_class.new.perform }
-
+    shared_examples_for "seeding" do
       it "seeds applications" do
         expect(add_applications_stub).to receive(:load).with(multiplier: 30)
         subject
       end
 
       it "seeds declarations" do
-        expect(add_declarations_stub).to receive(:load).with(multiplier: 30)
+        expect(add_declarations_stub).to receive(:load)
+        subject
+      end
+    end
+
+    context "when the times argument is not used" do
+      subject(:run_job) { described_class.new.perform }
+
+      it_behaves_like "seeding"
+
+      it "does not enqueue the job again" do
+        expect(SeedingJob).not_to receive(:perform_later)
+        subject
+      end
+    end
+
+    context "when times is less than 1" do
+      subject(:run_job) { described_class.new.perform(times: 0) }
+
+      it "does not perform any seeding" do
+        expect(add_applications_stub).not_to receive(:load)
+        expect(add_declarations_stub).not_to receive(:load)
         subject
       end
     end
@@ -41,5 +60,11 @@ RSpec.describe SeedingJob do
         subject
       end
     end
+  end
+
+  describe "#max_attempts" do
+    subject(:max_attempts) { described_class.new.max_attempts }
+
+    it { is_expected.to eq 1 }
   end
 end
