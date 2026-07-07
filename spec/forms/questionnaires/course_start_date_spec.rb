@@ -12,8 +12,24 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     it { is_expected.to validate_presence_of(:course_start_cohort) }
     it { is_expected.to validate_inclusion_of(:course_start_cohort).in_array(described_class::OPTIONS.keys) }
 
-    context "when the course_start_cohort does not correspond to an existing cohort" do
+    context "when the chosen cohort that does not correspond to an existing cohort" do
+      before { instance.course_start_cohort = described_class::OPTIONS.keys.last }
+
       it { is_expected.to have_error(:course_start_cohort, :invalid) }
+
+      it "notifies Sentry" do
+        expect(Sentry).to receive(:capture_message).with(/Cohort selected by user does not exist/)
+        instance.valid?
+      end
+    end
+
+    context "when no cohort is selected" do
+      it { is_expected.to have_error(:course_start_cohort, :blank) }
+
+      it "does not notify Sentry" do
+        expect(Sentry).not_to receive(:capture_message)
+        instance.valid?
+      end
     end
 
     context "when the course_start_cohort corresponds to an existing cohort" do
