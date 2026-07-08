@@ -15,7 +15,7 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     context "when the chosen cohort that does not correspond to an existing cohort" do
       before { instance.course_start_cohort = described_class::OPTIONS.keys.last }
 
-      it { is_expected.to have_error(:course_start_cohort, :invalid) }
+      it { is_expected.to have_error(:course_start_cohort, :invalid, "Cohort selected does not exist.") }
 
       it "notifies Sentry" do
         expect(Sentry).to receive(:capture_message).with(/Cohort selected by user does not exist/)
@@ -24,7 +24,7 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     end
 
     context "when no cohort is selected" do
-      it { is_expected.to have_error(:course_start_cohort, :blank) }
+      it { is_expected.to have_error(:course_start_cohort, :blank, "Choose your course start date.") }
 
       it "does not notify Sentry" do
         expect(Sentry).not_to receive(:capture_message)
