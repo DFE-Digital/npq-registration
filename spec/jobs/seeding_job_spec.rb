@@ -18,12 +18,12 @@ RSpec.describe SeedingJob do
 
     shared_examples_for "seeding" do
       it "seeds applications" do
-        expect(add_applications_stub).to receive(:load).with(multiplier: 30)
+        expect(add_applications_stub).to receive(:load).with(multiplier: 20)
         subject
       end
 
       it "seeds declarations" do
-        expect(add_declarations_stub).to receive(:load)
+        expect(add_declarations_stub).to receive(:load).with(multiplier: 20)
         subject
       end
     end

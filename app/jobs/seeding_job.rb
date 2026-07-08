@@ -12,8 +12,8 @@ class SeedingJob < ApplicationJob
     Faker::Config.locale = "en-GB"
 
     ApplicationRecord.transaction do
-      SeedAddApplications.new.load(multiplier: 30)
-      SeedAddDeclarations.new.load(multiplier: 30)
+      SeedAddApplications.new.load(multiplier: 20)
+      SeedAddDeclarations.new.load(multiplier: 20)
     end
 
     SeedingJob.perform_later(times: times - 1) if times > 1

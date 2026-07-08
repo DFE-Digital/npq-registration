@@ -7,7 +7,7 @@ RSpec.describe "Loading application seeds" do
     after { Rake::Task["large_seed:background"].reenable }
 
     it "enqueues a SeedingJob" do
-      expect { run_task }.to have_enqueued_job(SeedingJob).with(times: 2)
+      expect { run_task }.to have_enqueued_job(SeedingJob).with(times: 3)
     end
   end
 

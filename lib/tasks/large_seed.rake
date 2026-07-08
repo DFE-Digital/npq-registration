@@ -1,7 +1,7 @@
 namespace :large_seed do
   desc "Load large-scale application seeds in background"
   task background: :versioned_environment do
-    SeedingJob.perform_later(times: 2)
+    SeedingJob.perform_later(times: 3)
   end
 
   desc "Load large-scale application seeds in foreground"
