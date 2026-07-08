@@ -1,7 +1,7 @@
 class Admin::MilestonesController < AdminController
   before_action :set_cohort
   before_action :set_schedule
-  before_action :ensure_super_admin
+  before_action :warn_if_not_super_admin
   before_action :set_milestone, only: %i[edit update destroy]
   before_action :set_statement_date_options, only: %i[new create edit update]
   before_action :set_declaration_types_available, only: %i[new create]
@@ -79,7 +79,7 @@ private
     @declaration_types_available = @schedule.allowed_declaration_types - @schedule.milestones.pluck(:declaration_type)
   end
 
-  def ensure_super_admin
+  def warn_if_not_super_admin
     unless current_admin.super_admin?
       flash[:error] = "You must be a super admin to change milestones"
       redirect_to admin_cohort_schedule_path(@schedule.cohort, @schedule)

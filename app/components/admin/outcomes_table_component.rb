@@ -48,15 +48,4 @@ private
   def course_started_date(declaration)
     declaration.application.declarations.find_by(declaration_type: "started")&.declaration_date
   end
-
-  def caption_text
-    title = "Declaration Outcomes"
-    latest = outcomes.first
-
-    if latest.nil?
-      title
-    else
-      "#{title}: #{latest.state.capitalize}"
-    end
-  end
 end

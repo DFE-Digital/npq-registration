@@ -1,5 +1,5 @@
 class Admin::SchedulesController < AdminController
-  before_action :ensure_super_admin, except: :show
+  before_action :warn_if_not_super_admin, except: :show
   before_action :schedule, only: %i[show edit update destroy]
 
   def show; end
@@ -69,7 +69,7 @@ private
     @cohort ||= Cohort.find(params[:cohort_id])
   end
 
-  def ensure_super_admin
+  def warn_if_not_super_admin
     unless current_admin.super_admin?
       flash[:error] = "You must be a super admin to change schedules"
       redirect_to admin_cohort_path(cohort)

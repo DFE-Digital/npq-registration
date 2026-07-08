@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "NPQ Separation Admin Delivery Partners", :no_js, type: :feature do
+RSpec.feature "Admin Delivery Partners", :no_js, type: :feature do
   include Helpers::AdminLogin
 
   let(:admin) { create(:admin) }
