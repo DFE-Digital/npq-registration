@@ -47,8 +47,8 @@ RSpec.describe RegistrationQueryStore do
       it { is_expected.to be true }
     end
 
-    context "when check_funding is nil" do
-      let(:check_funding) { nil }
+    context "when check_funding is 'no'" do
+      let(:check_funding) { "no" }
 
       it { is_expected.to be false }
     end

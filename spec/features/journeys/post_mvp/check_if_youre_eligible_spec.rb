@@ -24,10 +24,16 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
       expect(page).to have_text("Do you work in England?")
-      # choose("Yes", visible: :all) # TOOD: will be part of NPQ-3841
+      choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
+      expect(page).to have_text("Choose an NPQ")
     end
 
     # check back links
+    click_link("Back")
+    expect(page).to have_current_path("/registration/teacher-catchment")
     click_link("Back")
     expect(page).to have_current_path("/registration/check-funding")
     click_link("Back")
@@ -42,10 +48,23 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
-      # choose("No", visible: :all) # TOOD: will be part of NPQ-3841
+      choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
+      click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
+      expect(page).to have_text("Choose an NPQ")
     end
 
     # check back links
+    click_link("Back")
+    expect(page).to have_current_path("/registration/ineligible-for-funding")
+    click_link("Back")
+    expect(page).to have_current_path("/registration/teacher-catchment")
     click_link("Back")
     expect(page).to have_current_path("/registration/check-funding")
     click_link("Back")
