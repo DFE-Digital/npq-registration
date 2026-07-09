@@ -22,6 +22,8 @@ module Questionnaires
              :employment_type_other?,
              :works_in_childcare?,
              :kind_of_nursery_public?,
+             :cohort_funded?,
+             :check_funding?,
              to: :query_store
 
     def self.permitted_params
@@ -91,22 +93,18 @@ module Questionnaires
     end
 
     def previous_step
-      if inside_catchment? && referred_by_return_to_teaching_adviser?
-        :referred_by_return_to_teaching_adviser
-      elsif inside_catchment? && works_in_school?
-        :choose_school
-      elsif inside_catchment? && works_in_childcare?
-        if kind_of_nursery_public?
-          :choose_childcare_provider
-        elsif has_ofsted_urn?
-          :choose_private_childcare_provider
+      if cohort_funded?
+        if check_funding?
+          if inside_catchment?
+            :teacher_catchment
+          else
+            :ineligible_for_funding
+          end
         else
-          :have_ofsted_urn
+          :check_funding
         end
-      elsif inside_catchment? && works_in_another_setting?
-        :your_employment
       else
-        :work_setting
+        :course_start_date
       end
     end
 

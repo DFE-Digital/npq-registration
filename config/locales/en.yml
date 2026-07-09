@@ -994,6 +994,7 @@ en:
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
+        check_funding: "Check if you’re eligible for DfE scholarship funding"
 
     legend:
       applications_change_training_status:
