@@ -1,4 +1,10 @@
 class SessionsController < PublicPagesController
+  def confirm_sign_out
+    return redirect_to(root_path) unless current_user || current_admin
+
+    @cancel_url = cancel_url
+  end
+
   def destroy
     admin = current_admin
     user = current_user
@@ -18,6 +24,19 @@ class SessionsController < PublicPagesController
   end
 
 private
+
+  # Only send the user back to the referer if it's in this domain and different to the current page.
+  def cancel_url
+    referer = URI.parse(request.referer.to_s)
+
+    if referer.host == request.host && referer.path != request.path
+      request.referer
+    else
+      root_path
+    end
+  rescue URI::InvalidURIError
+    root_path
+  end
 
   def get_an_identity_sign_out_uri
     tra_domain_uri = URI.parse(ENV["TRA_OIDC_DOMAIN"])

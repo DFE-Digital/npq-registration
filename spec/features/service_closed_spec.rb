@@ -104,6 +104,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
       expect(page).to have_content("Added #{email}")
 
       click_link("Sign out")
+      click_button("Sign out")
       visit "/closed_registration_exception"
       click_on("Start now")
 
@@ -198,6 +199,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
         fill_in("Email address", with: email)
         click_on("Add user")
         click_link("Sign out")
+        click_button("Sign out")
         open_registration!
       end
 
