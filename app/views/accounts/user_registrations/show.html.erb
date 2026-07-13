@@ -1,15 +1,5 @@
-<% content_for :title, "Your registration details" %>
-<% if params[:success] == "true" %>
-  <%= render GovukComponent::NotificationBannerComponent.new(
-    success: true,
-    title_text: "Success"
-  ) do %>
-    <h3 class="govuk-notification-banner__heading">
-      Registration successfully submitted
-    </h3>
-    <p class="govuk-body">Check the details of your registration and find out more about applying with your provider.</p>
-  <% end %>
-<% end %>
+<% page_heading = "Your #{localise_course_name(@application.course)} registration" %>
+<% content_for :title, page_heading %>
 <% content_for :before_content do %>
   <% if current_user.applications.count > 1 %>
     <%= render GovukComponent::BackLinkComponent.new(
@@ -19,20 +9,13 @@
   <% end %>
 <% end %>
 
-<span class="govuk-caption-m">Submitted <%= @application.created_at.to_date.to_fs(:govuk_short) %></span>
-<% if current_user.applications.count > 1 %>
-  <h1 class="govuk-heading-l">Your <%= title_embedded_course_name(@application.course) %> registration</h1>
-<% else %>
-  <h1 class="govuk-heading-l"><%= I18n.t("accounts.show.title") %></h1>
-<% end %>
+<span class="govuk-caption-m">Submitted <%= @application.created_at.to_date.to_fs(:govuk) %></span>
+<h1 class="govuk-heading-l"><%= page_heading %></h1>
 
-<p class="govuk-body"><strong>Application ID:</strong> <%= @application.ecf_id %></p>
+<p class="govuk-body"><strong>Registration ID:</strong> <%= @application.ecf_id %></p>
 
-<%= render "course_details", application: @application %>
+<%= render "course_details", application: @application, cohort_option: Questionnaires::CourseStartDate::OPTIONS[@application.cohort.identifier] %>
 <%= render "funding_details", application: @application %>
-<%= render "work_details", application: @application %>
-
-
-<% if Feature.registration_enabled? %>
-  <%= render partial: 'registration_wizard/shared/register_for_an_npq' %>
-<% end %>
+<%= render "your_progress", application: @application %>
+<%= render "personal_details", application: @application %>
+<%= render "next_steps", application: @application %>
