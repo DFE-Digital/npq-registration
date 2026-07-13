@@ -4,7 +4,10 @@ module TeachingRecordSystem
       WEBHOOK_NAME = "One Login user updated webhook".freeze
 
       def process!
-        user.update!(params_to_update)
+        User.transaction do
+          user.update!(params_to_update)
+          user.refresh_token&.destroy! if new_trn.present?
+        end
       end
 
     private

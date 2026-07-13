@@ -5,7 +5,7 @@ module TeachingRecordSystem
 
       if user.trn.present?
         # TRN has been allocated already and token no longer needed
-        user.refresh_token.destroy!
+        user.refresh_token&.destroy!
         return
       end
 
