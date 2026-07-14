@@ -81,8 +81,6 @@ module Helpers
           page.select(name, from: label)
         end
       end
-
-      page.click_button("Continue")
     end
 
     def choose_teacher_catchment(js:, region:)
@@ -124,6 +122,34 @@ module Helpers
         else
           page.choose(Questionnaires::CourseStartDate::OPTIONS.values.last[:label], visible: :all)
         end
+      end
+    end
+
+    def complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting:)
+      navigate_to_page(path: "/", submit_form: false) do
+        page.click_button("Start now")
+      end
+
+      choose_course_start_date
+
+      expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+        click_button("Check funding")
+      end
+
+      expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+        choose("Yes", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+        page.choose(course, visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
+        page.choose("No", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose(work_setting, visible: :all)
       end
     end
   end

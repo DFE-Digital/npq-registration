@@ -40,7 +40,7 @@ module Questionnaires
           :senco_in_role
         end
       else
-        :choose_your_npq
+        :teacher_catchment
       end
     end
 
