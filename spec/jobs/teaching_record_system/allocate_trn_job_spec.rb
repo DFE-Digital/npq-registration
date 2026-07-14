@@ -53,6 +53,22 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
         expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail, deliver_now: true)
         perform_job
       end
+
+      context "when the user's refresh token has already been removed" do
+        let(:user) do
+          create(:user,
+                 :with_teacher_auth,
+                 trn:,
+                 trn_verified: true,
+                 trn_auto_verified: true)
+        end
+
+        it "does not call the APIs" do
+          perform_job
+          expect(TeachingRecordSystem::RefreshTokens).not_to have_received(:refresh!)
+          expect(TeachingRecordSystem::ActivateTrnRequest).not_to have_received(:activate!)
+        end
+      end
     end
 
     context "with user without TRN" do

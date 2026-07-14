@@ -28,6 +28,15 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
       expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
     end
 
+    context "when the user has a refresh token" do
+      let(:user) { create(:user, :with_teacher_auth, :with_refresh_token) }
+
+      it "destroys the user's refresh token" do
+        subject
+        expect(user.refresh_token).to be_nil
+      end
+    end
+
     context "when the user's TRN was initially nil" do
       let(:user) { create(:user, :with_teacher_auth, trn: nil) }
 
