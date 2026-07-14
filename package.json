@@ -13,7 +13,7 @@
     "lodash.debounce": "^4.0.8",
     "rails-ujs": "^5.2.8",
     "sass": "^1.101.0",
-    "swagger-ui": "^5.32.6"
+    "swagger-ui": "^5.32.8"
   },
   "resolutions": {
     "react": "^18.3.1",
