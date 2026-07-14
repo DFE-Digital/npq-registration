@@ -34,7 +34,7 @@ module Helpers
       expect(summary_data).to eql(values)
     end
 
-    def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1, course_start: "Autumn 2026")
+    def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1)
       latest_application.reload
 
       expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}/registration-complete", submit_form: false) do
@@ -45,11 +45,9 @@ module Helpers
         page.click_link("Review a summary of your registration")
       end
 
-      autumn_start_answer = course_start == "Autumn 2026" ? "Yes" : "No, I already started in Spring"
-
       expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}", submit_form: false) do
         expect(page).to have_text("Registration ID: #{latest_application.ecf_id}")
-        expect(page).to have_summary_item("Autumn 2026 start", autumn_start_answer)
+        expect(page).to have_summary_item("Course start", latest_application.cohort.start_year)
         expect(page).to have_link("Start now", href: registration_wizard_show_path("course-start-date"))
       end
 

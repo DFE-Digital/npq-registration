@@ -14,7 +14,7 @@
 
 <p class="govuk-body"><strong>Registration ID:</strong> <%= @application.ecf_id %></p>
 
-<%= render "course_details", application: @application, cohort_option: Questionnaires::CourseStartDate::OPTIONS[@application.cohort.identifier] %>
+<%= render "course_details", application: @application %>
 <%= render "funding_details", application: @application %>
 <%= render "your_progress", application: @application %>
 <%= render "personal_details", application: @application %>

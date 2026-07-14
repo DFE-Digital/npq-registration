@@ -43,21 +43,12 @@
       </div>
 
       <div class="govuk-summary-list__row">
-        <% if cohort_option %>
-          <dt class="govuk-summary-list__key">
-            Autumn 2026 start
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= cohort_option[:label] %>
-          </dd>
-        <% else %>
-          <dt class="govuk-summary-list__key">
-            Course start
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= application.cohort.start_year %>
-          </dd>
-        <% end %>
+        <dt class="govuk-summary-list__key">
+          Course start
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= application.cohort.start_year %>
+        </dd>
       </div>
 
       <div class="govuk-summary-list__row">
