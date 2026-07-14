@@ -60,36 +60,7 @@ module Questionnaires
     end
 
     def next_step
-      # If your lead provider remains valid we can progress down the changing answer path
-      # as it is fine for us to end up going back to the check_answers page.
-      # If it is no longer valid due to the NPQ changing though we will need to be
-      # reinserted back into the flow so that later on the user can be asked to
-      # choose a new provider.
-      if changing_answer? && lead_provider_valid?
-        if no_answers_will_change?
-          :check_answers
-        elsif course.ehco?
-          :npqh_status
-        elsif previously_eligible_for_funding? && !eligible_for_funding?
-          if wizard.query_store.works_in_another_setting?
-            :choose_your_provider
-          else
-            :ineligible_for_funding
-          end
-        else
-          :check_answers
-        end
-      elsif course.ehco?
-        :npqh_status
-      elsif course.npqlpm?
-        :maths_eligibility_teaching_for_mastery
-      elsif course.npqs?
-        :senco_in_role
-      elsif funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
-        :possible_funding
-      else
-        :ineligible_for_funding
-      end
+      :funding_history
     end
 
     def previous_step

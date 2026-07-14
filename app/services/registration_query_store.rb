@@ -212,4 +212,8 @@ class RegistrationQueryStore
   def check_funding?
     store["check_funding"] == "yes"
   end
+
+  def declared_previous_funding?
+    store["declared_previous_funding"] == "yes"
+  end
 end

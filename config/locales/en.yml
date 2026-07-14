@@ -979,6 +979,7 @@ en:
         possible_funding: "You may qualify for DfE scholarship funding"
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
+        ineligible_for_funding_previously_funded: "DfE scholarship funding is not available"
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
         employment_role: "What is your role?"
         employer_name: "What organisation are you employed by?"
@@ -1029,6 +1030,7 @@ en:
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
+        declared_previous_funding: "Have you received DfE funding for this course before?"
     hint:
       applications_change_training_status:
         reason: Required for deferred or withdrawn
