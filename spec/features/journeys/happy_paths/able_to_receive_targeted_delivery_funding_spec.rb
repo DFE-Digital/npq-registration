@@ -62,9 +62,9 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
 
-      page.click_button("Continue")
+      page.click_button("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
