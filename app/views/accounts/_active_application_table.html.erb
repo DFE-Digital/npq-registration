@@ -23,12 +23,19 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Provider application
+          Application status
         </dt>
         <dd class="govuk-summary-list__value">
           <% if application.lead_provider_approval_status.blank? || pending?(application) %>
-            <%= govuk_tag(text: "Apply with provider", colour: "yellow") %>
-            <%= render 'provider_pending_status' %>
+            <%= govuk_tag(text: "Awaiting provider", colour: "yellow") %>
+
+            <p class="govuk-body govuk-!-margin-top-2">
+              Your provider will contact you with instructions on how to apply for the course.
+            </p>
+
+            <p class="govuk-body govuk-!-margin-bottom-0">
+              You do not need to do anything until they contact you.
+            </p>
           <% elsif accepted?(application) %>
             <%= govuk_tag(text: "Successful", colour: "green") %>
           <% elsif rejected?(application) %>
