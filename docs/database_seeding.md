@@ -14,7 +14,6 @@ run the following rake task:
   rake 'large_seed:background'
 ```
 
-This will set off a background job, to repeatedly run our application and declaration seeds,
-which should result in ~20,000 applications and ~20,000 declarations, and ~17,000 users being created in the database.
+This will set off a background job, to repeatedly run our application and declaration seeds.
 
 To check on the progress of the background job, run the task `rake large_seed:check`.

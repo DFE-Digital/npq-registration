@@ -164,5 +164,11 @@ FactoryBot.define do
       senco_in_role { "yes" }
       senco_start_date { Time.zone.today }
     end
+
+    trait :with_random_cohort_bounded_created_at do
+      created_at do
+        Faker::Time.between(from: cohort.registration_start_date, to: (cohort.registration_start_date + 6.months))
+      end
+    end
   end
 end

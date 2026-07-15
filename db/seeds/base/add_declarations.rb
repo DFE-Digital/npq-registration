@@ -16,6 +16,7 @@ class SeedAddDeclarations
               :accepted,
               :with_random_user,
               :with_random_work_setting,
+              :with_random_cohort_bounded_created_at,
               eligible_for_funding:,
               cohort: schedule.cohort,
               lead_provider:,

@@ -16,6 +16,7 @@ class SeedAddApplications
           :with_random_user,
           :with_random_work_setting,
           :with_participant_id_change,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           lead_provider_approval_status: "pending",
@@ -30,6 +31,7 @@ class SeedAddApplications
           :accepted,
           :with_random_participant_outcome_state,
           :with_random_work_setting,
+          :with_random_cohort_bounded_created_at,
           user:,
           lead_provider:,
           course: all_courses.sample,
@@ -42,6 +44,7 @@ class SeedAddApplications
           :rejected,
           :with_random_participant_outcome_state,
           :with_random_work_setting,
+          :with_random_cohort_bounded_created_at,
           user:,
           lead_provider:,
           course: all_courses.sample,
@@ -55,6 +58,7 @@ class SeedAddApplications
           :accepted,
           :with_random_user,
           :with_random_work_setting,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           participant_outcome_state: "passed",
@@ -68,6 +72,7 @@ class SeedAddApplications
           :rejected,
           :with_random_user,
           :with_random_work_setting,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           participant_outcome_state: "failed",
@@ -83,6 +88,7 @@ class SeedAddApplications
           :with_random_user,
           :with_random_work_setting,
           :with_random_participant_outcome_state,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           cohort: funded_cohorts.sample,
@@ -97,6 +103,7 @@ class SeedAddApplications
           :with_random_user,
           :with_random_work_setting,
           :with_random_participant_outcome_state,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           cohort: funded_cohorts.sample,
@@ -111,6 +118,7 @@ class SeedAddApplications
           :with_random_user,
           :with_random_work_setting,
           :with_participant_id_change,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           funded_place: Faker::Boolean.boolean(true_ratio: 0.6),
@@ -125,6 +133,7 @@ class SeedAddApplications
           :with_random_user,
           :with_random_work_setting,
           :with_participant_id_change,
+          :with_random_cohort_bounded_created_at,
           lead_provider:,
           course: all_courses.sample,
           funded_place: false,
@@ -139,6 +148,7 @@ class SeedAddApplications
           :with_random_user,
           :with_random_work_setting,
           :with_participant_id_change,
+          :with_random_cohort_bounded_created_at,
           eligible_for_funding: Faker::Boolean.boolean,
           lead_provider:,
           course: all_courses.sample,
@@ -159,12 +169,7 @@ class SeedAddApplications
       { employment_type: :other },
       { referred_by_return_to_teaching_adviser: "yes" },
     ].each do |application_attrs|
-      FactoryBot.create(:application, :manual_review, **application_attrs.merge(course:))
+      FactoryBot.create(:application, :manual_review, :with_random_cohort_bounded_created_at, **application_attrs.merge(course:))
     end
-
-    # temporarily comment the below out, to see if the large-scale seeding job will complete
-    # Application.order(id: :desc).each.with_index do |a, i|
-    #   a.update!(created_at: i.days.ago)
-    # end
   end
 end
