@@ -35,6 +35,15 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
     end
 
+    context "when the user has a refresh token" do
+      let(:user) { create(:user, :with_teacher_auth, :with_refresh_token) }
+
+      it "destroys the user's refresh token" do
+        subject
+        expect(user.refresh_token).to be_nil
+      end
+    end
+
     context "when there is no connected person" do
       let(:webhook_message) do
         create(
@@ -48,6 +57,15 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       it "updates the user's email address" do
         subject
         expect(user.reload.email).to eq(new_email)
+      end
+
+      context "when the user has a refresh token" do
+        let(:user) { create(:user, :with_teacher_auth, :with_refresh_token) }
+
+        it "does not destroy the user's refresh token" do
+          subject
+          expect(user.refresh_token).not_to be_nil
+        end
       end
     end
 

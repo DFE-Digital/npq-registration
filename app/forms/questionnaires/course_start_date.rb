@@ -15,7 +15,7 @@ module Questionnaires
     attribute QUESTION_NAME
 
     validates QUESTION_NAME, presence: true, inclusion: { in: OPTIONS.keys }
-    validate :cohort_exists
+    validate :cohort_exists, if: -> { course_start_cohort.present? }
 
     def self.permitted_params
       [QUESTION_NAME]
@@ -55,12 +55,10 @@ module Questionnaires
   private
 
     def cohort_exists
-      cohort_identifier = course_start_cohort
-      cohort = Cohort.find_by(identifier: cohort_identifier)
-      unless cohort
-        errors.add(QUESTION_NAME, :invalid)
-        Sentry.capture_message("Cohort selected by user does not exist: #{cohort_identifier}")
-      end
+      return if Cohort.find_by(identifier: course_start_cohort)
+
+      errors.add(QUESTION_NAME, :invalid)
+      Sentry.capture_message("Cohort selected by user does not exist: #{course_start_cohort}")
     end
   end
 end

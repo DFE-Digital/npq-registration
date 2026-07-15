@@ -449,9 +449,10 @@ en:
               blank: Select an option that tells us about your experience of mastery approaches to teaching maths.
         questionnaires/course_start_date:
           attributes:
-            course_start_date:
+            course_start_cohort:
               blank: Choose your course start date.
               inclusion: Choose your course start date.
+              invalid: Cohort selected does not exist.
         questionnaires/choose_your_provider:
           attributes:
             lead_provider_id:

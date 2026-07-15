@@ -1,0 +1,17 @@
+<% content_for :title, "Sign out" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Sign out</h1>
+
+    <p class="govuk-body">Are you sure you want to sign out?</p>
+
+    <p class="govuk-body">If you sign out, you will need to sign in again to continue using this service.</p>
+
+    <%= form_with url: sign_out_user_path, method: :delete do |f| %>
+      <%= f.govuk_submit "Sign out" do %>
+        <%= govuk_button_link_to "Stay signed in", @cancel_url, secondary: true %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

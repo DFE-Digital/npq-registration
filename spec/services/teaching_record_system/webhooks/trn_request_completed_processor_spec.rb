@@ -8,17 +8,54 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
     let(:user) { create(:user, :with_teacher_auth) }
     let(:new_trn) { "2345678" }
 
-    it "updates the user's TRN" do
-      subject
-      expect(user.reload).to have_attributes(
-        trn: new_trn,
-        trn_verified: true,
-        trn_auto_verified: true,
-      )
+    context "when the user's TRN was initially set" do
+      it "updates the user's TRN" do
+        subject
+        expect(user.reload).to have_attributes(
+          trn: new_trn,
+          trn_verified: true,
+          trn_auto_verified: true,
+        )
+      end
+
+      it "does not send a TRN allocated email" do
+        expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
+        subject
+      end
     end
 
     it "marks the webhook message as processed" do
       expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+    end
+
+    context "when the user has a refresh token" do
+      let(:user) { create(:user, :with_teacher_auth, :with_refresh_token) }
+
+      it "destroys the user's refresh token" do
+        subject
+        expect(user.refresh_token).to be_nil
+      end
+    end
+
+    context "when the user's TRN was initially nil" do
+      let(:user) { create(:user, :with_teacher_auth, trn: nil) }
+
+      it "sends a TRN allocated email" do
+        expect(TrnAllocatedMailer).to send_mail(:trn_allocated_mail)
+          .with_params(to: user.email,
+                       full_name: user.full_name,
+                       trn: new_trn)
+        subject
+      end
+
+      context "when the user's email is nil" do
+        let(:user) { create(:user, :with_teacher_auth, :archived, trn: nil, email: nil) }
+
+        it "does not send a TRN allocated email" do
+          expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
+          subject
+        end
+      end
     end
 
     context "when the message format is incorrect" do

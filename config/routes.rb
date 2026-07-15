@@ -37,7 +37,8 @@ Rails.application.routes.draw do
   get "/registration-interest/sign-up/confirm", to: "interest_notification_sign_up#confirm"
 
   get "/sign-in", to: "session_wizard#show", step: "sign_in"
-  get "/sign-out", to: "sessions#destroy", as: "sign_out_user"
+  get "/sign-out", to: "sessions#confirm_sign_out", as: "sign_out_user"
+  delete "/sign-out", to: "sessions#destroy"
 
   get "/session/:step", to: "session_wizard#show", as: "session_wizard_show"
   patch "/session/:step", to: "session_wizard#update", as: "session_wizard_update"
