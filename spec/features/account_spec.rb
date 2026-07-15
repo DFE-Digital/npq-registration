@@ -74,6 +74,16 @@ RSpec.feature "Account", :no_js, type: :feature do
         expect(page).not_to have_text("Registration successfully submitted")
       end
 
+      context "when the user's previous application is in a 2026 cohort" do
+        let(:cohort) { create(:cohort, start_year: 2026) }
+
+        scenario "it shows the correct cohort description" do
+          visit "/account"
+
+          expect(page).to have_summary_item("Course start", "Spring 2026")
+        end
+      end
+
       # Deliberately written like this
       #  to pick up if a new funding_eligiblity_status constant is added to FundingEligibility,
       #  but it is not correctly added to FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS

@@ -58,6 +58,11 @@ module ApplicationHelper
     application.rejected_lead_provider_approval_status?
   end
 
+  def application_cohort_description(application)
+    cohort_option = Questionnaires::CourseStartDate::OPTIONS[application.cohort.identifier]
+    cohort_option ? cohort_option[:cohort_description] : application.cohort.start_year
+  end
+
   def show_otp_code_in_ui(current_env, admin)
     return unless current_env.in?(%w[development review staging]) && admin.present?
 
