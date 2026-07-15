@@ -3,7 +3,6 @@ class Accounts::UserRegistrationsController < AccountsController
 
   def show; end
 
-  def registration_complete; end
 
 private
 
