@@ -32,7 +32,7 @@ namespace :large_seed do
       puts "Locked at: #{job.locked_at}" if job.locked_at
       scheduled_or_running = job.run_at.future? ? " (scheduled)" : " (running)"
       puts "Run at: #{job.run_at}#{scheduled_or_running}"
-      iterations_left = job.payload_object.job_data["arguments"].first["times"]
+      iterations_left = job.payload_object.job_data["arguments"].first["times"] || 1
       puts "Iterations left: #{iterations_left}"
 
       next unless job.failed_at

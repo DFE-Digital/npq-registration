@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 class SeedAddApplications
-  def load(multiplier: nil)
+  def load(multiplier: 1)
     all_courses = Course.all.to_a
     funded_cohorts = Cohort.capped_funding.or(Cohort.full_funding).to_a
 
     LeadProvider.find_each do |lead_provider|
-      quantity = multiplier || { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)
-
-      quantity.times do
+      multiplier.times do
         # users with one application each
         FactoryBot.create_list(
           :application,

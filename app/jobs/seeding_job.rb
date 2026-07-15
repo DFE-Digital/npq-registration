@@ -4,7 +4,7 @@ class SeedingJob < ApplicationJob
 
   queue_as :default
 
-  def perform(times: 1)
+  def perform(times: 1, multiplier: 20)
     return unless Rails.env.in?(%w[development review staging sandbox])
     return unless times.positive?
 
@@ -12,8 +12,8 @@ class SeedingJob < ApplicationJob
     Faker::Config.locale = "en-GB"
 
     ApplicationRecord.transaction do
-      SeedAddApplications.new.load(multiplier: 20)
-      SeedAddDeclarations.new.load(multiplier: 20)
+      SeedAddApplications.new.load(multiplier:)
+      SeedAddDeclarations.new.load(multiplier:)
     end
 
     SeedingJob.perform_later(times: times - 1) if times > 1

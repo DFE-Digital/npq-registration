@@ -43,30 +43,45 @@ ApplicationRecord.descendants.each(&:reset_column_information)
 # Ensure course/course group are first so the replant for
 # review apps doesn't cause the container to go into an
 # unhealthy state for too long (as courses are loaded in healthcheck).
-{
-  "add_course_groups.rb" => nil,
-  "add_courses.rb" => nil,
-  "add_feature_flags.rb" => nil,
-  "add_cohorts.rb" => nil,
-  "add_childcare_providers.rb" => nil,
-  "add_schools.rb" => nil,
-  "add_schedules.rb" => nil,
-  "add_lead_providers.rb" => nil,
-  "add_itt_providers.rb" => nil,
-  "add_users.rb" => nil,
-  "add_applications.rb" => "SeedAddApplications",
-  "add_statements.rb" => nil,
-  "add_contracts.rb" => nil,
-  "add_declarations.rb" => "SeedAddDeclarations",
-  "add_api_tokens.rb" => nil,
-  "process_statements.rb" => nil,
-  "add_delivery_partners.rb" => nil,
-  "add_eligibility_list_entries.rb" => nil,
-  "add_course_cohort_providers.rb" => nil,
-}.each do |seed_file, seed_class|
+[
+  "add_course_groups.rb",
+  "add_courses.rb",
+  "add_feature_flags.rb",
+  "add_cohorts.rb",
+  "add_childcare_providers.rb",
+  "add_schools.rb",
+  "add_schedules.rb",
+  "add_lead_providers.rb",
+  "add_itt_providers.rb",
+  "add_users.rb",
+  "add_statements.rb",
+  "add_contracts.rb",
+  "add_api_tokens.rb",
+  "process_statements.rb",
+  "add_delivery_partners.rb",
+  "add_eligibility_list_entries.rb",
+  "add_course_cohort_providers.rb",
+].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   ApplicationRecord.transaction do
     load_base_file(seed_file)
-    seed_class.constantize.new.load if seed_class
   end
+end
+
+# add_applications.rb and add_declarations.rb are dealt with separately
+if Rails.env.local?
+  ApplicationRecord.transaction do
+    Rails.logger.info("seeding applications")
+    load_base_file("add_applications.rb")
+    SeedAddApplications.new.load
+  end
+  ApplicationRecord.transaction do
+    Rails.logger.info("seeding declaration")
+    load_base_file("add_declarations.rb")
+    SeedAddDeclarations.new.load
+  end
+else
+  # use background job to speed up review app deployment
+  Rails.logger.info("seeding applications and declarations in background")
+  SeedingJob.perform_later(multiplier: 4)
 end
