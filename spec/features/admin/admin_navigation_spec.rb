@@ -1,0 +1,23 @@
+require "rails_helper"
+
+RSpec.feature "admin", :no_js, type: :feature do
+  include Helpers::AdminLogin
+
+  let(:admin) { create(:admin) }
+  let(:super_admin) { create(:super_admin) }
+  let(:feature_flags_link_text) { "Feature flags" }
+
+  before do
+    create(:cohort, :current)
+  end
+
+  scenario "regular admins cannot see links that super admins can" do
+    sign_in_as_admin
+    expect(page).not_to have_link(feature_flags_link_text)
+  end
+
+  scenario "super admins can see links that regular admins can't" do
+    sign_in_as_super_admin
+    expect(page).to have_link(feature_flags_link_text, href: "/admin/features")
+  end
+end

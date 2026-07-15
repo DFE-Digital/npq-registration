@@ -73,8 +73,8 @@ RSpec.describe "choosing the correct controller to inherit from" do
     it_behaves_like "not allowing an admin access"
   end
 
-  context "when a controller is a subclass of NpqSeparation::AdminController" do
-    controller(NpqSeparation::AdminController) do
+  context "when a controller is a subclass of AdminController" do
+    controller(AdminController) do
       def index
         head :ok
       end

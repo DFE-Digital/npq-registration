@@ -17,7 +17,7 @@ RSpec.feature "Signing out", :no_js, type: :feature do
     click_button "Sign out"
 
     expect(page).to have_current_path("/")
-    visit "/npq-separation/admin"
+    visit "/admin"
     expect(page).to have_current_path(sign_in_path)
   end
 
@@ -27,7 +27,7 @@ RSpec.feature "Signing out", :no_js, type: :feature do
     click_link "Sign out"
     click_link "Stay signed in"
 
-    expect(page).to have_current_path("/npq-separation/admin")
+    expect(page).to have_current_path("/admin")
   end
 
   scenario "visiting the confirmation page when signed out redirects to the homepage" do

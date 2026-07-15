@@ -10,8 +10,8 @@ module Admin::Adjustments
 
     validates_inclusion_of :add_another, in: %w[yes no]
 
-    delegate :new_npq_separation_admin_finance_statement_adjustment_path,
-             :npq_separation_admin_finance_statement_path,
+    delegate :new_admin_finance_statement_adjustment_path,
+             :admin_finance_statement_path,
              to: :"Rails.application.routes.url_helpers"
 
     def adding_another_adjustment?

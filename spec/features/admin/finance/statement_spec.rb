@@ -1,0 +1,118 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.feature "Statement", type: :feature do
+  include Helpers::AdminLogin
+  include ActionView::Helpers::NumberHelper
+
+  let(:statement) { create(:statement) }
+
+  let!(:contracts) do
+    [
+      create(:contract, course: create(:course, :leading_teaching), statement:),
+      create(:contract, course: create(:course, :leading_behaviour_culture), statement:),
+      create(:contract, course: create(:course, :leading_primary_mathematics), statement:),
+    ]
+  end
+
+  before do
+    schedule_1 = create(:schedule, :npq_leadership_autumn)
+    schedule_2 = create(:schedule, :npq_leadership_spring)
+    create(:schedule, :npq_specialist_autumn)
+    create(:schedule, :npq_specialist_spring)
+
+    create(:milestone, declaration_type: "started", schedule: schedule_1, statements: [statement])
+    create(:milestone, declaration_type: "started", schedule: schedule_2, statements: [statement])
+    create(:milestone, declaration_type: "completed", schedule: schedule_1, statements: [statement])
+    create(:milestone, declaration_type: "completed", schedule: schedule_2, statements: [statement])
+
+    sign_in_as(create(:admin))
+  end
+
+  scenario "see details" do
+    visit(admin_finance_statement_path(statement))
+
+    expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
+
+    component = Admin::StatementSummaryComponent.new(statement:)
+    expect(page).to have_component(component)
+
+    expect(page).to have_link("Download declarations (CSV)", href: admin_finance_assurance_report_path(statement, format: :csv))
+
+    start_year = statement.cohort.start_year
+    within(".govuk-summary-card:nth-of-type(3) .govuk-summary-list") do |overview_summary_list|
+      expect(overview_summary_list).to have_summary_item("Cohort", "#{start_year} to #{start_year.next}")
+      expect(overview_summary_list).to have_summary_item("Output payment date", statement.payment_date.to_fs(:govuk))
+      expect(overview_summary_list).to have_summary_item("Status", statement.state.humanize)
+      expect(overview_summary_list).to have_summary_item("Statement ID", statement.ecf_id)
+      expect(overview_summary_list).to have_summary_item("Output statement", "Yes")
+    end
+
+    contracts.each do |contract|
+      component = Admin::CoursePaymentOverviewComponent.new(contract:)
+      expect(page).to have_component(component)
+    end
+
+    expect(page).not_to have_text("Standalone payments")
+
+    expect(page).to be_accessible
+  end
+
+  scenario "see special course details" do
+    contract = contracts.last
+    contract.contract_template.update! special_course: true
+
+    visit admin_finance_statement_path(statement)
+
+    within "#special-contracts-warning" do
+      expect(page).to have_content("#{contract.course.name} has standalone payments")
+      expect(page).to have_link("View payments for this course", href: "#standalone_payments")
+    end
+
+    within "h4#standalone_payments" do
+      expect(page).to have_content("Standalone payments")
+    end
+
+    within "h4#standalone_payments + .govuk-summary-card" do
+      component = Admin::CoursePaymentOverviewComponent.new(contract:)
+      expect(page).to have_component(component)
+    end
+
+    expect(page).to be_accessible
+  end
+
+  scenario "see the contract information for all courses of a statement" do
+    visit admin_finance_statement_path(statement)
+    find("span", text: "Contract Information").click
+
+    within all(".govuk-details__text", visible: false).last do
+      contracts.each do |contract|
+        expect(page).to have_content(contract.course.name)
+        expect(page).to have_content(contract.recruitment_target)
+        expect(page).to have_content(number_to_currency(contract.per_participant))
+      end
+    end
+
+    expect(page).to be_accessible
+  end
+
+  scenario "print views" do
+    visit admin_finance_statement_path(statement)
+
+    within(".govuk-inset-text.noprint") do
+      print_providers_window = window_opened_by do
+        click_link "Providers"
+      end
+      within_window print_providers_window do
+        expect(page).to have_current_path(print_provider_admin_finance_statement_path(statement))
+      end
+      print_dfe_users_window = window_opened_by do
+        click_link "DfE users"
+      end
+      within_window print_dfe_users_window do
+        expect(page).to have_current_path(print_dfe_user_admin_finance_statement_path(statement))
+      end
+    end
+  end
+end

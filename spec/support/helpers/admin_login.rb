@@ -21,7 +21,7 @@ module Helpers
       page.fill_in "Enter your code", with: code
       page.click_button "Sign in"
 
-      expect(page).to have_current_path("/npq-separation/admin")
+      expect(page).to have_current_path("/admin")
     end
   end
 end

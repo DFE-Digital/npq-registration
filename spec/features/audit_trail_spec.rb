@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Recording audit trail via papertrail", :versioning, type: :request do
-  include Helpers::NPQSeparationAdminLogin
+  include Helpers::RequestAdminLogin
 
   let(:cohort) { create(:cohort, :current, :without_funding_cap) }
 
@@ -11,7 +11,7 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
     before do
       sign_in_as_admin
 
-      post npq_separation_admin_applications_change_training_status_path(application, params:)
+      post admin_applications_change_training_status_path(application, params:)
     end
 
     let :application do

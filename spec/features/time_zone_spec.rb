@@ -19,7 +19,7 @@ RSpec.feature "Showing Application timestamps in UK local time", :no_js, type: :
       travel_to(timestamp) do
         sign_in_as create(:admin)
 
-        visit(npq_separation_admin_applications_path)
+        visit(admin_applications_path)
 
         expect(page).to have_css("h1", text: "Applications")
         expect(page).to have_css("td", text: "1 Jan #{next_year} 8:15am")

@@ -1,0 +1,39 @@
+<% if adjustments.empty? %>
+  <p class="govuk-body">There are no adjustments.</p>
+<% else %>
+  <%=
+    helpers.govuk_table do |table|
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(text: t(".description"))
+          row.with_cell(text: t(".amount"), numeric: true)
+          row.with_cell(text: t(".actions")) if show_actions
+        end
+      end
+
+      table.with_body do |body|
+        adjustments.each do |adjustment|
+          body.with_row do |row|
+            row.with_cell(text: adjustment.description)
+            row.with_cell(text: number_to_currency(adjustment.amount, negative_format: "\u2011%u%n"), numeric: true)
+            row.with_cell do
+              if show_actions
+                helpers.govuk_link_to(t(".edit"), edit_admin_finance_statement_adjustment_path(adjustment.statement, adjustment, show_all_adjustments:)) +
+                  tag.br +
+                  helpers.govuk_link_to(t(".remove"), delete_admin_finance_statement_adjustment_path(adjustment.statement, adjustment, show_all_adjustments:))
+              end
+            end
+          end
+        end
+
+        if show_total
+          body.with_row do |row|
+            row.with_cell(text: t(".total"), header: true)
+            row.with_cell(text: number_to_currency(adjustments.sum(&:amount), negative_format: "\u2011%u%n"), numeric: true, header: true)
+            row.with_cell
+          end
+        end
+      end
+    end
+  %>
+<% end %>

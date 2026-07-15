@@ -1,0 +1,14 @@
+<%= render SubNavigationComponent.new(
+  request.path,
+  heading: {
+    text: "Finance statement",
+    visible: true
+  },
+  structure: [
+    NavigationStructure::Node.new(
+      name: "#{@statement.lead_provider.name}, #{statement_name(@statement)}",
+      href: admin_finance_statement_path(@statement),
+      prefix: admin_finance_statement_path(@statement)
+    )
+  ]
+) %>
