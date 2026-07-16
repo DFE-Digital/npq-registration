@@ -65,8 +65,11 @@ jobs:
      environment: review
 
      if: >
-       github.event.inputs.dry_run == 'false' &&
-       needs.display-review-apps-to-remove.outputs.stale_prs != '[]'
+        (
+          github.event_name == 'schedule' ||
+          github.event.inputs.dry_run == 'false'
+        ) &&
+        needs.display-review-apps-to-remove.outputs.stale_prs != '[]'
 
      strategy:
        fail-fast: false
