@@ -753,7 +753,7 @@ en:
   accounts:
     show:
       title: "Your NPQ registration"
-      pural_title: "Your NPQ registrations"
+      plural_title: "Your NPQ registrations"
 
   admin:
     layout:

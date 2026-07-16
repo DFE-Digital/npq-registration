@@ -1,12 +1,12 @@
 <% page_heading = "Your #{localise_course_name(@application.course)} registration" %>
+
 <% content_for :title, page_heading %>
+
 <% content_for :before_content do %>
-  <% if current_user.applications.count > 1 %>
-    <%= render GovukComponent::BackLinkComponent.new(
-      text: "Back to your registrations",
-      href: account_path
-    ) %>
-  <% end %>
+  <% breadcrumbs = current_user.applications.count > 1 ? { I18n.t("accounts.show.plural_title") => account_path } : {} %>
+  <%= render GovukComponent::BreadcrumbsComponent.new(
+    breadcrumbs: breadcrumbs.merge(I18n.t("accounts.show.title") => nil)
+  ) %>
 <% end %>
 
 <span class="govuk-caption-m">Submitted <%= @application.created_at.to_date.to_fs(:govuk) %></span>

@@ -153,4 +153,48 @@ RSpec.feature "Account", :no_js, type: :feature do
       expect(page).to have_current_path("/")
     end
   end
+
+  describe "breadcrumbs" do
+    before do
+      navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+        page.click_button("Start now")
+      end
+    end
+
+    context "with a single application" do
+      scenario "the registration page shows only the page, no back link and no breadcrum to registration list" do
+        visit accounts_user_registration_path(application)
+
+        expect(page).to have_current_breadcrumb("Your NPQ registration")
+        expect(page).not_to have_breadcrumb_link("Your NPQ registrations")
+        expect(page).not_to have_css(".govuk-back-link")
+      end
+    end
+
+    context "with multiple applications" do
+      before { create(:application, user:, cohort:) }
+
+      scenario "the registrations page shows the page only with a current breadcrumb" do
+        visit "/account"
+
+        expect(page).to have_current_breadcrumb("Your NPQ registrations")
+      end
+
+      scenario "the registration page links back to the registrations page" do
+        visit accounts_user_registration_path(application)
+
+        expect(page).to have_breadcrumb_link("Your NPQ registrations", href: account_path)
+        expect(page).to have_current_breadcrumb("Your NPQ registration")
+        expect(page).not_to have_css(".govuk-back-link")
+      end
+
+      scenario "selecting the registrations breadcrumb goes to the registrations page" do
+        visit accounts_user_registration_path(application)
+
+        within(".govuk-breadcrumbs") { click_link "Your NPQ registrations" }
+
+        expect(page).to have_current_path("/account")
+      end
+    end
+  end
 end
