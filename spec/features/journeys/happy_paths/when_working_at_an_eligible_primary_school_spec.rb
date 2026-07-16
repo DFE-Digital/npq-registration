@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -8,6 +8,16 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
+
+  before do
+    School.create!(urn: 100_000,
+                   name: "open manchester school",
+                   address_1: "street 1", town: "manchester",
+                   establishment_status_code: "1",
+                   establishment_type_code: 1,
+                   number_of_pupils: 150,
+                   phase_name: "Primary")
+  end
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey (with JS)") { run_scenario(js: true) }
@@ -20,43 +30,12 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   def run_scenario(js:)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
-    School.create!(urn: 100_000,
-                   name: "open manchester school",
-                   address_1: "street 1", town: "manchester",
-                   establishment_status_code: "1",
-                   establishment_type_code: 1,
-                   number_of_pupils: 150,
-                   phase_name: "Primary")
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Headship",
+      work_setting: "A school",
+    )
 
     choose_a_school(js:, name: "open")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Headship", visible: :all)
-    end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
       expect(page).to have_text("Funding")
@@ -167,9 +146,10 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_identifier" => "npq-headship",
         "course_start_cohort" => course_start_cohort_value,
+        "declared_previous_funding" => "no",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",

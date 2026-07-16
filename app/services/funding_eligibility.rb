@@ -119,7 +119,7 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      return UNFUNDED_COHORT unless cohort.funded?
+      return UNFUNDED_COHORT unless cohort&.funded?
       return NOT_IN_ENGLAND unless inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 

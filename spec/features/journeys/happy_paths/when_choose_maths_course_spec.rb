@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,39 +9,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey when choosing Leading primary mathematics journey (with JS)") { run_scenario(js: true) }
-  end
-
-  context "when JavaScript is disabled", :js do
-    scenario("registration journey when choosing Leading primary mathematics journey (without JS)") { run_scenario(js: true) }
-  end
-
-  def run_scenario(*)
-    stub_participant_validation_request
-
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
+  before do
     School.create!(urn: 100_000,
                    name: "open manchester school",
                    address_1: "street 1", town: "manchester",
@@ -49,24 +17,17 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
                    establishment_type_code: 1,
                    number_of_pupils: 150,
                    phase_name: "Primary")
+  end
 
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"))
+  scenario "registration journey when choosing Leading primary mathematics journey" do
+    stub_participant_validation_request
 
-      within ".npq-js-reveal" do
-        page.fill_in "What is the name of your workplace?", with: "open"
-      end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Leading primary mathematics",
+      work_setting: "A school",
+    )
 
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
-      page.click_button("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Leading primary mathematics", visible: :all)
-    end
+    choose_a_school(js: false, name: "open")
 
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
       expect(page).to have_text("Have you taken at least one year of the primary maths Teaching for Mastery programme?")
@@ -180,13 +141,14 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-leading-primary-mathematics",
+        "declared_previous_funding" => "no",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
-        "institution_name" => "",
+        "institution_name" => "open",
         "lead_provider_id" => "3",
         "maths_eligibility_teaching_for_mastery" => "yes",
         "maths_understanding" => true,

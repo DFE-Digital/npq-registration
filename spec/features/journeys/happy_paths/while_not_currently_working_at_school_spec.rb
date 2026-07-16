@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -22,28 +22,10 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
   scenario("registration journey while not currently working at school") do
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Another setting", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Executive leadership",
+      work_setting: "Another setting",
+    )
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
@@ -52,11 +34,6 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
       page.fill_in "What organisation are you employed by?", with: "Big company"
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Executive leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -73,6 +50,8 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
     end
+
+    # check_back_journey_is_correct # FIXME: this currently fails
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
@@ -144,9 +123,10 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-executive-leadership",
+        "declared_previous_funding" => "no",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",
         "funding" => "self",

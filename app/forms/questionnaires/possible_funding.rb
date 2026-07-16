@@ -12,7 +12,7 @@ module Questionnaires
           :maths_understanding_of_approach
         end
       else
-        :choose_your_npq
+        :work_setting
       end
     end
 

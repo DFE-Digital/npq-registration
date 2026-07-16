@@ -44,13 +44,13 @@ class RegistrationWizardController < PublicPagesController
     return redirect_to root_path unless @form.requirements_met?
 
     if @form.valid?
+      @wizard.save!
+
       if @form.redirect_to_change_path?
         redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
       else
         redirect_to registration_wizard_show_path(@wizard.next_step_path)
       end
-
-      @wizard.save!
     else
       render @wizard.current_step
     end

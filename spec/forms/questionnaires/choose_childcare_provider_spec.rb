@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
-  subject :instance do
+  subject(:instance) do
     described_class.new(wizard:,
                         childcare_identifier: identifier,
                         childcare_name: name)
@@ -13,6 +13,7 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
   let(:identifier) { "" }
   let(:name) { "" }
   let(:provider) { create :school, urn: "8329422" }
+  let(:course_start_cohort) { create(:cohort, :capped).identifier }
 
   let(:wizard) do
     RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
@@ -135,19 +136,28 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
   end
 
   describe "#next_step" do
-    subject { described_class.new(childcare_identifier: "School-#{provider.urn}", wizard:) }
+    subject { instance.next_step }
 
     let(:course) { create(:course) }
+    let(:provider) { create(:school) }
+    let(:identifier) { "School-#{provider.urn}" }
+
     let(:store) do
       {
         "course_identifier" => course.identifier.to_s,
         "works_in_childcare" => "yes",
+        "course_start_cohort" => course_start_cohort,
       }
     end
-    let(:provider) { create(:school) }
 
-    it "goes to choose_your_npq" do
-      expect(subject.next_step).to be(:choose_your_npq)
+    context "when the chosen school is in England" do
+      it_behaves_like "showing the eligibility step"
+    end
+
+    context "when the chosen provider is not in England" do
+      let(:provider) { create(:school, establishment_type_code: "30") }
+
+      it { is_expected.to be(:childcare_provider_not_in_england) }
     end
   end
 end

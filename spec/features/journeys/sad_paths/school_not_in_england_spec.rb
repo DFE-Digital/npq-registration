@@ -1,12 +1,17 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
+
+  before do
+    # create a school in Wales
+    School.create!(urn: 100_099, name: "open wrexham school", address_1: "street 4", town: "wrexham", establishment_status_code: "1", establishment_type_code: "30")
+  end
 
   context "when JavaScript is enabled", :js do
     scenario("school not in England (with JS)") { run_scenario(js: true) }
@@ -19,31 +24,11 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type
   def run_scenario(js:)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Headship",
+      work_setting: "A school",
+    )
 
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # expect(page).to be_accessible
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
-    School.create!(urn: 100_099, name: "open wrexham school", address_1: "street 4", town: "wrexham", establishment_status_code: "1", establishment_type_code: "30")
     choose_a_school(js:, name: "open wrexham school")
 
     expect_page_to_have(path: "/registration/school-not-in-england", submit_form: false) do

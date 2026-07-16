@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseSchool, type: :model do
-  subject :instance do
+  subject(:instance) do
     described_class.new(wizard:,
                         institution_identifier: identifier,
                         institution_name: name)
@@ -135,19 +135,27 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
   end
 
   describe "#next_step" do
-    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
+    subject { instance.next_step }
 
     let(:course) { create(:course) }
+    let(:school) { create(:school) }
+    let(:identifier) { "School-#{school.urn}" }
+
     let(:store) do
       {
         "course_identifier" => course.identifier.to_s,
         "works_in_school" => "yes",
       }
     end
-    let(:school) { create(:school) }
 
-    it "goes to choose_your_npq" do
-      expect(subject.next_step).to be(:choose_your_npq)
+    context "when the chosen school is in England" do
+      it_behaves_like "showing the eligibility step"
+    end
+
+    context "when the chosen school is not in England" do
+      let(:school) { create(:school, establishment_type_code: "30") }
+
+      it { is_expected.to be(:school_not_in_england) }
     end
   end
 end

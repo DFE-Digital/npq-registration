@@ -124,5 +124,44 @@ module Questionnaires
         revealed_question:,
       )
     end
+
+  private
+
+    def show_eligibility_step
+      if changing_answer?
+        if no_answers_will_change?
+          :check_answers
+        elsif query_store.course.ehco?
+          :npqh_status
+        else
+          :check_answers
+        end
+      elsif query_store.course.ehco?
+        :npqh_status
+      elsif query_store.course.npqlpm?
+        :maths_eligibility_teaching_for_mastery
+      elsif query_store.course.npqs?
+        :senco_in_role
+      elsif funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
+        :possible_funding
+      else
+        :ineligible_for_funding
+      end
+    end
+
+    def eligible_for_funding?
+      funding_eligibility_calculator.funded?
+    end
+
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
+        course: query_store.course,
+        institution: query_store.institution,
+        approved_itt_provider: query_store.approved_itt_provider?,
+        inside_catchment: query_store.inside_catchment?,
+        user_ecf_id: query_store.user_ecf_id,
+        query_store:,
+      )
+    end
   end
 end
