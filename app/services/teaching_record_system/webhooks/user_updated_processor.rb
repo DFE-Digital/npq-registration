@@ -6,7 +6,10 @@ module TeachingRecordSystem
       def process!
         User.transaction do
           user.update!(params_to_update)
-          user.refresh_token&.destroy! if new_trn.present?
+          if new_trn.present?
+            merge_and_archive_other_users_with_same_trn
+            user.refresh_token&.destroy!
+          end
         end
       end
 
@@ -32,6 +35,14 @@ module TeachingRecordSystem
 
       def new_trn
         webhook_message.message["connectedPerson"]["trn"] if webhook_message.message["connectedPerson"]
+      end
+
+      def merge_and_archive_other_users_with_same_trn
+        users_with_same_trn = User.not_archived.with_trn(new_trn).order(created_at: :desc).to_a
+        user_to_keep = users_with_same_trn[0]
+        users_with_same_trn[1..].each do |user_to_merge|
+          Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
+        end
       end
 
       def correct_format?
