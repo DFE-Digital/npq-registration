@@ -62,13 +62,14 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "Spring 2026",
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => "Spring 2026",
           "Course" => "Headship",
           "Provider" => "LLSE",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My trust is paying",
           "Work setting" => "A school",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end
