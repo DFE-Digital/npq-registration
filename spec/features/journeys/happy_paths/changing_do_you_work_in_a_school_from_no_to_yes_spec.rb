@@ -82,14 +82,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Leading teaching",
           "Course funding" => "I am paying",
           "Employment type" => "In an independent hospital education organisation",
           "Employer" => "Big company",
           "Provider" => "Teach First",
           "Work setting" => "Another setting",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
 
@@ -133,13 +134,14 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Leading teaching",
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "A school",
           "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

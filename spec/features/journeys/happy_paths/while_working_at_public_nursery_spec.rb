@@ -87,14 +87,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

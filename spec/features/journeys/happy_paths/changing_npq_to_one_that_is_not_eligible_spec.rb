@@ -95,13 +95,14 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Senior leadership",
           "Provider" => "Best Practice Network",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
 
@@ -140,14 +141,15 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Executive leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "National Institute of Teaching",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

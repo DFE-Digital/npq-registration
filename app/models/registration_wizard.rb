@@ -7,7 +7,15 @@ class RegistrationWizard
   class InvalidStep < StandardError; end
   class RemovedStep < StandardError; end
 
-  Answer = Struct.new(:key, :value, :change_step)
+  Answer = Struct.new(:key, :value, :change_step, :action_text, :action_href, :tag_colour) do
+    def action_text
+      self[:action_text] || "Change"
+    end
+
+    def action_href
+      self[:action_href] || "/registration/#{change_step.to_s.dasherize}/change"
+    end
+  end
 
   VALID_REGISTRATION_STEPS = %i[
     start
@@ -132,8 +140,9 @@ class RegistrationWizard
   def answers
     array = []
 
-    array << Answer.new("Course start", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]][:cohort_description], :course_start_date)
-    array << Answer.new("Workplace in England", teacher_catchment_humanized, :teacher_catchment)
+    array << Answer.new("Cohort", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]][:cohort_description], :course_start_date)
+    array << Answer.new("Working in England", teacher_catchment_humanized, :teacher_catchment)
+    array << Answer.new("Course", I18n.t(course.identifier, scope: "course.name"), :choose_your_npq)
 
     if store["referred_by_return_to_teaching_adviser"]
       array << Answer.new("Referred by return to teaching adviser", t("referred_by_return_to_teaching_adviser"), :referred_by_return_to_teaching_adviser)
@@ -172,8 +181,6 @@ class RegistrationWizard
       array << Answer.new("Employer", store["employer_name"], :your_employer) if employer_name_matters?
     end
 
-    array << Answer.new("Course", I18n.t(course.identifier, scope: "course.name"), :choose_your_npq)
-
     if course.ehco?
       array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status)
       array << Answer.new("Headteacher", t("ehco_headteacher"), :ehco_headteacher)
@@ -207,6 +214,16 @@ class RegistrationWizard
         array << Answer.new("Course funding", t("funding"), :funding_your_npq)
       end
     end
+
+    funded = funding_eligibility_calculator.funded?
+    array << Answer.new(
+      "DfE scholarship funding",
+      funded ? "Eligible" : "Not eligible",
+      :check_funding,
+      "View",
+      "/registration/check-funding",
+      funded ? "green" : "grey",
+    )
 
     array << Answer.new("Provider", lead_provider&.name, :choose_your_provider)
 

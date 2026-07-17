@@ -75,13 +75,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       expect_check_answers_page_to_have_answers(
         {
 
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Eligible",
+
+          "Cohort" => course_start_cohort_description,
           "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
           "Provider" => "Church of England",
           "Work setting" => "Another setting",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

@@ -72,6 +72,29 @@ RSpec.describe RegistrationWizard do
       it "does not show Ofsted registration details" do
         expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
       end
+
+      describe "the check your answers layout" do
+        let(:keys) { subject.answers.map(&:key) }
+
+        it "uses the Cohort and Working in England labels" do
+          expect(keys).to include("Cohort", "Working in England")
+          expect(keys).not_to include("Course start", "Workplace in England")
+        end
+
+        it "shows the Course row right after Working in England" do
+          expect(keys.index("Course")).to eq(keys.index("Working in England") + 1)
+        end
+
+        it "adds a DfE scholarship funding row with a View link and a status tag" do
+          row = subject.answers.find { |answer| answer.key == "DfE scholarship funding" }
+
+          expect(row).to be_present
+          expect(row.action_text).to eq("View")
+          expect(row.action_href).to eq("/registration/check-funding")
+          expect(row.value).to be_in(["Eligible", "Not eligible"])
+          expect(row.tag_colour).to be_in(%w[green grey])
+        end
+      end
     end
 
     context "when working in private nursery" do

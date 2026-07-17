@@ -106,13 +106,14 @@ RSpec.feature "Happy journeys", :with_default_nursery, :with_default_schedules, 
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
           "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Early years setting" => "Private nursery",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end
