@@ -72,6 +72,7 @@ jobs:
         needs.display-review-apps-to-remove.outputs.stale_prs != '[]'
 
      strategy:
+       max-parallel: 1
        fail-fast: false
        matrix:
          pr_number: ${{ fromJson(needs.display-review-apps-to-remove.outputs.stale_prs) }}
