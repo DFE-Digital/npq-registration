@@ -3,7 +3,6 @@ require "rails_helper"
 RSpec.describe Questionnaires::WorkSetting, type: :model do
   subject(:instance) { described_class.new(wizard:, work_setting:) }
 
-  let(:current_step) { :check_funding }
   let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request: nil, current_user: nil) }
   let(:store) { {} }
   let(:work_setting) { nil }

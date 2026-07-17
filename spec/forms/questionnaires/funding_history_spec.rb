@@ -8,6 +8,7 @@ RSpec.describe Questionnaires::FundingHistory, type: :model do
   let(:declared_previous_funding) { "" }
 
   describe "validations" do
+    it { is_expected.to validate_presence_of(:declared_previous_funding) }
     it { is_expected.to validate_inclusion_of(:declared_previous_funding).in_array(described_class::OPTIONS.keys) }
   end
 
