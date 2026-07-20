@@ -44,6 +44,31 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       end
     end
 
+    context "when the TRN is blank" do
+      let(:trn) { "1234567" }
+      let(:user) { create(:user, :with_teacher_auth, :with_verified_trn, trn:) }
+      let(:new_trn) { nil }
+
+      it "does not blank the user's TRN" do
+        subject
+        expect(user.reload.trn).to eq(trn)
+      end
+    end
+
+    context "when the new TRN is the same as the existing TRN" do
+      let(:trn) { "1234567" }
+      let(:user) { create(:user, :with_teacher_auth, trn:) }
+      let(:new_trn) { "1234567" }
+
+      it "updates the verified_trn fields" do
+        subject
+        expect(user.reload).to have_attributes(
+          trn_verified: true,
+          trn_auto_verified: true,
+        )
+      end
+    end
+
     context "when there are other users with the same verified TRN" do
       let(:other_user) { create(:user, :with_get_an_identity_id, :with_verified_trn, trn: new_trn, created_at: 1.day.ago) }
       let(:more_recent_other_user) { create(:user, :with_teacher_auth, :with_verified_trn, trn: new_trn) }

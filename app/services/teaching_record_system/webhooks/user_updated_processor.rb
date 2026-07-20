@@ -17,7 +17,7 @@ module TeachingRecordSystem
 
       def params_to_update
         { email: user_email }.tap do |params|
-          if new_trn.present? && new_trn != user.trn
+          if new_trn.present?
             params[:trn] = new_trn
             params[:trn_verified] = true
             params[:trn_auto_verified] = true
@@ -40,6 +40,7 @@ module TeachingRecordSystem
       def merge_and_archive_other_users_with_same_trn
         users_with_same_trn = User.not_archived.with_trn(new_trn).order(created_at: :desc).to_a
         user_to_keep = users_with_same_trn[0]
+
         users_with_same_trn[1..].each do |user_to_merge|
           Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
         end
