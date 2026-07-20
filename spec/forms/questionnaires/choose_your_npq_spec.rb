@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
+  let(:instance) { described_class.new(course_identifier: course.identifier) }
   let(:aso_course) { Course.find_by(identifier: "npq-additional-support-offer") }
   let(:ehco_course) { Course.find_by(identifier: "npq-early-headship-coaching-offer") }
   let(:headship_course) { Course.find_by(identifier: "npq-headship") }
@@ -8,6 +9,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   let(:leading_primary_mathematics_course) { Course.find_by(identifier: "npq-leading-primary-mathematics") }
   let(:leading_teaching_course) { Course.find_by(identifier: "npq-leading-teaching") }
   let(:senco_course) { Course.find_by(identifier: "npq-senco") }
+  let(:course) { leading_behaviour_culture_course }
 
   describe "validations" do
     let(:valid_course_identifier) { ehco_course.identifier }
@@ -28,8 +30,6 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   describe "#next_step" do
     subject { instance.next_step }
 
-    let(:instance) { described_class.new(course_identifier: course.identifier) }
-    let(:course) { leading_behaviour_culture_course }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :next, suffix: "b") }
 
@@ -132,76 +132,58 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   end
 
   describe "#previous_step" do
-    let(:request) { nil }
     let(:store) do
       {
+        course_start_cohort:,
+        check_funding:,
         teacher_catchment:,
-        works_in_school:,
-        works_in_childcare:,
-        kind_of_nursery:,
-        has_ofsted_urn:,
       }.stringify_keys
     end
-    let(:teacher_catchment) { "another" }
-    let(:works_in_school) { "no" }
-    let(:works_in_childcare) { "no" }
-    let(:kind_of_nursery) { nil }
-    let(:has_ofsted_urn) { "no" }
+
+    let(:check_funding) { nil }
+    let(:teacher_catchment) { nil }
+
+    subject { instance.previous_step }
 
     before do
-      subject.wizard = RegistrationWizard.new(
+      instance.wizard = RegistrationWizard.new(
         current_step: :choose_your_npq,
         store:,
-        request:, current_user: create(:user)
+        request: nil,
+        current_user: create(:user),
       )
     end
 
-    context "when inside catchment" do
-      let(:teacher_catchment) { "england" }
+    context "when the course started in a funded cohort" do
+      let(:course_start_cohort) { create(:cohort, :capped).identifier }
 
-      it "returns work_setting" do
-        expect(subject.previous_step).to be(:work_setting)
-      end
+      context "when the user chose to check funding" do
+        let(:check_funding) { "yes" }
 
-      context "when working in school" do
-        let(:works_in_school) { "yes" }
+        context "when the user is inside the catchment" do
+          let(:teacher_catchment) { "england" }
 
-        it "returns choose_school" do
-          expect(subject.previous_step).to be(:choose_school)
+          it { is_expected.to be :teacher_catchment }
+        end
+
+        context "when the user is outside the catchment" do
+          let(:teacher_catchment) { "another" }
+
+          it { is_expected.to be :ineligible_for_funding }
         end
       end
 
-      context "when working in childcare" do
-        let(:works_in_childcare) { "yes" }
+      context "when the user chose not to check funding" do
+        let(:check_funding) { "no" }
 
-        it "return have_ofsted_urn" do
-          expect(subject.previous_step).to be(:have_ofsted_urn)
-        end
-
-        context "when working for a public childcare provider" do
-          let(:kind_of_nursery) { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
-
-          it "return choose_childcare_provider" do
-            expect(subject.previous_step).to be(:choose_childcare_provider)
-          end
-        end
-
-        context "when working for a private childcare provider" do
-          let(:kind_of_nursery) { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
-
-          it "return have_ofsted_urn" do
-            expect(subject.previous_step).to be(:have_ofsted_urn)
-          end
-
-          context "when user has declared they have an ofsted URN" do
-            let(:has_ofsted_urn) { "yes" }
-
-            it "return choose_private_childcare_provider" do
-              expect(subject.previous_step).to be(:choose_private_childcare_provider)
-            end
-          end
-        end
+        it { is_expected.to be :check_funding }
       end
+    end
+
+    context "when the course started in an unfunded cohort" do
+      let(:course_start_cohort) { create(:cohort, :unfunded).identifier }
+
+      it { is_expected.to be :course_start_date }
     end
   end
 end

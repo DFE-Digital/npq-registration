@@ -17,6 +17,7 @@ class RegistrationWizard
     work_setting
     provider_check
     change_your_course_or_provider
+    check_funding
     choose_an_npq_and_provider
     login_callback
     npqh_status

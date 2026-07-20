@@ -29,7 +29,7 @@ module Questionnaires
     end
 
     def previous_step
-      :provider_check
+      :check_funding
     end
 
     def questions

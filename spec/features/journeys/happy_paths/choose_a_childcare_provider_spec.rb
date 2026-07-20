@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Choose a childcare provider page", :with_default_schedules, type: :feature do
+RSpec.feature "Choose a childcare provider page", :mvp, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
