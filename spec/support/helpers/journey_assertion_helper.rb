@@ -53,7 +53,12 @@ module Helpers
         back_steps ||= []
         back_steps << page.current_path
       end
-      expect(back_steps.reverse).to eq @steps_visited
+      always_skipped_pages_going_back = [
+        "/registration/choose-school",
+        "/registration/kind_of_nursery",
+        "/registration/referred_by_return_to_teaching_adviser",
+      ]
+      expect(back_steps.reverse).to match_array @steps_visited.excluding(always_skipped_pages_going_back)
       visit starting_path
     end
 

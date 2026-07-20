@@ -14,6 +14,7 @@ RSpec.feature "Sad journeys", :mvp, :no_js, :with_default_schedules, type: :feat
     end
   end
 
+  # FIXME: ineligible-for-funding step currently does not need a course for 'not in england' user, but does for others
   steps_that_require_course = %w[
     check-answers
     choose-your-provider
@@ -21,9 +22,8 @@ RSpec.feature "Sad journeys", :mvp, :no_js, :with_default_schedules, type: :feat
     ehco-possible-funding
     funding-eligibility-maths
     funding-eligibility-senco
-    funding-your-npq
-    login-callback
     ineligible-for-funding
+    login-callback
     maths-eligibility-teaching-for-mastery
     maths-understanding-of-approach
     possible-funding

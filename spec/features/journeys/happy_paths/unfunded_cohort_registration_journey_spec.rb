@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -24,12 +24,12 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
       page.choose("No, I already started in Spring", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Headship", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -38,17 +38,13 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      page.choose("Headship", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_content("You’re not eligible for scholarship funding for the Headship NPQ course as you have selected the Spring 2026 cohort.")
       page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      page.choose "My trust is paying", visible: :all
+      page.choose "I am paying", visible: :all
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -65,10 +61,9 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
           "Course start" => "Spring 2026",
           "Course" => "Headship",
           "Provider" => "LLSE",
-          "Workplace" => "open manchester school – street 1, manchester",
-          "Course funding" => "My trust is paying",
+          "Course funding" => "I am paying",
           "Work setting" => "A school",
-          "Workplace in England" => "Yes",
+          "Workplace in England" => "",
         },
       )
     end

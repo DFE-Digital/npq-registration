@@ -138,6 +138,12 @@ RSpec.describe FundingEligibility do
       include_examples "funding eligibility", :unfunded_cohort
     end
 
+    context "and the cohort chosen is nil" do
+      let(:cohort) { nil }
+
+      include_examples "funding eligibility", :unfunded_cohort
+    end
+
     context "and the applicant is outside England" do
       let(:inside_catchment) { false }
 

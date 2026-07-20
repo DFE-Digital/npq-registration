@@ -7,21 +7,7 @@ module Questionnaires
     validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
-    delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-
-    delegate :new_headteacher?,
-             :inside_catchment?,
-             :approved_itt_provider?,
-             :works_in_another_setting?,
-             :works_in_school?,
-             :young_offender_institution?,
-             :referred_by_return_to_teaching_adviser?,
-             :employment_type_local_authority_virtual_school?,
-             :has_ofsted_urn?,
-             :employment_type_hospital_school?,
-             :employment_type_other?,
-             :works_in_childcare?,
-             :kind_of_nursery_public?,
+    delegate :inside_catchment?,
              :cohort_funded?,
              :check_funding?,
              to: :query_store
@@ -55,8 +41,8 @@ module Questionnaires
     end
 
     def after_save
-      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
-      wizard.store["lead_provider_id"] = store_lead_provider_id
+      # TODO: move this to correct step
+      # wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
     end
 
     def next_step
@@ -85,53 +71,12 @@ module Questionnaires
 
   private
 
-    def store_lead_provider_id
-      return wizard.query_store.lead_provider.id if lead_provider_valid?
-
-      nil
-    end
-
-    def lead_provider_valid?
-      valid_providers.include?(wizard.query_store.lead_provider)
-    end
-
-    def valid_providers
-      cohort = Cohort.find_by!(identifier: wizard.query_store.course_start_cohort)
-      LeadProvider.for(course:, cohort:)
-    end
-
     def courses
       Course.where(display: true).order(:position)
     end
 
     def previous_course
       wizard.query_store.course
-    end
-
-    def previously_eligible_for_funding?
-      FundingEligibility.new_from_query_store(
-        course: previous_course,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: wizard.query_store.user_ecf_id,
-        query_store: wizard.query_store,
-      ).funded?
-    end
-
-    def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: wizard.query_store.user_ecf_id,
-        query_store: wizard.query_store,
-      )
-    end
-
-    def eligible_for_funding?
-      funding_eligibility_calculator.funded?
     end
 
     def validate_course_exists

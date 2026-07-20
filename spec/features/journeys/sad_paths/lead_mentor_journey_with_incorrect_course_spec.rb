@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -24,27 +24,10 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type
   def run_scenario(js:)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Another setting", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Senior leadership",
+      work_setting: "Another setting",
+    )
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
@@ -54,11 +37,6 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type
     approved_itt_provider_legal_name = ::IttProvider.currently_approved.sample.legal_name
 
     choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
-    end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
@@ -184,9 +162,10 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-senior-leadership",
+        "declared_previous_funding" => "no",
         "email_template" => "itt_leader_wrong_course",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "funding" => "self",

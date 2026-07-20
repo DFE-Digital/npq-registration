@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
-  subject :instance do
+  subject(:instance) do
     described_class.new(wizard:,
                         private_childcare_identifier: identifier,
                         private_childcare_name: name)
@@ -137,11 +137,11 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   end
 
   describe "#next_step" do
-    before { allow(subject).to receive(:private_childcare_identifier).and_return("12345") }
+    subject { instance.next_step }
 
-    it "is choose_private_childcare_provider" do
-      expect(subject.next_step).to be(:choose_your_npq)
-    end
+    let(:identifier) { "12345" }
+
+    it_behaves_like "showing the eligibility step"
   end
 
   describe "#previous_step" do

@@ -25,7 +25,7 @@ module Questionnaires
 
     def next_step
       if institution.in_england?
-        :choose_your_npq
+        show_eligibility_step
       else
         :school_not_in_england
       end

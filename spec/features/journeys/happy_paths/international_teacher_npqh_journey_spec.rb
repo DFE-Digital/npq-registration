@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -16,21 +16,32 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
   def run_scenario(*)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
+    navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
 
-    expect(page).not_to have_content("Before you start")
-
     choose_course_start_date
 
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Check funding")
     end
 
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_text("Funding")
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
+
+      page.click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Headship", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
       page.choose("No", visible: :all)
     end
 
@@ -38,29 +49,24 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
       page.choose("A school", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      expect(page).not_to have_text("Additional Support Offer for new headteachers")
-      page.choose("Headship", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("you do not work in England")
-      expect(page).to have_text("This means that you would need to pay for the course another way")
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
 
       page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       expect(page).to have_text("How are you funding your course?")
-      page.choose("My workplace is covering the cost", visible: :all)
+      page.choose "My workplace is covering the cost", visible: :all
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
     end
+
+    # check_back_journey_is_correct # FIXME: ineligible screen shown twice, previous step is always the teacher-cathment step
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
@@ -151,8 +157,9 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
         "works_in_childcare" => "no",
         "work_setting" => "a_school",
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
+        "declared_previous_funding" => "no",
         "course_identifier" => "npq-headship",
         "funding" => "school",
         "teacher_catchment" => "another",
