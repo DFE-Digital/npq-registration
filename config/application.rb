@@ -80,6 +80,8 @@ module NpqRegistration
 
     config.skylight.environments += %w[review sandbox staging]
 
+    config.active_storage.variant_processor = :disabled
+
     # TeacherAuth configuration
     config.x.teacher_auth.enabled = true
     config.x.teacher_auth.domain = ENV["TEACHER_AUTH_DOMAIN"]

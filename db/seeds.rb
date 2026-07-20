@@ -8,22 +8,9 @@ PaperTrail.enabled = false
 Faker::Config.locale = "en-GB"
 
 def load_base_file(file)
-  base_file = Rails.root.join("db", "seeds", "base", file)
+  base_file = Rails.root.join("db/seeds/base", file)
 
   load(base_file)
-end
-
-def with_versioning
-  was_enabled = PaperTrail.enabled?
-  was_enabled_for_request = PaperTrail.request.enabled?
-  PaperTrail.enabled = true
-  PaperTrail.request.enabled = true
-  begin
-    yield
-  ensure
-    PaperTrail.enabled = was_enabled
-    PaperTrail.request.enabled = was_enabled_for_request
-  end
 end
 
 def load_csv(file, model_class)
@@ -67,10 +54,8 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_lead_providers.rb",
   "add_itt_providers.rb",
   "add_users.rb",
-  "add_applications.rb",
   "add_statements.rb",
   "add_contracts.rb",
-  "add_declarations.rb",
   "add_api_tokens.rb",
   "process_statements.rb",
   "add_delivery_partners.rb",
@@ -81,4 +66,22 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   ApplicationRecord.transaction do
     load_base_file(seed_file)
   end
+end
+
+# add_applications.rb and add_declarations.rb are dealt with separately
+if Rails.env.local?
+  ApplicationRecord.transaction do
+    Rails.logger.info("seeding applications")
+    load_base_file("add_applications.rb")
+    SeedAddApplications.new.load
+  end
+  ApplicationRecord.transaction do
+    Rails.logger.info("seeding declaration")
+    load_base_file("add_declarations.rb")
+    SeedAddDeclarations.new.load
+  end
+else
+  # use background job to speed up review app deployment
+  Rails.logger.info("seeding applications and declarations in background")
+  SeedingJob.perform_later(multiplier: 4)
 end
