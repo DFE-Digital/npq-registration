@@ -1,20 +1,14 @@
 module Questionnaires
-  class CheckAnswers < Base
+  class ContinueToLogin < Base
     def previous_step
-      :share_provider
+      :check_answers
     end
 
     def next_step
-      :continue_to_login unless user_logged_in?
-    end
-
-    def last_step?
-      user_logged_in?
+      :check_answers
     end
 
     def after_save
-      return unless user_logged_in?
-
       wizard.store["email_template"] = email_template
 
       wizard.store["submitted"] = true
@@ -25,12 +19,6 @@ module Questionnaires
 
     def email_template
       @email_template ||= EmailTemplate.call(data: wizard.store)
-    end
-
-  private
-
-    def user_logged_in?
-      wizard.current_user
     end
   end
 end

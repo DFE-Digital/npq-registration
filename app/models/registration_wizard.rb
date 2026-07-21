@@ -62,6 +62,7 @@ class RegistrationWizard
     check_answers
     course_start_date
     cannot_register_yet
+    continue_to_login
   ].freeze
 
   REMOVED_REGISTRATION_STEPS = %i[

@@ -991,6 +991,7 @@ en:
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
+        continue_to_login: "Continue through GOV.UK One Login"
 
     legend:
       applications_change_training_status:

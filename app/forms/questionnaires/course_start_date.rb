@@ -36,10 +36,6 @@ module Questionnaires
       end
     end
 
-    def requirements_met?
-      query_store.current_user
-    end
-
     def next_step
       :provider_check
     end
