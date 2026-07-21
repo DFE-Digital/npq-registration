@@ -153,8 +153,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "raw_application_data" => {
         "can_share_choices" => "1",
         "check_funding" => "yes",
-        "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "course_start_cohort" => course_start_cohort_value,
         "declared_previous_funding" => "no",
         "ehco_funding_choice" => "self",
         "ehco_headteacher" => "no",
@@ -163,13 +163,14 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
         "npqh_status" => "completed_npqh",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "works_in_school" => "yes",
         "work_setting" => "primary_school",
         "works_in_childcare" => "no",
+        "works_in_school" => "yes",
       },
     )
   end

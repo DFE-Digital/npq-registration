@@ -143,6 +143,10 @@ module Questionnaires
       funding_eligibility_calculator.funded?
     end
 
+    def user_previously_funded?
+      funding_eligibility_calculator.funding_eligiblity_status_code == :previously_funded
+    end
+
     def funding_eligibility_calculator
       @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course: query_store.course,

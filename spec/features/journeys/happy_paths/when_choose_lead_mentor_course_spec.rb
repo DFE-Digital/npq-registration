@@ -159,6 +159,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
+        "pre_login_funding_eligiblity_status_code" => "funded",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

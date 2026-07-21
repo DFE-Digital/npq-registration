@@ -59,40 +59,34 @@ RSpec.describe RegistrationWizard do
   end
 
   describe "#answers" do
+    subject { registration_wizard.answers }
+
+    let(:kind_of_nursery) { nil }
     let(:school) { create(:school, establishment_type_code: "1") }
 
+    let(:store) do
+      {
+        "course_start_cohort" => cohort.identifier,
+        "teacher_catchment" => "england",
+        "course_identifier" => "npq-additional-support-offer",
+        "funding" => "self",
+      }
+    end
+
     context "when working in Local authority maintained nursery" do
-      let(:store) do
-        {
-          "course_start_cohort" => cohort.identifier,
-          "chosen_provider" => "yes",
-          "teacher_catchment" => "england",
-          "teacher_catchment_country" => "",
-          "works_in_school" => "no",
-          "trn_knowledge" => "yes",
-          "trn" => "123456",
-          "full_name" => "Maia Mack",
-          "date_of_birth" => 30.years.ago,
-          "national_insurance_number" => "123420",
-          "trn_auto_verified" => nil,
-          "verified_trn" => nil,
-          "works_in_childcare" => "yes",
-          "kind_of_nursery" => "local_authority_maintained_nursery",
-          "childcare_name" => "",
-          "childcare_identifier" => "School-#{school.urn}",
-          "course_identifier" => "npq-additional-support-offer",
-          "lead_provider_id" => LeadProvider.all.sample.id,
-          "funding" => "self",
-          "referred_by_return_to_teaching_adviser" => "no",
-        }
+      before do
+        store["works_in_childcare"] = "yes"
+        store["childcare_name"] = ""
+        store["childcare_identifier"] = "School-#{school.urn}"
+        store["kind_of_nursery"] = "local_authority_maintained_nursery"
       end
 
       it "does not show Ofsted registration details" do
-        expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
+        expect(subject.map(&:key)).not_to include("Ofsted registration details")
       end
 
       describe "the check your answers layout" do
-        let(:keys) { subject.answers.map(&:key) }
+        let(:keys) { subject.map(&:key) }
 
         it "uses the Cohort and Working in England labels" do
           expect(keys).to include("Cohort", "Working in England")
@@ -104,7 +98,7 @@ RSpec.describe RegistrationWizard do
         end
 
         it "adds a DfE scholarship funding row with a View link and a status tag" do
-          row = subject.answers.find { |answer| answer.key == "DfE scholarship funding" }
+          row = subject.find { |answer| answer.key == "DfE scholarship funding" }
 
           expect(row).to be_present
           expect(row.action_text).to eq("View")
@@ -117,29 +111,13 @@ RSpec.describe RegistrationWizard do
 
     context "when working in private nursery" do
       let(:private_childcare_provider) { create(:private_childcare_provider) }
-      let(:store) do
-        {
-          "course_start_cohort" => cohort.identifier,
-          "chosen_provider" => "yes",
-          "course_identifier" => "npq-additional-support-offer",
-          "date_of_birth" => 30.years.ago,
-          "full_name" => "Tatyana Christensen",
-          "has_ofsted_urn" => has_ofsted_urn,
-          "private_childcare_identifier" => private_childcare_identifier,
-          "private_childcare_name" => "",
-          "kind_of_nursery" => "private_nursery",
-          "lead_provider_id" => LeadProvider.all.sample.id,
-          "national_insurance_number" => "123420",
-          "teacher_catchment" => "england",
-          "teacher_catchment_country" => "",
-          "trn" => "123456",
-          "trn_auto_verified" => nil,
-          "trn_knowledge" => "yes",
-          "verified_trn" => nil,
-          "works_in_childcare" => "yes",
-          "works_in_school" => "no",
-          "referred_by_return_to_teaching_adviser" => "no",
-        }
+
+      before do
+        store["works_in_childcare"] = "yes"
+        store["kind_of_nursery"] = "private_nursery"
+        store["has_ofsted_urn"] = has_ofsted_urn
+        store["private_childcare_identifier"] = private_childcare_provider.identifier
+        store["private_childcare_name"] = ""
       end
 
       context "without urn" do
@@ -147,15 +125,15 @@ RSpec.describe RegistrationWizard do
         let(:private_childcare_identifier) { "" }
 
         it "does not show Ofsted registration details" do
-          expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
+          expect(subject.map(&:key)).not_to include("Ofsted registration details")
         end
 
         it "shows Do you have a URN?" do
-          expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
+          expect(subject.map(&:key)).to include("Ofsted unique reference number (URN)")
         end
 
         it "does not show Nursery" do
-          expect(subject.answers.map(&:key)).not_to include("Nursery")
+          expect(subject.map(&:key)).not_to include("Nursery")
         end
       end
 
@@ -164,15 +142,15 @@ RSpec.describe RegistrationWizard do
         let(:private_childcare_identifier) { private_childcare_provider.identifier }
 
         it "shows Ofsted registration details" do
-          expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
+          expect(subject.map(&:key)).to include("Ofsted unique reference number (URN)")
         end
 
         it "does not show Do you have a URN?" do
-          expect(subject.answers.map(&:key)).not_to include("Do you have a URN?")
+          expect(subject.map(&:key)).not_to include("Do you have a URN?")
         end
 
         it "does not show Nursery" do
-          expect(subject.answers.map(&:key)).not_to include("Nursery")
+          expect(subject.map(&:key)).not_to include("Nursery")
         end
       end
     end

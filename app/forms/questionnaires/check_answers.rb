@@ -11,5 +11,9 @@ module Questionnaires
     def next_step
       :continue_to_login
     end
+
+    def before_render
+      wizard.store["pre_login_funding_eligiblity_status_code"] = wizard.query_store.funding_eligiblity_status_code
+    end
   end
 end
