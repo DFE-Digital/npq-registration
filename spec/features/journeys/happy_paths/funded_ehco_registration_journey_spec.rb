@@ -172,6 +172,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "institution_identifier" => "School-100000",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "funded",
         "npqh_status" => "completed_npqh",
         "submitted" => true,
         "teacher_catchment" => "england",

@@ -16,6 +16,21 @@ module Questionnaires
       user_logged_in?
     end
 
+    def show_previously_funded_alert?
+      return unless user_logged_in?
+
+      wizard.store["pre_login_funding_eligiblity_status_code"] == :funded && user_previously_funded?
+    end
+
+    def before_render
+      unless user_logged_in?
+        wizard.store["pre_login_funding_eligiblity_status_code"] = wizard.query_store.funding_eligiblity_status_code
+      end
+
+      wizard.store["previously_funded"] = true if user_previously_funded?
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
+    end
+
     def after_save
       return unless user_logged_in?
 
@@ -32,6 +47,10 @@ module Questionnaires
     end
 
   private
+
+    def user_previously_funded?
+      funding_eligibility_calculator.funding_eligiblity_status_code == :previously_funded
+    end
 
     def user_logged_in?
       wizard.current_user

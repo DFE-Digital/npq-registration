@@ -114,6 +114,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "employer_name" => "Return to teaching adviser referral",
         "funding_eligiblity_status_code" => "referred_by_return_to_teaching_adviser",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "referred_by_return_to_teaching_adviser",
         "submitted" => true,
         "referred_by_return_to_teaching_adviser" => "yes",
         "teacher_catchment" => "england",
