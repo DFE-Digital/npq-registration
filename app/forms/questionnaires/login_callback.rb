@@ -5,11 +5,11 @@ module Questionnaires
     end
 
     def next_step
-      first_questionnaire_step
+      :check_answers
     end
 
     def previous_step
-      :start
+      :continue_to_login
     end
   end
 end

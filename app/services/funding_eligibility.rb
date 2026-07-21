@@ -58,7 +58,7 @@ class FundingEligibility
     def new_from_query_store(institution:,
                              course:,
                              inside_catchment:,
-                             user_ecf_id:,
+                             user_ecf_id: nil,
                              approved_itt_provider: false,
                              query_store: nil)
       cohort = Cohort.find_by(identifier: query_store.course_start_cohort)

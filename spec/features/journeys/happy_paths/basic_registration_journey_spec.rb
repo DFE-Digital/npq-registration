@@ -87,7 +87,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
           "DfE scholarship funding" => "Eligible",
@@ -116,17 +116,9 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         expect(application.eligible_for_funding).to be true
       end
     end
-    if User.last.applications.count == 1
-      navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
-        expect(page).to have_text("Teach First")
-        expect(page).to have_text("Headship")
-      end
-    else
-      navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
-        expect(page).to have_text("Teach First")
-        expect(page).to have_text("Headship")
-      end
-    end
+
+    expect(page).to have_text("Teach First")
+    expect(page).to have_text("Headship")
 
     visit "/registration/share-provider"
 

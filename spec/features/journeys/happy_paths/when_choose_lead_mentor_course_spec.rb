@@ -49,12 +49,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-
           "DfE scholarship funding" => "Eligible",
-
           "Cohort" => course_start_cohort_description,
           "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",

@@ -134,6 +134,20 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
     end
   end
 
+  describe "#requirements_met?" do
+    subject { instance.requirements_met? }
+
+    context "when a work setting has been chosen" do
+      before { wizard.store["work_setting"] = "other" }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context "when a work setting has not been chosen" do
+      it { is_expected.to be_falsey }
+    end
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 
