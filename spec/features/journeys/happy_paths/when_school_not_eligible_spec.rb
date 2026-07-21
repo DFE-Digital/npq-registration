@@ -22,7 +22,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
 
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Headship",
-      work_setting: "A school",
+      work_setting: "Primary school (5 to 11)",
     )
 
     choose_a_school(js:, name: "open")
@@ -60,7 +60,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Working in England" => "Yes",
         },
       )
@@ -140,7 +140,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -160,7 +160,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "works_in_childcare" => "no",
         "works_in_school" => "yes",
       },

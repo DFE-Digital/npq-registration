@@ -47,6 +47,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -79,7 +80,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
           "DfE scholarship funding" => "Not eligible",
           "Cohort" => course_start_cohort_description,
           "Working in England" => "No",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Course funding" => "My workplace is covering the cost",
@@ -145,7 +146,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -156,7 +157,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         "submitted" => true,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "can_share_choices" => "1",
         "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,

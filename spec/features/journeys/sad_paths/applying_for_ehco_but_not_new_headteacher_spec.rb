@@ -22,7 +22,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
 
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Early headship coaching offer",
-      work_setting: "A school",
+      work_setting: "Primary school (5 to 11)",
     )
 
     choose_a_school(js:, name: "open")
@@ -80,7 +80,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
           "DfE scholarship funding" => "Not eligible",
           "Cohort" => course_start_cohort_description,
           "Working in England" => "Yes",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Early headship coaching offer",
           "Provider" => "Teach First",
           "Course funding" => "I am paying",
@@ -135,7 +135,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       "works_in_nursery" => nil,
       "works_in_childcare" => false,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -160,7 +160,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
       },
     )
   end

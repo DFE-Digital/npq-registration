@@ -14,7 +14,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
     scenario "the registration journey starts" do
       complete_journey_as_far_as_choosing_a_work_setting(
         course: "Headship",
-        work_setting: "A school",
+        work_setting: "Primary school (5 to 11)",
       )
 
       choose_a_school(js: false, name: "open")
@@ -44,7 +44,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
             "Provider" => "Teach First",
             "Workplace" => "open manchester school – street 1, manchester",
             "Course funding" => "My trust is paying",
-            "Work setting" => "A school",
+            "Work setting" => "Primary school (5 to 11)",
             "Working in England" => "Yes",
           },
         )

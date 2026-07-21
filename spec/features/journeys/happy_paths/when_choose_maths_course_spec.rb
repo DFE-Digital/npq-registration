@@ -24,7 +24,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Leading primary mathematics",
-      work_setting: "A school",
+      work_setting: "Primary school (5 to 11)",
     )
 
     choose_a_school(js: false, name: "open")
@@ -55,7 +55,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
           "DfE scholarship funding" => "Eligible",
           "Cohort" => course_start_cohort_description,
           "Working in England" => "Yes",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course" => "Leading primary mathematics",
           "Completed one year of the primary maths Teaching for Mastery programme" => "Yes",
@@ -139,7 +139,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -162,7 +162,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
       },
     )
   end
