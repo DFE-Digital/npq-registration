@@ -6,9 +6,11 @@
         <%= application.lead_provider.name %>
       </p>
     </div>
-    <span class="govuk-summary-card__action govuk-!-margin-top-1">
-      <%= govuk_link_to("View details", accounts_user_registration_path(application)) %>
-    </span>
+    <ul class="govuk-summary-card__actions">
+      <li class="govuk-summary-card__action">
+        <%= govuk_link_to("View details", accounts_user_registration_path(application)) %>
+      </li>
+    </ul>
   </div>
   <div class="govuk-summary-card__content">
     <dl class="govuk-summary-list">
