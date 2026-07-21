@@ -538,6 +538,7 @@ en:
           attributes:
             work_setting:
               blank: Select the setting that you work in
+              school_type_blank: Select the type of school that you work in
         email_updates:
           attributes:
             email_updates_status:
@@ -1087,8 +1088,10 @@ en:
         work_setting_options:
           early_years_or_childcare: "Early years or childcare"
           a_school: "A school"
+          primary_school: "Primary school (5 to 11)"
+          secondary_school: "Secondary school (11 to 16)"
+          a_16_to_19_educational_setting: "Post-16 provider (16 to 19)"
           an_academy_trust: "An academy trust"
-          a_16_to_19_educational_setting: "A 16 to 19 educational setting"
           another_setting: "Another setting"
           other: "Other"
 

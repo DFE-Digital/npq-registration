@@ -51,7 +51,7 @@ RSpec.feature "Sad journeys", :mvp, :no_js, :with_cohorts, :with_default_schedul
     # window/tab. the previous answers on the other window are irrelevant here.
     # choose a setting that does require an institution, but don't set it
     navigate_to_page(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: false)

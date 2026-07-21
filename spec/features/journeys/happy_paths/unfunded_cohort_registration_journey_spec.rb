@@ -33,7 +33,7 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js: false, name: "open")

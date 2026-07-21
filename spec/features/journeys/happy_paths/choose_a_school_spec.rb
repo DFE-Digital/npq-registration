@@ -30,7 +30,7 @@ RSpec.feature "Choose a school page", :mvp, :with_default_schedules, type: :feat
     end
 
     navigate_to_page(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
   end
 
