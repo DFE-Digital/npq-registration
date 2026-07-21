@@ -27,11 +27,18 @@
         end
   end %>
 
-  <h2 class="govuk-heading-m">Submit your registration</h2>
-
-  <p class="govuk-body">By submitting your registration to the DfE, you're confirming that all the information you entered is correct.</p>
-
-  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-    <%= f.govuk_submit "Submit" %>
+  <% if current_user %>
+    <h2 class="govuk-heading-m">Submit your registration</h2>
+    <p class="govuk-body">By submitting your registration to the DfE, you're confirming that all the information you entered is correct.</p>
+  <% else %>
+    <h2 class="govuk-heading-m">Continue to register</h2>
+    <p class="govuk-body">You can still check or change your answers later.</p>
   <% end %>
+
+  <%=
+    form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f|
+      button_text = current_user ? "Submit" : "Continue"
+      f.govuk_submit button_text
+    end
+  %>
 <% end %>

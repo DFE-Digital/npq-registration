@@ -22,7 +22,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_button("Start now")
+      page.click_link("Start now")
     end
 
     expect(page).not_to have_content("Before you start")
@@ -73,6 +73,25 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+      expect_check_answers_page_to_have_answers(
+        {
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => "Autumn 2026",
+          "Course" => "Headship",
+          "Provider" => "Teach First",
+          "Workplace" => "open manchester school – street 1, manchester",
+          "Course funding" => "My trust is paying",
+          "Work setting" => "A school",
+          "Working in England" => "Yes",
+        },
+      )
+    end
+
+    expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+      expect(page).to have_text("Continue through GOV.UK One Login")
     end
 
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do

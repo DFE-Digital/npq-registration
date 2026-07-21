@@ -4,7 +4,7 @@ class RegistrationWizardController < PublicPagesController
   before_action :set_form
   before_action :check_end_of_journey, only: %i[update]
   before_action :check_course_defined, only: %i[show]
-  before_action :check_teacher_auth_user
+  # before_action :check_teacher_auth_user
 
   rescue_from FundingEligibility::MissingMandatoryInstitution, with: :redirect_to_institution_picker
   rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date

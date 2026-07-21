@@ -14,9 +14,10 @@
       <% if Rails.configuration.x.teacher_auth.enabled %>
         <br>
         <%=
-          render(
-            "shared/teacher_auth/redirect_button",
-            button_text: "Start now"
+          govuk_start_button(
+            text: "Start now",
+            href: registration_wizard_show_path("course-start-date"),
+            html_attributes: { data: { "prevent-double-click": true } }
           )
         %>
 

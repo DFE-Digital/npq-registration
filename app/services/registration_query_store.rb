@@ -18,7 +18,7 @@ class RegistrationQueryStore
   end
 
   def user_ecf_id
-    current_user.ecf_id
+    current_user&.ecf_id
   end
 
   def trn_set_via_fallback_verification_question?
@@ -26,7 +26,7 @@ class RegistrationQueryStore
   end
 
   def trn
-    current_user.trn
+    current_user&.trn
   end
 
   def inside_catchment?
