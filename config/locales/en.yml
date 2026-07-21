@@ -752,8 +752,9 @@ en:
 
   accounts:
     show:
-      title: "Your NPQ registration"
-      plural_title: "Your NPQ registrations"
+      title:
+        one: "Your NPQ registration"
+        other: "Your NPQ registrations"
 
   admin:
     layout:

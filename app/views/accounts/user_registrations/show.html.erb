@@ -3,15 +3,14 @@
 <% content_for :title, page_heading %>
 
 <% content_for :before_content do %>
-  <% breadcrumbs = current_user.applications.count > 1 ? { I18n.t("accounts.show.plural_title") => account_path } : {} %>
+  <% breadcrumbs = current_user.applications.count > 1 ? { I18n.t("accounts.show.title.other") => account_path } : {} %>
   <%= render GovukComponent::BreadcrumbsComponent.new(
-    breadcrumbs: breadcrumbs.merge(I18n.t("accounts.show.title") => nil)
+    breadcrumbs: breadcrumbs.merge(I18n.t("accounts.show.title.one") => nil)
   ) %>
 <% end %>
 
 <span class="govuk-caption-m">Submitted <%= @application.created_at.to_date.to_fs(:govuk) %></span>
 <h1 class="govuk-heading-l"><%= page_heading %></h1>
-
 <p class="govuk-body"><strong>Registration ID:</strong> <%= @application.ecf_id %></p>
 
 <%= render "course_details", application: @application %>
