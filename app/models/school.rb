@@ -5,6 +5,14 @@ class School < ApplicationRecord
   PRIMARY_PHASE = "Primary".freeze
   MIDDLE_DEEMED_PRIMARY_PHASE = "Middle deemed primary".freeze
 
+  ELIGIBILITY_LISTS = [
+    EligibilityList::Pp50School,
+    EligibilityList::Pp50FurtherEducation,
+    EligibilityList::DisadvantagedEarlyYearsSchool,
+    EligibilityList::LocalAuthorityNursery,
+    EligibilityList::RiseSchool,
+  ].map(&:name).freeze
+
   ELIGIBLE_ESTABLISHMENT_TYPE_CODES = {
     "1" => "Community school",
     "2" => "Voluntary aided school",
@@ -59,6 +67,18 @@ class School < ApplicationRecord
 
   scope :open, -> { where(establishment_status_code: %w[1 3 4]) }
 
+  has_many :urn_eligibility_entries,
+           -> { where(identifier_type: "urn", type: ELIGIBILITY_LISTS) },
+           class_name: "EligibilityList::Entry",
+           primary_key: :urn,
+           foreign_key: :identifier
+
+  has_many :ukprn_eligibility_entries,
+           -> { where(identifier_type: "ukprn", type: ELIGIBILITY_LISTS) },
+           class_name: "EligibilityList::Entry",
+           primary_key: :ukprn,
+           foreign_key: :identifier
+
   ELIGIBLE_ESTABLISHMENT_TYPE_CODES.each do |code, name|
     define_method("#{name.parameterize.underscore}?") do
       establishment_type_code == code
@@ -69,6 +89,10 @@ class School < ApplicationRecord
     search_with_synonyms(name) do |name|
       search_by_fields(name).limit(NAME_SEARCH_LIMIT)
     end
+  end
+
+  def eligibility_lists
+    urn_eligibility_entries + ukprn_eligibility_entries
   end
 
   def display_name
