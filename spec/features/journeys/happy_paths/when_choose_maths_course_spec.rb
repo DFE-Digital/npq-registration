@@ -91,8 +91,9 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
           "Work setting" => "A school",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course" => "Leading primary mathematics",

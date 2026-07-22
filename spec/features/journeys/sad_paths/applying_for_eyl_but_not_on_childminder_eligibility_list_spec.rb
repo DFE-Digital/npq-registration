@@ -70,14 +70,15 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_nurse
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "DfE scholarship funding" => "Not eligible",
           "Course funding" => "I am paying",
-          "Course start" => course_start_cohort_description,
+          "Cohort" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Early years setting" => "As a childminder",
           "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Provider" => "Teach First",
           "Work setting" => "Early years or childcare",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end
