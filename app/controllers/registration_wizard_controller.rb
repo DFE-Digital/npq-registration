@@ -108,7 +108,7 @@ private
   def check_end_of_journey
     if @form.valid? && @form.last_step?
       @wizard.save!
-      redirect_to accounts_user_registration_path(current_user.applications.last, success: true)
+      redirect_to registration_complete_accounts_user_registration_path(current_user.applications.last)
     end
   end
 

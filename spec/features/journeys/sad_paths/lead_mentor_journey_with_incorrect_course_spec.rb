@@ -121,7 +121,7 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type
     if User.last.applications.count == 1
       navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
         expect(page).to have_text("Church of England")
-        expect(page).to have_text("Your NPQ registration")
+        expect(page).to have_text("Your Senior leadership registration")
       end
     else
       navigate_to_page(path: "/account", axe_check: false, submit_form: false) do

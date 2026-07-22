@@ -38,6 +38,42 @@ RSpec.feature "Account", :no_js, type: :feature do
         expect(page).to have_summary_item("Course start", "2025")
       end
 
+      scenario "it shows the registration details" do
+        visit "/accounts/user_registrations/#{application.id}"
+
+        expect(page).to have_css("h1", text: "Your Senior leadership registration")
+        expect(page).to have_text("Submitted #{application.created_at.to_date.to_fs(:govuk)}")
+        expect(page).to have_text("Registration ID: #{application.ecf_id}")
+        expect(page).to have_summary_item("Registration submitted", application.created_at.to_date.to_fs(:govuk))
+        expect(page).to have_summary_item("Provider", application.lead_provider.name)
+        expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+        expect(page).to have_summary_item("Working in England", "Yes")
+        expect(page).to have_summary_item("Workplace", application.school.name)
+      end
+
+      scenario "it shows the application progress, personal details and next steps" do
+        visit "/accounts/user_registrations/#{application.id}"
+
+        expect(page).to have_summary_item("Application status", "Awaiting provider")
+        expect(page).to have_text("Your provider will contact you with instructions on how to apply for the course.")
+        expect(page).to have_text("You do not need to do anything until they contact you.")
+
+        expect(page).to have_summary_item("Your details", "Update your personal details on GOV.UK One Login")
+        expect(page).to have_link("GOV.UK One Login (opens in a new tab)", href: Rails.configuration.x.teacher_auth.onelogin_home_uri)
+
+        expect(page).to have_css("h2", text: "Next steps")
+        expect(page).to have_text("Once you’ve applied with your provider, they’ll:")
+        expect(page).to have_link("Start now", href: "/registration/course-start-date")
+      end
+
+      scenario "it does not show the removed sections" do
+        visit "/accounts/user_registrations/#{application.id}"
+
+        expect(page).not_to have_text("Work details")
+        expect(page).not_to have_text("We’d like your feedback")
+        expect(page).not_to have_text("Registration successfully submitted")
+      end
+
       context "when the user's previous application is in a 2026 cohort" do
         let(:cohort) { create(:cohort, start_year: 2026) }
 

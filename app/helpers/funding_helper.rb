@@ -11,9 +11,19 @@ module FundingHelper
     sanitize I18n.t("funding_details.#{key}", course_name:) if key
   end
 
+  def scholarship_funding_eligibility_status(application)
+    if application.eligible_for_funding?
+      :eligible
+    elsif scholarship_eligibility_in_review?(application)
+      :in_review
+    else
+      :not_eligible
+    end
+  end
+
   def scholarship_eligibility_in_review?(application)
-    return false if application.eligible_for_funding
-    return false if !application.eligible_for_funding && application.funding_choice.present?
+    return false if application.eligible_for_funding?
+    return false if !application.eligible_for_funding? && application.funding_choice.present?
     return false if application.employment_type == "other"
     return false unless application.inside_catchment?
     return true if application.course.ehco? && new_headteacher?(application)

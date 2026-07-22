@@ -111,7 +111,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
     if User.last.applications.count == 1
       navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
         expect(page).to have_text("Teach First")
-        expect(page).to have_text("Your NPQ registration")
+        expect(page).to have_text("Your Early headship coaching offer registration")
       end
     else
       navigate_to_page(path: "/account", axe_check: false, submit_form: false) do

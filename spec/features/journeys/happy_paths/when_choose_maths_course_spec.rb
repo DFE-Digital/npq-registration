@@ -102,9 +102,13 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
       )
     end
 
-    expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}?success=true", submit_form: false) do
-      expect(page).to have_text("Registration successfully submitted")
-      expect(page).to have_text("Leading primary mathematics NPQ")
+    expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}/registration-complete", submit_form: false) do
+      expect(page).to have_text("Registration complete")
+      page.click_link("Review a summary of your registration")
+    end
+
+    expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}", submit_form: false) do
+      expect(page).to have_text("Your Leading primary mathematics registration")
     end
 
     expect(User.count).to be(1)
@@ -124,7 +128,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
     end
 
     expect(page).to have_text("Church of England")
-    expect(page).to have_text("Leading primary mathematics NPQ")
+    expect(page).to have_text("Your Leading primary mathematics registration")
 
     visit "/registration/share-provider"
 
