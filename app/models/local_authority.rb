@@ -9,13 +9,13 @@ class LocalAuthority < ApplicationRecord
                       dictionary: "english",
                     },
                   }
-  def display_name
-    name
-  end
 
-  def urn
-    nil
-  end
+  def eligibility_lists = []
+  def display_name = name
+  def urn = nil
+  def identifier = "LocalAuthority-#{id}"
+  def in_england? = true
+  def la_name = name
 
   def address
     [address_1, address_2, address_3, town, county, postcode].reject(&:blank?)
@@ -27,17 +27,5 @@ class LocalAuthority < ApplicationRecord
 
   def name_with_address
     [display_name, address_string].join(" – ")
-  end
-
-  def identifier
-    "LocalAuthority-#{id}"
-  end
-
-  def in_england?
-    true
-  end
-
-  def la_name
-    name
   end
 end

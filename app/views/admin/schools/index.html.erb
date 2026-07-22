@@ -36,18 +36,25 @@
         row.with_cell(text: "UKPRN (UK provider reference number)")
         row.with_cell(text: "Local authority")
         row.with_cell(text: "Address")
+        row.with_cell(text: "Eligibility lists")
       end
     end
 
     table.with_body do |body|
       @schools.each do |school|
         body.with_row do |row|
-          row.with_cell(text: school.name)
-          row.with_cell(text: school.id)
-          row.with_cell(text: school.urn)
-          row.with_cell(text: school.ukprn)
-          row.with_cell(text: school.la_name)
-          row.with_cell(text: join_with_commas(school.town, school.county, school.postcode))
+          row.with_cell { school.name }
+          row.with_cell { school.id.to_s }
+          row.with_cell { school.urn }
+          row.with_cell { school.ukprn }
+          row.with_cell { school.la_name }
+          row.with_cell { join_with_commas(school.town, school.county, school.postcode) }
+
+          row.with_cell do
+            if school.eligibility_lists.any?
+              govuk_list school.eligibility_lists.map(&:short_name)
+            end
+          end
         end
       end
     end

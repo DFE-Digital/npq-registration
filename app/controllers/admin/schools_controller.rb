@@ -7,7 +7,7 @@ class Admin::SchoolsController < AdminController
 private
 
   def scope
-    Workplace.includes(:source)
+    Workplace.includes(source: %i[urn_eligibility_entries ukprn_eligibility_entries])
              .order(:name, :source_id)
              .search(params[:q])
   end
