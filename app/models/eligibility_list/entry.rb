@@ -11,6 +11,8 @@ class EligibilityList::Entry < ApplicationRecord
     last&.created_at
   end
 
+  def short_name = self.class::SHORT_NAME
+
 private
 
   def set_identifier_type
