@@ -7,10 +7,13 @@ RSpec.describe RegistrationQueryStore do
     {
       course_start_cohort:,
       check_funding:,
+      declared_previous_funding:,
     }.stringify_keys
   end
 
+  let(:course_start_cohort) { nil }
   let(:check_funding) { nil }
+  let(:declared_previous_funding) { nil }
 
   describe "#cohort_funded?" do
     subject { described_class.new(store:).cohort_funded? }
@@ -39,8 +42,6 @@ RSpec.describe RegistrationQueryStore do
   describe "#check_funding?" do
     subject { described_class.new(store:).check_funding? }
 
-    let(:course_start_cohort) { "2026b" }
-
     context "when check_funding is 'yes'" do
       let(:check_funding) { "yes" }
 
@@ -49,6 +50,22 @@ RSpec.describe RegistrationQueryStore do
 
     context "when check_funding is 'no'" do
       let(:check_funding) { "no" }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#declared_previous_funding?" do
+    subject { described_class.new(store:).declared_previous_funding? }
+
+    context "when declared_previous_funding is 'yes'" do
+      let(:declared_previous_funding) { "yes" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when declared_previous_funding is 'no'" do
+      let(:declared_previous_funding) { "no" }
 
       it { is_expected.to be false }
     end

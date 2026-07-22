@@ -78,7 +78,11 @@ module Questionnaires
     end
 
     def previous_step
-      :teacher_catchment
+      if wizard.query_store.declared_previous_funding?
+        :ineligible_for_funding_previously_funded
+      else
+        :funding_history
+      end
     end
 
     def questions
