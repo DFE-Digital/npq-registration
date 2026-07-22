@@ -15,10 +15,16 @@ module Questionnaires
     attribute :version
 
     def next_step
-      :funding_your_npq
+      if course
+        :funding_your_npq
+      else
+        :choose_your_npq
+      end
     end
 
     def previous_step
+      return :teacher_catchment unless course
+
       if works_in_another_setting? && employment_type_other?
         :choose_your_npq
       elsif course.npqlpm?

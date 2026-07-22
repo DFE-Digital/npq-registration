@@ -1,34 +1,20 @@
-<% application_count = current_user.applications.count %>
-
 <% content_for :title, "Your NPQ registrations" %>
-<% if application_count > 0%>
-  <% if application_count == 1 %>
-    <h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
-  <% else %>
-    <h1 class="govuk-heading-l"><%= title ||= t(".pural_title") %></h1>
-  <% end %>
+
+<h1 class="govuk-heading-l">Your NPQ registrations</h1>
+
+<%= govuk_inset_text do %>
+  You can change your personal details on <%= govuk_link_to "GOV.UK One Login (opens in a new tab)", Rails.configuration.x.teacher_auth.onelogin_home_uri, target: "_blank", rel: "noopener noreferrer" %>.
 <% end %>
 
-<% if Time.zone.now > Time.zone.local(2024, 4, 2) %>
-  <% active_applications = current_user.applications.active_applications.includes(:course, :lead_provider).order(created_at: :desc, id: :desc) %>
-  <% expired_applications = current_user.applications.expired_applications.includes(:course, :lead_provider).order(created_at: :desc, id: :desc) %>
+<% @active_applications.each do |application| %>
+  <%= render "active_application_table", application: application %>
+<% end %>
 
-  <% active_applications.each do |application| %>
-    <%= render "active_application_table", application: application %>
-  <% end %>
+<% if @expired_applications.any? %>
+  <h3 class="govuk-heading-l">Expired registrations</h3>
 
-  <% if expired_applications.count > 0 %>
-    <h3 class="govuk-heading-l">Expired registrations</h3>
-
-    <% expired_applications.each do |application| %>
-      <%= render "expired_application_table", application: application %>
-    <% end %>
-  <% end %>
-<% else %>
-  <% active_applications = current_user.applications.order(created_at: :desc, id: :desc) %>
-
-  <% active_applications.each do |application| %>
-    <%= render "active_application_table", application: application %>
+  <% @expired_applications.each do |application| %>
+    <%= render "expired_application_table", application: application %>
   <% end %>
 <% end %>
 

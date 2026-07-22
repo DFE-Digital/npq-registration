@@ -116,10 +116,14 @@ module Helpers
       Questionnaires::CourseStartDate::OPTIONS.values.first[:cohort_description]
     end
 
-    def choose_course_start_date
+    def choose_course_start_date(first_option: true)
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
         expect(page).to have_text(I18n.t("helpers.legend.registration_wizard.course_start_cohort"))
-        page.choose(course_start_cohort_label, visible: :all)
+        if first_option
+          page.choose(course_start_cohort_label, visible: :all)
+        else
+          page.choose(Questionnaires::CourseStartDate::OPTIONS.values.last[:label], visible: :all)
+        end
       end
     end
   end

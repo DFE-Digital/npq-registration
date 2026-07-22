@@ -12,7 +12,7 @@
     chosen_cohort: Questionnaires::CourseStartDate::OPTIONS[@wizard.query_store.course_start_cohort][:cohort_description]
   %>
 
-  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+  <%= govuk_button_link_to "Continue to register", registration_wizard_show_path(@wizard.next_step_path) %>
 
 <% end %>
 

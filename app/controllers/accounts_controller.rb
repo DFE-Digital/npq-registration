@@ -1,8 +1,16 @@
 class AccountsController < LoggedInController
   def show
-    return unless current_user.applications.count == 1
+    applications = current_user.applications
 
-    application = current_user.applications.first
-    redirect_to accounts_user_registration_path(application)
+    if applications.count == 1
+      redirect_to accounts_user_registration_path(applications.first)
+    else
+      @active_applications = applications.active_applications
+                                         .includes(:course, :lead_provider)
+                                         .order(created_at: :desc, id: :desc)
+      @expired_applications = applications.expired_applications
+                                          .includes(:course, :lead_provider)
+                                          .order(created_at: :desc, id: :desc)
+    end
   end
 end

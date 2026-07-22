@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper

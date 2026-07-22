@@ -201,4 +201,15 @@ class RegistrationQueryStore
   def course_start_cohort
     store["course_start_cohort"]
   end
+
+  def cohort_funded?
+    cohort = Cohort.find_by(identifier: course_start_cohort)
+    return true unless cohort
+
+    cohort.funded?
+  end
+
+  def check_funding?
+    store["check_funding"] == "yes"
+  end
 end

@@ -6,21 +6,10 @@
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Course
+          Registration submitted
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= title_embedded_course_name(application.course) %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <% if Feature.registration_closed?(current_user) %>
-            <a class="govuk-link" href="<%= change_registration_closed_path %>">
-              Change<span class="govuk-visually-hidden"> Course</span>
-            </a>
-          <% else %>
-            <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
-              Change<span class="govuk-visually-hidden"> Course</span>
-            </a>
-          <% end %>
+          <%= application.created_at.to_date.to_fs(:govuk) %>
         </dd>
       </div>
 
@@ -46,44 +35,49 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Provider application
+          DfE scholarship funding
         </dt>
         <dd class="govuk-summary-list__value">
-          <% if application.lead_provider_approval_status.blank? || pending?(application) %>
-            <%= govuk_tag(text: "Apply with provider", colour: "yellow") %>
-            <%= render 'provider_pending_status' %>
-          <% elsif accepted?(application) %>
-            <%= govuk_tag(text: "Successful", colour: "green") %>
-          <% elsif rejected?(application) %>
-            <%= govuk_tag(text: "Unsuccessful", colour: "red") %>
-          <% end %>
+          <%= eligibility_tag(scholarship_funding_eligibility_status(application)) %>
         </dd>
       </div>
 
-      <% if application.lead_provider_approval_status.blank? || pending?(application) %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Course start
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= application_cohort_description(application) %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Working in England
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= boolean_tag(application.teacher_catchment == 'england') %>
+        </dd>
+      </div>
+
+      <% if application.work_setting.present? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Course start
+            Work setting
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= application_cohort_description(application) %>
+            <%= I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") %>
           </dd>
         </div>
       <% end %>
 
-      <% if application.latest_participant_outcome_state.present? && accepted?(application) %>
+      <% if application.long_employer_name_to_display.present? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Course outcome
+            Workplace
           </dt>
           <dd class="govuk-summary-list__value">
-            <% if application.latest_participant_outcome_state.capitalize == "Passed" %>
-              <%= govuk_tag(text: "Passed", colour: "green") %>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
-            <% elsif application.latest_participant_outcome_state.capitalize == "Failed" %>
-              <%= govuk_tag(text: "Not passed", colour: "red") %>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
-            <% end %>
+            <%= application.long_employer_name_to_display %>
           </dd>
         </div>
       <% end %>

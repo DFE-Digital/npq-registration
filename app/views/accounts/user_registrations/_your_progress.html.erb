@@ -1,28 +1,9 @@
 <div class="govuk-summary-card">
   <div class="govuk-summary-card__title-wrapper">
-    <div>
-      <h2 class="govuk-summary-card__title"><%= title_embedded_course_name(application.course) %></h2>
-      <p class="govuk-body">
-        <%= application.lead_provider.name %>
-      </p>
-    </div>
-    <ul class="govuk-summary-card__actions">
-      <li class="govuk-summary-card__action">
-        <%= govuk_link_to("View details", accounts_user_registration_path(application)) %>
-      </li>
-    </ul>
+    <h2 class="govuk-summary-card__title">Your progress</h2>
   </div>
   <div class="govuk-summary-card__content">
     <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Registration submitted
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= application.created_at.to_date.to_fs(:govuk_short) %>
-        </dd>
-      </div>
-
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Application status
@@ -34,6 +15,18 @@
             <p class="govuk-body govuk-!-margin-top-2">
               Your provider will contact you with instructions on how to apply for the course.
             </p>
+
+            <p class="govuk-body">
+              During the application process, your provider will check your:
+            </p>
+
+            <ul class="govuk-list govuk-list--bullet">
+              <li>identity</li>
+              <li>place of work</li>
+              <li>suitability for the NPQ course you&rsquo;ve chosen</li>
+              <li>eligibility for scholarship funding</li>
+              <li>decision to complete an NPQ is supported by your workplace</li>
+            </ul>
 
             <p class="govuk-body govuk-!-margin-bottom-0">
               You do not need to do anything until they contact you.
@@ -52,13 +45,13 @@
             Course outcome
           </dt>
           <dd class="govuk-summary-list__value">
-              <% if application.latest_participant_outcome_state.capitalize == "Passed" %>
-                <%= govuk_tag(text: "Passed", colour: "green") %>
-                <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
-              <% elsif application.latest_participant_outcome_state.capitalize == "Failed" %>
-                <%= govuk_tag(text: "Not passed", colour: "red") %>
-                <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
-              <% end %>
+            <% if application.latest_participant_outcome_state.capitalize == "Passed" %>
+              <%= govuk_tag(text: "Passed", colour: "green") %>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html") %></p>
+            <% elsif application.latest_participant_outcome_state.capitalize == "Failed" %>
+              <%= govuk_tag(text: "Not passed", colour: "red") %>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed") %></p>
+            <% end %>
           </dd>
         </div>
       <% end %>
