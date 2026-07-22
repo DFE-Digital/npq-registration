@@ -4,6 +4,7 @@ RSpec.describe "accounts/show.html.erb", type: :view do
   subject { render }
 
   before do
+    assign(:application_count, application_count)
     assign(:active_applications, active_applications)
     assign(:expired_applications, expired_applications)
     allow(view).to receive(:current_user).and_return(user)
@@ -12,6 +13,7 @@ RSpec.describe "accounts/show.html.erb", type: :view do
   let(:user) { create(:user, :with_teacher_auth) }
   let(:active_applications) { create_list :application, 2, user: }
   let(:expired_applications) { [] }
+  let(:application_count) { active_applications.count + expired_applications.count }
 
   it { is_expected.to have_css "h1", text: "Your NPQ registrations" }
   it { is_expected.to have_content "Register for another NPQ" }

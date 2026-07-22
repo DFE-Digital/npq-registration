@@ -6,8 +6,8 @@
   ) %>
 <% end %>
 
-<% if application_count > 0 %>
-  <h1 class="govuk-heading-l"><%= t(".title", count: application_count) %></h1>
+<% if @application_count > 0 %>
+  <h1 class="govuk-heading-l"><%= t(".title", count: @application_count) %></h1>
 <% end %>
 
 <%= govuk_inset_text do %>
