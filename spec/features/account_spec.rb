@@ -33,6 +33,34 @@ RSpec.feature "Account", :no_js, type: :feature do
         expect(page).to have_current_path("/accounts/user_registrations/#{application.id}")
       end
 
+      context "when the user has more than one registration" do
+        let(:second_application) { create(:application, user:, cohort:) }
+        let :expired_application do
+          create(:application,
+                 user:,
+                 lead_provider_approval_status: :rejected,
+                 created_at: Application.cut_off_date_for_expired_applications - 1.day)
+        end
+
+        before do
+          second_application
+          expired_application
+        end
+
+        scenario "it shows the registrations overview page with active and expired registrations" do
+          visit "/account"
+
+          expect(page).to have_current_path("/account")
+          expect(page).to have_css("h1", text: "Your NPQ registrations")
+          expect(page).to have_link("GOV.UK One Login (opens in a new tab)")
+          expect(page).to have_content("Awaiting provider")
+          expect(page).to have_content("Expired registrations")
+          expect(page).to have_link("View details", href: accounts_user_registration_path(application))
+          expect(page).to have_link("View details", href: accounts_user_registration_path(second_application))
+          expect(page).not_to have_link("View details", href: accounts_user_registration_path(expired_application))
+        end
+      end
+
       scenario "it shows the course start cohort" do
         visit "/account"
         expect(page).to have_summary_item("Course start", "2025")
