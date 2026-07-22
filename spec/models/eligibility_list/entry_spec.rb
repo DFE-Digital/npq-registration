@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe EligibilityList::Entry, type: :model do
   let(:identifier) { "123" }
 
+  it { expect { described_class.new.short_name }.to raise_exception NameError }
+
   describe "before_validation" do
     EligibilityList::Entry.descendants.each do |eligibility_list|
       context "with #{eligibility_list}" do
