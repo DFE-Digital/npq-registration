@@ -114,7 +114,7 @@ module Questionnaires
       wizard.query_store
     end
 
-    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil)
+    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil, nested_options: nil)
       QuestionTypes::RadioOption.new(
         value:,
         label:,
@@ -122,6 +122,7 @@ module Questionnaires
         link_errors:,
         divider:,
         revealed_question:,
+        nested_options:,
       )
     end
   end

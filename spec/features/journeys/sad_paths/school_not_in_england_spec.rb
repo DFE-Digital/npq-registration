@@ -40,7 +40,7 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, type
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     School.create!(urn: 100_099, name: "open wrexham school", address_1: "street 4", town: "wrexham", establishment_status_code: "1", establishment_type_code: "30")

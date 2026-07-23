@@ -3,11 +3,19 @@ module Questionnaires
     A_SCHOOL = "a_school".freeze
     AN_ACADEMY_TRUST = "an_academy_trust".freeze
     A_16_TO_19_EDUCATIONAL_SETTING = "a_16_to_19_educational_setting".freeze
+    PRIMARY_SCHOOL = "primary_school".freeze
+    SECONDARY_SCHOOL = "secondary_school".freeze
+
+    NESTED_SCHOOL_SETTINGS = [
+      PRIMARY_SCHOOL,
+      SECONDARY_SCHOOL,
+      A_16_TO_19_EDUCATIONAL_SETTING,
+    ].freeze
 
     SCHOOL_SETTINGS = [
       A_SCHOOL,
       AN_ACADEMY_TRUST,
-      A_16_TO_19_EDUCATIONAL_SETTING,
+      *NESTED_SCHOOL_SETTINGS,
     ].freeze
 
     CHILDCARE_SETTINGS = %w[
@@ -26,7 +34,9 @@ module Questionnaires
 
     attribute :work_setting
 
-    validates :work_setting, presence: true, inclusion: { in: ALL_SETTINGS }
+    validates :work_setting, presence: true
+    validates :work_setting, inclusion: { in: ALL_SETTINGS }, allow_blank: true
+    validate :school_type_chosen
 
     def self.permitted_params
       %i[work_setting]
@@ -97,15 +107,26 @@ module Questionnaires
     def options
       [
         build_option_struct(value: "early_years_or_childcare", link_errors: true),
-        build_option_struct(value: "a_school"),
-        build_option_struct(value: "an_academy_trust"),
-        build_option_struct(value: "a_16_to_19_educational_setting"),
+        build_option_struct(value: A_SCHOOL, nested_options: school_type_options),
+        build_option_struct(value: AN_ACADEMY_TRUST),
         build_option_struct(value: "another_setting"),
         build_option_struct(value: "other", divider: true),
       ]
     end
 
   private
+
+    def school_type_options
+      NESTED_SCHOOL_SETTINGS.map { |value| build_option_struct(value:) }
+    end
+
+    def school_parent_selected?
+      work_setting == A_SCHOOL
+    end
+
+    def school_type_chosen
+      errors.add(:work_setting, :school_type_blank) if school_parent_selected?
+    end
 
     def build_option_struct(**kwargs)
       super(**kwargs.deep_merge(label: { size: "s" }))

@@ -35,7 +35,7 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
@@ -138,7 +138,7 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -149,7 +149,7 @@ RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_sched
         "submitted" => true,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start_cohort" => course_start_cohort_value,
