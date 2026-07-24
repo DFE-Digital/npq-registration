@@ -1,14 +1,19 @@
 class OmniauthController < Devise::OmniauthCallbacksController
   OMNIAUTH_ERROR_STRATEGY_KEY = "omniauth.error.strategy".freeze
 
+  SESSSION_RESET_RETAINED_KEYS = %w[
+    log_session_id
+    registration_store
+    feature_flag_id
+  ].freeze
+
   skip_before_action :verify_authenticity_token, only: [
     Omniauth::Strategies::TraOpenidConnect::NAME, Omniauth::Strategies::TeacherAuth::NAME
   ]
   skip_before_action :authenticate_user!
 
   def tra_openid_connect
-    # Let user continue using current TRA login
-    session.delete("clear_tra_login")
+    reset_session_and_copy_allowed_session_data
 
     @user = User.find_or_create_from_provider_data(
       provider_data,
@@ -58,6 +63,8 @@ class OmniauthController < Devise::OmniauthCallbacksController
   end
 
   def teacher_auth
+    reset_session_and_copy_allowed_session_data
+
     # Store id_token for OIDC logout (required as id_token_hint parameter)
     session[:id_token] = provider_data.credentials.id_token
 
@@ -194,5 +201,13 @@ private
     end
 
     request.env[OMNIAUTH_ERROR_STRATEGY_KEY].name
+  end
+
+  def reset_session_and_copy_allowed_session_data
+    retained_values = session.to_h.slice(*SESSSION_RESET_RETAINED_KEYS)
+
+    reset_session.tap do
+      retained_values.each { |k, v| session[k] = v }
+    end
   end
 end
