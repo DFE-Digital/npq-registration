@@ -53,6 +53,21 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
         it { is_expected.to have_error(:base, :no_completed_declarations, "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome.") }
       end
 
+      context "when the application was transferred to the lead provider" do
+        let(:previous_lead_provider) { create(:lead_provider) }
+        let(:lead_provider) { create(:lead_provider) }
+        let(:application) { create(:application, :accepted, course:, lead_provider:) }
+        let!(:completed_declaration) do
+          travel_to(2.days.ago) do
+            create(:declaration, :completed, :payable, course:, application:, lead_provider: previous_lead_provider)
+          end
+        end
+
+        it "allows the outcome to be submitted by the application's lead provider" do
+          expect(instance).to be_valid
+        end
+      end
+
       context "when the participant has completed declarations with a different course identifier" do
         let(:other_course) { Course.find_by(identifier: described_class::PERMITTED_COURSES.excluding(course_identifier).first) }
 
