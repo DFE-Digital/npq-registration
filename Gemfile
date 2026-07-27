@@ -8,7 +8,7 @@ gem "azure-blob"
 gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails", github: "commonlit/canonical-rails", ref: "bump-rails-8-1" # the gem has not bumped its rails version yet: https://github.com/jumph4x/canonical-rails/pull/96
-gem "connection_pool", "~> 2.5" # v3 swaps to kwargs, we'll upgrade as part of Rails 8.1
+gem "connection_pool", "~> 3.0" # v3 swaps to kwargs, we'll upgrade as part of Rails 8.1
 gem "countries"
 gem "cssbundling-rails", "~> 1.4"
 gem "daemons"
