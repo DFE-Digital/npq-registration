@@ -2,16 +2,16 @@
 
 # C4 Container model
 
-Internally we have Web and Worker Kubernetes containers nodes, with the web
-containers accessed via a CDN backed onto an NGINX kubernetes ingress. These are
-backed by Azure managed Postgres, Redis and Blob storage services.
+Internally we have web and worker Kubernetes containers nodes, with the web
+containers accessed via a CDN backed onto an nginx kubernetes ingress. These are
+backed by Azure managed Postgres, Redis and blob storage services.
 
 Externally we integrate with
-* the TeacherAuth service provided by the TRS service, which itself then integrates with the GovUK OneLogin service
+* the TeacherAuth service provided by the TRS service, which itself then integrates with the GOV.UK One Login service
 * we provide certificate information to the TRS service via an internal API
 * we request TRN allocation for new TeacherAuth users via a TRS API, via a per-user OAuth access token
-* we are notified of user changes via signed Webhooks we provide to TRS
-* we send emails out using the GovUK Notify service
+* we are notified of user changes via signed webhooks we provide to TRS
+* we send emails out using the GOV.UK Notify service
 
 Below is a C4 Container diagram for the NPQ service
 
@@ -22,7 +22,7 @@ C4Container
   System_Ext("lp1", "Lead Provider 1", "Lead Provider API", "Bearer Token secured API for Lead Providers to interact with NPQ service")
   System_Ext("lp2", "Lead Provider 2", "Lead Provider API", "Bearer Token secured API for Lead Providers to interact with NPQ service")
 
-  Person(citizen, "User registering for NPQ", "Citizen")
+  Person(participant, "Participant", "User registering for NPQ")
   Person(staff, "Admin user", "Admin User")
 
   Container_Boundary(cip, "DfE Cloud Infrastructure Platform") {
@@ -61,12 +61,12 @@ C4Container
   Rel(worker,blob, "HTTPS")
   Rel(lp1,cdn,  "JSON-API service", "HTTPS bearer  token")
   Rel(lp2,cdn, "JSON-API service", "HTTPS bearer token")
-  Rel(citizen,cdn, "Web", "HTTPS")
+  Rel(participant,cdn, "Web", "HTTPS")
   Rel(staff,cdn, "Web", "HTTPS")
   Rel(teacherauth, cdn,"OAuth")
   Rel(onelogin,teacherauth,"OAuth")
-  Rel(citizen,onelogin,"OAuth")
-  Rel(citizen,teacherauth,"OAuth")
+  Rel(participant,onelogin,"OAuth")
+  Rel(participant,teacherauth,"OAuth")
   Rel(web, trsapi,"Fetch users teaching record", "per-user OAuth access token")
   Rel(worker, trsapi,"Fetch users teaching record", "per-user OAuth access token")
   Rel(trsapi,cdn,"HTTPS", "HTTPS bearer token")
