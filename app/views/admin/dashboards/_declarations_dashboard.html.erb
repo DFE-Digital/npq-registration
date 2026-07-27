@@ -1,0 +1,81 @@
+<h1 class="govuk-heading-l">Declarations dashboard</h1>
+
+<div class="admin-search-box">
+  <%=
+    form_with(
+      model: @declarations_filter,
+      scope: :declarations_filter,
+      url: admin_dashboard_path("declarations-dashboard"),
+      method: :get,
+    ) do |f|
+  %>
+    <%= f.govuk_error_summary %>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :lead_provider_id,
+            @lead_providers,
+            :id,
+            :name,
+            options: { include_blank: "Select a provider" },
+            label: { text: "Provider", size: "s" },
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :cohort_id,
+            @cohorts,
+            :id,
+            :description,
+            options: { include_blank: "Select a cohort" },
+            label: { text: "Cohort", size: "s" },
+          )
+        %>
+      </div>
+    </div>
+
+    <%= f.govuk_submit "Select" %>
+  <% end %>
+</div>
+
+<% if @declarations_filter.submitted? && @declarations_filter.valid? %>
+  <h2 class="govuk-heading-m"><%= @declarations_filter.lead_provider.name %></h2>
+
+  <p class="govuk-body">
+    Showing declaration data for the <%= @declarations_filter.cohort.description %> cohort.
+  </p>
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Declaration type</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Expected</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Received</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Remaining</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <% Declaration.declaration_types.keys.each do |declaration_type| %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header"><%= declaration_type.capitalize %></th>
+          <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+        </tr>
+      <% end %>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">Total declarations</th>
+        <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+        <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+        <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+      </tr>
+    </tbody>
+  </table>
+<% else %>
+  <%= govuk_inset_text(text: "Select a provider and cohort to view declaration data.") %>
+<% end %>
