@@ -1,6 +1,14 @@
 <% content_for :title, "Your NPQ registrations" %>
 
-<h1 class="govuk-heading-l">Your NPQ registrations</h1>
+<% content_for :before_content do %>
+  <%= render GovukComponent::BreadcrumbsComponent.new(
+    breadcrumbs: { t(".title.other") => nil }
+  ) %>
+<% end %>
+
+<% if @application_count > 0 %>
+  <h1 class="govuk-heading-l"><%= t(".title", count: @application_count) %></h1>
+<% end %>
 
 <%= govuk_inset_text do %>
   You can change your personal details on <%= govuk_link_to "GOV.UK One Login (opens in a new tab)", Rails.configuration.x.teacher_auth.onelogin_home_uri, target: "_blank", rel: "noopener noreferrer" %>.
