@@ -1,18 +1,18 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::WorkSetting, type: :model do
+  subject(:instance) { described_class.new(wizard:, work_setting:) }
+
+  let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request: nil, current_user: nil) }
+  let(:store) { {} }
+  let(:work_setting) { nil }
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:work_setting) }
     it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::ALL_SETTINGS) }
   end
 
   describe "#after_save" do
-    subject { described_class.new(work_setting:, wizard:) }
-
-    let(:session) { {} }
-    let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request:, current_user: create(:user)) }
-
     {
       "a_school" => {
         "works_in_school" => "yes",
@@ -36,15 +36,14 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
       },
     }.each do |option, expectations|
       context "when #{option}" do
-        let(:store) { {} }
         let(:work_setting) { option }
         let(:expecations) { expectations }
 
-        before { subject.after_save }
+        before { instance.after_save }
 
         it "sets #{expectations} when '#{option}' is picked" do
           expecations.each_key do |field|
-            expect(subject.wizard.store[field]).to eql(expectations[field])
+            expect(instance.wizard.store[field]).to eql(expectations[field])
           end
         end
       end
@@ -58,11 +57,29 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
         let(:childcare_specific_keys) { %w[kind_of_nursery has_ofsted_urn] }
 
         it "deletes 'kind_of_nursery' and 'has_ofted_urn'" do
-          expect(subject.wizard.store.keys).to include(*childcare_specific_keys)
-          subject.after_save
-          expect(subject.wizard.store.keys).not_to include(*childcare_specific_keys)
+          expect(instance.wizard.store.keys).to include(*childcare_specific_keys)
+          instance.after_save
+          expect(instance.wizard.store.keys).not_to include(*childcare_specific_keys)
         end
       end
+    end
+  end
+
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    let(:store) { { "declared_previous_funding" => declared_previous_funding } }
+
+    context "when the user has declared previous funding" do
+      let(:declared_previous_funding) { "yes" }
+
+      it { is_expected.to be :ineligible_for_funding_previously_funded }
+    end
+
+    context "when the user has not declared previous funding" do
+      let(:declared_previous_funding) { "no" }
+
+      it { is_expected.to be :funding_history }
     end
   end
 end

@@ -18,6 +18,7 @@ class RegistrationWizard
     provider_check
     change_your_course_or_provider
     check_funding
+    funding_history
     choose_an_npq_and_provider
     login_callback
     npqh_status
@@ -50,6 +51,7 @@ class RegistrationWizard
     childcare_provider_not_in_england
     possible_funding
     ineligible_for_funding
+    ineligible_for_funding_previously_funded
     funding_your_npq
     share_provider
     check_answers
