@@ -655,7 +655,7 @@ GEM
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 4.0)
       multi_json (~> 1.10)
-    simplecov (1.0.1)
+    simplecov (1.0.2)
     simpleidn (0.2.3)
     site_prism (5.2)
       addressable (~> 2.8, >= 2.8.4)
