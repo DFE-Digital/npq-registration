@@ -165,7 +165,7 @@ GEM
     crack (1.0.1)
       bigdecimal
       rexml
-    crass (1.0.6)
+    crass (1.0.7)
     cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
     csv (3.3.5)
@@ -282,10 +282,10 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
-    govuk-components (6.2.0)
+    govuk-components (6.4.1)
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 10)
-      view_component (>= 4.9, < 4.10)
+      view_component (>= 4.9, < 4.13)
     govuk_design_system_formbuilder (6.1.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
@@ -355,7 +355,7 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     logger (1.7.0)
-    loofah (2.25.1)
+    loofah (2.25.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.9.0)
@@ -508,8 +508,8 @@ GEM
       activesupport (>= 7.0)
       choice (~> 0.2.0)
       ostruct
-    rails-html-sanitizer (1.7.0)
-      loofah (~> 2.25)
+    rails-html-sanitizer (1.7.1)
+      loofah (~> 2.25, >= 2.25.2)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rails_semantic_logger (4.19.0)
       rack
@@ -706,7 +706,7 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    view_component (4.9.0)
+    view_component (4.12.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
@@ -779,7 +779,7 @@ DEPENDENCIES
   flipper-active_record
   foreman
   google-cloud-bigquery
-  govuk-components (~> 6.0)
+  govuk-components (~> 6.4)
   govuk_design_system_formbuilder (~> 6.0)
   govuk_markdown
   httparty (~> 0.24)
