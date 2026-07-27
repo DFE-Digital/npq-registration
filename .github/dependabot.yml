@@ -5,10 +5,11 @@ updates:
   schedule:
     interval: daily
     time: "07:00"
-  allow:
+  ignore:
     - dependency-name: "rails"
       update-types:
-      - version-update:semver-patch
+      - version-update:semver-minor
+      - version-update:semver-major
   open-pull-requests-limit: 20
 - package-ecosystem: npm
   directory: "/"
