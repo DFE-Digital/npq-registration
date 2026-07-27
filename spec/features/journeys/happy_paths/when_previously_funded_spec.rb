@@ -116,7 +116,8 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :wit
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Early headship coaching offer",
           "Course funding" => "I am paying",
           "Headship NPQ stage" => "I’ve completed it",
@@ -126,7 +127,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :wit
           "Provider" => "Teach First",
           "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Early years setting" => "Private nursery",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

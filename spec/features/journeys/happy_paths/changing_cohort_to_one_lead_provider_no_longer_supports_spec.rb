@@ -72,13 +72,14 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
+          "DfE scholarship funding" => "Not eligible",
           "Course funding" => "My workplace is covering the cost",
-          "Course start" => "Autumn 2026",
+          "Cohort" => "Autumn 2026",
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
           "Work setting" => "A school",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
       page.click_link("Change", href: "/registration/course-start-date/change")
@@ -137,13 +138,14 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
+          "DfE scholarship funding" => "Not eligible",
           "Course funding" => "My workplace is covering the cost",
-          "Course start" => "Spring 2026",
+          "Cohort" => "Spring 2026",
           "Course" => "Headship",
           "Provider" => "Best Practice Network",
           "Workplace" => "open manchester school – street 1, manchester",
           "Work setting" => "A school",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end
