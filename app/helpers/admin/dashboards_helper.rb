@@ -5,6 +5,8 @@ module Admin::DashboardsHelper
       render "providers_dashboard"
     when "courses-dashboard"
       render "courses_dashboard"
+    when "declarations-dashboard"
+      render "declarations_dashboard"
     else
       raise ActionController::RoutingError, "Not Found"
     end
