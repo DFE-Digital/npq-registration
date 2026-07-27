@@ -1,7 +1,7 @@
 class OmniauthController < Devise::OmniauthCallbacksController
   OMNIAUTH_ERROR_STRATEGY_KEY = "omniauth.error.strategy".freeze
 
-  SESSSION_RESET_RETAINED_KEYS = %w[
+  SESSION_RESET_RETAINED_KEYS = %w[
     log_session_id
     registration_store
     feature_flag_id
@@ -204,7 +204,7 @@ private
   end
 
   def reset_session_and_copy_allowed_session_data
-    retained_values = session.to_h.slice(*SESSSION_RESET_RETAINED_KEYS)
+    retained_values = session.to_h.slice(*SESSION_RESET_RETAINED_KEYS)
 
     reset_session.tap do
       retained_values.each { |k, v| session[k] = v }
