@@ -664,17 +664,21 @@ RSpec.describe Declaration, type: :model do
       let(:course_identifier) { completed_declaration.course_identifier }
       let(:completed_declaration) { create(:declaration, :completed, :payable) }
       let(:course) { completed_declaration.course }
+      let(:other_lead_provider) { LeadProvider.where.not(id: lead_provider.id).first }
       let(:older_completed_declaration) { travel_to(1.hour.ago) { create(:declaration, :completed, :payable, course:, lead_provider:) } }
 
       before do
         # Not a completed declaration.
         create(:declaration, :payable, lead_provider:, course:, declaration_type: "retained-1")
 
-        # Declaration on another provider.
-        create(:declaration, :completed, :payable, lead_provider: LeadProvider.where.not(id: lead_provider.id).first, course:)
+        # Declaration and application on another provider.
+        other_lead_provider_application = create(:application, :accepted, course:, lead_provider: other_lead_provider)
+        create(:declaration, :completed, :payable, lead_provider: other_lead_provider, course:, application: other_lead_provider_application)
 
         # Declaration with different course.
-        create(:declaration, :completed, :payable, lead_provider:, course:, application: create(:application, course: create(:course, identifier: "other-course")))
+        other_course = create(:course, identifier: "other-course")
+        other_course_application = create(:application, course: other_course)
+        create(:declaration, :completed, :payable, lead_provider:, course:, application: other_course_application)
 
         # Declarations that are not billable or voidable.
         Declaration.states.keys.excluding(Declaration::BILLABLE_STATES + Declaration::VOIDABLE_STATES).each do |state|
@@ -683,6 +687,30 @@ RSpec.describe Declaration, type: :model do
       end
 
       it { is_expected.to eq([completed_declaration, older_completed_declaration]) }
+
+      context "when the application was transferred to the lead provider" do
+        let!(:transferred_declaration) do
+          travel_to(2.hours.ago) do
+            create(:declaration, :completed, :payable, lead_provider: other_lead_provider, course:, application: create(:application, :accepted, course:, lead_provider:))
+          end
+        end
+
+        it "includes the declaration submitted by the previous provider" do
+          expect(subject).to eq([completed_declaration, older_completed_declaration, transferred_declaration])
+        end
+      end
+
+      context "when the application was transferred from the lead provider" do
+        let!(:transferred_declaration) do
+          travel_to(2.hours.ago) do
+            create(:declaration, :completed, :payable, lead_provider:, course:, application: create(:application, :accepted, course:, lead_provider: other_lead_provider))
+          end
+        end
+
+        it "includes the declaration submitted by the lead provider" do
+          expect(subject).to eq([completed_declaration, older_completed_declaration, transferred_declaration])
+        end
+      end
 
       context "when there are no declarations" do
         before { Declaration.destroy_all }
