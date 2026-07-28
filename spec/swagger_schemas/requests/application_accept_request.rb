@@ -34,8 +34,8 @@ APPLICATION_ACCEPT_REQUEST = {
   },
 }.tap { |h|
   h[:v3][:properties][:data][:properties][:attributes][:properties][:schedule_identifier] = {
-    description: "The new schedule of the participant",
-    nullable: false,
+    description: "The new schedule of the application - if it is not specified a default schedule will be set",
+    nullable: true,
     type: :string,
     example: Schedule::IDENTIFIERS.first,
     enum: Schedule::IDENTIFIERS,
