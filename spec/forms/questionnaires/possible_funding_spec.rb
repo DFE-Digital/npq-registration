@@ -44,13 +44,13 @@ RSpec.describe Questionnaires::PossibleFunding do
     context "when the course is not NPQLPM" do
       before { wizard.store["course_identifier"] = "npq-senior-leadership" }
 
-      it { is_expected.to be(:choose_your_npq) }
+      it { is_expected.to be(:work_setting) }
     end
 
     context "when the course identifier is not set" do
       before { wizard.store["course_identifier"] = nil }
 
-      it { is_expected.to be(:choose_your_npq) }
+      it { is_expected.to be(:work_setting) }
     end
   end
 

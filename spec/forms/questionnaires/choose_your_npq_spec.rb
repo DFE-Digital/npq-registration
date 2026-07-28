@@ -2,13 +2,9 @@ require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   let(:instance) { described_class.new(course_identifier: course.identifier) }
-  let(:aso_course) { Course.find_by(identifier: "npq-additional-support-offer") }
   let(:ehco_course) { Course.find_by(identifier: "npq-early-headship-coaching-offer") }
   let(:headship_course) { Course.find_by(identifier: "npq-headship") }
   let(:leading_behaviour_culture_course) { Course.find_by(identifier: "npq-leading-behaviour-culture") }
-  let(:leading_primary_mathematics_course) { Course.find_by(identifier: "npq-leading-primary-mathematics") }
-  let(:leading_teaching_course) { Course.find_by(identifier: "npq-leading-teaching") }
-  let(:senco_course) { Course.find_by(identifier: "npq-senco") }
   let(:course) { leading_behaviour_culture_course }
 
   describe "validations" do
