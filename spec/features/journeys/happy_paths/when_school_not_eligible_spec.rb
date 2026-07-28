@@ -28,7 +28,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re not eligible for scholarship funding for the Headship NPQ course")
 
       page.click_link "Continue to register"

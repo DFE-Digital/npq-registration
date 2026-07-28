@@ -89,7 +89,7 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("eligible for scholarship funding")
     end
 

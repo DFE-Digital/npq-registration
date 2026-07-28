@@ -35,7 +35,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
     end
 
     expect_page_to_have(path: "/registration/funding-eligibility-maths", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re eligible for scholarship funding for the Leading primary mathematics NPQ, but this does not guarantee a funded place is available.")
     end
 

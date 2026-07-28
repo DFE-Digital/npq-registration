@@ -29,7 +29,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_nursery, :w
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("You’re not eligible for scholarship funding for the Early years leadership NPQ")
       expect(page).to have_text("as your workplace is not in the list of EY settings that are eligible for funding")
-      page.click_on("Continue")
+      page.click_on("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do

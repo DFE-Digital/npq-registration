@@ -55,7 +55,7 @@ RSpec.feature "Sad journey", :mvp, :with_cohorts, :with_default_schedules, type:
     end
 
     click_button "Continue"
-    click_button "Continue"
+    click_button "Continue to register"
 
     click_link "Back"
     click_link "Back"

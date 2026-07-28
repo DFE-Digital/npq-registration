@@ -35,7 +35,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re eligible for scholarship funding for the")
     end
 

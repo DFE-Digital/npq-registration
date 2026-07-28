@@ -59,7 +59,7 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, :wit
     end
 
     navigate_to_page(path: "/registration/ineligible-for-funding", submit_form: false) do
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     navigate_to_page(path: "/registration/funding-your-npq", submit_form: true) do

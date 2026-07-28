@@ -36,7 +36,7 @@ module ApplicationHelper
     govuk_tag(text: eligibility.to_s.humanize, colour: tag_colour)
   end
 
-  def funding_title(eligibility, title: "Funding")
+  def funding_title(eligibility, title: "DfE scholarship funding")
     tag.div(class: "eligibility-page-header") do
       tag.h1(class: "govuk-heading-l govuk-!-margin-0") { title } + eligibility_tag(eligibility)
     end
