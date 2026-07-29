@@ -26,7 +26,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
 
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Headship",
-      work_setting: "A school",
+      work_setting: "Primary school (5 to 11)",
     )
 
     choose_a_school(js:, name: "open wrexham school")

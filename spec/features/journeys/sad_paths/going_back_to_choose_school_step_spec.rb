@@ -39,6 +39,7 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, :wit
 
     navigate_to_page(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js:, name: school_name)

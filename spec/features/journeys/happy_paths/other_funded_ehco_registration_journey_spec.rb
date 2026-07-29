@@ -25,7 +25,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Early headship coaching offer",
-      work_setting: "A school",
+      work_setting: "Primary school (5 to 11)",
     )
 
     choose_a_school(js:, name: "open")
@@ -76,7 +76,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
           "DfE scholarship funding" => "Not eligible",
           "Cohort" => course_start_cohort_description,
           "Working in England" => "Yes",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Early headship coaching offer",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
@@ -145,7 +145,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -168,7 +168,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "works_in_childcare" => "no",
       },
     )

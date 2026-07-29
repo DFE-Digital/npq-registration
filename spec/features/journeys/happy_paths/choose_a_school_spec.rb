@@ -17,7 +17,7 @@ RSpec.feature "Choose a school page", :with_cohorts, :with_default_schedules, ty
 
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Senior leadership",
-      work_setting: "A school",
+      work_setting: "Primary school (5 to 11)",
     )
   end
 

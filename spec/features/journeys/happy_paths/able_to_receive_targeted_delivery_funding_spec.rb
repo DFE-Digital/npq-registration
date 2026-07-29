@@ -41,6 +41,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     School.create!(
@@ -83,7 +84,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
           "DfE scholarship funding" => "Eligible",
           "Cohort" => course_start_cohort_description,
           "Working in England" => "Yes",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Senior leadership",
           "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
@@ -135,7 +136,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -153,7 +154,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "works_in_childcare" => "no",
         "works_in_school" => "yes",
       },

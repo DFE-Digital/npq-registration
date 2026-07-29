@@ -149,6 +149,7 @@ module Helpers
       end
 
       expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
         page.choose(work_setting, visible: :all)
       end
     end
