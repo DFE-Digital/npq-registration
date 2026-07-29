@@ -22,14 +22,14 @@ RSpec.feature "Viewing the declarations dashboard", type: :feature do
   end
 
   scenario "no filter shows an inset and no table" do
-    visit admin_dashboard_path("declarations-dashboard")
+    visit admin_declarations_dashboard_path
 
     expect(page).to have_content("Select a provider and cohort to view declaration data.")
     expect(page).not_to have_css("th", text: "Declaration type")
   end
 
   scenario "submitting choosing no values shows validation errors and no table" do
-    visit admin_dashboard_path("declarations-dashboard")
+    visit admin_declarations_dashboard_path
 
     click_button "Select"
 
@@ -41,7 +41,7 @@ RSpec.feature "Viewing the declarations dashboard", type: :feature do
     test_provider
     cohort
 
-    visit admin_dashboard_path("declarations-dashboard")
+    visit admin_declarations_dashboard_path
 
     select "Test Provider", from: "Provider"
     select cohort.description, from: "Cohort"
