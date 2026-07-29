@@ -20,7 +20,7 @@ The data model for storing NPQ data is designed to:
 
 This diagram represents our current understanding of the data models:
 
-<a href="content_editors/images/erd.png" target="blank"><img src="content_editors/images/erd.png" width="1000"/></a>
+<a href="content_editors/images/erd.mmd" target="blank"><img src="content_editors/images/erd.png" width="1000"/></a>
 
 ### 3.1 Overview of Key Entities and Relationships
 
