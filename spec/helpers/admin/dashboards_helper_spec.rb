@@ -7,12 +7,5 @@ RSpec.describe Admin::DashboardsHelper, type: :helper do
         helper.render_dashboard_partial("invalid-dashboard")
       }.to raise_error(ActionController::RoutingError, "Not Found")
     end
-
-    it "renders the declarations dashboard partial for the declarations dashboard" do
-      allow(helper).to receive(:render).and_return("rendered")
-
-      expect(helper.render_dashboard_partial("declarations-dashboard")).to eq("rendered")
-      expect(helper).to have_received(:render).with("declarations_dashboard")
-    end
   end
 end
