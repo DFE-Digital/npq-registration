@@ -3,8 +3,8 @@
 <div class="admin-search-box">
   <%=
     form_with(
-      model: @declarations_filter,
-      scope: :declarations_filter,
+      model: @declarations_dashboard,
+      scope: :declarations_dashboard,
       url: admin_declarations_dashboard_path,
       method: :get,
     ) do |f|
@@ -43,11 +43,11 @@
   <% end %>
 </div>
 
-<% if @declarations_filter.submitted? && @declarations_filter.valid? %>
-  <h2 class="govuk-heading-m"><%= @declarations_filter.lead_provider.name %></h2>
+<% if submitted? && @declarations_dashboard.valid? %>
+  <h2 class="govuk-heading-m"><%= @declarations_dashboard.lead_provider.name %></h2>
 
   <p class="govuk-body">
-    Showing declaration data for the <%= @declarations_filter.cohort.description %> cohort.
+    Showing declaration data for the <%= @declarations_dashboard.cohort.description %> cohort.
   </p>
 
   <table class="govuk-table">

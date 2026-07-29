@@ -1,18 +1,21 @@
 class Admin::DeclarationsDashboardController < AdminController
+  helper_method :submitted?
+
   def show
     @lead_providers = LeadProvider.alphabetical
     @cohorts = Cohort.order_by_latest
 
-    @declarations_filter = Admin::Dashboards::DeclarationsFilter.new(
-      declarations_filter_params,
-      submitted: params.key?(:declarations_filter),
-    )
-    @declarations_filter.valid? if @declarations_filter.submitted?
+    @declarations_dashboard = AdminService::DeclarationsDashboard.new(declarations_dashboard_params)
+    @declarations_dashboard.valid? if submitted?
   end
 
 private
 
-  def declarations_filter_params
-    params.fetch(:declarations_filter, {}).permit(:lead_provider_id, :cohort_id)
+  def submitted?
+    params.key?(:declarations_dashboard)
+  end
+
+  def declarations_dashboard_params
+    params.fetch(:declarations_dashboard, {}).permit(:lead_provider_id, :cohort_id)
   end
 end
