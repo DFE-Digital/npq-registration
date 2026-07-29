@@ -1,12 +1,10 @@
 class Admin::DeclarationsDashboardController < AdminController
-  helper_method :submitted?
-
   def show
     @lead_providers = LeadProvider.alphabetical
     @cohorts = Cohort.order_by_latest
 
     @declarations_dashboard = AdminService::DeclarationsDashboard.new(declarations_dashboard_params)
-    @declarations_dashboard.valid? if submitted?
+    @show_results = submitted? && @declarations_dashboard.valid?
   end
 
 private

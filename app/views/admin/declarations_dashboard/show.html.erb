@@ -43,7 +43,7 @@
   <% end %>
 </div>
 
-<% if submitted? && @declarations_dashboard.valid? %>
+<% if @show_results %>
   <h2 class="govuk-heading-m"><%= @declarations_dashboard.lead_provider.name %></h2>
 
   <p class="govuk-body">
