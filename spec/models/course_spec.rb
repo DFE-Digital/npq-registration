@@ -16,6 +16,32 @@ RSpec.describe Course do
     it { is_expected.to have_many(:lead_providers).through(:course_cohort_providers) }
   end
 
+  describe ".offered_in" do
+    let(:cohort) { create(:cohort) }
+    let(:another_cohort) { create(:cohort, suffix: "b") }
+    let(:course) { described_class.npqeyl }
+
+    it "returns the courses a lead provider delivers in the cohort" do
+      create(:course_cohort, :with_provider, course:, cohort:)
+
+      expect(described_class.offered_in(cohort)).to contain_exactly(course)
+      expect(described_class.offered_in(another_cohort)).to be_empty
+    end
+
+    it "excludes a course in the cohort that no lead provider delivers" do
+      create(:course_cohort, course:, cohort:)
+
+      expect(described_class.offered_in(cohort)).to be_empty
+    end
+
+    it "returns a course once when several lead providers deliver it" do
+      course_cohort = create(:course_cohort, :with_provider, course:, cohort:)
+      create(:course_cohort_provider, course_cohort:, lead_provider: create(:lead_provider))
+
+      expect(described_class.offered_in(cohort)).to contain_exactly(course)
+    end
+  end
+
   describe ".ehco" do
     it { expect(described_class.ehco).to eq(described_class.find_by(identifier: "npq-early-headship-coaching-offer")) }
   end

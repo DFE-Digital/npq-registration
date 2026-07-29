@@ -28,6 +28,10 @@ module Questionnaires
       [QUESTION_NAME]
     end
 
+    def requirements_met?
+      super && cohort.present?
+    end
+
     def questions
       [
         QuestionTypes::RadioButtonGroup.new(
@@ -127,12 +131,15 @@ module Questionnaires
     end
 
     def valid_providers
-      cohort = Cohort.find_by!(identifier: wizard.query_store.course_start_cohort)
       LeadProvider.for(course:, cohort:)
     end
 
+    def cohort
+      @cohort ||= Cohort.find_by(identifier: wizard.query_store.course_start_cohort)
+    end
+
     def courses
-      Course.where(display: true).order(:position)
+      Course.offered_in(cohort).where(display: true).order(:position)
     end
 
     def previous_course

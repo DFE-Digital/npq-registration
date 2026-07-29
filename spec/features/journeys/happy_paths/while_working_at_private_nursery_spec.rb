@@ -65,7 +65,7 @@ RSpec.feature "Happy journeys", :with_default_nursery, :with_default_schedules, 
     ehco_course = ["Early headship coaching offer"]
     npqlpm_course = ["Leading primary mathematics"]
 
-    ineligible_courses_list = Questionnaires::ChooseYourNpq.new.options.map(&:value)
+    ineligible_courses_list = course_identifiers_offered_in_chosen_cohort
 
     ineligible_courses = ineligible_courses_list.map { |name|
       I18n.t("course.name.#{name}")

@@ -16,6 +16,13 @@ class Course < ApplicationRecord
   validates :identifier, presence: true, uniqueness: true
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
+  # Only courses at least one lead provider delivers in the given cohort
+  scope :offered_in, lambda { |cohort|
+    joins(course_cohorts: :course_cohort_providers)
+      .where(course_cohorts: { cohort: })
+      .distinct
+  }
+
   # npq-additional-support-offer is replaced by npq-early-headship-coaching-offer
   IDENTIFIERS = %w[
     npq-senior-leadership
