@@ -111,6 +111,11 @@ variable "worker_replicas" {
   default = 1
 }
 
+variable "postgres_server_version" {
+  type = string
+  default = "14"
+}
+
 variable "postgres_flexible_server_sku" {
   type = string
   default = "B_Standard_B1ms"
