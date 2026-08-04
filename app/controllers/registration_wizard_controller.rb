@@ -12,9 +12,14 @@ class RegistrationWizardController < PublicPagesController
   helper_method :first_questionnaire_step
 
   FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN = [
+    Questionnaires::Start,
+    Questionnaires::CourseStartDate,
+    Questionnaires::CheckFunding,
+    Questionnaires::TeacherCatchment,
     Questionnaires::ChooseYourNpq,
     Questionnaires::FundingYourNpq,
     Questionnaires::IneligibleForFunding,
+    Questionnaires::Closed,
   ].freeze
 
   def show
@@ -114,8 +119,13 @@ private
 
   def check_course_defined
     return if FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN.include?(@form.class)
+    return if @wizard.query_store.course
 
-    redirect_to_course_start_date if defined?(@form.course) && !@form.course
+    # redirect to course start date if the user has started the registration journey
+    return redirect_to_course_start_date if @wizard.query_store.has_answers?
+
+    # redirect to the start of the registration journey if the user has not started the registration journey
+    redirect_to "/"
   end
 
   def registration_closed
