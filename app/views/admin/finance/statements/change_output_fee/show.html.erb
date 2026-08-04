@@ -1,0 +1,32 @@
+<% content_for :side_navigation do %>
+  <hr class="govuk-section-break govuk-section-break--m">
+  <%= render "admin/finance/statements/statement_side_navigation" %>
+<% end %>
+
+<%= govuk_back_link href: admin_finance_statement_path(@statement) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @service,
+                 url: admin_finance_statements_change_output_fee_path(@statement) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :output_fee,
+            legend: { text: "Change output statement", tag: "h1", size: "l" } do %>
+
+        <%= f.govuk_radio_button :output_fee, true,
+              label: { text: "Output statement" },
+              hint: { text: @service.move_onto_hint } %>
+        <%= f.govuk_radio_button :output_fee, false,
+               label: { text: "Non-output statement" },
+               hint: { text: @service.move_off_hint } %>
+      <% end %>
+
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Change output statement" %>
+        <%= govuk_link_to t("shared.cancel"), admin_finance_statement_path(@statement) %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

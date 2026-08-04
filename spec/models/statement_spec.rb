@@ -134,6 +134,12 @@ RSpec.describe Statement, type: :model do
       end
     end
 
+    describe ".open" do
+      it "selects only open statements" do
+        expect(Statement.open.to_sql).to include(%(WHERE "statements"."state" = 'open'))
+      end
+    end
+
     describe ".with_state" do
       it "selects only statements with states matching the provided name" do
         expect(Statement.with_state("foo").to_sql).to include(%(WHERE "statements"."state" = 'foo'))

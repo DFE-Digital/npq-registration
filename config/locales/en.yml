@@ -746,6 +746,12 @@ en:
               invalid: Output payment date cannot be before the Declaration deadline
             statement:
               blank: Statement not found
+        statements/change_output_fee:
+          attributes:
+            output_fee:
+              next_output_statement_required: Later output statement does not exist
+              statement_is_paid: Statement has been paid and cannot be changed
+              statement_is_payable: Statement is payable and cannot be changed
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
