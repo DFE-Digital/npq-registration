@@ -4,6 +4,7 @@ FactoryBot.define do
       declaration {}
       sequence(:months_from_start_of_2021) { |n| (n - 1) % 48 }
       for_date { nil }
+      extend_from { nil }
     end
 
     after :create do |statement, evaluator|
@@ -16,12 +17,30 @@ FactoryBot.define do
       end
     end
 
-    month { for_date&.month || (months_from_start_of_2021 % 12 + 1) }
-    year { for_date&.year || (2021 + months_from_start_of_2021 / 12) }
-    deadline_date { Faker::Date.forward(days: 30) }
+    month do
+      if for_date
+        for_date.month
+      elsif extend_from
+        extend_from.month % 12 + 1
+      else
+        months_from_start_of_2021 % 12 + 1
+      end
+    end
+
+    year do
+      if for_date
+        for_date.year
+      elsif extend_from
+        extend_from.year + extend_from.month / 12
+      else
+        2021 + months_from_start_of_2021 / 12
+      end
+    end
+
+    deadline_date { extend_from ? (extend_from.deadline_date + 1.month) : Faker::Date.forward(days: 30) }
     payment_date { deadline_date ? deadline_date + 3.days : Faker::Date.forward(days: 30) }
-    cohort { create(:cohort, :current) }
-    lead_provider { declaration&.lead_provider || build(:lead_provider) }
+    cohort { extend_from&.cohort || create(:cohort, :current) }
+    lead_provider { extend_from&.lead_provider || declaration&.lead_provider || build(:lead_provider) }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
     state { "open" }
     ecf_id { SecureRandom.uuid }
@@ -41,7 +60,7 @@ FactoryBot.define do
 
     trait :payable do
       state { "payable" }
-      deadline_date { Time.zone.yesterday }
+      deadline_date { extend_from ? (extend_from.deadline_date + 1.month) : Time.zone.yesterday }
     end
 
     trait :with_existing_lead_provider do

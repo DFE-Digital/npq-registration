@@ -44,6 +44,9 @@
             summary_list.with_row do |row|
               row.with_key { "Output statement" }
               row.with_value { boolean_red_green_tag(@statement.output_fee) }
+              if current_admin.super_admin? # FIXME: Check statement should be changeable
+                row.with_action(text: "Change", href: admin_finance_statements_change_output_fee_path(@statement))
+              end
             end
 
             if @statement.marked_as_paid_with_date?
