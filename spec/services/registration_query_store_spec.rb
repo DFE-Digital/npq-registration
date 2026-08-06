@@ -70,4 +70,26 @@ RSpec.describe RegistrationQueryStore do
       it { is_expected.to be false }
     end
   end
+
+  describe "#has_answers?" do
+    subject { described_class.new(store:).has_answers? }
+
+    context "when the store is empty" do
+      let(:store) { {} }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the store only has user id" do
+      let(:store) { { current_user_id: 123 }.stringify_keys }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the store has at least one answer" do
+      let(:store) { { course_start_cohort: "2026b" }.stringify_keys }
+
+      it { is_expected.to be true }
+    end
+  end
 end

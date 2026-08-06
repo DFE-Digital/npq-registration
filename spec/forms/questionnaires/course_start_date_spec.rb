@@ -42,6 +42,12 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     end
   end
 
+  describe "#requirements_met?" do
+    subject { instance.requirements_met? }
+
+    it { is_expected.to be true }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 

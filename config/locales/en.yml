@@ -995,6 +995,7 @@ en:
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
         check_funding: "Check if you’re eligible for DfE scholarship funding"
+        continue_to_login: "Continue through GOV.UK One Login"
 
     legend:
       applications_change_training_status:

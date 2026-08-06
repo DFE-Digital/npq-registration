@@ -67,10 +67,6 @@ module Questionnaires
       end
     end
 
-    def requirements_met?
-      true
-    end
-
     def return_to_regular_flow_on_change?
       true
     end

@@ -24,7 +24,7 @@ RSpec.feature "Account", :no_js, type: :feature do
     context "when logged in" do
       before do
         navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-          page.click_button("Start now")
+          page.click_button("Sign in")
         end
       end
 
@@ -157,7 +157,7 @@ RSpec.feature "Account", :no_js, type: :feature do
   describe "breadcrumbs" do
     before do
       navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-        page.click_button("Start now")
+        page.click_button("Sign in")
       end
     end
 

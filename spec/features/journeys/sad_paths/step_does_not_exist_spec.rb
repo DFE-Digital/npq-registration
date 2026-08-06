@@ -4,41 +4,30 @@ RSpec.feature "visiting steps that do not exist", type: :feature do
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when not logged in" do
-    scenario "visiting steps that used to exist", :no_js do
-      visit "/registration/confirmation"
-      expect(page).to have_current_path "/"
+  scenario "visiting steps that used to exist", :no_js do
+    visit "/registration/confirmation"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/about-npq"
-      expect(page).to have_current_path "/"
+    visit "/registration/about-npq"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/choosen-start-date"
-      expect(page).to have_current_path "/"
-    end
-  end
+    visit "/registration/choosen-start-date"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-  context "when logged in" do
-    before do
-      visit "/"
-      page.click_button("Start now")
-    end
+    visit "/registration/confirmation"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-    scenario "visiting steps that used to exist", :no_js do
-      visit "/registration/confirmation"
-      expect(page).to have_current_path "/registration/course-start-date"
+    visit "/registration/about-npq"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/about-npq"
-      expect(page).to have_current_path "/registration/course-start-date"
+    visit "/registration/choosen-start-date"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/choosen-start-date"
-      expect(page).to have_current_path "/registration/course-start-date"
+    visit "/registration/find-school"
+    expect(page).to have_current_path "/registration/course-start-date"
 
-      visit "/registration/find-school"
-      expect(page).to have_current_path "/registration/course-start-date"
-
-      visit "/registration/find-childcare-provider"
-      expect(page).to have_current_path "/registration/course-start-date"
-    end
+    visit "/registration/find-childcare-provider"
+    expect(page).to have_current_path "/registration/course-start-date"
   end
 
   scenario "visiting steps that never existed", :no_js do

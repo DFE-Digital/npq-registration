@@ -12,6 +12,24 @@ RSpec.describe RegistrationWizard do
 
   before { create(:course, :additional_support_offer) }
 
+  context "when logged in" do
+    let(:user) { create(:user) }
+
+    it "stores the current user ID" do
+      subject
+      expect(store["current_user_id"]).to eq user.id
+    end
+  end
+
+  context "when not logged in" do
+    let(:user) { nil }
+
+    it "does not create a current_user_id entry" do
+      subject
+      expect(store.keys).not_to include("current_user_id")
+    end
+  end
+
   describe "#current_step" do
     subject { described_class.new(current_step:, store:, request:, current_user: user).current_step }
 

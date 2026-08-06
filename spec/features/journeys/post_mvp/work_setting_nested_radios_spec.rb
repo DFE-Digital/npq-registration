@@ -7,19 +7,31 @@ RSpec.feature "Work setting nested radios", :with_cohorts, type: :feature do
   let(:school_types) { ["Primary school (5 to 11)", "Secondary school (11 to 16)", "Post-16 provider (16 to 19)"] }
   let(:group) { "#registration-wizard-work-setting-a-school-conditional" }
 
-  context "without JavaScript", :no_js do
-    # The step is only reached mid-journey, so seed a store with a course and
-    # catchment. Without it, submitting routes into the eligibility step, which
-    # reads the (missing) course and blows up - a test-only artifact of visiting
-    # the page directly.
-    let(:store) { build(:registration_wizard_store) }
-
-    before do
-      allow_any_instance_of(RegistrationWizardController)
-        .to receive(:session).and_return("registration_store" => store)
-      visit "/registration/work-setting"
+  before do
+    navigate_to_page(path: "/", submit_form: false) do
+      page.click_button("Start now")
     end
 
+    choose_course_start_date
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Check funding")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Headship", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+  end
+
+  context "without JavaScript", :no_js do
     scenario "renders the school types, so they do not rely on JavaScript" do
       school_types.each { |type| expect(page).to have_field(type) }
     end

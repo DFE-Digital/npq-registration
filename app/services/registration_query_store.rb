@@ -25,10 +25,6 @@ class RegistrationQueryStore
     store["trn_set_via_fallback_verification_question"]
   end
 
-  def trn
-    current_user.trn
-  end
-
   def inside_catchment?
     store["teacher_catchment"] == "england"
   end
@@ -215,5 +211,9 @@ class RegistrationQueryStore
 
   def declared_previous_funding?
     store["declared_previous_funding"] == "yes"
+  end
+
+  def has_answers?
+    store.excluding("current_user_id").any?
   end
 end

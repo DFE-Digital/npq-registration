@@ -6,11 +6,11 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :wit
   include ApplicationHelper
 
   context "when JavaScript is enabled", :js do
-    scenario("registration journey when previously funded (with JS)") { run_scenario(js: true) }
+    scenario("registration journey when previously funded") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
-    scenario("registration journey when previously funded (without JS)") { run_scenario(js: false) }
+    scenario("registration journey when previously funded") { run_scenario(js: false) }
   end
 
   include_context "retrieve latest application data"
