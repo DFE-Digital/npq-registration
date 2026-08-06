@@ -1,0 +1,394 @@
+erDiagram
+	direction LR
+	APIToken {
+		string hashed_token
+		datetime last_used_at
+		integer lead_provider_id FK
+		enum scope
+	}
+	Adjustment {
+		decimal amount
+		string description
+		integer statement_id FK
+	}
+	Application {
+		string DEPRECATED_itt_provider
+		text DEPRECATED_private_childcare_provider_urn
+		text DEPRECATED_school_urn
+		datetime accepted_at
+		integer cohort_id FK
+		integer course_id FK
+		uuid ecf_id
+		boolean eligible_for_funding
+		string employer_name
+		string employment_role
+		enum employment_type
+		boolean funded_place
+		enum funding_choice
+		string funding_eligiblity_status_code
+		enum headteacher_status
+		integer itt_provider_id FK
+		enum kind_of_nursery
+		boolean lead_mentor
+		enum lead_provider_approval_status
+		integer lead_provider_id FK
+		string notes
+		integer number_of_pupils
+		string on_submission_trn
+		text participant_outcome_state
+		boolean primary_establishment
+		integer private_childcare_provider_id FK
+		jsonb raw_application_data
+		enum reason_for_rejection
+		string referred_by_return_to_teaching_adviser
+		enum review_status
+		integer schedule_id FK
+		integer school_id FK
+		string senco_in_role
+		date senco_start_date
+		boolean targeted_delivery_funding_eligibility
+		boolean targeted_support_funding_eligibility
+		text teacher_catchment
+		text teacher_catchment_country
+		string teacher_catchment_iso_country_code
+		boolean teacher_catchment_synced_to_ecf
+		enum training_status
+		boolean tsf_primary_eligibility
+		boolean tsf_primary_plus_eligibility
+		text ukprn
+		integer user_id FK
+		text work_setting
+		boolean works_in_childcare
+		boolean works_in_nursery
+		boolean works_in_school
+	}
+	ApplicationState {
+		integer application_id FK
+		uuid ecf_id
+		integer lead_provider_id FK
+		text reason
+		enum state
+	}
+	BulkOperation {
+		integer admin_id FK
+		datetime finished_at
+		integer ran_by_admin_id FK
+		jsonb result
+		integer row_count
+		datetime started_at
+	}
+	Cohort {
+		string description
+		uuid ecf_id
+		enum funding
+		string identifier
+		datetime registration_start_date
+		integer start_year
+		string suffix
+	}
+	Contract {
+		integer contract_template_id FK
+		integer course_id FK
+		integer statement_id FK
+	}
+	ContractTemplate {
+		uuid ecf_id
+		decimal monthly_service_fee
+		integer number_of_payment_periods
+		integer output_payment_percentage
+		decimal per_participant
+		integer recruitment_target
+		integer service_fee_installments
+		integer service_fee_percentage
+		boolean special_course
+		decimal targeted_delivery_funding_per_participant
+	}
+	Course {
+		integer course_group_id FK
+		text description
+		boolean display
+		uuid ecf_id
+		string identifier
+		text name
+		integer position
+		string short_code
+	}
+	CourseCohort {
+		integer cohort_id FK
+		integer course_id FK
+	}
+	CourseCohortProvider {
+		integer course_cohort_id FK
+		integer lead_provider_id FK
+	}
+	CourseGroup {
+		string name
+	}
+	Declaration {
+		integer application_id FK
+		integer cohort_id FK
+		datetime declaration_date
+		enum declaration_type
+		integer delivery_partner_id FK
+		uuid ecf_id
+		integer lead_provider_id FK
+		integer secondary_delivery_partner_id FK
+		enum state
+		enum state_reason
+		integer superseded_by_id FK
+	}
+	DeliveryPartner {
+		uuid ecf_id
+		string name
+	}
+	DeliveryPartnership {
+		integer cohort_id FK
+		integer delivery_partner_id FK
+		integer lead_provider_id FK
+	}
+	"EligibilityList::Entry" {
+		string identifier
+		string identifier_type
+	}
+	IttProvider {
+		boolean approved
+		datetime disabled_at
+		text legal_name
+		text operating_name
+		datetime removed_at
+	}
+	LeadProvider {
+		uuid ecf_id
+		string hint
+		text name
+	}
+	LegacyPassedParticipantOutcome {
+		date completion_date
+		string course_short_code
+		string trn
+	}
+	LocalAuthority {
+		text address_1
+		text address_2
+		text address_3
+		text county
+		boolean high_pupil_premium
+		text name
+		text postcode
+		text postcode_without_spaces
+		text town
+		text ukprn
+	}
+	Milestone {
+		enum declaration_type
+		integer schedule_id FK
+	}
+	MilestoneStatement {
+		integer milestone_id FK
+		integer statement_id FK
+	}
+	OauthToken {
+		text token
+		enum token_type
+		datetime token_updated_at
+		integer user_id FK
+	}
+	ParticipantIdChange {
+		uuid ecf_id
+		uuid from_participant_id
+		uuid to_participant_id
+		integer user_id FK
+	}
+	ParticipantOutcome {
+		date completion_date
+		integer declaration_id FK
+		uuid ecf_id
+		enum state
+	}
+	PrivateChildcareProvider {
+		text address_1
+		text address_2
+		text address_3
+		datetime disabled_at
+		json early_years_individual_registers
+		text local_authority
+		text ofsted_region
+		integer places
+		text postcode
+		text postcode_without_spaces
+		boolean provider_compulsory_childcare_register_flag
+		boolean provider_early_years_register_flag
+		text provider_name
+		text provider_status
+		text provider_urn
+		text region
+		text registered_person_name
+		text registered_person_urn
+		text registration_date
+		text town
+	}
+	RegistrationInterest {
+		citext email
+		boolean notified
+	}
+	Schedule {
+		date acceptance_window_end
+		date acceptance_window_start
+		enum allowed_declaration_types
+		date applies_from
+		date applies_to
+		integer cohort_id FK
+		integer course_group_id FK
+		uuid ecf_id
+		string identifier
+		string name
+		integer policy_descriptor
+	}
+	School {
+		text address_1
+		text address_2
+		text address_3
+		date close_date
+		text country
+		text county
+		integer easting
+		text establishment_number
+		text establishment_status_code
+		text establishment_status_name
+		text establishment_type_code
+		text establishment_type_name
+		boolean eyl_funding_eligible
+		boolean high_pupil_premium
+		text la_code
+		text la_name
+		date last_changed_date
+		text name
+		integer northing
+		integer number_of_pupils
+		string phase_name
+		integer phase_type
+		text postcode
+		text postcode_without_spaces
+		text region
+		tsvector search_vector
+		text town
+		text ukprn
+		text urn
+	}
+	Statement {
+		integer cohort_id FK
+		date deadline_date
+		uuid ecf_id
+		integer lead_provider_id FK
+		datetime marked_as_paid_at
+		integer month
+		boolean output_fee
+		date payment_date
+		decimal reconcile_amount
+		enum state
+		integer year
+	}
+	StatementItem {
+		integer declaration_id FK
+		uuid ecf_id
+		enum state
+		integer statement_id FK
+	}
+	User {
+		boolean active_alert
+		datetime archived_at
+		string archived_email
+		date date_of_birth
+		uuid ecf_id
+		string email
+		integer email_updates_status
+		string email_updates_unsubscribe_key
+		string feature_flag_id
+		text full_name
+		boolean get_an_identity_id_synced_to_ecf
+		text national_insurance_number
+		boolean notify_user_for_future_reg
+		string preferred_name
+		citext previous_names
+		string provider
+		jsonb raw_tra_provider_data
+		datetime significantly_updated_at
+		text trn
+		boolean trn_auto_verified
+		string trn_lookup_status
+		boolean trn_verified
+		string uid
+		datetime updated_from_tra_at
+	}
+	Workplace {
+		text address_1
+		text address_2
+		text address_3
+		date close_date
+		text country
+		text county
+		integer easting
+		text establishment_number
+		text establishment_status_code
+		text establishment_status_name
+		text establishment_type_code
+		text establishment_type_name
+		boolean eyl_funding_eligible
+		boolean high_pupil_premium
+		integer id
+		text la_code
+		text la_name
+		date last_changed_date
+		text name
+		integer northing
+		integer number_of_pupils
+		string phase_name
+		integer phase_type
+		text postcode
+		text postcode_without_spaces
+		text region
+		tsvector search_vector
+		text town
+		text ukprn
+		text urn
+	}
+	LeadProvider ||--}o APIToken : ""
+	Statement ||--}o Adjustment : ""
+	User ||--}o Application : ""
+	Course ||--}o Application : ""
+	LeadProvider ||--}o Application : ""
+	School o|--}o Application : ""
+	PrivateChildcareProvider o|--}o Application : ""
+	IttProvider o|--}o Application : ""
+	Cohort o|--}o Application : ""
+	Schedule o|--}o Application : ""
+	Application ||--}o ApplicationState : ""
+	Application ||--}o Declaration : ""
+	LeadProvider o|--}o ApplicationState : ""
+	Cohort ||--}o Declaration : ""
+	Cohort ||--}o Schedule : ""
+	Cohort ||--}o Statement : ""
+	Cohort ||--}o DeliveryPartnership : ""
+	Cohort ||--}o CourseCohort : ""
+	Statement ||--}o Contract : ""
+	Course ||--}o Contract : ""
+	ContractTemplate ||--}o Contract : ""
+	CourseGroup o|--}o Course : ""
+	Course ||--}o CourseCohort : ""
+	CourseCohort ||--}o CourseCohortProvider : ""
+	LeadProvider ||--}o CourseCohortProvider : ""
+	CourseGroup ||--}o Schedule : ""
+	LeadProvider ||--}o Declaration : ""
+	Declaration o|--}o Declaration : ""
+	DeliveryPartner o|--}o Declaration : ""
+	Declaration ||--}o ParticipantOutcome : ""
+	Declaration ||--}o StatementItem : ""
+	DeliveryPartner ||--}o DeliveryPartnership : ""
+	LeadProvider ||--}o DeliveryPartnership : ""
+	LeadProvider ||--}o Statement : ""
+	Milestone ||--}o MilestoneStatement : ""
+	Schedule ||--}o Milestone : ""
+	Statement ||--}o MilestoneStatement : ""
+	User ||--}o OauthToken : ""
+	User ||--}o ParticipantIdChange : ""
+	Statement ||--}o StatementItem : ""
