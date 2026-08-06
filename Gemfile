@@ -1,4 +1,4 @@
-source "https://rubygems.org", cooldown: 7
+source "https://rubygems.org", cooldown: 3
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read(".ruby-version").chomp
