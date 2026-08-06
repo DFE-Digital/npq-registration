@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -65,10 +65,14 @@ jobs:
      environment: review
 
      if: >
-       github.event.inputs.dry_run == 'false' &&
-       needs.display-review-apps-to-remove.outputs.stale_prs != '[]'
+        (
+          github.event_name == 'schedule' ||
+          github.event.inputs.dry_run == 'false'
+        ) &&
+        needs.display-review-apps-to-remove.outputs.stale_prs != '[]'
 
      strategy:
+       max-parallel: 1
        fail-fast: false
        matrix:
          pr_number: ${{ fromJson(needs.display-review-apps-to-remove.outputs.stale_prs) }}
@@ -77,7 +81,7 @@ jobs:
 
      steps:
        - name: Checkout
-         uses: actions/checkout@v6
+         uses: actions/checkout@v7
          with:
            token: ${{ secrets.GITHUB_TOKEN }}
 

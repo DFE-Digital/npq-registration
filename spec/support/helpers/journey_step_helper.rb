@@ -153,5 +153,16 @@ module Helpers
         page.choose(work_setting, visible: :all)
       end
     end
+
+    def course_identifiers_offered_in_chosen_cohort
+      form = Questionnaires::ChooseYourNpq.new
+      form.wizard = RegistrationWizard.new(
+        current_step: :choose_your_npq,
+        store: { "course_start_cohort" => course_start_cohort_value },
+        request: nil,
+        current_user: nil,
+      )
+      form.options.map(&:value)
+    end
   end
 end

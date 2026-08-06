@@ -37,9 +37,14 @@ class Declaration < ApplicationRecord
   scope :latest_first, -> { order(created_at: :desc, id: :desc) }
   scope :not_voided, -> { where.not(state: :voided) }
 
+  scope :with_lead_provider_or_application_lead_provider, lambda { |lead_provider|
+    relation = joins(:application)
+    relation.where(lead_provider:).or(relation.where(application: { lead_provider: }))
+  }
+
   scope :eligible_for_outcomes, lambda { |lead_provider, course_identifier|
     completed
-    .with_lead_provider(lead_provider)
+    .with_lead_provider_or_application_lead_provider(lead_provider)
     .with_course_identifier(course_identifier)
     .billable_or_voidable
     .latest_first

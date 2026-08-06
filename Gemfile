@@ -87,7 +87,7 @@ end
 
 group :test do
   gem "axe-core-capybara", "~> 4.7"
-  gem "axe-core-rspec", "~> 4.11"
+  gem "axe-core-rspec", "~> 4.12"
   gem "cuprite"
   gem "rspec-default_http_header"
   gem "shoulda-matchers"
@@ -101,4 +101,4 @@ group :development, :test, :review, :staging, :sandbox do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+gem "tzinfo-data", platforms: %i[windows jruby]

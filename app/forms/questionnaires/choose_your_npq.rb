@@ -16,6 +16,10 @@ module Questionnaires
       [QUESTION_NAME]
     end
 
+    def requirements_met?
+      super && cohort.present?
+    end
+
     def questions
       [
         QuestionTypes::RadioButtonGroup.new(
@@ -66,8 +70,26 @@ module Questionnaires
 
   private
 
+    def store_lead_provider_id
+      return wizard.query_store.lead_provider.id if lead_provider_valid?
+
+      nil
+    end
+
+    def lead_provider_valid?
+      valid_providers.include?(wizard.query_store.lead_provider)
+    end
+
+    def valid_providers
+      LeadProvider.for(course:, cohort:)
+    end
+
+    def cohort
+      @cohort ||= Cohort.find_by(identifier: wizard.query_store.course_start_cohort)
+    end
+
     def courses
-      Course.where(display: true).order(:position)
+      Course.offered_in(cohort).where(display: true).order(:position)
     end
 
     def previous_course

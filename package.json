@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "24.14.1",
+    "node": "24.17.0",
     "yarn": "^1.22.0"
   },
   "dependencies": {
@@ -9,11 +9,11 @@
     "accessible-autocomplete": "^3.0.1",
     "esbuild": "^0.28.1",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
-    "govuk-frontend": "^6.0",
+    "govuk-frontend": "^6.4",
     "lodash.debounce": "^4.0.8",
     "rails-ujs": "^5.2.8",
-    "sass": "^1.101.0",
-    "swagger-ui": "^5.32.8"
+    "sass": "^1.101.6",
+    "swagger-ui": "^5.32.11"
   },
   "resolutions": {
     "react": "^18.3.1",

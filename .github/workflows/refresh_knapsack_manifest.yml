@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -41,9 +41,9 @@ jobs:
           bundler-cache: true
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          node-version: "24.14.1"
+          node-version: "24.17.0"
           cache: yarn
 
       - name: Create screenshots directory

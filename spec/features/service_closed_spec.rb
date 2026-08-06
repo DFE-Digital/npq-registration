@@ -137,6 +137,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
       choose_course_start_date
 
+      sign_in_as(super_admin)
       visit "/admin/registration-closed/closed-registration-users"
 
       click_link("Remove access")

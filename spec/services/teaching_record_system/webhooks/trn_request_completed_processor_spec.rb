@@ -58,6 +58,23 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
       end
     end
 
+    context "when there are other users with the same verified TRN" do
+      let(:other_user) { create(:user, :with_get_an_identity_id, :with_verified_trn, trn: new_trn) }
+      let(:application) { create(:application, :accepted, user: other_user) }
+
+      before do
+        application
+        create(:user, :archived, :with_get_an_identity_id, :with_verified_trn, trn: new_trn)
+      end
+
+      it "merges the other users into this user" do
+        subject
+        expect(other_user.reload).to be_archived
+        expect(application.reload.user).to eq user
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: other_user.ecf_id, to_participant_id: user.ecf_id)
+      end
+    end
+
     context "when the message format is incorrect" do
       let(:webhook_message) { create(:trs_trn_request_completed_webhook_message, user_uid: user.uid, user_trn: new_trn, message:) }
 

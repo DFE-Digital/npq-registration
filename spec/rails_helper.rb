@@ -149,6 +149,7 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper, type: :job
   config.include Helpers::JourneyHelper, type: :feature
   config.include GovukComponentsHelper, type: :helper
+  config.include Devise::Test::ControllerHelpers, type: :controller
 
   config.before(:each, type: :feature) do
     Capybara.current_session.driver.browser.try(:download_path=, Capybara.save_path)

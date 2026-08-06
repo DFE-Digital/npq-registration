@@ -8,9 +8,22 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before do
-    course_cohort = create(:course_cohort, course: create(:course, :headship), cohort: Cohort.find_by(identifier: "2026a"))
-    create(:course_cohort_provider, course_cohort:, lead_provider: LeadProvider.find_by(name: "LLSE"))
+  scenario "does not offer courses no lead provider delivers in the chosen cohort" do
+    stub_participant_validation_request
+
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+      page.click_button("Start now")
+    end
+
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      page.choose("No, I already started in Spring", visible: :all)
+    end
+
+    # Only Headship has a lead provider in the Spring cohort
+    expect(page).to have_current_path("/registration/choose-your-npq")
+    expect(page).to have_text("Headship")
+    expect(page).not_to have_text("Early years leadership")
+    expect(page).not_to have_text("Leading literacy")
   end
 
   scenario "unfunded cohort registration journey" do
