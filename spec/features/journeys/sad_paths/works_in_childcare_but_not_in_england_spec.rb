@@ -149,6 +149,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
         "funding" => "school",
         "funding_eligiblity_status_code" => "not_in_england",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "not_in_england",
         "submitted" => true,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,

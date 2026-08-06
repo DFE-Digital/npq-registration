@@ -5,6 +5,13 @@
     wizard: @wizard,
     ) do
 %>
+
+  <% if @form.show_previously_funded_alert? %>
+    <%= govuk_notification_banner(title_text: "Important") do |banner| %>
+      <% banner.with_heading(text: "Our records show that you have previously received funding for this course. This means you are not eligible for further funding.") %>
+    <% end %>
+  <% end %>
+
   <h1 class="govuk-heading-l">Check your answers</h1>
 
   <%= render GovukComponent::SummaryListComponent.new do |component|

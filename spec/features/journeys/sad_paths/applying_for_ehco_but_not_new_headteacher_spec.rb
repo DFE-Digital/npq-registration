@@ -155,6 +155,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
+        "pre_login_funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
