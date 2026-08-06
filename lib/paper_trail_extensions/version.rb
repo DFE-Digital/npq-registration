@@ -1,7 +1,9 @@
 module PaperTrailExtensions
   module Version
     def self.included(base)
-      base.after_commit :send_to_dfe_analytics, on: :create
+      base.after_commit :send_to_dfe_analytics,
+                        on: :create,
+                        if: -> { Feature.dfe_analytics_enabled? }
     end
 
   private

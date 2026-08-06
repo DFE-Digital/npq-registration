@@ -5,6 +5,7 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
     freeze_time
     PaperTrail.request.whodunnit = "Admin 1"
     allow(StreamVersionsToBigQueryJob).to receive(:perform_later).and_call_original
+    allow(Feature).to receive(:dfe_analytics_enabled?).and_return(true)
   end
 
   context "when a model has paper trail enabled" do
@@ -114,6 +115,36 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
         course = create(:course)
         course.destroy!
       end
+
+      it "does not call StreamVersionsToBigQueryJob" do
+        expect(StreamVersionsToBigQueryJob).not_to have_received(:perform_later)
+      end
+    end
+  end
+
+  context "when dfe_analytics is disabled" do
+    before { allow(Feature).to receive(:dfe_analytics_enabled?).and_return(false) }
+
+    let(:record) { create(:user, full_name: "John Doe") }
+
+    context "when a record is created" do
+      before { record }
+
+      it "does not call StreamVersionsToBigQueryJob" do
+        expect(StreamVersionsToBigQueryJob).not_to have_received(:perform_later)
+      end
+    end
+
+    context "when a record is updated" do
+      before { record.update!(full_name: "Jane Doe") }
+
+      it "does not call StreamVersionsToBigQueryJob" do
+        expect(StreamVersionsToBigQueryJob).not_to have_received(:perform_later)
+      end
+    end
+
+    context "when a record is destroyed" do
+      before { record.destroy! }
 
       it "does not call StreamVersionsToBigQueryJob" do
         expect(StreamVersionsToBigQueryJob).not_to have_received(:perform_later)
