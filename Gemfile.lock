@@ -646,8 +646,8 @@ GEM
       capybara (~> 3.34)
       site_prism-all_there (> 3, < 5)
     site_prism-all_there (3.0.8)
-    skylight (7.0.0)
-      activesupport (>= 7.1.0)
+    skylight (7.1.1)
+      activesupport (>= 7.2.0)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -800,7 +800,7 @@ DEPENDENCIES
   simplecov
   simpleidn
   site_prism (~> 5.2)
-  skylight (~> 7.0)
+  skylight (~> 7.1)
   sprockets (~> 4.2.2)
   sprockets-rails
   state_machines-activerecord
