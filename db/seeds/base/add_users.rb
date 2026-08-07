@@ -1,19 +1,33 @@
-otp_testing_code = "00000"
+# frozen_string_literal: true
 
-# Create admin user
-Admin.find_or_create_by!(
-  email: "admin@example.com",
-  full_name: "example admin",
-  otp_hash: otp_testing_code,
-  otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
-  super_admin: false,
-)
+class SeedAddUsers
+  def load
+    # create some users that have been archived with blanked emails
 
-# Create admin user
-Admin.find_or_create_by!(
-  email: "superadmin@example.com",
-  full_name: "example super admin",
-  otp_hash: otp_testing_code,
-  otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
-  super_admin: true,
-)
+    cohorts_with_teacher_auth_users = Cohort.where(start_year: 2025..)
+
+    User
+      .joins(applications: :cohort)
+      .with_get_an_identity_id
+      .where(cohort: { start_year: ..2025 })
+      .where.not(email: nil)
+      .order(id: :desc)
+      .limit(40).each do |user|
+      # archive the user and blank the email
+      email = user.email
+      full_name = user.full_name
+      trn = user.trn
+      Users::Archiver.new(user:).archive!(blank_email: true, enable_sentry: false)
+
+      # create a new user with the same name, email address and an application
+      FactoryBot.create(
+        :application,
+        :with_random_user,
+        :with_random_work_setting,
+        user: FactoryBot.create(:user, :with_random_name, :with_teacher_auth, :with_verified_trn, full_name:, email:, trn:),
+        lead_provider_approval_status: "pending",
+        cohort: cohorts_with_teacher_auth_users.sample,
+      )
+    end
+  end
+end

@@ -110,7 +110,7 @@ module Applications
     end
 
     def trn
-      @trn ||= user.trn_verified? ? user.trn : nil
+      @trn ||= user.verified_trn
     end
 
     def same_trn_users

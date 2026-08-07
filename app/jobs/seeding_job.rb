@@ -1,6 +1,7 @@
 class SeedingJob < ApplicationJob
   load(Rails.root.join("db/seeds/base/add_applications.rb"))
   load(Rails.root.join("db/seeds/base/add_declarations.rb"))
+  load(Rails.root.join("db/seeds/base/add_users.rb"))
 
   queue_as :default
 
@@ -14,6 +15,7 @@ class SeedingJob < ApplicationJob
     ApplicationRecord.transaction do
       SeedAddApplications.new.load(multiplier:)
       SeedAddDeclarations.new.load(multiplier:)
+      SeedAddUsers.new.load if times == 1
     end
 
     SeedingJob.perform_later(times: times - 1) if times > 1

@@ -35,6 +35,14 @@ def load_csv(file, model_class)
   end
 end
 
+def load_using_seed_class(description, file, seed_class_name)
+  ApplicationRecord.transaction do
+    Rails.logger.info("Seeding #{description}")
+    load_base_file(file)
+    seed_class_name.constantize.new.load
+  end
+end
+
 Rails.logger.info("Seeding database")
 
 # Due to migrations modifying the tables, we need to reset column informations before running seeds
@@ -53,7 +61,7 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_schedules.rb",
   "add_lead_providers.rb",
   "add_itt_providers.rb",
-  "add_users.rb",
+  "add_admin_users.rb",
   "add_statements.rb",
   "add_contracts.rb",
   "add_api_tokens.rb",
@@ -68,18 +76,11 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   end
 end
 
-# add_applications.rb and add_declarations.rb are dealt with separately
+# add_applications.rb, add_declarations.rb and add_users.rb are dealt with separately
 if Rails.env.local?
-  ApplicationRecord.transaction do
-    Rails.logger.info("seeding applications")
-    load_base_file("add_applications.rb")
-    SeedAddApplications.new.load
-  end
-  ApplicationRecord.transaction do
-    Rails.logger.info("seeding declaration")
-    load_base_file("add_declarations.rb")
-    SeedAddDeclarations.new.load
-  end
+  load_using_seed_class("applications", "add_applications.rb", "SeedAddApplications")
+  load_using_seed_class("declarations", "add_declarations.rb", "SeedAddDeclarations")
+  load_using_seed_class("users", "add_users.rb", "SeedAddUsers")
 else
   # use background job to speed up review app deployment
   Rails.logger.info("seeding applications and declarations in background")
