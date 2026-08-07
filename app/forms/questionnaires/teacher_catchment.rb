@@ -25,11 +25,15 @@ module Questionnaires
     def next_step
       return :check_answers if changing_answer? && !answers_will_change?
 
-      :work_setting
+      if teacher_catchment == "england"
+        :choose_your_npq
+      else
+        :ineligible_for_funding
+      end
     end
 
     def previous_step
-      :provider_check
+      :check_funding
     end
 
     def questions

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -66,7 +66,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("already been allocated scholarship funding for")
 
       page.click_link("Back")
@@ -92,7 +92,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
     end
 
     expect_page_to_have(path: "/registration/ehco-previously-funded", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You would need to pay for the EHCO if you were previously funded but you withdrew")
 
       page.click_link("Continue")
@@ -116,7 +116,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Early headship coaching offer",
           "Course funding" => "I am paying",
           "Headship NPQ stage" => "I’ve completed it",
@@ -126,7 +127,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
           "Provider" => "Teach First",
           "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Early years setting" => "Private nursery",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

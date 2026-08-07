@@ -20,36 +20,12 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
   def run_scenario(js:)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # expect(page).to be_accessible
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early headship coaching offer",
+      work_setting: "Primary school (5 to 11)",
+    )
 
     choose_a_school(js:, name: "open")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early headship coaching offer", visible: :all)
-    end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       expect(page).to have_selector "h2", text: "What stage are you at with the Headship NPQ?"
@@ -101,9 +77,10 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Early headship coaching offer",
           "Provider" => "Teach First",
           "Course funding" => "I am paying",
@@ -158,16 +135,17 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       "works_in_nursery" => nil,
       "works_in_childcare" => false,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "declared_previous_funding" => "no",
         "ehco_funding_choice" => "self",
         "ehco_headteacher" => "yes",
         "ehco_new_headteacher" => "no",
@@ -182,7 +160,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
       },
     )
   end

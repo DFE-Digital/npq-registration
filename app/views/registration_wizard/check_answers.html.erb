@@ -5,23 +5,31 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-l">Check your answers and submit</h1>
+  <h1 class="govuk-heading-l">Check your answers</h1>
 
   <%= render GovukComponent::SummaryListComponent.new do |component|
         @wizard.answers.each do |answer|
           component.with_row do |row|
             row.with_key { answer.key }
-            row.with_value { answer.value }
+            row.with_value do
+              if answer.tag_colour
+                govuk_tag(text: answer.value, colour: answer.tag_colour)
+              else
+                answer.value
+              end
+            end
             row.with_action(
-              text: 'Change',
+              text: answer.action_text,
               visually_hidden_text: answer.key,
-              href: "/registration/#{answer.change_step.to_s.dasherize}/change",
+              href: answer.action_href,
             )
           end
         end
   end %>
 
-  <%= govuk_warning_text(text: "If you enter your information incorrectly, it may result in you not being offered a funded place on an NPQ course.") %>
+  <h2 class="govuk-heading-m">Submit your registration</h2>
+
+  <p class="govuk-body">By submitting your registration to the DfE, you're confirming that all the information you entered is correct.</p>
 
   <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
     <%= f.govuk_submit "Submit" %>

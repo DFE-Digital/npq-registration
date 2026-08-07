@@ -33,9 +33,73 @@ RSpec.feature "Account", :no_js, type: :feature do
         expect(page).to have_current_path("/accounts/user_registrations/#{application.id}")
       end
 
+      context "when the user has more than one registration" do
+        let(:second_application) { create(:application, user:, cohort:) }
+        let :expired_application do
+          create(:application,
+                 user:,
+                 lead_provider_approval_status: :rejected,
+                 created_at: Application.cut_off_date_for_expired_applications - 1.day)
+        end
+
+        before do
+          second_application
+          expired_application
+        end
+
+        scenario "it shows the registrations overview page with active and expired registrations" do
+          visit "/account"
+
+          expect(page).to have_current_path("/account")
+          expect(page).to have_css("h1", text: "Your NPQ registrations")
+          expect(page).to have_link("GOV.UK One Login (opens in a new tab)")
+          expect(page).to have_content("Awaiting provider")
+          expect(page).to have_content("Expired registrations")
+          expect(page).to have_link("View details", href: accounts_user_registration_path(application))
+          expect(page).to have_link("View details", href: accounts_user_registration_path(second_application))
+          expect(page).not_to have_link("View details", href: accounts_user_registration_path(expired_application))
+        end
+      end
+
       scenario "it shows the course start cohort" do
         visit "/account"
         expect(page).to have_summary_item("Course start", "2025")
+      end
+
+      scenario "it shows the registration details" do
+        visit "/accounts/user_registrations/#{application.id}"
+
+        expect(page).to have_css("h1", text: "Your Senior leadership registration")
+        expect(page).to have_text("Submitted #{application.created_at.to_date.to_fs(:govuk)}")
+        expect(page).to have_text("Registration ID: #{application.ecf_id}")
+        expect(page).to have_summary_item("Registration submitted", application.created_at.to_date.to_fs(:govuk))
+        expect(page).to have_summary_item("Provider", application.lead_provider.name)
+        expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+        expect(page).to have_summary_item("Working in England", "Yes")
+        expect(page).to have_summary_item("Workplace", application.school.name)
+      end
+
+      scenario "it shows the application progress, personal details and next steps" do
+        visit "/accounts/user_registrations/#{application.id}"
+
+        expect(page).to have_summary_item("Application status", "Awaiting provider")
+        expect(page).to have_text("Your provider will contact you with instructions on how to apply for the course.")
+        expect(page).to have_text("You do not need to do anything until they contact you.")
+
+        expect(page).to have_summary_item("Your details", "Update your personal details on GOV.UK One Login")
+        expect(page).to have_link("GOV.UK One Login (opens in a new tab)", href: Rails.configuration.x.teacher_auth.onelogin_home_uri)
+
+        expect(page).to have_css("h2", text: "Next steps")
+        expect(page).to have_text("Once you’ve applied with your provider, they’ll:")
+        expect(page).to have_link("Start now", href: "/registration/course-start-date")
+      end
+
+      scenario "it does not show the removed sections" do
+        visit "/accounts/user_registrations/#{application.id}"
+
+        expect(page).not_to have_text("Work details")
+        expect(page).not_to have_text("We’d like your feedback")
+        expect(page).not_to have_text("Registration successfully submitted")
       end
 
       context "when the user's previous application is in a 2026 cohort" do
@@ -87,6 +151,50 @@ RSpec.feature "Account", :no_js, type: :feature do
       visit(accounts_user_registration_path(application.id))
 
       expect(page).to have_current_path("/")
+    end
+  end
+
+  describe "breadcrumbs" do
+    before do
+      navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+        page.click_button("Start now")
+      end
+    end
+
+    context "with a single application" do
+      scenario "the registration page shows only the page, no back link and no breadcrum to registration list" do
+        visit accounts_user_registration_path(application)
+
+        expect(page).to have_current_breadcrumb("Your NPQ registration")
+        expect(page).not_to have_breadcrumb_link("Your NPQ registrations")
+        expect(page).not_to have_css(".govuk-back-link")
+      end
+    end
+
+    context "with multiple applications" do
+      before { create(:application, user:, cohort:) }
+
+      scenario "the registrations page shows the page only with a current breadcrumb" do
+        visit "/account"
+
+        expect(page).to have_current_breadcrumb("Your NPQ registrations")
+      end
+
+      scenario "the registration page links back to the registrations page" do
+        visit accounts_user_registration_path(application)
+
+        expect(page).to have_breadcrumb_link("Your NPQ registrations", href: account_path)
+        expect(page).to have_current_breadcrumb("Your NPQ registration")
+        expect(page).not_to have_css(".govuk-back-link")
+      end
+
+      scenario "selecting the registrations breadcrumb goes to the registrations page" do
+        visit accounts_user_registration_path(application)
+
+        within(".govuk-breadcrumbs") { click_link "Your NPQ registrations" }
+
+        expect(page).to have_current_path("/account")
+      end
     end
   end
 end

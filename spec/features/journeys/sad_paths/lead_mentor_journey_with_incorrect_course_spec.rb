@@ -24,27 +24,10 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   def run_scenario(js:)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Another setting", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Senior leadership",
+      work_setting: "Another setting",
+    )
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
@@ -55,17 +38,12 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
 
     choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("such as state-funded schools")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -86,13 +64,14 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Senior leadership",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
           "Provider" => "Church of England",
           "Work setting" => "Another setting",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
           "Course funding" => "I am paying",
         },
       )
@@ -121,7 +100,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
     if User.last.applications.count == 1
       navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
         expect(page).to have_text("Church of England")
-        expect(page).to have_text("Your NPQ registration")
+        expect(page).to have_text("Your Senior leadership registration")
       end
     else
       navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
@@ -184,9 +163,10 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-senior-leadership",
+        "declared_previous_funding" => "no",
         "email_template" => "itt_leader_wrong_course",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "funding" => "self",

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -41,6 +41,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     School.create!(
@@ -62,9 +63,9 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
 
-      page.click_button("Continue")
+      page.click_button("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -80,9 +81,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Senior leadership",
           "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
@@ -134,7 +136,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -152,7 +154,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "works_in_childcare" => "no",
         "works_in_school" => "yes",
       },

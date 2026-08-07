@@ -86,6 +86,9 @@ RSpec.configure do |config|
   config.include RSpec::DefaultHttpHeader, type: :request
   config.include AxeHelper, type: :feature
 
+  # exclude the journey specs that are from the journey as it was before the 2026 'Post-MVP' journey
+  config.filter_run_excluding :mvp
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
     Rails.root.join("spec/fixtures"),

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,39 +9,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey when choosing Leading primary mathematics journey (with JS)") { run_scenario(js: true) }
-  end
-
-  context "when JavaScript is disabled", :js do
-    scenario("registration journey when choosing Leading primary mathematics journey (without JS)") { run_scenario(js: true) }
-  end
-
-  def run_scenario(*)
-    stub_participant_validation_request
-
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
+  before do
     School.create!(urn: 100_000,
                    name: "open manchester school",
                    address_1: "street 1", town: "manchester",
@@ -49,24 +17,17 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
                    establishment_type_code: 1,
                    number_of_pupils: 150,
                    phase_name: "Primary")
+  end
 
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"))
+  scenario "registration journey when choosing Leading primary mathematics journey" do
+    stub_participant_validation_request
 
-      within ".npq-js-reveal" do
-        page.fill_in "What is the name of your workplace?", with: "open"
-      end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Leading primary mathematics",
+      work_setting: "Primary school (5 to 11)",
+    )
 
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
-      page.click_button("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Leading primary mathematics", visible: :all)
-    end
+    choose_a_school(js: false, name: "open")
 
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
       expect(page).to have_text("Have you taken at least one year of the primary maths Teaching for Mastery programme?")
@@ -74,7 +35,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     end
 
     expect_page_to_have(path: "/registration/funding-eligibility-maths", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re eligible for scholarship funding for the Leading primary mathematics NPQ, but this does not guarantee a funded place is available.")
     end
 
@@ -91,9 +52,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course" => "Leading primary mathematics",
           "Completed one year of the primary maths Teaching for Mastery programme" => "Yes",
@@ -102,9 +64,13 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
       )
     end
 
-    expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}?success=true", submit_form: false) do
-      expect(page).to have_text("Registration successfully submitted")
-      expect(page).to have_text("Leading primary mathematics NPQ")
+    expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}/registration-complete", submit_form: false) do
+      expect(page).to have_text("Registration complete")
+      page.click_link("Review a summary of your registration")
+    end
+
+    expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}", submit_form: false) do
+      expect(page).to have_text("Your Leading primary mathematics registration")
     end
 
     expect(User.count).to be(1)
@@ -124,7 +90,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     end
 
     expect(page).to have_text("Church of England")
-    expect(page).to have_text("Leading primary mathematics NPQ")
+    expect(page).to have_text("Your Leading primary mathematics registration")
 
     visit "/registration/share-provider"
 
@@ -173,20 +139,21 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-leading-primary-mathematics",
+        "declared_previous_funding" => "no",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
-        "institution_name" => "",
+        "institution_name" => "open",
         "lead_provider_id" => "3",
         "maths_eligibility_teaching_for_mastery" => "yes",
         "maths_understanding" => true,
@@ -195,7 +162,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
       },
     )
   end

@@ -12,6 +12,12 @@ class RegistrationWizardController < PublicPagesController
   include Questionnaires::FlowHelper
   helper_method :first_questionnaire_step
 
+  FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN = [
+    Questionnaires::ChooseYourNpq,
+    Questionnaires::FundingYourNpq,
+    Questionnaires::IneligibleForFunding,
+  ].freeze
+
   def show
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
@@ -38,13 +44,13 @@ class RegistrationWizardController < PublicPagesController
     return redirect_to root_path unless @form.requirements_met?
 
     if @form.valid?
+      @wizard.save!
+
       if @form.redirect_to_change_path?
         redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
       else
         redirect_to registration_wizard_show_path(@wizard.next_step_path)
       end
-
-      @wizard.save!
     else
       render @wizard.current_step
     end
@@ -102,12 +108,12 @@ private
   def check_end_of_journey
     if @form.valid? && @form.last_step?
       @wizard.save!
-      redirect_to accounts_user_registration_path(current_user.applications.last, success: true)
+      redirect_to registration_complete_accounts_user_registration_path(current_user.applications.last)
     end
   end
 
   def check_course_defined
-    redirect_to_course_start_date if !@form.instance_of?(Questionnaires::ChooseYourNpq) && defined?(@form.course) && !@form.course
+    redirect_to_course_start_date if !FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN.include?(@form.class) && defined?(@form.course) && !@form.course
     redirect_to_course_start_date if @form.instance_of?(Questionnaires::CheckAnswers) && !@wizard.course
   end
 
