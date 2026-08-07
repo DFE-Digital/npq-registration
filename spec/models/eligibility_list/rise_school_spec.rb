@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe EligibilityList::RiseSchool, type: :model do
   let(:urn) { "100001" }
 
+  it { is_expected.to have_attributes short_name: "RISE" }
+
   describe ".eligible?" do
     subject { described_class.eligible?(urn) }
 
