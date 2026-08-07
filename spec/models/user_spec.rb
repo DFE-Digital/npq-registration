@@ -788,4 +788,31 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "#verified_trn" do
+    subject { user.verified_trn }
+
+    let(:user) { build(:user, trn:, trn_verified:) }
+
+    context "when trn is present and verified" do
+      let(:trn) { "1234567" }
+      let(:trn_verified) { true }
+
+      it { is_expected.to eq trn }
+    end
+
+    context "when trn is present but not verified" do
+      let(:trn) { "1234567" }
+      let(:trn_verified) { false }
+
+      it { is_expected.to be_nil }
+    end
+
+    context "when trn is nil" do
+      let(:trn) { nil }
+      let(:trn_verified) { false }
+
+      it { is_expected.to be_nil }
+    end
+  end
 end

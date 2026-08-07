@@ -169,6 +169,10 @@ class User < ApplicationRecord
     trn_lookup_status == "Found"
   end
 
+  def verified_trn
+    trn if trn_verified?
+  end
+
 private
 
   def touch_significantly_updated_at
