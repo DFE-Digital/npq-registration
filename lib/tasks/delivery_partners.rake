@@ -88,7 +88,7 @@ namespace :delivery_partners do
               partnership.cohort.identifier,
               partnership.delivery_partner.ecf_id,
             ]
-        end
+          end
       end
     end
   end
