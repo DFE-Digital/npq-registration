@@ -125,6 +125,11 @@ module Admin::NavigationStructures
           href: admin_dashboard_path("providers-dashboard"),
           prefix: "/admin/dashboards/providers-dashboard",
         ),
+        Node.new(
+          name: "Declarations dashboard",
+          href: admin_declarations_dashboard_path,
+          prefix: "/admin/dashboards/declarations",
+        ),
       ]
     end
   end
