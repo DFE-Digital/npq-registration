@@ -10,6 +10,15 @@ GIT
       request_store_rails (~> 2)
 
 GIT
+  remote: https://github.com/DFE-Digital/dfe-wizard.git
+  revision: 449473a0ffb69b63832f11cab7e5555513edfb21
+  specs:
+    dfe-wizard (1.0.0.beta)
+      activemodel
+      activesupport
+      ruby-graphviz
+
+GIT
   remote: https://github.com/commonlit/canonical-rails.git
   revision: 97bcb28b910b08ce4dc0169eae55a8cd3d4f26ff
   ref: bump-rails-8-1
@@ -607,6 +616,8 @@ GEM
     rubocop-rspec (3.9.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.81)
+    ruby-graphviz (1.2.5)
+      rexml
     ruby-progressbar (1.13.0)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
@@ -750,6 +761,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise (~> 5.0)
   dfe-analytics!
+  dfe-wizard!
   dotenv-rails
   email_validator
   factory_bot_rails
