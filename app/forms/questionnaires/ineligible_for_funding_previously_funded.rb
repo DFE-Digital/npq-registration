@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      :work_setting
+      funding_your_npq_step
     end
   end
 end

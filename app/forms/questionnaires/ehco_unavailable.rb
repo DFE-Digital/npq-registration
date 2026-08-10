@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      :choose_your_npq
+      :choose_your_provider
     end
   end
 end

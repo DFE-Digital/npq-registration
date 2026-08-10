@@ -9,8 +9,6 @@ RSpec.feature "Choose a school page", :with_cohorts, :with_default_schedules, ty
   include_context "with stubbed Teaching Record System person API"
 
   before do
-    stub_participant_validation_request
-
     School.create!(urn: 100_000, name: "an open school", establishment_status_code: "1")
     School.create!(urn: 100_001, name: "closed school", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "another open school", establishment_status_code: "1")

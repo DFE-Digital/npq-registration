@@ -9,7 +9,7 @@ module Questionnaires
 
     delegate :inside_catchment?,
              :cohort_funded?,
-             :check_funding?,
+             :proceed_without_checking_funding?,
              to: :query_store
 
     def self.permitted_params
@@ -50,14 +50,12 @@ module Questionnaires
 
     def previous_step
       if cohort_funded?
-        if check_funding?
-          if inside_catchment?
-            :teacher_catchment
-          else
-            :ineligible_for_funding
-          end
-        else
+        if proceed_without_checking_funding?
           :check_funding
+        elsif inside_catchment?
+          :teacher_catchment
+        else
+          :ineligible_for_funding
         end
       else
         :course_start_date

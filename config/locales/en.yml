@@ -498,10 +498,6 @@ en:
           attributes:
             npqh_status:
               blank: Select what stage you are at with the Headship NPQ
-        questionnaires/ehco_headteacher:
-          attributes:
-            ehco_headteacher:
-              blank: Choose whether or not you are a headteacher
         questionnaires/ehco_funding_not_available:
           attributes:
             ehco_funding:
@@ -1009,8 +1005,7 @@ en:
         cohort_id: Choose a cohort
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
-        ehco_headteacher: "Are you a headteacher?"
-        ehco_new_headteacher: "Are you in your first 5 years of a headship?"
+        ehco_new_headteacher: "Are you a headteacher in your first 5 years of a headship?"
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
         funding: "How are you funding your course?"
@@ -1176,10 +1171,6 @@ en:
           none: None of the above
 
         has_ofsted_urn_options:
-          "yes": "Yes"
-          "no": "No"
-
-        ehco_headteacher_options:
           "yes": "Yes"
           "no": "No"
 

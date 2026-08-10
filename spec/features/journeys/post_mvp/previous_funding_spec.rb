@@ -9,16 +9,7 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
   include_context "with stubbed Teaching Record System person API", stub: false
 
   before do
-    # create an eligible school
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-    )
-
+    create(:school, :eligible_with_urn_and_address)
     user = create(:user, :with_verified_trn, email: user_email, trn: user_trn)
     create(:application, :accepted, :with_funded_place, user:, course: create(:course, :headship))
   end

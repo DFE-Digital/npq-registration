@@ -12,12 +12,22 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      :choose_your_provider
+    def previous_step
+      if !wizard.query_store.inside_catchment? && wizard.query_store.teacher_catchment_specified?
+        :ehco_new_headteacher
+      elsif wizard.query_store.declared_previous_funding?
+        :ineligible_for_funding_previously_funded
+      else
+        :ineligible_for_funding
+      end
     end
 
-    def previous_step
-      "ehco_funding_not_available"
+    def next_step
+      if wizard.query_store.declared_previous_funding?
+        :work_setting
+      else
+        :choose_your_provider
+      end
     end
 
     def questions
@@ -30,6 +40,7 @@ module Questionnaires
     end
 
     def options
+      # compared to the funding_your_npq step - here the 'trust' option is always shown
       [
         build_option_struct(value: "school", link_errors: true),
         build_option_struct(value: "trust"),

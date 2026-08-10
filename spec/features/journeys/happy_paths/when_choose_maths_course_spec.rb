@@ -20,8 +20,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   end
 
   scenario "registration journey when choosing Leading primary mathematics journey" do
-    stub_participant_validation_request
-
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Leading primary mathematics",
       work_setting: "Primary school (5 to 11)",

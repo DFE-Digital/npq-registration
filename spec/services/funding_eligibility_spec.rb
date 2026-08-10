@@ -166,9 +166,7 @@ RSpec.describe FundingEligibility do
     end
 
     context "and the applicant has previously received funding" do
-      before do
-        create(:application, :with_funded_place, :accepted, user:, course:)
-      end
+      before { create(:application, :with_funded_place, :accepted, user:, course:) }
 
       include_examples "funding eligibility", :previously_funded
     end
@@ -561,6 +559,32 @@ RSpec.describe FundingEligibility do
       let(:institution) { build(:school) }
 
       it { is_expected.to be_truthy }
+    end
+  end
+
+  describe "#previously_funded?" do
+    subject { funding_eligibility.previously_funded? }
+
+    let(:course) { build(:course, :headship) }
+
+    context "when the applicant has previously received funding" do
+      before { create(:application, :with_funded_place, :accepted, user:, course:) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the applicant has not previously received funding" do
+      context "when the user has declared previous funding" do
+        let(:declared_previous_funding) { true }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the applicant has not declared previous funding" do
+        let(:declared_previous_funding) { false }
+
+        it { is_expected.to be false }
+      end
     end
   end
 end

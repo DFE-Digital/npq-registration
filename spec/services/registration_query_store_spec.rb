@@ -39,17 +39,23 @@ RSpec.describe RegistrationQueryStore do
     end
   end
 
-  describe "#check_funding?" do
-    subject { described_class.new(store:).check_funding? }
+  describe "#proceed_without_checking_funding?" do
+    subject { described_class.new(store:).proceed_without_checking_funding? }
 
     context "when check_funding is 'yes'" do
       let(:check_funding) { "yes" }
 
-      it { is_expected.to be true }
+      it { is_expected.to be false }
     end
 
     context "when check_funding is 'no'" do
       let(:check_funding) { "no" }
+
+      it { is_expected.to be true }
+    end
+
+    context "when check_funding is not present in the store" do
+      let(:store) { {} }
 
       it { is_expected.to be false }
     end
@@ -90,6 +96,22 @@ RSpec.describe RegistrationQueryStore do
       let(:store) { { course_start_cohort: "2026b" }.stringify_keys }
 
       it { is_expected.to be true }
+    end
+  end
+
+  describe "#new_headteacher" do
+    subject { described_class.new(store:).new_headteacher? }
+
+    context "when ehco_new_headteacher is 'yes'" do
+      let(:store) { { ehco_new_headteacher: "yes" }.stringify_keys }
+
+      it { is_expected.to be true }
+    end
+
+    context "when ehco_new_headteacher is 'no'" do
+      let(:store) { { ehco_new_headteacher: "no" }.stringify_keys }
+
+      it { is_expected.to be false }
     end
   end
 end

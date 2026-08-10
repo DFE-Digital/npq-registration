@@ -16,12 +16,12 @@ module Questionnaires
       if npqh_status == "none"
         :ehco_unavailable
       else
-        :ehco_headteacher
+        :ehco_new_headteacher
       end
     end
 
     def previous_step
-      :choose_your_npq
+      :work_setting
     end
 
     def questions
@@ -38,7 +38,6 @@ module Questionnaires
       [
         build_option_struct(value: "completed_npqh", link_errors: true),
         build_option_struct(value: "studying_npqh"),
-        build_option_struct(value: "will_start_npqh"),
         build_option_struct(value: "none"),
       ]
     end

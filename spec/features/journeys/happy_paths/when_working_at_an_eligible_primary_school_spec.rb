@@ -28,8 +28,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Headship",
       work_setting: "Primary school (5 to 11)",
