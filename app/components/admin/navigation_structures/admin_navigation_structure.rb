@@ -59,7 +59,7 @@ module Admin::NavigationStructures
           name: "Users",
           href: admin_users_path,
           prefix: "/admin/users",
-        ) => [],
+        ) => users_nodes,
         Node.new(
           name: "Finance",
           href: admin_finance_statements_path,
@@ -124,6 +124,21 @@ module Admin::NavigationStructures
           name: "Providers dashboard",
           href: admin_dashboard_path("providers-dashboard"),
           prefix: "/admin/dashboards/providers-dashboard",
+        ),
+      ]
+    end
+
+    def users_nodes
+      [
+        Node.new(
+          name: "All users",
+          href: admin_users_path,
+          prefix: /\/admin\/users(?!\/duplicates)$/,
+        ),
+        Node.new(
+          name: "Archived duplicate users",
+          href: admin_duplicate_users_path,
+          prefix: /\/admin\/users\/duplicates$/,
         ),
       ]
     end

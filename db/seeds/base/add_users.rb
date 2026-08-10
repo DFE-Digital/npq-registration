@@ -17,7 +17,7 @@ class SeedAddUsers
       email = user.email
       full_name = user.full_name
       trn = user.trn
-      Users::Archiver.new(user:).archive!(blank_email: true, enable_sentry: false)
+      Users::Archiver.new(user:).archive!(blank_email: true, notify_sentry: false)
 
       # create a new user with the same name, email address and an application
       FactoryBot.create(
