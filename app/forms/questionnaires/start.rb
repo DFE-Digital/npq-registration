@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      first_questionnaire_step
+      :course_start_date
     end
   end
 end

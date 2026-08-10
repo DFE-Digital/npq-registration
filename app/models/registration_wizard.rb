@@ -63,6 +63,7 @@ class RegistrationWizard
     funding_your_npq
     share_provider
     check_answers
+    check_answers_and_submit
     course_start_date
     cannot_register_yet
     continue_to_login

@@ -174,7 +174,7 @@ module Helpers
         expect(page).to have_text("Continue through GOV.UK One Login")
       end
 
-      expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+      expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: true) do
         block.call if block_given?
       end
     end

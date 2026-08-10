@@ -8,9 +8,6 @@ class RegistrationWizardController < PublicPagesController
   rescue_from FundingEligibility::MissingMandatoryInstitution, with: :redirect_to_institution_picker
   rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date
 
-  include Questionnaires::FlowHelper
-  helper_method :first_questionnaire_step
-
   FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN = [
     Questionnaires::Start,
     Questionnaires::CourseStartDate,
@@ -125,7 +122,7 @@ private
     return redirect_to_course_start_date if @wizard.query_store.has_answers?
 
     # redirect to the start of the registration journey if the user has not started the registration journey
-    redirect_to "/"
+    redirect_to root_path
   end
 
   def registration_closed

@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      :check_answers
+      :check_answers_and_submit
     end
   end
 end

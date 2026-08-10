@@ -3,7 +3,6 @@ module Questionnaires
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
-    include Questionnaires::FlowHelper
 
     attr_accessor :wizard
 
@@ -129,6 +128,14 @@ module Questionnaires
         :possible_funding
       else
         :ineligible_for_funding
+      end
+    end
+
+    def check_answers_step
+      if wizard.current_user
+        :check_answers_and_submit
+      else
+        :check_answers
       end
     end
 
