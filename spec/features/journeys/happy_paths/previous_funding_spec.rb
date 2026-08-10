@@ -32,11 +32,11 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
       page.choose("Teach First", visible: :all)
     end
 
-    # check_back_journey_is_correct # FIXME: this currently fails
-
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
       expect_check_answers_page_to_have_answers(
@@ -59,6 +59,20 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
       expect(page).to have_text("Continue through GOV.UK One Login")
     end
 
+    # TODO: NPQ-3956
+    # expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    #   expect(page).to have_text("DfE scholarship funding")
+    #   expect(page).to have_text("You’re not eligible for scholarship funding for the Headship NPQ course")
+    #   expect(page).to have_text("Our records show that you have previously received funding for this course. " \
+    #                             "This means you are not eligible for further funding.")
+    #   page.click_link "Continue to register"
+    # end
+
+    # expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+    #   expect(page).to have_text("How are you funding your course?")
+    #   page.choose "I am paying", visible: :all
+    # end
+
     expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
@@ -71,12 +85,8 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
           "Workplace" => "open manchester school – street 1, manchester",
         },
       )
+      page.click_button "Submit"
     end
-
-    expect(page).to have_text("Our records show that you have previously received funding for this course. " \
-                              "This means you are not eligible for further funding.")
-
-    page.click_button "Submit"
 
     expect_applicant_reached_end_of_journey(total_number_of_created_applications: 2)
 

@@ -44,14 +44,6 @@ module Questionnaires
         end
     end
 
-    def next_step
-      if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded? # TODO: test, and put logic into base.rb
-        :funding_history
-      else
-        :work_setting
-      end
-    end
-
     def previous_step
       if cohort_funded?
         if proceed_without_checking_funding?
@@ -66,36 +58,26 @@ module Questionnaires
       end
     end
 
+    def next_step
+      if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded?
+        :funding_history
+      else
+        :work_setting
+      end
+    end
+
     def course
       courses.find_by(identifier: course_identifier)
     end
 
   private
 
-    def store_lead_provider_id
-      return wizard.query_store.lead_provider.id if lead_provider_valid?
-
-      nil
-    end
-
-    def lead_provider_valid?
-      valid_providers.include?(wizard.query_store.lead_provider)
-    end
-
-    def valid_providers
-      LeadProvider.for(course:, cohort:)
-    end
-
     def cohort
-      @cohort ||= Cohort.find_by(identifier: wizard.query_store.course_start_cohort)
+      @cohort ||= Cohort.find_by(identifier: query_store.course_start_cohort)
     end
 
     def courses
       Course.offered_in(cohort).where(display: true).order(:position)
-    end
-
-    def previous_course
-      wizard.query_store.course
     end
 
     def validate_course_exists

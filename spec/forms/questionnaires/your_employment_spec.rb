@@ -1,9 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::YourEmployment, type: :model do
-  subject do
-    described_class.new(employment_type:)
-  end
+  subject(:instance) { described_class.new(employment_type:) }
 
   let(:employment_type) { "other" }
 
@@ -11,72 +9,55 @@ RSpec.describe Questionnaires::YourEmployment, type: :model do
     it { is_expected.to validate_presence_of(:employment_type) }
   end
 
-  def next_step
-    case employment_type
-    when "lead_mentor_for_accredited_itt_provider"
-      :itt_provider
-    when "hospital_school", "young_offender_institution"
-      :your_employer
-    else
-      :your_role
-    end
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to eq(:work_setting) }
   end
 
   describe "#next_step" do
+    subject { instance.next_step }
+
     context "when an employment type is hospital_school" do
       let(:employment_type) { "hospital_school" }
 
-      it "returns your_employer" do
-        expect(subject.next_step).to be(:your_employer)
-      end
+      it { is_expected.to be(:your_employer) }
     end
 
     context "when an employment type is young_offender_institution" do
       let(:employment_type) { "young_offender_institution" }
 
-      it "returns your_employer" do
-        expect(subject.next_step).to be(:your_employer)
-      end
+      it { is_expected.to be(:your_employer) }
     end
 
     context "when an employment type is other" do
       let(:employment_type) { "other" }
 
-      it "returns your_employer" do
-        expect(subject.next_step).to be(:your_role)
-      end
+      it { is_expected.to be(:your_role) }
     end
 
     context "when an employment type is another_setting" do
       let(:employment_type) { "another_setting" }
 
-      it "returns your_employer" do
-        expect(subject.next_step).to be(:your_role)
-      end
+      it { is_expected.to be(:your_role) }
     end
 
     context "when an employment type is local_authority_supply_teacher" do
       let(:employment_type) { "local_authority_supply_teacher" }
 
-      it "returns your_employer" do
-        expect(subject.next_step).to be(:your_role)
-      end
+      it { is_expected.to be(:your_role) }
     end
 
     context "when an employment type is local_authority_virtual_school" do
       let(:employment_type) { "local_authority_virtual_school" }
 
-      it "returns your_employer" do
-        expect(subject.next_step).to be(:your_role)
-      end
+      it { is_expected.to be(:your_role) }
     end
 
     context "when an employment type is lead mentor" do
       let(:employment_type) { "lead_mentor_for_accredited_itt_provider" }
 
-      it "returns itt_provider" do
-        expect(subject.next_step).to be(:itt_provider)
-      end
+      it { is_expected.to be(:itt_provider) }
     end
   end
 end

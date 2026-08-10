@@ -23,11 +23,8 @@ class RegistrationWizard
     teacher_catchment
     referred_by_return_to_teaching_adviser
     work_setting
-    provider_check
-    change_your_course_or_provider
     check_funding
     funding_history
-    choose_an_npq_and_provider
     login_callback
     npqh_status
     ehco_unavailable
@@ -68,6 +65,8 @@ class RegistrationWizard
 
   REMOVED_REGISTRATION_STEPS = %i[
     about_npq
+    change_your_course_or_provider
+    choose_an_npq_and_provider
     choosen_start_date
     confirmation
     dont_have_teacher_reference_number
@@ -75,9 +74,10 @@ class RegistrationWizard
     ehco_funding_not_available
     ehco_headteacher
     ehco_previously_funded
-    find_school
     find_childcare_provider
+    find_school
     get_an_identity_callback
+    provider_check
     qualified_teacher_check
     teacher_reference_number
   ].freeze
@@ -146,7 +146,7 @@ class RegistrationWizard
     array = []
 
     array << Answer.new("Cohort", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]][:cohort_description], :course_start_date)
-    array << Answer.new("Working in England", teacher_catchment_humanized, :teacher_catchment)
+    array << Answer.new("Working in England", teacher_catchment_humanized, :teacher_catchment) if store["teacher_catchment"].present?
     array << Answer.new("Course", I18n.t(course.identifier, scope: "course.name"), :choose_your_npq)
 
     if store["referred_by_return_to_teaching_adviser"]
@@ -191,7 +191,7 @@ class RegistrationWizard
       array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher) if store["ehco_new_headteacher"]
     end
 
-    if course.npqs?
+    if course.npqs? && store["senco_in_role_status"]
       value = store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].to_fs(:govuk_approx)}" : t("senco_in_role")
       array << Answer.new("Special educational needs co-ordinator (SENCO)", value, :senco_in_role)
     end
@@ -242,9 +242,6 @@ private
            :employment_type_matters?,
            :employment_role_matters?,
            :employer_name_matters?,
-           :employment_type_hospital_school?,
-           :employment_type_other?,
-           :formatted_date_of_birth,
            :has_ofsted_urn?,
            :inside_catchment?,
            :itt_provider,
@@ -252,14 +249,11 @@ private
            :kind_of_nursery_public?,
            :lead_mentor_for_accredited_itt_provider?,
            :lead_provider,
-           :new_headteacher?,
            :teacher_catchment_humanized,
-           :trn,
            :works_in_another_setting?,
            :works_in_childcare?,
            :works_in_other?,
            :works_in_school?,
-           :young_offender_institution?,
            to: :query_store
 
   def form_for_step(step)

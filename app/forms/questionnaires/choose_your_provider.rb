@@ -22,28 +22,28 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      :share_provider
-    end
-
     def previous_step
       if query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?
         :work_setting
       elsif course&.npqs? && query_store.inside_catchment?
         :funding_eligibility_senco
       elsif course&.ehco?
-        if query_store.declared_previous_funding?
-          :ehco_new_headteacher
-        elsif eligible_for_funding?
+        if eligible_for_funding?
           :ehco_possible_funding
         else
           :funding_your_ehco
         end
-      elsif course&.npqh? && eligible_for_funding?
-        :possible_funding
-      else
+      elsif course.npqlpm? && eligible_for_funding?
+        :funding_eligibility_maths
+      elsif !eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
         :funding_your_npq
+      else
+        :possible_funding
       end
+    end
+
+    def next_step
+      :share_provider
     end
 
     def options
@@ -74,6 +74,7 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
+        user_ecf_id: query_store.user_ecf_id,
         query_store:,
       )
     end

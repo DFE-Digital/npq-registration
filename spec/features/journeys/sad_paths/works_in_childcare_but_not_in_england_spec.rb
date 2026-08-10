@@ -9,17 +9,15 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("works in childcare but not in england (with JS)") { run_scenario }
+  context "with JS", :js do
+    scenario("works in childcare but declares not in England") { run_scenario }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("works in childcare but not in england (without JS)") { run_scenario }
+  context "without JS", :no_js do
+    scenario("works in childcare but declares not in England") { run_scenario }
   end
 
   def run_scenario
-    stub_participant_validation_request(nino: "")
-
     navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
@@ -49,13 +47,6 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       page.choose("Early years or childcare", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding")
-      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
-
-      page.click_link("Continue to register")
-    end
-
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       expect(page).to have_text("How are you funding your course?")
       page.choose "My workplace is covering the cost", visible: :all
@@ -66,12 +57,12 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       page.choose("Teach First", visible: :all)
     end
 
-    # check_back_journey_is_correct # FIXME back links are currently incorrect
-
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(

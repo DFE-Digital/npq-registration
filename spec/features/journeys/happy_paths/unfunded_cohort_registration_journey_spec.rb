@@ -62,6 +62,8 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
+    check_back_journey_is_correct
+
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
@@ -71,7 +73,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
           "Provider" => "LLSE",
           "Course funding" => "I am paying",
           "Work setting" => "Primary school (5 to 11)",
-          "Working in England" => "",
         },
       )
     end

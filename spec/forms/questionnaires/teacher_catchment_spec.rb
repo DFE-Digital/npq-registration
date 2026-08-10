@@ -9,6 +9,14 @@ RSpec.describe Questionnaires::TeacherCatchment, type: :model do
     it { is_expected.to validate_presence_of(:teacher_catchment) }
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    let(:teacher_catchment) { "another" }
+
+    it { is_expected.to eq(:check_funding) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 
@@ -23,13 +31,5 @@ RSpec.describe Questionnaires::TeacherCatchment, type: :model do
 
       it { is_expected.to eq(:ineligible_for_funding) }
     end
-  end
-
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    let(:teacher_catchment) { "another" }
-
-    it { is_expected.to eq(:check_funding) }
   end
 end

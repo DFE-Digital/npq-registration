@@ -53,6 +53,12 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
     end
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to be :senco_in_role }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 

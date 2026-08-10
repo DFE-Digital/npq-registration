@@ -72,10 +72,26 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     end
   end
 
+  shared_examples_for "eligible or ineligible for funding step based on funding eligibility calculator" do
+    context "when eligible for funding" do
+      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service_funded) }
+
+      it { is_expected.to be(:possible_funding) }
+    end
+
+    context "when not eligible for funding" do
+      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service_not_funded) }
+
+      it { is_expected.to be(:funding_your_npq) }
+    end
+  end
+
   describe "#previous_step" do
     subject { instance.previous_step }
 
-    let(:mock_funding_service) { instance_double(FundingEligibility, "funded?": true) }
+    let(:mock_funding_service_funded) { instance_double(FundingEligibility, "funded?": true) }
+    let(:mock_funding_service_not_funded) { instance_double(FundingEligibility, "funded?": false, "subject_to_review?": false) }
+    let(:mock_funding_service_in_review) { instance_double(FundingEligibility, "funded?": false, "subject_to_review?": true) }
 
     context "when having declared previous funding" do
       let(:declared_previous_funding) { "yes" }
@@ -83,7 +99,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       it { is_expected.to be(:work_setting) }
     end
 
-    context "when EHCO" do
+    context "when the course is EHCO" do
       let(:course) { Course.find_by(identifier: "npq-early-headship-coaching-offer") }
 
       context "when declared previous funding" do
@@ -93,7 +109,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       end
 
       context "when eligible for funding" do
-        before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service) }
+        before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service_funded) }
 
         it { is_expected.to be(:ehco_possible_funding) }
       end
@@ -103,35 +119,44 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       end
     end
 
-    context "when NPQH and eligible for funding" do
-      let(:course) { Course.find_by(identifier: "npq-headship") }
+    context "when the course is Leading primary mathematics and eligible for funding" do
+      let(:course) { Course.find_by(identifier: "npq-leading-primary-mathematics") }
 
-      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service) }
+      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service_funded) }
 
-      it "returns :possible_funding" do
-        expect(subject).to be(:possible_funding)
-      end
+      it { is_expected.to be(:funding_eligibility_maths) }
     end
 
-    context "international journey" do
-      let(:store) do
-        {
-          "teacher_catchment" => "another",
-          "course_start_cohort" => cohort.identifier,
-        }
-      end
+    context "when the course is SENCO and works in England" do
+      let(:course) { Course.find_by(identifier: "npq-senco") }
 
-      it "returns :funding_your_npq" do
-        expect(subject).to be(:funding_your_npq)
-      end
+      before { store["teacher_catchment"] = "england" }
+
+      it { is_expected.to be(:funding_eligibility_senco) }
     end
 
-    context "when not working in school" do
-      let(:works_in_school) { "no" }
+    context "when working for a lead mentor for an accredited initial teacher training (ITT) provider" do
+      before { store["itt_provider"] = IttProvider.currently_approved.first.legal_name }
 
-      it "returns :funding_your_npq" do
-        expect(subject).to be(:funding_your_npq)
-      end
+      it_behaves_like "eligible or ineligible for funding step based on funding eligibility calculator"
+    end
+
+    context "when referred by a Return To Teaching Adviser (RTTA)" do
+      before { store["referred_by_return_to_teaching_adviser"] = "yes" }
+
+      it_behaves_like "eligible or ineligible for funding step based on funding eligibility calculator"
+    end
+
+    context "when subject to review" do
+      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service_in_review) }
+
+      it { is_expected.to be(:possible_funding) }
+    end
+
+    context "when not eligible for funding" do
+      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service_not_funded) }
+
+      it { is_expected.to be(:funding_your_npq) }
     end
   end
 

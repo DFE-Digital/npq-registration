@@ -5,7 +5,11 @@ module Questionnaires
     end
 
     def next_step
-      funding_your_npq_step
+      if query_store.course.ehco?
+        :funding_your_ehco
+      else
+        :funding_your_npq
+      end
     end
   end
 end

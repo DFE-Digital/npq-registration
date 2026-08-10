@@ -132,7 +132,7 @@ module Helpers
 
       choose_course_start_date
 
-      expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      expect_page_to_have(path: "/registration/check-funding", submit_form: false) do
         click_button("Check funding")
       end
 
@@ -152,6 +152,28 @@ module Helpers
         page.choose("A school", visible: :all)
         page.choose(work_setting, visible: :all)
       end
+    end
+
+    def complete_journey_as_far_as_check_answers
+      complete_journey_as_far_as_choosing_a_work_setting(course: "Senior leadership", work_setting: "Other")
+
+      expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+        page.choose("Yes", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+        page.click_button("Continue to register")
+      end
+
+      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+        page.choose("Teach First", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+        page.check("Yes, I agree to share my information", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/check-answers", submit_form: false)
     end
 
     def course_identifiers_offered_in_chosen_cohort

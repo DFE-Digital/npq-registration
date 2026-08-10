@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::PossibleFunding do
+  subject(:instance) { described_class.new(wizard:) }
+
   let(:store) { {} }
 
   let(:wizard) do
@@ -12,26 +14,20 @@ RSpec.describe Questionnaires::PossibleFunding do
     )
   end
 
-  describe "#next_step" do
-    it "returns choose_your_provider" do
-      expect(subject.next_step).to be(:choose_your_provider)
-    end
-  end
-
   describe "#previous_step" do
-    subject { described_class.new(wizard:).previous_step }
+    subject { instance.previous_step }
 
     context "when the course is NPQLPM" do
-      before { wizard.store["course_identifier"] = "npq-leading-primary-mathematics" }
+      before { store["course_identifier"] = "npq-leading-primary-mathematics" }
 
       context "and maths_understanding is true" do
-        before { wizard.store["maths_understanding"] = true }
+        before { store["maths_understanding"] = true }
 
         it { is_expected.to be(:maths_eligibility_teaching_for_mastery) }
       end
 
       context "and maths_understanding is false" do
-        before { wizard.store["maths_understanding"] = false }
+        before { store["maths_understanding"] = false }
 
         it { is_expected.to be(:maths_understanding_of_approach) }
       end
@@ -42,33 +38,69 @@ RSpec.describe Questionnaires::PossibleFunding do
     end
 
     context "when the course is not NPQLPM" do
-      before { wizard.store["course_identifier"] = "npq-senior-leadership" }
+      before { store["course_identifier"] = "npq-senior-leadership" }
 
-      it { is_expected.to be(:work_setting) }
+      context "when working for a lead mentor for an accredited initial teacher training (ITT) provider" do
+        before { store["itt_provider"] = IttProvider.currently_approved.first.legal_name }
+
+        it { is_expected.to be(:itt_provider) }
+      end
+
+      context "when the employment type is hospital school" do
+        before { store["employment_type"] = Application.employment_types[:hospital_school] }
+
+        it { expect(instance.previous_step).to eq(:your_employer) }
+      end
+
+      context "when the employment type is young offender institution" do
+        before { store["employment_type"] = Application.employment_types[:young_offender_institution] }
+
+        it { expect(instance.previous_step).to eq(:your_employer) }
+      end
+
+      context "when the employment type is neither hospital school nor young offender institution" do
+        Application.employment_types.except(:hospital_school, :young_offender_institution).each do |employment_type|
+          context "when the employment type is #{employment_type}" do
+            before { store["employment_type"] = Application.employment_types[employment_type] }
+
+            it { is_expected.to be(:work_setting) }
+          end
+        end
+      end
+
+      context "when the employment type is not set" do
+        it { is_expected.to be(:work_setting) }
+      end
     end
 
     context "when the course identifier is not set" do
-      before { wizard.store["course_identifier"] = nil }
+      before { store["course_identifier"] = nil }
 
       it { is_expected.to be(:work_setting) }
     end
   end
 
+  describe "#next_step" do
+    subject { instance.next_step }
+
+    it { is_expected.to be(:choose_your_provider) }
+  end
+
   describe "#course" do
+    subject { instance.course }
+
     let(:course) { create(:course, :early_years_leadership) }
     let(:store) { { "course_identifier" => course.identifier } }
     let(:request) { nil }
 
-    before do
-      subject.wizard = wizard
-    end
-
     it "reutrns the course undertaken" do
-      expect(subject.course).to eql(course)
+      expect(subject).to eql(course)
     end
   end
 
   describe "#message_template" do
+    subject { instance.message_template }
+
     let(:course) { create(:course, :early_headship_coaching_offer) }
     let(:store) do
       { "course_identifier" => course.identifier,
@@ -86,13 +118,9 @@ RSpec.describe Questionnaires::PossibleFunding do
       )
     end
 
-    before do
-      subject.wizard = wizard
-    end
-
     context "when eligibility can not be determined" do
       it "returns proper template" do
-        expect(subject.message_template).to eq("funding_eligibility_unclear")
+        expect(subject).to eq("funding_eligibility_unclear")
       end
     end
   end
