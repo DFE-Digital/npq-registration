@@ -13,6 +13,12 @@ RSpec.describe Questionnaires::HaveOfstedUrn, type: :model do
     it { is_expected.to validate_inclusion_of(:has_ofsted_urn).in_array(%w[yes no]) }
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to eq(:kind_of_nursery) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 

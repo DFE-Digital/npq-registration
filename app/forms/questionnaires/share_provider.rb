@@ -26,12 +26,16 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      check_answers_step
-    end
-
     def previous_step
       :choose_your_provider
+    end
+
+    def next_step
+      if wizard.current_user&.teacher_auth_provider?
+        :check_answers_and_submit
+      else
+        :check_answers
+      end
     end
   end
 end

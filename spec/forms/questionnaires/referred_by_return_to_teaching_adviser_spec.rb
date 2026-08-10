@@ -13,6 +13,12 @@ RSpec.describe Questionnaires::ReferredByReturnToTeachingAdviser, type: :model d
     it { is_expected.to validate_inclusion_of(:referred_by_return_to_teaching_adviser).in_array(%w[yes no]) }
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to eq(:work_setting) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 

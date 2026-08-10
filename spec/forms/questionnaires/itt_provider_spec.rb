@@ -12,6 +12,12 @@ RSpec.describe Questionnaires::IttProvider, type: :model do
     it { is_expected.to validate_presence_of(:itt_provider) }
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to eq(:your_employment) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 

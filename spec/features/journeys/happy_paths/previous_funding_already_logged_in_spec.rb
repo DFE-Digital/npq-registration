@@ -39,11 +39,11 @@ RSpec.feature "Previous funded application - when logged in from the start", :no
       page.choose("Teach First", visible: :all)
     end
 
-    # check_back_journey_is_correct # FIXME: this currently fails
-
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/check-answers-and-submit", submit_form: false) do
       expect_check_answers_page_to_have_answers(

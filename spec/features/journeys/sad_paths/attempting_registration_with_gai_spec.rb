@@ -1,7 +1,8 @@
 require "rails_helper"
 
-RSpec.feature "Registration whilst already signed in with DfE Identity", :mvp, :no_js, type: :feature do
+RSpec.feature "Registration whilst already signed in with DfE Identity", :no_js, :with_cohorts, type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   before { allow(Sentry).to receive(:capture_message) }
 
@@ -16,32 +17,23 @@ RSpec.feature "Registration whilst already signed in with DfE Identity", :mvp, :
       page.click_button("Sign in to your DfE Identity account")
     end
 
-    expect(page).to have_current_path("/account")
-
-    allow(Feature).to receive(:registration_closed?).and_return(false)
-
+    expect_page_to_have(path: "/account")
     expect(page).to have_link("DfE Identity account")
     expect(page).to have_link("Sign out")
 
-    visit("/registration/course-start-date")
-
-    expect_page_to_have(path: "/") do
-      expect(page).not_to have_link("DfE Identity account")
-      expect(page).not_to have_link("Sign out")
-
-      expect(page).to have_css(".govuk-notification-banner", text: /restart.*registration/i)
-
-      expect(Sentry).to have_received(:capture_message)
-    end
-  end
-
-  scenario "visiting course page whilst not being signed in" do
     allow(Feature).to receive(:registration_closed?).and_return(false)
 
-    visit("/registration/course-start-date")
+    complete_journey_as_far_as_check_answers
 
-    expect_page_to_have(path: "/")
-    expect(Sentry).not_to have_received(:capture_message)
+    page.click_button("Continue")
+
+    expect_page_to_have(path: "/registration/continue-to-login", submit_form: false)
+
+    # attempt to bypass login
+    visit "/registration/check-answers-and-submit"
+
+    expect_page_to_have(path: "/registration/continue-to-login", submit_form: false)
+    expect(Sentry).to have_received(:capture_message)
   end
 
   scenario "visiting course page directly whilst not being signed in and registration is closed" do

@@ -53,17 +53,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
-    end
+    choose_provider_share_information_and_check_answers(provider: "Teach First")
 
-    # check_back_journey_is_correct # FIXME: this currently fails
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
+    check_back_journey_is_correct(exclude_current_page: true)
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
@@ -158,11 +150,27 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.choose("Headship", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-setting", submit_form: false)
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/choose-your-npq")
+    choose_a_school(js: false, name: "open")
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_content("You’re not eligible for scholarship funding for the Headship NPQ course as you have selected the Spring 2026 cohort.")
+      page.click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      page.choose "I am paying", visible: :all
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "LLSE") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "unfunded_cohort"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
   scenario "Declared as not previously funded with funded cohort" do
@@ -188,16 +196,26 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-setting", submit_form: false)
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/funding-history")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/choose-your-npq")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/teacher-catchment")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/check-funding")
+    choose_a_school(js: false, name: "open")
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_content("You’re not eligible for scholarship funding for the Headship NPQ course as you do not work in one of the eligible settings")
+      page.click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      page.choose "I am paying", visible: :all
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "ineligible_establishment_type"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 end
