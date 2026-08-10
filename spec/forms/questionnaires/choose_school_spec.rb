@@ -148,6 +148,12 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
     end
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to be :work_setting }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 

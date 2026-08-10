@@ -13,11 +13,11 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
 
   before { school }
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario("applying for EHCO but not a new headteacher") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario("applying for EHCO but not a new headteacher") { run_scenario(js: false) }
   end
 

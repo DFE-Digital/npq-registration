@@ -71,6 +71,20 @@ module Questionnaires
       true
     end
 
+    def previous_step
+      if query_store.declared_previous_funding?
+        if query_store.course&.ehco? && query_store.cohort_funded?
+          :funding_your_ehco
+        else
+          :funding_your_npq
+        end
+      elsif !query_store.cohort_funded? || query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england?
+        :choose_your_npq
+      else
+        :funding_history
+      end
+    end
+
     def next_step
       if query_store.inside_catchment?
         return :choose_school if works_in_school?
@@ -81,20 +95,6 @@ module Questionnaires
       end
 
       show_eligibility_step
-    end
-
-    def previous_step
-      if query_store.declared_previous_funding?
-        if query_store.course&.ehco? && query_store.cohort_funded?
-          :funding_your_ehco
-        else
-          :ineligible_for_funding_previously_funded
-        end
-      elsif query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england? || !query_store.cohort_funded? # TODO: test
-        :choose_your_npq
-      else
-        :funding_history
-      end
     end
 
     def questions
@@ -144,10 +144,6 @@ module Questionnaires
 
     def works_in_childcare?
       CHILDCARE_SETTINGS.include?(work_setting)
-    end
-
-    def works_in_another_setting?
-      ANOTHER_SETTING_SETTINGS.include?(work_setting)
     end
 
     def works_in_other?

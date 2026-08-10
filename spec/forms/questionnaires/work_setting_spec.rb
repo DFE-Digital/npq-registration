@@ -111,6 +111,85 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
     end
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    let(:check_funding) { nil }
+    let(:teacher_catchment) { nil }
+
+    let(:store) do
+      {
+        course_start_cohort:,
+        check_funding:,
+        teacher_catchment:,
+        declared_previous_funding:,
+        course_identifier: course.identifier,
+      }.stringify_keys
+    end
+
+    context "when the user has declared previous funding" do
+      let(:declared_previous_funding) { "yes" }
+
+      context "when the course is EHCO" do
+        let(:course) { create(:course, :early_headship_coaching_offer) }
+
+        context "when the cohort is funded" do
+          let(:course_start_cohort) { create(:cohort, :capped).identifier }
+
+          it { is_expected.to be :funding_your_ehco }
+        end
+
+        context "when the cohort is not funded" do
+          let(:course_start_cohort) { create(:cohort, :unfunded).identifier }
+
+          it { is_expected.to be :funding_your_npq }
+        end
+      end
+
+      context "when the course is not EHCO" do
+        let(:course) { create(:course, :headship) }
+
+        it { is_expected.to be :funding_your_npq }
+      end
+    end
+
+    context "when the user has not declared previous funding" do
+      let(:declared_previous_funding) { "no" }
+
+      context "when the cohort is funded" do
+        let(:course_start_cohort) { create(:cohort, :capped).identifier }
+
+        context "and the user has chosen to check funding" do
+          let(:check_funding) { "yes" }
+
+          context "and the user works in England" do
+            let(:teacher_catchment) { "england" }
+
+            it { is_expected.to be :funding_history }
+          end
+
+          context "and the user does not work in England" do
+            let(:teacher_catchment) { "another" }
+
+            it { is_expected.to be :choose_your_npq }
+          end
+        end
+
+        context "and the user has chosen to proceed without funding" do
+          let(:check_funding) { "no" }
+
+          it { is_expected.to be :choose_your_npq }
+        end
+      end
+
+      context "when the cohort is not funded" do
+        let(:course_start_cohort) { create(:cohort, :unfunded).identifier }
+
+        it { is_expected.to be :choose_your_npq }
+      end
+    end
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 
@@ -145,36 +224,7 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
     context "when the user has answered they work outside of England" do
       let(:teacher_catchment) { "another" }
 
-      it { is_expected.to be :ineligible_for_funding }
-    end
-  end
-
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    let(:store) { { "declared_previous_funding" => declared_previous_funding } }
-
-    context "when the user has declared previous funding" do
-      let(:declared_previous_funding) { "yes" }
-
-      it { is_expected.to be :ineligible_for_funding_previously_funded }
-
-      context "when the course is EHCO" do
-        let(:course) { create(:course, :early_headship_coaching_offer) }
-
-        let(:store) do
-          { declared_previous_funding: declared_previous_funding,
-            course_identifier: course.identifier }.stringify_keys
-        end
-
-        it { is_expected.to be :funding_your_ehco }
-      end
-    end
-
-    context "when the user has not declared previous funding" do
-      let(:declared_previous_funding) { "no" }
-
-      it { is_expected.to be :funding_history }
+      it { is_expected.to be :funding_your_npq }
     end
   end
 end

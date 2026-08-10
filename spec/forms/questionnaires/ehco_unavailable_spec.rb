@@ -12,6 +12,6 @@ RSpec.describe Questionnaires::EhcoUnavailable, type: :model do
   describe "#next_step" do
     subject { instance.next_step }
 
-    it { is_expected.to eq(:choose_your_provider) }
+    it { is_expected.to be_nil }
   end
 end

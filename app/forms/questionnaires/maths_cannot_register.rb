@@ -4,6 +4,8 @@ module Questionnaires
       :maths_understanding_of_approach
     end
 
-    def next_step; end
+    def next_step
+      # you cannot proceed any further from this step
+    end
   end
 end

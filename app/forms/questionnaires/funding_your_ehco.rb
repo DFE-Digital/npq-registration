@@ -13,10 +13,10 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.declared_not_working_in_england?
-        :work_setting
-      elsif query_store.declared_previous_funding?
+      if query_store.declared_previous_funding?
         :ineligible_for_funding_previously_funded
+      elsif query_store.new_headteacher? && query_store.cohort_funded?
+        :ehco_new_headteacher
       else
         :ineligible_for_funding
       end

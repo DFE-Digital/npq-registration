@@ -68,7 +68,7 @@ class RegistrationWizardVisualiser
   }.freeze
 
   EDGE_STYLES = {
-    penwidth: "7",
+    penwidth: "3",
   }.freeze
 
   INFORMATION_CLUSTER_STYLES = {
@@ -137,7 +137,7 @@ private
 
   def generate_png_output
     Rails.logger.debug("Generating #{output_png_filename}")
-    generate_png_command_array = "dot", "-Tpng", output_dot_filename, "-o", output_png_filename
+    generate_png_command_array = "dot", "-Tpng", "-Gdpi=150", output_dot_filename, "-o", output_png_filename
 
     Rails.logger.debug(generate_png_command_array.join(" "))
     result = system(*generate_png_command_array)
@@ -227,7 +227,13 @@ private
 
   def step_node_structs
     @step_node_structs ||= step_options.map do |f|
-      next_steps = extract_steps_from_source(f.new.method(:next_step).source)
+      next_step_source = f.new.method(:next_step).source
+      next_steps = extract_steps_from_source(next_step_source)
+
+      if next_step_source.scan(/show_eligibility_step/).any?
+        show_eligibility_step_source = f.new.method(:show_eligibility_step).source
+        next_steps += extract_steps_from_source(show_eligibility_step_source)
+      end
 
       Node.new(
         name: f.to_s.underscore.split("/").last,

@@ -1,19 +1,27 @@
 module Questionnaires
   class PossibleFunding < Base
-    def next_step
-      :choose_your_provider
-    end
-
     def previous_step
-      if course.try(:npqlpm?)
+      if course&.npqlpm?
         if maths_understanding?
           :maths_eligibility_teaching_for_mastery
         else
           :maths_understanding_of_approach
         end
+      elsif course&.senco?
+        :senco_start_date
+      elsif course&.ehco?
+        :ehco_new_headteacher
+      elsif query_store.approved_itt_provider?
+        :itt_provider
+      elsif query_store.employment_type_needs_employer_name?
+        :your_employer
       else
         :work_setting
       end
+    end
+
+    def next_step
+      :choose_your_provider
     end
 
     def message_template
@@ -26,7 +34,9 @@ module Questionnaires
 
   private
 
+    # TODO: test these scenarios
     def is_funding_eligibility_unclear?
+      return false if course.ehco?
       return true if referred_by_return_to_teaching_adviser?
       return true if works_in_another_setting? && employment_type_local_authority_virtual_school?
       return true if works_in_another_setting? && local_authority_supply_teacher?
