@@ -12,6 +12,12 @@ RSpec.describe Questionnaires::FundingHistory, type: :model do
     it { is_expected.to validate_inclusion_of(:declared_previous_funding).in_array(described_class::OPTIONS.keys) }
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to eq(:choose_your_npq) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 
@@ -26,11 +32,5 @@ RSpec.describe Questionnaires::FundingHistory, type: :model do
 
       it { is_expected.to eq(:work_setting) }
     end
-  end
-
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    it { is_expected.to eq(:choose_your_npq) }
   end
 end

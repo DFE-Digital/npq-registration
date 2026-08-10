@@ -11,6 +11,7 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
 
   before do
     create(:cohort, :next, :with_all_courses_for_provider, suffix: "b", lead_provider: LeadProvider.find_by(name: "Teach First"))
+    create(:school, :eligible_with_urn_and_address)
   end
 
   context "when JavaScript is enabled", :js do
@@ -22,8 +23,6 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -46,8 +45,6 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
     end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       expect(page).to have_text("Which early years setting do you work in?")

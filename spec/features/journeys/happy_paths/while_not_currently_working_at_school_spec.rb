@@ -51,7 +51,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Teach First", visible: :all)
     end
 
-    # check_back_journey_is_correct # FIXME: this currently fails
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")

@@ -7,7 +7,7 @@ RSpec.describe Questionnaires::CheckAnswers do
   let(:store) { {} }
 
   describe "#previous_step" do
-    subject { instance.previous_step }
+    subject { described_class.new(wizard:).previous_step }
 
     it { is_expected.to be(:share_provider) }
   end

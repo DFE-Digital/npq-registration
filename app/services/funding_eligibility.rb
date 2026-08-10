@@ -118,7 +118,7 @@ class FundingEligibility
   end
 
   def previously_funded?
-    accepted_applications.any?
+    accepted_applications.any? || declared_previous_funding
   end
 
   def funding_eligiblity_status_code

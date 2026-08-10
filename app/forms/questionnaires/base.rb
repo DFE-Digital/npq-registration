@@ -122,14 +122,24 @@ module Questionnaires
         :check_answers
       elsif query_store.course.ehco?
         :npqh_status
+      elsif wizard.query_store.proceed_without_checking_funding? || wizard.query_store.declared_previous_funding?
+        :choose_your_provider
       elsif query_store.course.npqlpm?
         :maths_eligibility_teaching_for_mastery
       elsif query_store.course.npqs?
         :senco_in_role
-      elsif funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
+      elsif eligible_for_funding? || funding_eligibility_calculator.subject_to_review?
         :possible_funding
       else
         :ineligible_for_funding
+      end
+    end
+
+    def funding_your_npq_step
+      if query_store.course.ehco?
+        :funding_your_ehco
+      else
+        :funding_your_npq
       end
     end
 

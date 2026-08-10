@@ -9,6 +9,8 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
+  before { create(:school, :eligible_with_urn_and_address) }
+
   context "when JavaScript is enabled", :js do
     scenario("registration journey changing from outside of catchment area to inside (with JS)") { run_scenario(js: true) }
   end
@@ -18,8 +20,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request(nino: "")
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -41,8 +41,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
     end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")

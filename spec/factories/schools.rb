@@ -30,5 +30,15 @@ FactoryBot.define do
       county { "county" }
       postcode { Faker::Address.postcode }
     end
+
+    trait :eligible_with_urn_and_address do
+      urn { 100_000 }
+      ukprn { nil }
+      name { "open manchester school" }
+      address_1 { "street 1" }
+      town { "manchester" }
+      establishment_status_code { "1" }
+      establishment_type_code { "1" }
+    end
   end
 end

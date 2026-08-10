@@ -51,7 +51,7 @@ module Helpers
       expect(Application.count).to be(total_number_of_created_applications)
     end
 
-    def check_back_journey_is_correct
+    def check_back_journey_is_correct(exclude_current_page: false)
       starting_path = page.current_path
       until page.current_path == "/registration/course-start-date"
         page.click_link("Back")
@@ -60,10 +60,12 @@ module Helpers
       end
       always_skipped_pages_going_back = [
         "/registration/choose-school",
-        "/registration/kind_of_nursery",
-        "/registration/referred_by_return_to_teaching_adviser",
+        "/registration/kind-of-nursery",
+        "/registration/referred-by-return-to-teaching-adviser",
       ]
-      expect(back_steps.reverse).to match_array @steps_visited.excluding(always_skipped_pages_going_back)
+      steps_visited = exclude_current_page ? @steps_visited.excluding(starting_path) : @steps_visited
+      # expect(back_steps.reverse).to match_array steps_visited.excluding(always_skipped_pages_going_back)
+      expect(back_steps.reverse).to match_backlinks steps_visited.excluding(always_skipped_pages_going_back)
       visit starting_path
     end
 

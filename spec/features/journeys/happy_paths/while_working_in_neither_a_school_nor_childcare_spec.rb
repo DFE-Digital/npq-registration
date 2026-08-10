@@ -9,13 +9,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before do
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-  end
+  before { create(:school, :eligible_with_urn_and_address) }
 
   scenario "registration journey while working in neither a school nor childcare" do
-    stub_participant_validation_request
-
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Early years leadership",
       work_setting: "Another setting",

@@ -7,39 +7,40 @@ module Questionnaires
     NOT_IN_ENGLAND = "not_in_england".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
     LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
+    EHCO_FUNDING_NOT_AVAILABLE = "ehco_funding_not_available".freeze
 
     # Already funded
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
 
     attribute :version
 
-    def next_step
-      if course
-        :funding_your_npq
-      else
-        :choose_your_npq
-      end
-    end
-
     def previous_step
       return :teacher_catchment unless course
 
-      if works_in_another_setting? && employment_type_other?
-        :choose_your_npq
-      elsif course.npqlpm?
-        if wizard.query_store.maths_understanding?
-          :maths_eligibility_teaching_for_mastery
-        else
-          :maths_understanding_of_approach
-        end
-      elsif course.npqs?
-        if wizard.query_store.senco_in_role_status?
-          :senco_start_date
-        else
-          :senco_in_role
-        end
-      else
+      if !wizard.query_store.inside_catchment? && wizard.query_store.teacher_catchment_specified?
         :teacher_catchment
+      elsif works_in_another_setting? && employment_type_other?
+        :choose_your_npq # TODO: test
+      elsif course.ehco?
+        if wizard.query_store.declared_previous_funding?
+          :funding_history
+        else
+          :ehco_new_headteacher
+        end
+      elsif course.npqlpm?
+        :maths_eligibility_teaching_for_mastery # TODO: test
+      elsif course.npqs?
+        :senco_in_role # TODO: test
+      else
+        :your_employer
+      end
+    end
+
+    def next_step
+      if course
+        funding_your_npq_step
+      else
+        :choose_your_npq
       end
     end
 
@@ -54,18 +55,19 @@ module Questionnaires
                                when FundingEligibility::PREVIOUSLY_FUNDED
                                  return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
-                                 return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
+                                 return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY # TODO: test
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
-                                 return "not_a_pp50_institution"
+                                 return "not_a_pp50_institution" # TODO: test
                                when FundingEligibility::NOT_ENTITLED_CHILDMINDER
                                  return "not_entitled_ey_institution"
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING # TODO: test
                                when FundingEligibility::UNFUNDED_COHORT
                                  return UNFUNDED_COHORT
+                               when FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO
+                                 return EHCO_FUNDING_NOT_AVAILABLE
                                end
-
-      raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}"
+      raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}" # TODO: test
     end
 
     def funding_eligiblity_status_code
