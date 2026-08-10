@@ -40,6 +40,10 @@ module Questionnaires
       true
     end
 
+    def previous_step
+      :start
+    end
+
     def next_step
       if Cohort.find_by(identifier: course_start_cohort).funded?
         :check_funding
@@ -48,12 +52,8 @@ module Questionnaires
       end
     end
 
-    def previous_step
-      :start
-    end
-
     def return_to_regular_flow_on_change?
-      true
+      false
     end
 
   private

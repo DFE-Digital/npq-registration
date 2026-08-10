@@ -16,15 +16,19 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      show_eligibility_step
-    end
-
     def previous_step
-      if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
+      if query_store.employment_type_needs_employer_name?
         :your_employment
       else
         :your_role
+      end
+    end
+
+    def next_step
+      if eligible_for_funding?
+        :possible_funding
+      else
+        :ineligible_for_funding
       end
     end
   end

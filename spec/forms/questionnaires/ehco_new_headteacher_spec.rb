@@ -93,5 +93,17 @@ RSpec.describe Questionnaires::EhcoNewHeadteacher, type: :model do
         end
       end
     end
+
+    context "when the work setting is 'other'" do
+      before { store["work_setting"] = "other" }
+
+      it { is_expected.to be :possible_funding }
+    end
+
+    context "when the user has chosen to proceed without checking funding" do
+      before { store["check_funding"] = "no" }
+
+      it { is_expected.to be :choose_your_provider }
+    end
   end
 end

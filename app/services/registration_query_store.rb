@@ -6,11 +6,19 @@ class RegistrationQueryStore
   end
 
   def current_user
-    store["current_user"] || User.find_by(id: store["current_user_id"])
+    User.find_by(id: store["current_user_id"])
   end
 
   def itt_provider
     store["itt_provider"]
+  end
+
+  def funding_eligiblity_status_code
+    store["funding_eligiblity_status_code"]
+  end
+
+  def employment_type
+    store["employment_type"]
   end
 
   def approved_itt_provider?
@@ -21,20 +29,16 @@ class RegistrationQueryStore
     current_user&.ecf_id
   end
 
-  def trn_set_via_fallback_verification_question?
-    store["trn_set_via_fallback_verification_question"]
-  end
-
   def inside_catchment?
     store["teacher_catchment"] == "england"
   end
 
   def declared_not_working_in_england?
-    store["teacher_catchment"].present? && !inside_catchment? # TODO: test
+    store["teacher_catchment"].present? && !inside_catchment?
   end
 
-  def funding_eligiblity_status_code
-    store["funding_eligiblity_status_code"]
+  def asked_to_continue_without_checking_funding?
+    store["teacher_catchment"].nil?
   end
 
   def teacher_catchment_humanized
@@ -44,10 +48,6 @@ class RegistrationQueryStore
     when "england"
       "Yes"
     end
-  end
-
-  def employment_type
-    store["employment_type"]
   end
 
   def lead_mentor_for_accredited_itt_provider?
@@ -66,20 +66,8 @@ class RegistrationQueryStore
     employment_type == Application.employment_types[:local_authority_supply_teacher]
   end
 
-  def employment_type_hospital_school?
-    employment_type == Application.employment_types[:hospital_school]
-  end
-
-  def young_offender_institution?
-    employment_type == Application.employment_types[:young_offender_institution]
-  end
-
-  def teacher_catchment_england?
-    store["teacher_catchment"] == "england"
-  end
-
   def valid_employent_type_for_england?
-    teacher_catchment_england? && !employment_type_other? && !lead_mentor_for_accredited_itt_provider?
+    inside_catchment? && !employment_type_other? && !lead_mentor_for_accredited_itt_provider?
   end
 
   def works_in_school?
@@ -126,28 +114,12 @@ class RegistrationQueryStore
     store["ehco_new_headteacher"] == "yes"
   end
 
-  def date_of_birth
-    store["date_of_birth"]
-  end
-
-  def formatted_date_of_birth
-    date_of_birth&.to_fs(:govuk)
-  end
-
   def maths_understanding?
     store["maths_understanding"]
   end
 
-  def senco_in_role
-    store["senco_in_role"]
-  end
-
   def senco_in_role_status?
     store["senco_in_role_status"]
-  end
-
-  def senco_start_date
-    store["senco_start_date"]
   end
 
   def childminder?
@@ -173,7 +145,7 @@ class RegistrationQueryStore
   end
 
   def employment_type_needs_employer_name?
-    employment_type_hospital_school? || young_offender_institution? # TODO: test
+    employment_type_hospital_school? || young_offender_institution?
   end
 
   def employer_name_matters?
@@ -223,5 +195,19 @@ class RegistrationQueryStore
 
   def has_answers?
     store.excluding("current_user_id").any?
+  end
+
+  def can_share_choices
+    store["can_share_choices"]
+  end
+
+private
+
+  def employment_type_hospital_school?
+    employment_type == Application.employment_types[:hospital_school]
+  end
+
+  def young_offender_institution?
+    employment_type == Application.employment_types[:young_offender_institution]
   end
 end
