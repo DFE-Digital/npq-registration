@@ -2,7 +2,7 @@
 
 module Banners
   class MaintenanceComponent < BaseComponent
-    MAINTENANCE_TEXT = "The service provider which hosts DfE Services is having outages and issues. This might mean that you have problems using the API or accessing the service. If you are having issues accessing the service, please try again later."
+    MAINTENANCE_TEXT = "This service will be unavailable from 8am to 10am on 25 August 2026."
 
     def render?
       Feature.maintenance_banner_enabled?
