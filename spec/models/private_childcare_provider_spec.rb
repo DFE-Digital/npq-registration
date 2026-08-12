@@ -91,6 +91,6 @@ RSpec.describe PrivateChildcareProvider, type: :model do
       create(:eligibility_list_entry, :disadvantaged_early_years_school, identifier:)
     end
 
-    it { is_expected.to contain_exactly "Childminder", "Early years" }
+    it { is_expected.to contain_exactly "Childminder" }
   end
 end

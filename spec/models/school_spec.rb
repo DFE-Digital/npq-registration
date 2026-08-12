@@ -380,6 +380,6 @@ RSpec.describe School do
       ]
     end
 
-    it { is_expected.to contain_exactly "PP50", "PP50FE", "Early years", "LA Nursery", "RISE" }
+    it { is_expected.to contain_exactly "PP50", "PP50FE", "LA Nursery", "RISE" }
   end
 end

@@ -4,7 +4,6 @@ class PrivateChildcareProvider < ApplicationRecord
   REDACTED_DATA_STRING = "REDACTED".freeze
 
   ELIGIBILITY_LISTS = [
-    EligibilityList::DisadvantagedEarlyYearsSchool,
     EligibilityList::Childminder,
   ].map(&:name).freeze
 

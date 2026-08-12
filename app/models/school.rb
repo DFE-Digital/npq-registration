@@ -8,7 +8,6 @@ class School < ApplicationRecord
   ELIGIBILITY_LISTS = [
     EligibilityList::Pp50School,
     EligibilityList::Pp50FurtherEducation,
-    EligibilityList::DisadvantagedEarlyYearsSchool,
     EligibilityList::LocalAuthorityNursery,
     EligibilityList::RiseSchool,
   ].map(&:name).freeze
