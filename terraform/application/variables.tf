@@ -113,7 +113,7 @@ variable "worker_replicas" {
 
 variable "postgres_server_version" {
   type = string
-  default = "14"
+  default = "17"
 }
 
 variable "postgres_flexible_server_sku" {
