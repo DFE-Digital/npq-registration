@@ -1,0 +1,38 @@
+<h1 class="govuk-heading-l">Archived duplicate users</h1>
+
+<p class="govuk-body">
+These are archived users with blank emails that have at least one application that is not rejected,
+that had the same email as other users before they were archived and had their email blanked.
+</p>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Name")
+        row.with_cell(text: "Archived email")
+        row.with_cell(text: "Verified TRN")
+        row.with_cell(text: "Date added")
+        row.with_cell(text: "Potential matches")
+      end
+    end
+
+    table.with_body do |body|
+      @users.each do |user|
+        body.with_row do |row|
+          row.with_cell(text: govuk_link_to(user.full_name, admin_user_path(user)))
+          row.with_cell(text: user.archived_email)
+          row.with_cell(text: user.verified_trn)
+          row.with_cell(text: user.created_at.to_date.to_formatted_s(:govuk))
+          row.with_cell do
+            @potential_matches[user.archived_email].to_a.map do |potential_match|
+              trn_text = " (#{potential_match.trn})" if potential_match.trn_verified?
+              concat tag.div(govuk_link_to((potential_match.full_name + trn_text.to_s), admin_user_path(potential_match)))
+            end
+          end
+        end
+      end
+    end
+  end
+%>
+<%= govuk_pagination(pagy: @pagy) %>
