@@ -4,7 +4,6 @@ module Statements
   class ChangeOutputFee
     include ActiveModel::Model
     include ActiveModel::Attributes
-    # include ActiveModel::Validations::Callbacks
     include StatementHelper
 
     attribute :statement
@@ -16,8 +15,6 @@ module Statements
     validate :next_output_statement_exists, unless: :output_fee
     validate :deadline_date_has_passed, unless: :allow_payable_statement_changes
     validate :statement_is_open, if: :statement
-
-    # validate :deadline_date_not_after_payment_date
 
     def statement=(...)
       super.tap do
@@ -61,13 +58,29 @@ module Statements
     def move_onto_hint
       return if statement.output_fee_was
 
-      "This will move #{next_output_statement.declarations.count} declarations from #{statement_name(next_output_statement)} onto this statement"
+      if next_output_statement
+        milestone_count = next_output_statement.milestones.count
+        declaration_count = next_output_statement
+          .declarations
+          .where(declaration_date: ..statement.deadline_date)
+          .count
+
+        "This will move #{declaration_count} declarations and #{milestone_count} milestones from #{statement_name(next_output_statement)} onto this statement"
+      else
+        "There is no later output statement and no declarations or milestones will be moved"
+      end
     end
 
     def move_off_hint
       return unless statement.output_fee_was
 
-      "This will move #{statement.declarations.count} declarations from this statement to #{statement_name(next_output_statement)}"
+      if statement.declarations.empty? && statement.milestones.empty?
+        "There are no declarations or milestones on this statement"
+      elsif next_output_statement
+        "This will move #{statement.declarations.count} declarations and #{statement.milestones.count} milestones from this statement to #{statement_name(next_output_statement)}"
+      else
+        "There are #{statement.declarations.count} declarations and #{statement.milestones.count} milestones on this statement but no suitable later statement"
+      end
     end
 
     def next_output_statement
