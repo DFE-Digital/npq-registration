@@ -218,17 +218,34 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
           end
 
           it "statement declaration count" do
-            expect { reconcile }.to change { statement.declarations.count }.by(3)
+            expect { reconcile }.to change { statement.declarations.count }.from(0).to(3)
           end
 
           it "changes later statement declaration count" do
-            expect { reconcile }.to change { later.declarations.count }.by(-3)
+            expect { reconcile }.to change { later.declarations.count }.from(3).to(0)
           end
 
           it "leaves declarations in eligible state" do
             expect { reconcile }
               .to(not_change { Declaration.all.pluck(:state) }
                     .and(not_change { StatementItem.all.pluck(:state) }))
+          end
+
+          context "with declaration_dates after the deadline date" do
+            before do
+              travel_to statement.deadline_date + 3.days do
+                create(:declaration,
+                       :eligible,
+                       statement: later,
+                       declaration_date: statement.deadline_date + 2.days)
+              end
+            end
+
+            it "only moves those declarations made early enough" do
+              expect { reconcile }
+                .to change { statement.declarations.count }.from(0).to(3)
+                .and change { later.declarations.count }.from(4).to(1)
+            end
           end
         end
 

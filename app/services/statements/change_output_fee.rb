@@ -122,9 +122,9 @@ module Statements
         .statement_items
         .includes(:declaration)
         .find_each do |statement_item|
-          statement_item.update!(statement: to_statement)
+          next unless statement_item.declaration.declaration_date <= to_statement.deadline_date
 
-          # FIXME: Consider if declaration was made too late for statement being changed
+          statement_item.update!(statement: to_statement)
 
           if to_statement.payable? && statement_item.declaration.eligible?
             statement_item.declaration.mark_payable!
