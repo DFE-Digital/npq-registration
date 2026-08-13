@@ -58,6 +58,7 @@ module "postgres-snapshot" {
 
   azure_sku_name                 = var.postgres_snapshot_flexible_server_sku
   use_azure                      = var.deploy_azure_backing_services
+  server_version                 = var.postgres_snapshot_server_version
   azure_enable_high_availability = false
   azure_enable_backup_storage    = false
   azure_enable_monitoring        = false

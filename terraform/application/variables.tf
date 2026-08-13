@@ -125,6 +125,11 @@ variable "postgres_snapshot_flexible_server_sku" {
   default = "B_Standard_B2ms"
 }
 
+
+variable "postgres_snapshot_server_version" {
+  default = "17"
+}
+
 variable "postgres_enable_high_availability" {
   type = bool
   default = false
