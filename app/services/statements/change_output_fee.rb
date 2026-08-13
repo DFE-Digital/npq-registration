@@ -80,6 +80,7 @@ module Statements
         .merge(allow_payable_statement_changes ? Statement.unpaid : Statement.open)
         .order(:deadline_date)
         .where(deadline_date: (statement.deadline_date + 1.day)..)
+        .where(cohort: statement.cohort)
         .first
     end
 

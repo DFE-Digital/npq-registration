@@ -121,6 +121,11 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
       end
 
       context "when there is not a suitable later output" do
+        before do
+          create(:statement, :open, extend_from: statement, cohort: create(:cohort, :next))
+          create(:statement, :open, extend_from: statement, lead_provider: create(:lead_provider))
+        end
+
         it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
       end
     end
