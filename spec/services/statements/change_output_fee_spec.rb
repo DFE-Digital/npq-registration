@@ -171,6 +171,92 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
     end
   end
 
+  describe "declaration counts" do
+    let(:later) { create(:statement, :open, extend_from: statement) }
+    let(:later_name) { Date.new(later.year, later.month).to_fs(:govuk_approx) }
+
+    describe "#move_onto_hint" do
+      context "with later statement" do
+        before do
+          create_list(:declaration, 2, :eligible, statement: later)
+
+          travel_to statement.deadline_date + 3.days do
+            create(:declaration, :eligible, statement: later)
+          end
+        end
+
+        it "includes only declarations declared before this statements deadline date" do
+          expect(service.move_onto_hint)
+            .to eq("This will move 2 declarations and 0 milestones from #{later_name} onto this statement")
+        end
+      end
+
+      context "without later statement" do
+        it "says nothing will be moved" do
+          expect(service.move_onto_hint)
+            .to eq("There is no later output statement and no declarations or milestones will be moved")
+        end
+      end
+
+      context "when output fee is being turned off" do
+        let(:original_output_fee) { true }
+        let(:output_fee) { false }
+
+        it { expect(service.move_onto_hint).to be_nil }
+      end
+    end
+
+    describe "#move_off_hint" do
+      let(:original_output_fee) { true }
+      let(:output_fee) { false }
+      let(:declarations) { create_list(:declaration, 2, :eligible, statement: statement) }
+
+      context "with later statement" do
+        before { declarations && later }
+
+
+        it "includes declarations count and destination statement" do
+          expect(service.move_off_hint)
+            .to eq("This will move 2 declarations and 0 milestones from this statement to #{later_name}")
+        end
+      end
+
+      context "without later statement" do
+        context "with declarations" do
+          before { declarations }
+
+          it "says change is not possible" do
+            expect(service.move_off_hint)
+              .to eq("There are 2 declarations and 0 milestones on this statement but no suitable later statement")
+          end
+        end
+
+        context "with milestones" do
+          before { create :milestone, for_statement: statement }
+
+          it "says change is not possible" do
+            expect(service.move_off_hint)
+              .to eq("There are 0 declarations and 1 milestones on this statement but no suitable later statement")
+          end
+        end
+
+        context "without milestones or declarations" do
+          it "allows the change" do
+            expect(service.move_off_hint)
+              .to eq("There are no declarations or milestones on this statement")
+          end
+        end
+      end
+
+      context "when output fee being turned on" do
+        let(:original_output_fee) { false }
+        let(:output_fee) { true }
+
+        it { expect(service.move_off_hint).to be_nil }
+      end
+    end
+  end
+
   describe "#change_statement_and_reconcile!" do
     subject(:reconcile) { service.change_statement_and_reconcile! }
 
@@ -234,10 +320,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
           context "with declaration_dates after the deadline date" do
             before do
               travel_to statement.deadline_date + 3.days do
-                create(:declaration,
-                       :eligible,
-                       statement: later,
-                       declaration_date: statement.deadline_date + 2.days)
+                create(:declaration, :eligible, statement: later)
               end
             end
 
