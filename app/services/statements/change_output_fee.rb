@@ -44,14 +44,15 @@ module Statements
           return if statement.output_fee == output_fee
 
           validate!
-          statement.update!(output_fee:)
 
-          if statement.output_fee
+          if output_fee
+            statement.update!(output_fee:)
+            move_milestones_onto_this_statement
             move_declarations_onto_this_statement
-            # FIXME: milestones
           else
+            move_milestones_off_this_statement
             move_declarations_off_this_statement
-            # FIXME: milestones
+            statement.update!(output_fee:)
           end
         end
       end
@@ -111,7 +112,7 @@ module Statements
       end
     end
 
-    def declarations_to_move_off_this_statement
+    def move_declarations_off_this_statement
       move_declarations(statement, next_output_statement)
     end
 
@@ -124,10 +125,32 @@ module Statements
 
           # FIXME: Consider if declaration was made too late for statement being changed
 
-          next unless to_statement.payable? && statement_item.declaration.eligible?
+          if to_statement.payable? && statement_item.declaration.eligible?
+            statement_item.declaration.mark_payable!
+            statement_item.mark_payable!
+          elsif to_statement.open? && statement_item.declaration.payable?
+            statement_item.declaration.revert_to_eligible!
+            statement_item.revert_to_eligible!
+          end
+        end
+    end
 
-          statement_item.declaration.mark_payable!
-          statement_item.mark_payable!
+    def move_milestones_onto_this_statement
+      if next_output_statement
+        move_milestones(next_output_statement, statement)
+      end
+    end
+
+    def move_milestones_off_this_statement
+      move_milestones(statement, next_output_statement)
+    end
+
+    def move_milestones(from_statement, to_statement)
+      from_statement
+        .milestone_statements
+        .find_each do |milestone_statement|
+          milestone_statement.update!(statement: to_statement,
+                                      skip_statement_date_validation: true)
         end
     end
   end
