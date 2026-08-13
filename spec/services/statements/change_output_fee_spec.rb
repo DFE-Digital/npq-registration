@@ -187,6 +187,8 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         context "without declarations" do
           before { later }
 
+          let(:milestone) { create(:milestone, for_statement: later) }
+
           it "updates output_fee" do
             expect { reconcile }
               .to change { statement.reload.output_fee }.from(false).to(true)
@@ -194,6 +196,11 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
           it "does not change statement declaration count" do
             expect { reconcile }.to(not_change { statement.declarations.count })
+          end
+
+          it "moves milestones" do
+            expect { reconcile }
+              .to change { milestone.reload.statements }.from([later]).to([statement])
           end
         end
 
@@ -213,10 +220,10 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
             expect { reconcile }.to change { later.declarations.count }.by(-3)
           end
 
-          it "leaves declarations in open state" do
+          it "leaves declarations in eligible state" do
             expect { reconcile }
-              .to(not_change { Declaration.all.pluck(:state) })
-              .and(not_change { StatementItem.all.pluck(:state) })
+              .to(not_change { Declaration.all.pluck(:state) }
+                    .and(not_change { StatementItem.all.pluck(:state) }))
           end
         end
 
@@ -241,7 +248,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
             expect { reconcile }.to change { later.declarations.count }.by(-3)
           end
 
-          it "leaves declarations in open state" do
+          it "moves eligible declarations to payable state" do
             expect { reconcile }
               .to change { Declaration.distinct.pluck(:state) }.from(%w[eligible]).to(%w[payable])
                   .and change { StatementItem.distinct.pluck(:state) }.from(%w[eligible]).to(%w[payable])
@@ -255,13 +262,113 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
     end
 
     context "when turning output fee off" do
-      it "moves declarations backwards"
-      it "updates state of statement items"
+      let(:original_output_fee) { true }
+      let(:output_fee) { false }
+      let(:later) { create(:statement, :open, extend_from: statement) }
+
+      before { later }
+
+      context "without declarations" do
+        let(:milestone) { create(:milestone, for_statement: statement) }
+
+        it "updates output_fee" do
+          expect { reconcile }
+            .to change { statement.reload.output_fee }.from(true).to(false)
+        end
+
+        it "does not change statement declaration count" do
+          expect { reconcile }.to(not_change { statement.declarations.count })
+        end
+
+        it "moves milestones" do
+          expect { reconcile }
+            .to change { milestone.reload.statements }.from([statement]).to([later])
+        end
+      end
+
+      context "when statement is open and later statement is also open" do
+        before { create_list(:declaration, 3, :eligible, statement:) }
+
+        it "updates output_fee" do
+          expect { reconcile }
+            .to change { statement.reload.output_fee }.from(true).to(false)
+        end
+
+        it "statement declaration count" do
+          expect { reconcile }.to change { statement.declarations.count }.by(-3)
+        end
+
+        it "changes later statement declaration count" do
+          expect { reconcile }.to change { later.declarations.count }.by(3)
+        end
+
+        it "leaves declarations in eligible state" do
+          expect { reconcile }
+            .to(not_change { Declaration.all.pluck(:state) }
+                  .and(not_change { StatementItem.all.pluck(:state) }))
+        end
+      end
+
+      context "when statement is already payable and later statement is open" do
+        before do
+          service.allow_payable_statement_changes = true
+          create_list(:declaration, 3, :payable, statement:)
+        end
+
+        let(:state) { :payable }
+
+        it "updates output_fee" do
+          expect { reconcile }
+            .to change { statement.reload.output_fee }.from(true).to(false)
+        end
+
+        it "statement declaration count" do
+          expect { reconcile }.to change { statement.declarations.count }.by(-3)
+        end
+
+        it "changes later statement declaration count" do
+          expect { reconcile }.to change { later.declarations.count }.by(3)
+        end
+
+        it "changes declarations to eligible state" do
+          expect { reconcile }
+            .to change { Declaration.distinct.pluck(:state) }.from(%w[payable]).to(%w[eligible])
+                .and change { StatementItem.distinct.pluck(:state) }.from(%w[payable]).to(%w[eligible])
+        end
+      end
+
+      context "when statement is already payable and later statement is also payable" do
+        before do
+          service.allow_payable_statement_changes = true
+          create_list(:declaration, 3, :payable, statement:)
+        end
+
+        let(:state) { :payable }
+        let(:later) { create(:statement, :payable, extend_from: statement) }
+
+        it "updates output_fee" do
+          expect { reconcile }
+            .to change { statement.reload.output_fee }.from(true).to(false)
+        end
+
+        it "statement declaration count" do
+          expect { reconcile }.to change { statement.declarations.count }.by(-3)
+        end
+
+        it "changes later statement declaration count" do
+          expect { reconcile }.to change { later.declarations.count }.by(3)
+        end
+
+        it "leaves declarations in payable state" do
+          expect { reconcile }
+            .to(not_change { Declaration.all.pluck(:state) }
+                  .and(not_change { StatementItem.all.pluck(:state) }))
+        end
+      end
     end
   end
 
   context "with unresolved thoughts" do
     it "consider allow turning output_fee off for last statement if no declarations"
-    it "thinks about milestones"
   end
 end
