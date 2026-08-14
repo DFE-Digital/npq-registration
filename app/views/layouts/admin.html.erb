@@ -30,18 +30,22 @@
         <%= render partial: "layouts/shared/messages" %>
 
         <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter" id="side-navigation">
+          <% content_for :side_navigation do %>
             <%=
               render SubNavigationComponent.new(
                 request.path,
                 structure: admin_navigation_structure.sub_structure(request.path, default_to_first_section: true),
               )
             %>
+          <% end %>
 
+          <% if content_for? :side_navigation %>
+          <div class="govuk-grid-column-one-quarter" id="side-navigation">
             <%= yield :side_navigation %>
           </div>
+          <% end %>
 
-          <div class="govuk-grid-column-three-quarters">
+          <div class="govuk-grid-column-<%= content_for?(:side_navigation) ? "three-quarters" : "full" %>">
             <%= yield %>
           </div>
         </div>

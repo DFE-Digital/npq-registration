@@ -76,4 +76,21 @@ RSpec.describe PrivateChildcareProvider, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe "#eligibility_lists" do
+    subject { provider.eligibility_lists.map(&:short_name) }
+
+    before { pp50 && childminder && early_years }
+
+    let(:identifier) { "1234567" }
+    let(:provider) { create(:private_childcare_provider, provider_urn: identifier) }
+    let(:childminder) { create(:eligibility_list_entry, :childminder, identifier:) }
+    let(:pp50) { create(:eligibility_list_entry, :pp50_school, identifier:) }
+
+    let :early_years do
+      create(:eligibility_list_entry, :disadvantaged_early_years_school, identifier:)
+    end
+
+    it { is_expected.to contain_exactly "Childminder" }
+  end
 end
