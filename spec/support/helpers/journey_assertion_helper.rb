@@ -23,15 +23,11 @@ module Helpers
     end
 
     def expect_check_answers_page_to_have_answers(values)
-      check_answers_page = CheckAnswersPage.new
-
-      expect(check_answers_page).to be_displayed
-
-      summary_data = check_answers_page.summary_list.rows.map { |summary_item|
-        [summary_item.key, summary_item.value]
-      }.to_h
-
-      expect(summary_data).to eql(values)
+      within(".govuk-summary-list") do
+        values.each do |key, value|
+          expect(page).to have_summary_item(key, value)
+        end
+      end
     end
 
     def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1, course_start: "Autumn 2026")

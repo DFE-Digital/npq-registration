@@ -14,8 +14,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   end
 
   def run_scenario(*)
-    stub_participant_validation_request
-
     navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
@@ -74,7 +72,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
           "DfE scholarship funding" => "Not eligible",

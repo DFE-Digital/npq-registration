@@ -23,8 +23,6 @@ module Questionnaires
     end
 
     def next_step
-      return :check_answers if changing_answer? && !answers_will_change?
-
       if teacher_catchment == "england"
         :choose_your_npq
       else

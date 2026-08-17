@@ -63,8 +63,10 @@ class RegistrationWizard
     funding_your_npq
     share_provider
     check_answers
+    check_answers_and_submit
     course_start_date
     cannot_register_yet
+    continue_to_login
   ].freeze
 
   REMOVED_REGISTRATION_STEPS = %i[
@@ -271,7 +273,7 @@ private
   end
 
   def load_current_user_into_store
-    store["current_user_id"] = current_user&.id
+    store["current_user_id"] = current_user.id if current_user
   end
 
   def institution_from_store

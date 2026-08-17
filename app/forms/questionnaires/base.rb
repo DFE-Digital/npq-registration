@@ -3,7 +3,6 @@ module Questionnaires
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
-    include Questionnaires::FlowHelper
 
     attr_accessor :wizard
 
@@ -90,20 +89,8 @@ module Questionnaires
     end
 
     def requirements_met?
-      # Redirect to new registration flow if a user wants to change the course or provider details
-      return true if return_to_new_registration_flow?
-
-      # Ensures the user is:
-      # a) logged in
-      # b) has answered at least one question
-      # Before allowing them to proceed into any questions.
-      # Certain questions, such as start and provider_check, override this
-      # as they are the first questions in the flow.
-      # Some questions add additional requirements, such as the confirmation page which requires
-      # a lead provider and a course to have been selected.
-      wizard.store.present? &&
-        query_store.current_user.present? &&
-        wizard.store.keys != %w[current_user]
+      # basic check to determine if user has completed a registration and is attempting to go directly to a step in the journey
+      query_store.has_answers?
     end
 
     def reset_store!
@@ -141,6 +128,14 @@ module Questionnaires
         :possible_funding
       else
         :ineligible_for_funding
+      end
+    end
+
+    def check_answers_step
+      if wizard.current_user
+        :check_answers_and_submit
+      else
+        :check_answers
       end
     end
 

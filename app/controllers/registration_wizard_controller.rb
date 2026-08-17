@@ -4,18 +4,19 @@ class RegistrationWizardController < PublicPagesController
   before_action :set_form
   before_action :check_end_of_journey, only: %i[update]
   before_action :check_course_defined, only: %i[show]
-  before_action :check_teacher_auth_user
 
   rescue_from FundingEligibility::MissingMandatoryInstitution, with: :redirect_to_institution_picker
   rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date
 
-  include Questionnaires::FlowHelper
-  helper_method :first_questionnaire_step
-
   FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN = [
+    Questionnaires::Start,
+    Questionnaires::CourseStartDate,
+    Questionnaires::CheckFunding,
+    Questionnaires::TeacherCatchment,
     Questionnaires::ChooseYourNpq,
     Questionnaires::FundingYourNpq,
     Questionnaires::IneligibleForFunding,
+    Questionnaires::Closed,
   ].freeze
 
   def show
@@ -108,13 +109,20 @@ private
   def check_end_of_journey
     if @form.valid? && @form.last_step?
       @wizard.save!
+      @wizard.store.clear
       redirect_to registration_complete_accounts_user_registration_path(current_user.applications.last)
     end
   end
 
   def check_course_defined
-    redirect_to_course_start_date if !FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN.include?(@form.class) && defined?(@form.course) && !@form.course
-    redirect_to_course_start_date if @form.instance_of?(Questionnaires::CheckAnswers) && !@wizard.course
+    return if FORMS_FOR_STEPS_BEFORE_COURSE_IS_CHOSEN.include?(@form.class)
+    return if @wizard.query_store.course
+
+    # redirect to course start date if the user has started the registration journey
+    return redirect_to_course_start_date if @wizard.query_store.has_answers?
+
+    # redirect to the start of the registration journey if the user has not started the registration journey
+    redirect_to root_path
   end
 
   def registration_closed
@@ -137,18 +145,5 @@ private
     return {} if Feature.registration_closed?(current_user)
 
     params.fetch(:registration_wizard, {}).permit(RegistrationWizard.permitted_params_for_step(params[:step].underscore))
-  end
-
-  def check_teacher_auth_user
-    return unless Rails.configuration.x.teacher_auth.enabled
-    return if params[:step].to_s == "start"
-    return unless current_user&.get_an_identity_provider?
-
-    Sentry.capture_message("User attempted registration from GAI")
-
-    sign_out_all_scopes
-    flash[:error] = "Please restart your registration"
-
-    redirect_to(root_path)
   end
 end

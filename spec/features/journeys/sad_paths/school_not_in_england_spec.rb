@@ -14,16 +14,14 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   end
 
   context "when JavaScript is enabled", :js do
-    scenario("school not in England (with JS)") { run_scenario(js: true) }
+    scenario("school not in England") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
-    scenario("school not in England (without JS)") { run_scenario(js: false) }
+    scenario("school not in England") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Headship",
       work_setting: "Primary school (5 to 11)",

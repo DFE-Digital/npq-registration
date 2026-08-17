@@ -164,5 +164,19 @@ module Helpers
       )
       form.options.map(&:value)
     end
+
+    def check_answers_log_in_and_submit(&block)
+      expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+        block.call if block_given?
+      end
+
+      expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+        expect(page).to have_text("Continue through GOV.UK One Login")
+      end
+
+      expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: true) do
+        block.call if block_given?
+      end
+    end
   end
 end

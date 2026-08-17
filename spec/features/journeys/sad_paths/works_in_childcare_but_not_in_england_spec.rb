@@ -77,7 +77,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
           "DfE scholarship funding" => "Not eligible",

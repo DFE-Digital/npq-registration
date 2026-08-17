@@ -975,7 +975,8 @@ en:
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         maths_cannot_register: "You cannot register for the leading primary mathematics NPQ"
         cannot_register_yet: "You cannot register yet"
-        check_answers: "Check your answers and confirm"
+        check_answers: "Check your answers"
+        check_answers_and_submit: "Check your answers"
         institution_location: What is the first part of your workplace postcode?
         find_childcare_provider: What is the first part of your workplace postcode?
         possible_funding: "You may qualify for DfE scholarship funding"
@@ -995,6 +996,7 @@ en:
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
         check_funding: "Check if you’re eligible for DfE scholarship funding"
+        continue_to_login: "Continue through GOV.UK One Login"
 
     legend:
       applications_change_training_status:
