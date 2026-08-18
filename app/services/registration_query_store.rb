@@ -29,6 +29,10 @@ class RegistrationQueryStore
     store["teacher_catchment"] == "england"
   end
 
+  def teacher_catchment_specified?
+    store["teacher_catchment"].present? # TODO: test
+  end
+
   def funding_eligiblity_status_code
     store["funding_eligiblity_status_code"]
   end
@@ -119,7 +123,7 @@ class RegistrationQueryStore
   end
 
   def new_headteacher?
-    store["ehco_headteacher"] == "yes" && store["ehco_new_headteacher"] == "yes"
+    store["ehco_new_headteacher"] == "yes"
   end
 
   def date_of_birth
@@ -205,8 +209,8 @@ class RegistrationQueryStore
     cohort.funded?
   end
 
-  def check_funding?
-    store["check_funding"] == "yes"
+  def proceed_without_checking_funding?
+    store["check_funding"] == "no"
   end
 
   def declared_previous_funding?

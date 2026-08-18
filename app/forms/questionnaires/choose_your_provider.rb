@@ -29,18 +29,20 @@ module Questionnaires
     def previous_step
       if course&.npqs? && wizard.query_store.inside_catchment?
         :funding_eligibility_senco
-      elsif !wizard.query_store.inside_catchment? || !wizard.query_store.works_in_school?
-        :funding_your_npq
-      elsif course.npqh? && eligible_for_funding?
-        :possible_funding
-      elsif course.ehco?
-        if eligible_for_funding?
+      elsif course&.ehco?
+        if wizard.query_store.declared_previous_funding?
+          :ehco_new_headteacher
+        elsif eligible_for_funding?
           :ehco_possible_funding
         else
           :funding_your_ehco
         end
+      elsif wizard.query_store.declared_previous_funding?
+        :funding_your_npq
+      elsif course&.npqh? && eligible_for_funding?
+        :possible_funding
       else
-        :choose_your_npq
+        :funding_your_npq
       end
     end
 

@@ -9,17 +9,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before do
-    # create an eligible school
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-    )
-  end
+  before { create(:school, :eligible_with_urn_and_address) }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey") { run_scenario(js: true) }

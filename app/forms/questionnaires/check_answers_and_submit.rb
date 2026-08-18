@@ -2,6 +2,14 @@ module Questionnaires
   class CheckAnswersAndSubmit < Base
     def requirements_met?
       super && wizard.query_store.has_answers?
+      # TODO: check minimum set of answers:
+      # - cohort
+      # - course
+      # - declared funding
+      # - work setting
+      # - if ineligible, funding option
+      # - provider
+      # - sharing infomration agreement
     end
 
     def previous_step

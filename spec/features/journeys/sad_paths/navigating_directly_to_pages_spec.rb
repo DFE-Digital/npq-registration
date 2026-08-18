@@ -40,10 +40,10 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, ty
     steps_that_do_not_need_the_journey_to_have_started
       .map { |step| step.to_s.dasherize }
       .each do |step|
-        scenario "navigating directly to the #{step} page shows the step" do
-          visit "/registration/#{step}"
-          expect(page).to have_current_path("/registration/#{step}")
-        end
+      scenario "navigating directly to the #{step} page shows the step" do
+        visit "/registration/#{step}"
+        expect(page).to have_current_path("/registration/#{step}")
+      end
     end
   end
 

@@ -10,6 +10,8 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
+  before { create(:school, :eligible_with_urn_and_address) }
+
   context "when JavaScript is enabled", :js do
     scenario("registration journey that is able to receive targeted delivery funding (with JS)") { run_scenario(js: true) }
   end
@@ -19,8 +21,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request(trn: "1234567", response: { trn: "1234567" })
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -43,17 +43,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
     end
-
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-      high_pupil_premium: true,
-      number_of_pupils: 100,
-    )
 
     choose_a_school(js:, name: "open")
 

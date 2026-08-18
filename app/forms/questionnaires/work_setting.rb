@@ -85,7 +85,11 @@ module Questionnaires
 
     def previous_step
       if wizard.query_store.declared_previous_funding?
-        :ineligible_for_funding_previously_funded
+        if wizard.query_store.course&.ehco?
+          :funding_your_ehco
+        else
+          :ineligible_for_funding_previously_funded
+        end
       else
         :funding_history
       end

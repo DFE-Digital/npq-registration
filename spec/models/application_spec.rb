@@ -757,4 +757,22 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "#eligibility_in_review?" do
+    subject { application.eligibility_in_review? }
+
+    let(:application) { build(:application, funding_eligiblity_status_code:) }
+
+    context "when funding_eligiblity_status_code is SUBJECT_TO_REVIEW" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::SUBJECT_TO_REVIEW }
+
+      it { is_expected.to be true }
+    end
+
+    context "when funding_eligiblity_status_code is not SUBJECT_TO_REVIEW" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
+
+      it { is_expected.to be false }
+    end
+  end
 end
