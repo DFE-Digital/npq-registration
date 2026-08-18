@@ -9,17 +9,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey when choosing lead mentor journey and approved ITT provider (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey when choosing lead mentor journey and approved ITT provider (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Leading teacher development",
       work_setting: "Another setting",
@@ -48,6 +46,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
@@ -158,7 +158,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "declared_previous_funding" => "no",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
-        "lead_provider_id" => "3",
+        "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "funded",
         "submitted" => true,
         "teacher_catchment" => "england",

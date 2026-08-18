@@ -23,7 +23,7 @@ module Questionnaires
     end
 
     def next_step
-      if teacher_catchment == "england"
+      if teacher_catchment == "england" # TODO: change this so it work when going back
         :choose_your_npq
       else
         :ineligible_for_funding

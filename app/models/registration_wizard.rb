@@ -23,11 +23,9 @@ class RegistrationWizard
     teacher_catchment
     referred_by_return_to_teaching_adviser
     work_setting
-    provider_check
     change_your_course_or_provider
     check_funding
     funding_history
-    choose_an_npq_and_provider
     login_callback
     npqh_status
     ehco_unavailable
@@ -68,6 +66,7 @@ class RegistrationWizard
 
   REMOVED_REGISTRATION_STEPS = %i[
     about_npq
+    choose_an_npq_and_provider
     choosen_start_date
     confirmation
     dont_have_teacher_reference_number
@@ -75,9 +74,10 @@ class RegistrationWizard
     ehco_funding_not_available
     ehco_headteacher
     ehco_previously_funded
-    find_school
     find_childcare_provider
+    find_school
     get_an_identity_callback
+    provider_check
     qualified_teacher_check
     teacher_reference_number
   ].freeze

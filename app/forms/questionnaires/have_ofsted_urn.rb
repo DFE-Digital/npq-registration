@@ -32,7 +32,7 @@ module Questionnaires
     end
 
     def previous_step
-      :kind_of_nursery
+      :kind_of_nursery # TODO: test
     end
 
     def questions

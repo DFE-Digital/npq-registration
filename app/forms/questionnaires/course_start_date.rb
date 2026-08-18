@@ -41,7 +41,9 @@ module Questionnaires
     end
 
     def next_step
-      if Cohort.find_by(identifier: course_start_cohort).funded?
+      if changing_answer?
+        :choose_your_provider # TODO: test
+      elsif Cohort.find_by(identifier: course_start_cohort).funded?
         :check_funding
       else
         :choose_your_npq
@@ -53,7 +55,7 @@ module Questionnaires
     end
 
     def return_to_regular_flow_on_change?
-      true
+      false
     end
 
   private

@@ -45,7 +45,7 @@ module Questionnaires
     end
 
     def previous_step
-      :choose_your_npq
+      :work_setting
     end
 
   private

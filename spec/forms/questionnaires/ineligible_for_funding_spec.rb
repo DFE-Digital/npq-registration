@@ -55,7 +55,7 @@ RSpec.describe Questionnaires::IneligibleForFunding, type: :model do
         }.stringify_keys
       end
 
-      it { is_expected.to eq(:your_employer) }
+      it { is_expected.to eq(:work_setting) }
     end
   end
 

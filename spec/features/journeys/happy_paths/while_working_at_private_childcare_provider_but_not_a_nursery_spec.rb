@@ -11,12 +11,12 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :wit
 
   before { create(:school, :eligible_with_urn_and_address) }
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey while working at private childcare provider but not a nursery (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey while working at private childcare provider but not a nursery") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey while working at private childcare provider but not a nursery (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey while working at private childcare provider but not a nursery") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
@@ -98,6 +98,8 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :wit
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(

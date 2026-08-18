@@ -7,9 +7,5 @@ module Questionnaires
     def previous_step
       :ehco_new_headteacher
     end
-
-    def course
-      @course ||= wizard.query_store.course
-    end
   end
 end

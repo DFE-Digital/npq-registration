@@ -28,7 +28,7 @@ module Questionnaires
 
     def previous_step
       if course&.npqs? && wizard.query_store.inside_catchment?
-        :funding_eligibility_senco
+        :funding_eligibility_senco # TODO: check if this is still needed - create feature spec if so
       elsif course&.ehco?
         if wizard.query_store.declared_previous_funding?
           :ehco_new_headteacher
@@ -37,12 +37,16 @@ module Questionnaires
         else
           :funding_your_ehco
         end
+      elsif wizard.query_store.maths_understanding?
+        :funding_eligibility_maths # TODO: test
       elsif wizard.query_store.declared_previous_funding?
-        :funding_your_npq
-      elsif course&.npqh? && eligible_for_funding?
-        :possible_funding
+        :work_setting # TODO: test
+      elsif wizard.query_store.approved_itt_provider? || wizard.query_store.referred_by_return_to_teaching_adviser?
+        show_eligibility_step # TODO: test
+      elsif !eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
+        :funding_your_npq # TODO: test
       else
-        :funding_your_npq
+        show_eligibility_step # TODO: test
       end
     end
 
@@ -74,6 +78,7 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
+        user_ecf_id: query_store.user_ecf_id,
         query_store: wizard.query_store,
       )
     end
