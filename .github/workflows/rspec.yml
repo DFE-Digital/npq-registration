@@ -12,7 +12,7 @@ on:
         description: Node version
         type: string
         required: false
-        default: "24.17.0"
+        default: "24.18.1"
 
 env:
   code-coverage-artifact-name: code_coverage_${{github.run_number}}
@@ -197,7 +197,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Fetch secrets from key vault
-        uses: azure/CLI@v2
+        uses: azure/CLI@v3
         id: keyvault-yaml-secret
         with:
           inlineScript: |

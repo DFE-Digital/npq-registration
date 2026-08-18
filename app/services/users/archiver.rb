@@ -7,7 +7,7 @@ module Users
 
     attribute :user
 
-    def archive!(blank_email: false)
+    def archive!(blank_email: false, notify_sentry: true)
       raise ArgumentError, "User already archived" if user.archived?
 
       user.archived_email = user.email
@@ -20,7 +20,7 @@ module Users
       # If we're archiving a user who still has applications then we want to
       # know about it otherwise its a user account for expression of interest,
       # or from a past incomplete registration
-      send_sentry_capture_message if blank_email && user.applications.any?
+      send_sentry_capture_message if notify_sentry && blank_email && user.applications.any?
     end
 
     def set_uid_to_nil!

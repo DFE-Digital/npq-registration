@@ -3,6 +3,10 @@ class PrivateChildcareProvider < ApplicationRecord
 
   REDACTED_DATA_STRING = "REDACTED".freeze
 
+  ELIGIBILITY_LISTS = [
+    EligibilityList::Childminder,
+  ].map(&:name).freeze
+
   include PgSearch::Model
 
   pg_search_scope :search_by_urn,
@@ -15,6 +19,14 @@ class PrivateChildcareProvider < ApplicationRecord
                   }
 
   validates :provider_urn, presence: true
+
+  has_many :urn_eligibility_entries,
+           -> { where(identifier_type: "urn", type: ELIGIBILITY_LISTS) },
+           class_name: "EligibilityList::Entry",
+           primary_key: :provider_urn,
+           foreign_key: :identifier
+
+  def eligibility_lists = urn_eligibility_entries
 
   def urn
     provider_urn

@@ -359,4 +359,27 @@ RSpec.describe School do
       it { is_expected.to be false }
     end
   end
+
+  describe "#eligibility_lists" do
+    subject { school.eligibility_lists.map(&:short_name) }
+
+    before { entries }
+
+    let(:identifier) { "1234567" }
+    let(:ukprn) { "12345678" }
+    let(:school) { create(:school, urn: identifier, ukprn:) }
+
+    let :entries do
+      [
+        create(:eligibility_list_entry, :pp50_school, identifier:),
+        create(:eligibility_list_entry, :pp50_further_education, identifier: ukprn),
+        create(:eligibility_list_entry, :disadvantaged_early_years_school, identifier:),
+        create(:eligibility_list_entry, :local_authority_nursery, identifier:),
+        create(:eligibility_list_entry, :rise_school, identifier:),
+        create(:eligibility_list_entry, :childminder, identifier:),
+      ]
+    end
+
+    it { is_expected.to contain_exactly "PP50", "PP50FE", "LA Nursery", "RISE" }
+  end
 end

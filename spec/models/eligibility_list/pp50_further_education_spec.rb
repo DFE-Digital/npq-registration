@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe EligibilityList::Pp50FurtherEducation, type: :model do
   let(:ukprn) { "12345678" }
 
+  it { is_expected.to have_attributes short_name: "PP50FE" }
+
   describe ".eligible?" do
     subject { described_class.eligible?(ukprn) }
 

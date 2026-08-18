@@ -115,7 +115,13 @@ FactoryBot.define do
     end
 
     trait :with_random_user do
-      user { build(:user, :with_random_name) }
+      user do
+        if cohort.start_year > 2025
+          build(:user, :with_teacher_auth, :with_random_name)
+        else
+          create(:user, :with_get_an_identity_id, :with_random_name, :with_verified_trn)
+        end
+      end
     end
 
     trait :with_participant_id_change do

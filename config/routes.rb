@@ -212,6 +212,9 @@ Rails.application.routes.draw do
 
     resources :courses, only: %i[index show]
     resources :users, only: %i[index show] do
+      collection do
+        resources :duplicates, controller: "users/duplicates", as: "duplicate_users", only: :index
+      end
       member do
         namespace :users, path: nil do
           resource :change_trn, controller: "change_trn", only: %i[show create]

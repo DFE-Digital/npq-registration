@@ -450,6 +450,18 @@ RSpec.describe User do
       end
     end
 
+    context "with different case email addresses" do
+      before { ClosedRegistrationUser.create!(email:) }
+
+      let(:email) { "UPPER.CASE@example.example" }
+      let(:user) { create(:user, email:) }
+
+      it "matches anyway" do
+        expect { user.set_closed_registration_feature_flag }
+          .to change { Feature.registration_closed?(user) }.from(true).to(false)
+      end
+    end
+
     context "when user is not on the ClosedRegistrationUser list" do
       it "can not be added" do
         expect { user.set_closed_registration_feature_flag }.not_to change { Feature.registration_closed?(user) }.from(true)
@@ -786,6 +798,33 @@ RSpec.describe User do
 
         it { is_expected.to be false }
       end
+    end
+  end
+
+  describe "#verified_trn" do
+    subject { user.verified_trn }
+
+    let(:user) { build(:user, trn:, trn_verified:) }
+
+    context "when trn is present and verified" do
+      let(:trn) { "1234567" }
+      let(:trn_verified) { true }
+
+      it { is_expected.to eq trn }
+    end
+
+    context "when trn is present but not verified" do
+      let(:trn) { "1234567" }
+      let(:trn_verified) { false }
+
+      it { is_expected.to be_nil }
+    end
+
+    context "when trn is nil" do
+      let(:trn) { nil }
+      let(:trn_verified) { false }
+
+      it { is_expected.to be_nil }
     end
   end
 end

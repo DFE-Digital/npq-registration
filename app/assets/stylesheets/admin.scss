@@ -141,3 +141,7 @@
     }
   }
 }
+
+.govuk-table td .govuk-list {
+  @include govuk-responsive-margin(0, "bottom");
+}
