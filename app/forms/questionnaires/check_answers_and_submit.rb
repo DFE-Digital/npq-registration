@@ -16,6 +16,15 @@ module Questionnaires
       true
     end
 
+    def show_previously_funded_alert?
+      wizard.store["pre_login_funding_eligiblity_status_code"] == :funded && user_previously_funded?
+    end
+
+    def before_render
+      wizard.store["previously_funded"] = true if user_previously_funded?
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
+    end
+
     def after_save
       wizard.store["email_template"] = email_template
 
