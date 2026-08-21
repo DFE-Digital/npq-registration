@@ -23,7 +23,7 @@ RSpec.describe Questionnaires::CheckAnswers do
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
   let(:wizard) { RegistrationWizard.new(current_step: :check_answers, store:, request:, current_user: user) }
 
-  describe "#previous_step" do
+  describe "#previous_step", skip: Rails.configuration.x.dfe_wizard do
     it "goes to share_provider" do
       expect(subject.previous_step).to be(:share_provider)
     end

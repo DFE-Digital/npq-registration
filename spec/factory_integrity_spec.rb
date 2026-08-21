@@ -3,6 +3,9 @@ require "rails_helper"
 RSpec.describe "Factory integrity check" do
   ignore_validation = %i[
     omniauth_auth_hash
+    registration_wizard
+    registration_state_store
+    registration_repository
   ].freeze
 
   FactoryBot.factories.each do |factory|

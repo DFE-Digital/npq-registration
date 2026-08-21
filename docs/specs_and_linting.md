@@ -36,6 +36,14 @@ bundle exec rake parallel:setup
 bundle exec rake parallel:spec
 ```
 
+### Disable generation of Capybara screenshots on failures
+
+To disable generation of Capybara screenshots on spec failure add the following
+to .env.test.local
+```
+NO_CAPYBARA_SCREENSHOTS=true
+```
+
 ## Running linting with auto correct
 
 To safely autocorrect offenses run:
