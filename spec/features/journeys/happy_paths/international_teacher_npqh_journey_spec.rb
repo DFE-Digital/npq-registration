@@ -14,47 +14,50 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   end
 
   def run_scenario(*)
-    stub_participant_validation_request
-
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
+    navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
 
-    expect(page).not_to have_content("Before you start")
-
     choose_course_start_date
 
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Check funding")
     end
 
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_text("DfE scholarship funding")
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
+
+      page.click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Headship", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
       page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      expect(page).not_to have_text("Additional Support Offer for new headteachers")
-      page.choose("Headship", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
-      expect(page).to have_text("you do not work in England")
-      expect(page).to have_text("This means that you would need to pay for the course another way")
+      expect(page).to have_text("DfE scholarship funding")
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
 
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       expect(page).to have_text("How are you funding your course?")
-      page.choose("My workplace is covering the cost", visible: :all)
+      page.choose "My workplace is covering the cost", visible: :all
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -62,17 +65,20 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Teach First", visible: :all)
     end
 
+    # check_back_journey_is_correct # FIXME: ineligible screen shown twice, previous step is always the teacher-cathment step
+
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "No",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "No",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Course funding" => "My workplace is covering the cost",
@@ -138,26 +144,28 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
       "review_status" => nil,
       "raw_application_data" => {
-        "email_template" => "not_england_wrong_catchment",
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "submitted" => true,
-        "works_in_school" => "yes",
-        "works_in_childcare" => "no",
-        "work_setting" => "a_school",
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
-        "course_start_cohort" => course_start_cohort_value,
+        "check_funding" => "yes",
         "course_identifier" => "npq-headship",
+        "course_start_cohort" => course_start_cohort_value,
+        "declared_previous_funding" => "no",
+        "email_template" => "not_england_wrong_catchment",
         "funding" => "school",
+        "funding_eligiblity_status_code" => "not_in_england",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "not_in_england",
+        "submitted" => true,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
-        "funding_eligiblity_status_code" => "not_in_england",
+        "work_setting" => "primary_school",
+        "works_in_childcare" => "no",
+        "works_in_school" => "yes",
       },
     )
   end

@@ -52,13 +52,14 @@ class FundingEligibility
               :childminder,
               :preschool_class_as_part_of_school,
               :work_setting,
-              :referred_by_return_to_teaching_adviser
+              :referred_by_return_to_teaching_adviser,
+              :declared_previous_funding
 
   class << self
     def new_from_query_store(institution:,
                              course:,
                              inside_catchment:,
-                             user_ecf_id:,
+                             user_ecf_id: nil,
                              approved_itt_provider: false,
                              query_store: nil)
       cohort = Cohort.find_by(identifier: query_store.course_start_cohort)
@@ -74,7 +75,8 @@ class FundingEligibility
           childminder: query_store.childminder?,
           preschool_class_as_part_of_school: query_store.preschool_class_as_part_of_school?,
           referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
-          work_setting: query_store.work_setting)
+          work_setting: query_store.work_setting,
+          declared_previous_funding: query_store.declared_previous_funding?)
     end
   end
 
@@ -90,7 +92,8 @@ class FundingEligibility
                  childminder:,
                  preschool_class_as_part_of_school:,
                  referred_by_return_to_teaching_adviser:,
-                 work_setting:)
+                 work_setting:,
+                 declared_previous_funding:)
     @cohort = cohort
     @institution = institution
     @course = course
@@ -103,6 +106,7 @@ class FundingEligibility
     @preschool_class_as_part_of_school = preschool_class_as_part_of_school
     @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
     @work_setting = work_setting
+    @declared_previous_funding = declared_previous_funding
   end
 
   def funded?
@@ -119,8 +123,9 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      return UNFUNDED_COHORT unless cohort.funded?
+      return UNFUNDED_COHORT unless cohort&.funded?
       return NOT_IN_ENGLAND unless inside_catchment
+      return PREVIOUSLY_FUNDED if declared_previous_funding
       return PREVIOUSLY_FUNDED if previously_funded?
 
       if course.ehco?

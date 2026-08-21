@@ -81,8 +81,6 @@ module Helpers
           page.select(name, from: label)
         end
       end
-
-      page.click_button("Continue")
     end
 
     def choose_teacher_catchment(js:, region:)
@@ -116,10 +114,43 @@ module Helpers
       Questionnaires::CourseStartDate::OPTIONS.values.first[:cohort_description]
     end
 
-    def choose_course_start_date
+    def choose_course_start_date(first_option: true)
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
         expect(page).to have_text(I18n.t("helpers.legend.registration_wizard.course_start_cohort"))
-        page.choose(course_start_cohort_label, visible: :all)
+        if first_option
+          page.choose(course_start_cohort_label, visible: :all)
+        else
+          page.choose(Questionnaires::CourseStartDate::OPTIONS.values.last[:label], visible: :all)
+        end
+      end
+    end
+
+    def complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting:)
+      navigate_to_page(path: "/", submit_form: false) do
+        page.click_button("Start now")
+      end
+
+      choose_course_start_date
+
+      expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+        click_button("Check funding")
+      end
+
+      expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+        choose("Yes", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+        page.choose(course, visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
+        page.choose("No", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose(work_setting, visible: :all)
       end
     end
 
@@ -132,6 +163,20 @@ module Helpers
         current_user: nil,
       )
       form.options.map(&:value)
+    end
+
+    def check_answers_log_in_and_submit(&block)
+      expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+        block.call if block_given?
+      end
+
+      expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+        expect(page).to have_text("Continue through GOV.UK One Login")
+      end
+
+      expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: true) do
+        block.call if block_given?
+      end
     end
   end
 end

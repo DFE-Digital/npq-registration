@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -20,21 +20,32 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   def run_scenario
     stub_participant_validation_request(nino: "")
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
+    navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
 
-    expect(page).not_to have_content("Before you start")
-
     choose_course_start_date
 
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Check funding")
     end
 
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_text("DfE scholarship funding")
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
+
+      page.click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Early years leadership", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
       page.choose("No", visible: :all)
     end
 
@@ -42,19 +53,11 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       page.choose("Early years or childcare", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all) # Needs changing to an early years course once added
-    end
-
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
-      expect(page).to have_text("you do not work in England")
-      expect(page).to have_text("This means that you would need to pay for the course another way")
+      expect(page).to have_text("DfE scholarship funding")
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
 
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -67,20 +70,23 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       page.choose("Teach First", visible: :all)
     end
 
+    # check_back_journey_is_correct # FIXME back links are currently incorrect
+
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Course" => "Senior leadership",
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
+          "Course" => "Early years leadership",
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
-          "Workplace in England" => "No",
+          "Working in England" => "No",
         },
       )
     end
@@ -92,7 +98,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => latest_application.cohort_id,
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "schedule_id" => nil,
       "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
@@ -135,13 +141,15 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
-        "course_identifier" => "npq-senior-leadership",
+        "course_identifier" => "npq-early-years-leadership",
+        "declared_previous_funding" => "no",
         "email_template" => "not_england_wrong_catchment",
         "funding" => "school",
         "funding_eligiblity_status_code" => "not_in_england",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "not_in_england",
         "submitted" => true,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,

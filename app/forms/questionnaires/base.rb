@@ -3,7 +3,6 @@ module Questionnaires
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
-    include Questionnaires::FlowHelper
 
     attr_accessor :wizard
 
@@ -90,20 +89,8 @@ module Questionnaires
     end
 
     def requirements_met?
-      # Redirect to new registration flow if a user wants to change the course or provider details
-      return true if return_to_new_registration_flow?
-
-      # Ensures the user is:
-      # a) logged in
-      # b) has answered at least one question
-      # Before allowing them to proceed into any questions.
-      # Certain questions, such as start and provider_check, override this
-      # as they are the first questions in the flow.
-      # Some questions add additional requirements, such as the confirmation page which requires
-      # a lead provider and a course to have been selected.
-      wizard.store.present? &&
-        query_store.current_user.present? &&
-        wizard.store.keys != %w[current_user]
+      # basic check to determine if user has completed a registration and is attempting to go directly to a step in the journey
+      query_store.has_answers?
     end
 
     def reset_store!
@@ -114,7 +101,7 @@ module Questionnaires
       wizard.query_store
     end
 
-    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil)
+    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil, nested_options: nil)
       QuestionTypes::RadioOption.new(
         value:,
         label:,
@@ -122,6 +109,52 @@ module Questionnaires
         link_errors:,
         divider:,
         revealed_question:,
+        nested_options:,
+      )
+    end
+
+  private
+
+    def show_eligibility_step
+      if changing_answer?
+        :check_answers
+      elsif query_store.course.ehco?
+        :npqh_status
+      elsif query_store.course.npqlpm?
+        :maths_eligibility_teaching_for_mastery
+      elsif query_store.course.npqs?
+        :senco_in_role
+      elsif funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
+        :possible_funding
+      else
+        :ineligible_for_funding
+      end
+    end
+
+    def check_answers_step
+      if wizard.current_user
+        :check_answers_and_submit
+      else
+        :check_answers
+      end
+    end
+
+    def eligible_for_funding?
+      funding_eligibility_calculator.funded?
+    end
+
+    def user_previously_funded?
+      funding_eligibility_calculator.funding_eligiblity_status_code == :previously_funded
+    end
+
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
+        course: query_store.course,
+        institution: query_store.institution,
+        approved_itt_provider: query_store.approved_itt_provider?,
+        inside_catchment: query_store.inside_catchment?,
+        user_ecf_id: query_store.user_ecf_id,
+        query_store:,
       )
     end
   end

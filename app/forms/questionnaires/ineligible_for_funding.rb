@@ -10,15 +10,20 @@ module Questionnaires
 
     # Already funded
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
-    ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
 
     attribute :version
 
     def next_step
-      :funding_your_npq
+      if course
+        :funding_your_npq
+      else
+        :choose_your_npq
+      end
     end
 
     def previous_step
+      return :teacher_catchment unless course
+
       if works_in_another_setting? && employment_type_other?
         :choose_your_npq
       elsif course.npqlpm?
@@ -34,7 +39,7 @@ module Questionnaires
           :senco_in_role
         end
       else
-        :choose_your_npq
+        :teacher_catchment
       end
     end
 
@@ -47,7 +52,7 @@ module Questionnaires
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::PREVIOUSLY_FUNDED
-                                 return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
+                                 return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50

@@ -20,27 +20,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   def run_scenario(js:)
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Another setting", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Leading teacher development",
+      work_setting: "Another setting",
+    )
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
@@ -51,13 +34,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
     choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Leading teacher development", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re eligible for scholarship funding for the")
     end
 
@@ -71,17 +49,17 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
           "Provider" => "Church of England",
           "Work setting" => "Another setting",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end
@@ -109,7 +87,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     if User.last.applications.count == 1
       navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
         expect(page).to have_text("Church of England")
-        expect(page).to have_text("Your NPQ registration")
+        expect(page).to have_text("Your Leading teacher development registration")
       end
     else
       navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
@@ -174,12 +152,14 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-leading-teaching-development",
+        "declared_previous_funding" => "no",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
+        "pre_login_funding_eligiblity_status_code" => "funded",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

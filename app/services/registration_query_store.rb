@@ -18,15 +18,11 @@ class RegistrationQueryStore
   end
 
   def user_ecf_id
-    current_user.ecf_id
+    current_user&.ecf_id
   end
 
   def trn_set_via_fallback_verification_question?
     store["trn_set_via_fallback_verification_question"]
-  end
-
-  def trn
-    current_user.trn
   end
 
   def inside_catchment?
@@ -200,5 +196,24 @@ class RegistrationQueryStore
 
   def course_start_cohort
     store["course_start_cohort"]
+  end
+
+  def cohort_funded?
+    cohort = Cohort.find_by(identifier: course_start_cohort)
+    return true unless cohort
+
+    cohort.funded?
+  end
+
+  def check_funding?
+    store["check_funding"] == "yes"
+  end
+
+  def declared_previous_funding?
+    store["declared_previous_funding"] == "yes"
+  end
+
+  def has_answers?
+    store.excluding("current_user_id").any?
   end
 end

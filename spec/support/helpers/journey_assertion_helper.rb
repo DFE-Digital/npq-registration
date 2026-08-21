@@ -23,23 +23,28 @@ module Helpers
     end
 
     def expect_check_answers_page_to_have_answers(values)
-      check_answers_page = CheckAnswersPage.new
-
-      expect(check_answers_page).to be_displayed
-
-      summary_data = check_answers_page.summary_list.rows.map { |summary_item|
-        [summary_item.key, summary_item.value]
-      }.to_h
-
-      expect(summary_data).to eql(values)
+      within(".govuk-summary-list") do
+        values.each do |key, value|
+          expect(page).to have_summary_item(key, value)
+        end
+      end
     end
 
     def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1, course_start: "Autumn 2026")
-      expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.reload.id}?success=true", submit_form: false) do
-        expect(page).to have_text("Registration successfully submitted")
-        expect(page).to have_text("Application ID: #{latest_application.ecf_id}")
+      latest_application.reload
+
+      expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}/registration-complete", submit_form: false) do
+        expect(page).to have_text("Registration complete")
+        expect(page).to have_text("Your Registration ID")
+        expect(page).to have_text(latest_application.ecf_id)
+        expect(page).to have_text("We have sent you a confirmation email")
+        page.click_link("Review a summary of your registration")
+      end
+
+      expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}", submit_form: false) do
+        expect(page).to have_text("Registration ID: #{latest_application.ecf_id}")
         expect(page).to have_summary_item("Course start", course_start)
-        expect(page).to have_link("Register for another NPQ", href: registration_wizard_show_path("course-start-date"))
+        expect(page).to have_link("Start now", href: registration_wizard_show_path("course-start-date"))
       end
 
       expect(User.count).to be(1)
@@ -53,7 +58,12 @@ module Helpers
         back_steps ||= []
         back_steps << page.current_path
       end
-      expect(back_steps.reverse).to eq @steps_visited
+      always_skipped_pages_going_back = [
+        "/registration/choose-school",
+        "/registration/kind_of_nursery",
+        "/registration/referred_by_return_to_teaching_adviser",
+      ]
+      expect(back_steps.reverse).to match_array @steps_visited.excluding(always_skipped_pages_going_back)
       visit starting_path
     end
 

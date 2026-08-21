@@ -29,10 +29,6 @@ module Questionnaires
       ]
     end
 
-    def requirements_met?
-      query_store.current_user
-    end
-
     def next_step
       case chosen_provider
       when "yes"
