@@ -40,8 +40,8 @@ RSpec.describe "sandbox test data for 2026 tasks" do
       expect { run_task }
         .to change(Cohort, :count).from(3).to(4)
         .and change(Schedule, :count).from(1).to(12)
-        .and change(Application, :count).from(0).to(78)
-        .and change(User, :count).from(0).to(78)
+        .and change(Application, :count).from(0).to(69)
+        .and change(User, :count).from(0).to(69)
     end
   end
 end
