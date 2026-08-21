@@ -13,11 +13,11 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
     School.create!(urn: 100_099, name: "open wrexham school", address_1: "street 4", town: "wrexham", establishment_status_code: "1", establishment_type_code: "30")
   end
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario("school not in England") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario("school not in England") { run_scenario(js: false) }
   end
 

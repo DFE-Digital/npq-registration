@@ -47,6 +47,8 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
+    check_back_journey_is_correct
+
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
@@ -152,7 +154,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_name" => "open",
-        "lead_provider_id" => "3",
+        "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "funded",
         "maths_eligibility_teaching_for_mastery" => "yes",
         "maths_understanding" => true,

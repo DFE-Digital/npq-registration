@@ -80,7 +80,9 @@ module Questionnaires
         return :your_employment
       end
 
-      show_eligibility_step
+      return show_eligibility_step if wizard.query_store.course.ehco? # TODO: test
+
+      funding_your_npq_step # TODO: test
     end
 
     def previous_step
@@ -88,7 +90,7 @@ module Questionnaires
         if wizard.query_store.course&.ehco?
           :funding_your_ehco
         else
-          :ineligible_for_funding_previously_funded
+          :funding_your_npq # TODO: test
         end
       else
         :funding_history

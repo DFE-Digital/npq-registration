@@ -11,6 +11,10 @@ module Questionnaires
         else
           :maths_understanding_of_approach
         end
+      elsif wizard.query_store.approved_itt_provider?
+        :itt_provider # TODO: test
+      elsif wizard.query_store.employment_type_needs_employer_name?
+        :your_employer # TODO: test
       else
         :work_setting
       end

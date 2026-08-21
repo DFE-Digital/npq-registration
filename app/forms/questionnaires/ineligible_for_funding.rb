@@ -17,22 +17,26 @@ module Questionnaires
     def previous_step
       return :teacher_catchment unless course
 
-      if !wizard.query_store.inside_catchment? && wizard.query_store.teacher_catchment_specified?
+      # TODO: simplify logic
+      # maybe:
+      # - have a method: course_has_additional_eligibility_questions? (for npqlpm, npqs, ehco)
+      # - have logic somewhere for each course, detailing the additional questions
+      if !query_store.inside_catchment? && query_store.teacher_catchment_specified?
         :teacher_catchment
-      elsif works_in_another_setting? && employment_type_other?
-        :choose_your_npq # TODO: test
+      elsif query_store.ofsted_route?
+        :have_ofsted_urn # TODO: test
+      elsif query_store.works_in_childcare?
+        :kind_of_nursery # TODO: test - this line needs to be after have_ofsted_urn - test this
+      elsif query_store.works_in_another_setting?
+        :your_employer # TODO: test
       elsif course.ehco?
-        if wizard.query_store.declared_previous_funding?
-          :funding_history
-        else
-          :ehco_new_headteacher
-        end
+        :ehco_new_headteacher
       elsif course.npqlpm?
         :maths_eligibility_teaching_for_mastery # TODO: test
       elsif course.npqs?
         :senco_in_role # TODO: test
       else
-        :your_employer
+        :work_setting
       end
     end
 
@@ -78,21 +82,13 @@ module Questionnaires
       @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
         institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
+        approved_itt_provider: query_store.approved_itt_provider?,
+        inside_catchment: query_store.inside_catchment?,
         user_ecf_id: query_store.user_ecf_id,
-        query_store: wizard.query_store,
+        query_store: query_store,
       )
     end
 
-    delegate :course,
-             :lead_provider,
-             :new_headteacher?,
-             :inside_catchment?,
-             :approved_itt_provider?,
-             :lead_mentor_for_accredited_itt_provider?,
-             :works_in_another_setting?,
-             :employment_type_other?,
-             to: :query_store
+    delegate :course, :lead_provider, to: :query_store
   end
 end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,37 +9,19 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey while working at public nursery (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey while working at public nursery") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey while working at public nursery (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey while working at public nursery") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Senior leadership",
+      work_setting: "Early years or childcare",
+    )
 
     public_kind_of_nursery_key = Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
     public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
@@ -50,11 +32,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
     end
 
     choose_a_childcare_provider(js:, name: "open")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all) # Needs changing to an early years course once added
-    end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("DfE scholarship funding")
@@ -80,7 +57,9 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_back_journey_is_correct
+
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
           "DfE scholarship funding" => "Not eligible",
@@ -146,9 +125,10 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-senior-leadership",
+        "declared_previous_funding" => "no",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
         "funding_eligiblity_status_code" => "early_years_invalid_npq",
@@ -156,6 +136,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
         "childcare_name" => js ? "" : "open",
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "early_years_invalid_npq",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

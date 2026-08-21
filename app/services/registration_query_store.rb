@@ -33,6 +33,10 @@ class RegistrationQueryStore
     store["teacher_catchment"].present? # TODO: test
   end
 
+  def asked_to_continue_without_checking_funding?
+    store["teacher_catchment"].nil? # TODO: test & replace uses of teacher_catchment_specified?
+  end
+
   def funding_eligiblity_status_code
     store["funding_eligiblity_status_code"]
   end
@@ -74,12 +78,8 @@ class RegistrationQueryStore
     employment_type == Application.employment_types[:young_offender_institution]
   end
 
-  def teacher_catchment_england?
-    store["teacher_catchment"] == "england"
-  end
-
   def valid_employent_type_for_england?
-    teacher_catchment_england? && !employment_type_other? && !lead_mentor_for_accredited_itt_provider?
+    inside_catchment? && !employment_type_other? && !lead_mentor_for_accredited_itt_provider?
   end
 
   def works_in_school?
@@ -172,11 +172,19 @@ class RegistrationQueryStore
     !(lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?)
   end
 
+  def employment_type_needs_employer_name?
+    employment_type_hospital_school? || young_offender_institution? # TODO: test
+  end
+
   def employer_name_matters?
     return true if referred_by_return_to_teaching_adviser?
     return false unless employment_type_matters?
 
     !(lead_mentor_for_accredited_itt_provider? || employment_type_other?)
+  end
+
+  def ofsted_route?
+    Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(store["kind_of_nursery"]) # TODO: test
   end
 
   def institution

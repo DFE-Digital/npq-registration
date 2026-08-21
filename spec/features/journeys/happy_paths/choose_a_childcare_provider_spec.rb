@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Choose a childcare provider page", :mvp, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Choose a childcare provider page", :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,8 +9,6 @@ RSpec.feature "Choose a childcare provider page", :mvp, :with_cohorts, :with_def
   include_context "with stubbed Teaching Record System person API"
 
   before do
-    stub_participant_validation_request
-
     School.create!(urn: 100_000, name: "an open school", establishment_status_code: "1")
     School.create!(urn: 100_001, name: "closed school", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "another open school", establishment_status_code: "1")
@@ -21,12 +19,20 @@ RSpec.feature "Choose a childcare provider page", :mvp, :with_cohorts, :with_def
 
     choose_course_start_date
 
-    navigate_to_page(path: "/registration/provider-check", submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Check funding")
     end
 
-    navigate_to_page(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Early years leadership", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     navigate_to_page(path: "/registration/work-setting", submit_form: true) do
@@ -41,7 +47,7 @@ RSpec.feature "Choose a childcare provider page", :mvp, :with_cohorts, :with_def
     end
   end
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario "choosing a childcare provider" do
       expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
         expect(page).to have_text("What is the name of your workplace?")
@@ -65,7 +71,7 @@ RSpec.feature "Choose a childcare provider page", :mvp, :with_cohorts, :with_def
     end
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario "choosing a childcare provider" do
       expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
         expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js: false)

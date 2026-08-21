@@ -9,17 +9,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey when outside of catchment area (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey when outside of catchment area") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey when outside of catchment area (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey when outside of catchment area") { run_scenario(js: false) }
   end
 
   def run_scenario(*)
-    stub_participant_validation_request(nino: "")
-
     navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
@@ -54,13 +52,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding")
-      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
-
-      page.click_link("Continue to register")
-    end
-
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       expect(page).to have_text("How are you funding your course?")
       page.choose "I am paying", visible: :all
@@ -70,7 +61,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
     end
-    # check_back_journey_is_correct # FIXME: ineligible screen shown twice, previous step is always the teacher-cathment step
+
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")

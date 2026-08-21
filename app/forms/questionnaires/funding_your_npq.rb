@@ -13,7 +13,13 @@ module Questionnaires
     end
 
     def previous_step
-      :ineligible_for_funding
+      if wizard.query_store.declared_previous_funding?
+        :ineligible_for_funding_previously_funded # TODO: test
+      elsif wizard.query_store.asked_to_continue_without_checking_funding? || wizard.query_store.inside_catchment? # TODO: test
+        :ineligible_for_funding
+      else
+        :work_setting
+      end
     end
 
     def next_step
@@ -22,10 +28,6 @@ module Questionnaires
       else
         :choose_your_provider
       end
-    end
-
-    def course
-      @course ||= wizard.query_store.course
     end
 
     def questions

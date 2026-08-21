@@ -59,12 +59,11 @@ module Helpers
         back_steps << page.current_path
       end
       always_skipped_pages_going_back = [
+        "/registration/choose-childcare-provider",
         "/registration/choose-school",
-        "/registration/kind-of-nursery",
         "/registration/referred-by-return-to-teaching-adviser",
       ]
       steps_visited = exclude_current_page ? @steps_visited.excluding(starting_path) : @steps_visited
-      # expect(back_steps.reverse).to match_array steps_visited.excluding(always_skipped_pages_going_back)
       expect(back_steps.reverse).to match_backlinks steps_visited.excluding(always_skipped_pages_going_back)
       visit starting_path
     end

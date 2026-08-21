@@ -14,12 +14,12 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
     create(:school, :eligible_with_urn_and_address)
   end
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey while working at private nursery (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey while working at private nursery") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey while working at private nursery (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey while working at private nursery") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
@@ -28,19 +28,18 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
       page.click_button("Start now")
     end
 
-    expect(page).not_to have_content("Before you start")
-
     choose_course_start_date
 
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      expect(page).to have_text("Check if you’re eligible for DfE scholarship funding")
+      click_button("Check funding")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
       page.choose("Yes", visible: :all)
     end
 
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
+    # TODO: next step "/registration/choose-your-npq"
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
@@ -99,6 +98,8 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(

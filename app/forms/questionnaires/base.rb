@@ -18,6 +18,10 @@ module Questionnaires
       false
     end
 
+    def step_requires_login?
+      false
+    end
+
     # Previous steps should lead to `closed` when registration is closed.
     def previous_step
       return :closed if Feature.registration_closed?
@@ -142,7 +146,7 @@ module Questionnaires
     end
 
     def check_answers_step
-      if wizard.current_user
+      if wizard.current_user&.teacher_auth_provider? # TODO: test
         :check_answers_and_submit
       else
         :check_answers

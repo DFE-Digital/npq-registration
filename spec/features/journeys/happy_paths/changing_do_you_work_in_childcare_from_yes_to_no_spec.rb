@@ -11,17 +11,15 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
 
   before { create(:school, :eligible_with_urn_and_address) }
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey changing do you work in childcare from yes to no (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey changing do you work in childcare from yes to no") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey changing do you work in childcare from yes to no (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey changing do you work in childcare from yes to no") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")

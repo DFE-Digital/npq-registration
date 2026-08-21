@@ -99,4 +99,13 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, ty
       end
     end
   end
+
+  context "when navigating directly to the check answers and submit page after getting to the check answers page" do
+    scenario "redirects to the continue to login page" do
+      complete_journey_as_far_as_check_answers
+      visit "/registration/check-answers-and-submit"
+
+      expect_page_to_have(path: "/registration/continue-to-login", submit_form: false)
+    end
+  end
 end

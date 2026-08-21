@@ -12,16 +12,20 @@ module Questionnaires
       # - sharing infomration agreement
     end
 
+    def step_requires_login?
+      true
+    end
+
+    def last_step?
+      true
+    end
+
     def previous_step
       :share_provider
     end
 
     def next_step
       # This is the last step, so there is no next step.
-    end
-
-    def last_step?
-      true
     end
 
     def show_previously_funded_alert?
