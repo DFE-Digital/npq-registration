@@ -106,12 +106,12 @@ GEM
     amazing_print (2.0.0)
     ast (2.4.3)
     attr_required (1.0.2)
-    axe-core-api (4.12.0)
+    axe-core-api (4.13.0)
       dumb_delegator
-    axe-core-capybara (4.12.0)
-      axe-core-api (= 4.12.0)
-    axe-core-rspec (4.12.0)
-      axe-core-api (= 4.12.0)
+    axe-core-capybara (4.13.0)
+      axe-core-api (= 4.13.0)
+    axe-core-rspec (4.13.0)
+      axe-core-api (= 4.13.0)
     azure-blob (0.8.0)
       cgi
       rexml
@@ -731,7 +731,7 @@ DEPENDENCIES
   activerecord-session_store
   amazing_print
   axe-core-capybara (~> 4.7)
-  axe-core-rspec (~> 4.12)
+  axe-core-rspec (~> 4.13)
   azure-blob
   blueprinter
   bootsnap (>= 1.1.0)
