@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@govuk-one-login/service-header": "^6.0.0",
-    "@ministryofjustice/frontend": "^9.0.0",
+    "@ministryofjustice/frontend": "^10.0.1",
     "accessible-autocomplete": "^3.0.1",
     "esbuild": "^0.28.2",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
