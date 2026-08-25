@@ -1,28 +1,23 @@
 module Registration
   class CheckAnswersPresenter
-    Answer = Struct.new(:key, :value, :change_step)
-
-    delegate_missing_to :@store
-
-    attr_reader :store
-
-    def initialize(store)
-      @store = store
-    end
+    include DfE::Wizard::CheckAnswersPresenter
 
     def answers
-      array = []
+      [
+        row_for(:course_start_date, :course_start_cohort, label: "Course start"),
+      ]
+    end
 
-      array << Answer.new("Course start", course_start, :course_start_cohort)
-
-      array
+    def format_value(attribute, value)
+      case attribute
+      when :course_start_cohort
+        Questionnaires::CourseStartDate::OPTIONS.dig(value, :cohort_description)
+      else
+        value.to_s
+      end
     end
 
   private
-
-    def course_start
-      Questionnaires::CourseStartDate::OPTIONS.dig(store["course_start_cohort"], :cohort_description)
-    end
 
     def t(key)
       I18n.t(store[key], scope: "helpers.label.registration_wizard.#{key}_options")

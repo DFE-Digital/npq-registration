@@ -1,14 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Registration::CheckAnswersPresenter do
-  subject(:presenter) { described_class.new(state_store) }
+  subject(:presenter) { described_class.new(wizard) }
 
-  let(:state_store) { create(:registration_wizard, :completed).state_store }
-  let(:answer) { described_class::Answer }
+  let(:wizard) { create(:registration_wizard, :completed) }
 
   describe "#answers" do
     subject { presenter.answers }
 
-    it { is_expected.to include have_attributes(key: "Course start", value: "Autumn 2026") }
+    it { is_expected.to include have_attributes(label: "Course start", formatted_value: "Autumn 2026") }
   end
 end

@@ -10,6 +10,10 @@ module Questionnaires
       true
     end
 
+    def answers
+      @answers ||= Registration::CheckAnswersPresenter.new(wizard)
+    end
+
     def after_save
       wizard.store["email_template"] = email_template
 

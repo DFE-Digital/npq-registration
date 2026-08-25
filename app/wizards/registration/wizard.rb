@@ -42,11 +42,6 @@ module Registration
       end
     end
 
-    def check_answers_presenter
-      @check_answers_presenter ||= CheckAnswersPresenter.new(state_store)
-    end
-    delegate :answers, to: :check_answers_presenter
-
     def query_store = state_store
     def store = state_store
 

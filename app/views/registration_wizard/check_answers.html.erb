@@ -8,15 +8,29 @@
   <h1 class="govuk-heading-l">Check your answers and submit</h1>
 
   <%= render GovukComponent::SummaryListComponent.new do |component|
-        @wizard.answers.each do |answer|
-          component.with_row do |row|
-            row.with_key { answer.key }
-            row.with_value { answer.value }
-            row.with_action(
-              text: 'Change',
-              visually_hidden_text: answer.key,
-              href: "/registration/#{answer.change_step.to_s.dasherize}/change",
-            )
+        if @wizard.is_a?(Registration::Wizard)
+          @form.answers.each do |answer|
+            component.with_row do |row|
+              row.with_key { answer.label }
+              row.with_value { answer.formatted_value }
+              row.with_action(
+                text: "Change",
+                href: row.change_path,
+                visually_hidden_text: row.label.downcase
+              )
+            end
+          end
+        else
+          @wizard.answers.each do |answer|
+            component.with_row do |row|
+              row.with_key { answer.key }
+              row.with_value { answer.value }
+              row.with_action(
+                text: 'Change',
+                visually_hidden_text: answer.key,
+                href: "/registration/#{answer.change_step.to_s.dasherize}/change",
+              )
+            end
           end
         end
   end %>
