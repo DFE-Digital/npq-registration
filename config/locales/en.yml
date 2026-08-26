@@ -359,6 +359,12 @@ en:
           attributes:
             continue:
               inclusion: Select ‘Yes’ or ‘No’ to continue
+        admin_service/declarations_dashboard:
+          attributes:
+            lead_provider_id:
+              blank: Choose a provider
+            cohort_id:
+              blank: Choose a cohort
         applications/change_training_status:
           attributes:
             training_status:

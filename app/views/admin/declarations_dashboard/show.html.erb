@@ -76,6 +76,8 @@
       </tr>
     </tbody>
   </table>
+<% elsif @declarations_dashboard.errors.any? %>
+  <%= govuk_inset_text(text: "Choose a provider and cohort") %>
 <% else %>
   <%= govuk_inset_text(text: "Select a provider and cohort to view declaration data.") %>
 <% end %>

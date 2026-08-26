@@ -34,6 +34,15 @@ RSpec.feature "Viewing the declarations dashboard", type: :feature do
     click_button "Select"
 
     expect(page).to have_css(".govuk-error-summary")
+    within(".govuk-error-summary") do
+      expect(page).to have_link("Choose a provider")
+      expect(page).to have_link("Choose a cohort")
+    end
+
+    expect(page).to have_css(".govuk-error-message", text: "Choose a provider")
+    expect(page).to have_css(".govuk-error-message", text: "Choose a cohort")
+
+    expect(page).to have_content("Choose a provider and cohort")
     expect(page).not_to have_css("th", text: "Declaration type")
   end
 
