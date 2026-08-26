@@ -65,6 +65,8 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
     context "when changing output_fee to be false" do
       subject { service.tap(&:validate) }
 
+      before { create(:declaration, :eligible, statement:) }
+
       let(:output_fee) { false }
       let(:original_output_fee) { true }
 
@@ -121,12 +123,29 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
       end
 
       context "when there is not a suitable later output" do
-        before do
-          create(:statement, :open, extend_from: statement, cohort: create(:cohort, :next))
-          create(:statement, :open, extend_from: statement, lead_provider: create(:lead_provider))
+        context "when other statements is exist but for other LPs and cohorts" do
+          before do
+            create(:statement, :open, extend_from: statement, cohort: create(:cohort, :next))
+            create(:statement, :open, extend_from: statement, lead_provider: create(:lead_provider))
+          end
+
+          it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
         end
 
-        it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+        context "when there are milestones but no declarations" do
+          before do
+            StatementItem.delete_all
+            create(:milestone, for_statement: statement)
+          end
+
+          it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+        end
+
+        context "when there are no declarations or milestones" do
+          before { StatementItem.delete_all }
+
+          it { is_expected.to be_valid }
+        end
       end
     end
   end
@@ -213,7 +232,6 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
       context "with later statement" do
         before { declarations && later }
-
 
         it "includes declarations count and destination statement" do
           expect(service.move_off_hint)
@@ -361,7 +379,44 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         end
 
         context "with declarations which occurred after this statements deadline date" do
-          it "needs to handle statements items too late for deadline"
+          before do
+            service.allow_payable_statement_changes = true
+
+            create_list(:declaration,
+                        2,
+                        :eligible,
+                        statement: later,
+                        declaration_date: statement.deadline_date - 1.day)
+
+            create_list(:declaration,
+                        2,
+                        :eligible,
+                        declaration_date: statement.deadline_date + 1.day,
+                        statement: later)
+          end
+
+          let :statement do
+            travel_to 1.month.ago do
+              create(:statement, state:, output_fee: false, for_date: Time.zone.now)
+            end
+          end
+
+          it "updates output_fee" do
+            expect { reconcile }
+              .to change { statement.reload.output_fee }.from(false).to(true)
+          end
+
+          it "moves declarations before target statements deadline date" do
+            expect { reconcile }.to change { statement.declarations.count }.from(0).to(2)
+          end
+
+          it "does not move declarations after target statements deadline date" do
+            expect { reconcile }.to change { later.declarations.count }.from(4).to(2)
+          end
+
+          it "provides correct declaration movement estimate" do
+            expect(service.move_onto_hint).to match("move 2 declarations")
+          end
         end
       end
     end
@@ -471,9 +526,5 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         end
       end
     end
-  end
-
-  context "with unresolved thoughts" do
-    it "consider allow turning output_fee off for last statement if no declarations"
   end
 end
