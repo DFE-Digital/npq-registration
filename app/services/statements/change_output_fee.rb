@@ -12,7 +12,7 @@ module Statements
 
     validates :statement, presence: true, validate_and_copy_errors: true
     validates :output_fee, inclusion: [true, false]
-    validate :next_output_statement_exists, unless: :output_fee
+    validate :next_output_statement_exists
     validate :deadline_date_has_passed, unless: :allow_payable_statement_changes
     validate :statement_is_open, if: :statement
 
@@ -108,7 +108,10 @@ module Statements
     end
 
     def next_output_statement_exists
+      return if output_fee
       return if next_output_statement
+      return unless statement
+      return if statement.declarations.count.zero? && statement.milestones.count.zero?
 
       errors.add :output_fee, :next_output_statement_required
     end
