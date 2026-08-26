@@ -21,7 +21,7 @@ RSpec.feature "Statement - change deadline date", :no_js, type: :feature do
     expect(page).to have_current_path(admin_finance_statement_path(statement))
 
     # check blank date validation
-    within(".govuk-summary-card", text: "Statement summary") do
+    within(".govuk-summary-list__row", text: "Declaration deadline") do
       click_link "Change"
     end
     click_button "Change date"

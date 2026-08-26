@@ -60,6 +60,28 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
         it { is_expected.to have_error :output_fee, :statement_is_paid, "Statement has been paid and cannot be changed" }
       end
+
+      context "when deadline_date has passed" do
+        let :statement do
+          create(:statement,
+                 state:,
+                 output_fee: false,
+                 for_date: 20.days.ago,
+                 deadline_date: 3.days.ago)
+        end
+
+        context "when the allow payable flag is set" do
+          before { service.allow_payable_statement_changes = true }
+
+          it { is_expected.to be_valid }
+        end
+
+        context "when the allow payable flag is not set" do
+          before { service.allow_payable_statement_changes = false }
+
+          it { is_expected.to have_error :output_fee, :deadline_date_has_passed, "Deadline date for the statement has already passed so cannot be changed" }
+        end
+      end
     end
 
     context "when changing output_fee to be false" do

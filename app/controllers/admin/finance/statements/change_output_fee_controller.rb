@@ -22,13 +22,13 @@ module Admin::Finance
 
       def set_service
         @service = ::Statements::ChangeOutputFee.new(statement_change_params)
+        @service.statement = @statement
       end
 
       def statement_change_params
         params
-          .fetch(:statements_change_deadline_date, {})
+          .fetch(:statements_change_output_fee, {})
           .permit(:output_fee, :skip_reconcile_statement_check)
-          .merge(statement: @statement)
       end
     end
   end
