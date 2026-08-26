@@ -452,7 +452,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.2.6)
+    rack (3.2.7)
     rack-attack (6.8.0)
       rack (>= 1.0, < 4)
     rack-oauth2 (2.3.0)
@@ -661,8 +661,8 @@ GEM
     site_prism-all_there (3.0.10)
     skylight (7.1.1)
       activesupport (>= 7.2.0)
-    sprockets (4.2.2)
-      concurrent-ruby (~> 1.0)
+    sprockets (4.4.0)
+      concurrent-ruby (~> 1.1)
       logger
       rack (>= 2.2.4, < 4)
     sprockets-rails (3.5.2)
@@ -814,7 +814,7 @@ DEPENDENCIES
   simpleidn
   site_prism (~> 6.0)
   skylight (~> 7.1)
-  sprockets (~> 4.2.2)
+  sprockets (~> 4.4.0)
   sprockets-rails
   state_machines-activerecord
   strong_migrations
