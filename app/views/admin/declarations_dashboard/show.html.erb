@@ -63,16 +63,16 @@
       <% Declaration.declaration_types.keys.each do |declaration_type| %>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header"><%= declaration_type.capitalize %></th>
-          <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= @calculator.expected_applications_count(declaration_type) %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= @calculator.received_declarations_count(declaration_type) %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= @calculator.remaining_declarations_count(declaration_type) %></td>
         </tr>
       <% end %>
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header">Total declarations</th>
-        <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
-        <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
-        <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+        <td class="govuk-table__cell govuk-table__cell--numeric"><%= @calculator.total_expected_applications %></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric"><%= @calculator.received_declarations_count %></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric"><%= @calculator.total_remaining_declarations_count %></td>
       </tr>
     </tbody>
   </table>

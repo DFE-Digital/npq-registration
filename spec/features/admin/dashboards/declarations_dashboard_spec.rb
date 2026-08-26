@@ -5,9 +5,23 @@ RSpec.feature "Viewing the declarations dashboard", type: :feature do
 
   let(:test_provider) { create(:lead_provider, name: "Test Provider") }
   let(:cohort) { create(:cohort, :current) }
+  let(:schedule) { create(:schedule, :npq_leadership_autumn, cohort:) }
+  let(:statement) { create(:statement, lead_provider: test_provider, cohort:, for_date: 2.months.ago) }
 
   before do
     sign_in_as(create(:admin))
+  end
+
+  def add_started_declarations
+    milestone = create(:milestone, schedule:, declaration_type: "started")
+    create(:milestone_statement, milestone:, statement:)
+
+    applications = create_list(:application, 3, :accepted, lead_provider: test_provider, cohort:, schedule:)
+    create(:declaration, :eligible, declaration_type: "started", application: applications.first, lead_provider: test_provider, cohort:, statement:)
+  end
+
+  def row_values(label)
+    find("th", text: label, exact_text: true).ancestor("tr").all("td").map(&:text)
   end
 
   scenario "visiting the declarations dashboard from the navigation" do
@@ -47,8 +61,7 @@ RSpec.feature "Viewing the declarations dashboard", type: :feature do
   end
 
   scenario "choosing a provider and cohort shows the declaration summary table" do
-    test_provider
-    cohort
+    add_started_declarations
 
     visit admin_declarations_dashboard_path
 
@@ -64,12 +77,43 @@ RSpec.feature "Viewing the declarations dashboard", type: :feature do
     expect(page).to have_css("th", text: "Received")
     expect(page).to have_css("th", text: "Remaining")
 
-    expect(page).to have_css("th", text: "Started")
-    expect(page).to have_css("th", text: "Retained-1")
-    expect(page).to have_css("th", text: "Retained-2")
-    expect(page).to have_css("th", text: "Completed")
-    expect(page).to have_css("th", text: "Total declarations")
+    expect(row_values("Started")).to eq(%w[3 1 2])
+    expect(row_values("Retained-1")).to eq(%w[0 0 0])
+    expect(row_values("Retained-2")).to eq(%w[0 0 0])
+    expect(row_values("Completed")).to eq(%w[0 0 0])
+    expect(row_values("Total declarations")).to eq(%w[3 1 2])
+  end
 
-    expect(page).to have_css("td.govuk-table__cell--numeric", text: "-", count: 15)
+  scenario "the chosen provider and cohort stay selected" do
+    test_provider
+    cohort
+
+    visit admin_declarations_dashboard_path
+
+    select "Test Provider", from: "Provider"
+    select cohort.description, from: "Cohort"
+    click_button "Select"
+
+    expect(page).to have_select("Provider", selected: "Test Provider")
+    expect(page).to have_select("Cohort", selected: cohort.description)
+  end
+
+  scenario "changing the provider refreshes the table" do
+    add_started_declarations
+    other_provider = create(:lead_provider, name: "Other Provider")
+
+    visit admin_declarations_dashboard_path
+
+    select "Test Provider", from: "Provider"
+    select cohort.description, from: "Cohort"
+    click_button "Select"
+
+    expect(row_values("Started")).to eq(%w[3 1 2])
+
+    select other_provider.name, from: "Provider"
+    click_button "Select"
+
+    expect(page).to have_css("h2", text: "Other Provider")
+    expect(row_values("Started")).to eq(%w[0 0 0])
   end
 end
