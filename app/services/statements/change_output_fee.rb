@@ -120,7 +120,7 @@ module Statements
       return unless statement
       return unless statement.deadline_date.past?
 
-      errors.add :deadline_date, :deadline_date_is_in_past
+      errors.add :output_fee, :deadline_date_has_passed
     end
 
     def move_declarations_onto_this_statement

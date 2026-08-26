@@ -5,64 +5,64 @@ require "rails_helper"
 RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
   include Helpers::AdminLogin
 
-  let(:statement) { create(:statement) }
+  let(:statement) { create(:statement, output_fee: false) }
 
-  before { sign_in_as(create(:super_admin)) }
+  before do
+    allow(Statements::ChangeOutputFeeJob).to receive(:perform_later)
+    sign_in_as(create(:super_admin))
+  end
 
   scenario "updating output fee" do
-    visit(admin_finance_statement_path(statement))
-    within(".govuk-summary-card", text: "Statement summary") do
+    visit admin_finance_statement_path(statement)
+    within(".govuk-summary-list__row", text: "Output statement") do
       click_link "Change"
     end
 
     # check cancel
+    expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
     click_link "Cancel"
-    expect(page).to have_current_path(admin_finance_statement_path(statement))
 
-    # check blank date validation
-    within(".govuk-summary-card", text: "Statement summary") do
+    expect(page).to have_current_path admin_finance_statement_path(statement)
+    within(".govuk-summary-list__row", text: "Output statement") do
       click_link "Change"
     end
+
+    expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
     click_button "Change output statement"
+    expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
 
-    expect(page).to have_content I18n.t("activemodel.errors.models.statements/change_deadline_date.attributes.deadline_date.blank")
+    expect(page).to have_current_path admin_finance_statement_path(statement)
+    within(".govuk-summary-list__row", text: "Output statement") do
+      click_link "Change"
+    end
 
-    # check non-numeric characters validation
-    click_button "Change output fee"
-
-    expect(page).to have_content I18n.t("activemodel.errors.models.statements/change_deadline_date.attributes.deadline_date.blank")
-
-    choose "Yes"
+    expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
+    expect(page).to have_content "There is no later output statement and no declarations or milestones will be moved"
+    choose "Output statement"
     click_button "Change output statement"
+    expect(Statements::ChangeOutputFeeJob).to have_received(:perform_later)
 
-    expect(page).to have_content I18n.t("activemodel.errors.models.statements/change_deadline_date.attributes.deadline_date.invalid")
-
-    # check valid date
-    new_deadline_date = statement.payment_date - 1.month
-    fill_in "statements_change_deadline_date[deadline_date(3i)]", with: new_deadline_date.day
-    fill_in "statements_change_deadline_date[deadline_date(2i)]", with: new_deadline_date.month
-    fill_in "statements_change_deadline_date[deadline_date(1i)]", with: new_deadline_date.year
-
-    click_button "Change date"
-
-    expect(page).to have_content("Declaration deadline changed")
-    expect(page).to have_current_path(admin_finance_statement_path(statement))
+    expect(page).to have_current_path admin_finance_statement_path(statement)
+    expect(page).to have_content "Output statement is being changed and declarations moved - this will take a few minutes"
   end
 
   context "when the statement is payable" do
-    let(:statement) { create(:statement, :payable) }
+    let(:statement) { create(:statement, :payable, output_fee: false) }
 
     scenario "it shows an error" do
-      visit(admin_finance_statements_change_deadline_date_path(statement))
+      visit admin_finance_statement_path(statement)
+      within(".govuk-summary-list__row", text: "Output statement") do
+        click_link "Change"
+      end
 
-      new_deadline_date = statement.payment_date - 1.month
-      fill_in "statements_change_deadline_date[deadline_date(3i)]", with: new_deadline_date.day
-      fill_in "statements_change_deadline_date[deadline_date(2i)]", with: new_deadline_date.month
-      fill_in "statements_change_deadline_date[deadline_date(1i)]", with: new_deadline_date.year
+      expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
+      expect(page).to have_content "There is no later output statement and no declarations or milestones will be moved"
+      choose "Output statement"
+      click_button "Change output statement"
+      expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
 
-      click_button "Change date"
-
-      expect(page).to have_content I18n.t("activerecord.errors.models.statement.attributes.base.statement_payable")
+      expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
+      expect(page).to have_content I18n.t("activemodel.errors.models.statements/change_output_fee.attributes.output_fee.deadline_date_has_passed")
     end
   end
 end
