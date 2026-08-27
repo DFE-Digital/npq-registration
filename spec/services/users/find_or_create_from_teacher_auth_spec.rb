@@ -118,7 +118,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
         end
 
-        it "stores the previous name on the user", skip: "temporarily disabling" do
+        it "stores the previous name on the user" do
           subject
           expect(user.reload.previous_names).to eq(["Sarah Johnson"])
         end
@@ -132,7 +132,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           ]
         end
 
-        it "stores all previous names on the user", skip: "temporarily disabling" do
+        it "stores all previous names on the user" do
           subject
           expect(user.reload.previous_names).to eq([
             "Sarah Johnson",
@@ -147,7 +147,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
         end
 
-        it "replaces old previous_names with new data from API", skip: "temporarily disabling" do
+        it "replaces old previous_names with new data from API" do
           subject
           expect(user.reload.previous_names).to eq(["Sarah Johnson"])
         end
@@ -311,7 +311,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
       end
 
-      it "stores previous_names on the kept user", skip: "temporarily disabling" do
+      it "stores previous_names on the kept user" do
         subject
         expect(most_recently_updated_user.reload.previous_names).to eq(["Sarah Johnson"])
       end
@@ -376,7 +376,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
         end
 
-        it "updates previous_names on the user", skip: "temporarily disabling" do
+        it "updates previous_names on the user" do
           subject
           expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
         end
@@ -392,7 +392,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
         end
 
-        it "replaces old previous_names with new API data", skip: "temporarily disabling" do
+        it "replaces old previous_names with new API data" do
           subject
           expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
         end
@@ -457,7 +457,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       context "when the API returns no previous names" do
         let(:api_previous_names) { [] }
 
-        it "creates the user with an empty previous_names array", skip: "temporarily disabling" do
+        it "creates the user with an empty previous_names array" do
           subject
           created_user = User.find_by(provider: "teacher_auth", uid:)
           expect(created_user.previous_names).to eq([])
@@ -472,7 +472,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           ]
         end
 
-        it "creates the user with previous_names from API", skip: "temporarily disabling" do
+        it "creates the user with previous_names from API" do
           subject
           created_user = User.find_by(provider: "teacher_auth", uid:)
 
