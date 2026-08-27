@@ -1,6 +1,5 @@
 class OmniauthController < Devise::OmniauthCallbacksController
   OMNIAUTH_ERROR_STRATEGY_KEY = "omniauth.error.strategy".freeze
-  OMNIAUTH_ERROR_TYPE = "omniauth.error.type".freeze
 
   SESSION_RESET_RETAINED_KEYS = %w[
     log_session_id
@@ -94,16 +93,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
     end
 
     Rails.logger.info("[GAI][omniauth_failure] uid=#{try_to_extract_user_uid} error=#{try_to_extract_error_type}")
-
-    unless csrf_detected?
-      send_error_to_sentry(
-        "Omniauth login failure",
-        contexts: {
-          "Strategy" => { name: strategy_name },
-          "Error" => { "error.type" => request.env[OMNIAUTH_ERROR_TYPE].to_s },
-        },
-      )
-    end
+    send_error_to_sentry(
+      "Omniauth login failure",
+      contexts: {
+        "Strategy" => { name: strategy_name },
+        "Error" => { "error.type" => request.env["omniauth.error.type"].to_s },
+      },
+    )
 
     flash[:error] = failure_message
     redirect_to failed_sign_in_path
@@ -213,9 +209,5 @@ private
     reset_session.tap do
       retained_values.each { |k, v| session[k] = v }
     end
-  end
-
-  def csrf_detected?
-    request.env[OMNIAUTH_ERROR_TYPE] == :csrf_detected
   end
 end
