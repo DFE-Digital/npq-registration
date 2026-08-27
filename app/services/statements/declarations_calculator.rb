@@ -1,79 +1,14 @@
 # frozen_string_literal: true
 
 module Statements
-  class DeclarationsCalculator
-    class InvalidDeclarationType < StandardError; end
-
+  class DeclarationsCalculator < BaseDeclarationsCalculator
     attr_reader :statement
+
+    delegate :cohort, :lead_provider, :milestone_declaration_types, to: :statement
 
     def initialize(statement:)
       @statement = statement
-    end
-
-    def expected_applications(declaration_type)
-      case declaration_type
-      when "started"
-        return Application.none unless statement.milestone_declaration_types.include?("started")
-
-        Application.where(cohort: statement.cohort, lead_provider: statement.lead_provider).accepted
-      when "retained-1"
-        applications_with_declarations_and_milestones(
-          declaration_type: :started,
-          milestone_declaration_type: :"retained-1",
-        )
-      when "retained-2"
-        applications_with_declarations_and_milestones(
-          declaration_type: :"retained-1",
-          milestone_declaration_type: :"retained-2",
-        )
-      when "completed"
-        applications_in_schedules_with_declarations_and_milestones(
-          schedules: Schedule.with_retained_2_milestone,
-          declaration_type: :"retained-2",
-          milestone_declaration_type: :completed,
-        ).or(
-          applications_in_schedules_with_declarations_and_milestones(
-            schedules: Schedule.without_retained_2_milestone,
-            declaration_type: :"retained-1",
-            milestone_declaration_type: :completed,
-          ),
-        ).distinct
-      else
-        raise InvalidDeclarationType, "Invalid declaration type: #{declaration_type}, class: #{declaration_type.class}"
-      end
-    end
-
-    def total_expected_applications
-      statement.milestone_declaration_types
-        .map { |declaration_type| expected_applications(declaration_type).count }
-        .sum
-    end
-
-    def received_declarations(declaration_type = nil)
-      scope = statement.declarations.billable.where(cohort: statement.cohort, lead_provider: statement.lead_provider)
-
-      return scope unless declaration_type
-
-      scope.where(declaration_type: declaration_type)
-    end
-
-    def remaining_declarations_count(declaration_type)
-      expected_applications_count = expected_applications(declaration_type).count
-
-      return 0 if expected_applications_count.zero?
-
-      expected_applications_count -
-        received_declarations(declaration_type).count +
-        previous_milestones_remaining_count(declaration_type)
-    end
-
-    def total_remaining_declarations_count
-      received_declarations_for_milestones_on_statement =
-        statement.milestone_declaration_types
-        .map { |declaration_type| received_declarations(declaration_type).count }
-        .sum
-
-      total_expected_applications - received_declarations_for_milestones_on_statement
+      super()
     end
 
     def expected_output_payment(course_calculators)
@@ -86,50 +21,8 @@ module Statements
 
   private
 
-    def active_applications
-      Application
-        .joins(:declarations, schedule: :milestones)
-        .where(
-          training_status: "active",
-          cohort: statement.cohort,
-          lead_provider: statement.lead_provider,
-        )
-    end
-
-    def applications_with_declarations_and_milestones(declaration_type:, milestone_declaration_type:)
-      return Application.none unless statement.milestone_declaration_types.include?(milestone_declaration_type.to_s)
-
-      active_applications.where(
-        declarations: { declaration_type: Declaration.declaration_types[declaration_type] },
-        schedule: { milestones: { declaration_type: Declaration.declaration_types[milestone_declaration_type] } },
-      ).distinct
-    end
-
-    def applications_in_schedules_with_declarations_and_milestones(schedules:, declaration_type:, milestone_declaration_type:)
-      return Application.none unless statement.milestone_declaration_types.include?(milestone_declaration_type.to_s)
-
-      active_applications.where(
-        declarations: { declaration_type: Declaration.declaration_types[declaration_type] },
-        schedule: {
-          id: schedules,
-          milestones: { declaration_type: Declaration.declaration_types[milestone_declaration_type] },
-        },
-      )
-    end
-
-    def previous_milestones_remaining_count(declaration_type)
-      previous_milestones(declaration_type).sum do |previous_declaration_type|
-        previous_remaining_count = expected_applications(previous_declaration_type).uniq.count -
-          received_declarations(previous_declaration_type).count
-        previous_remaining_count.positive? ? previous_remaining_count : 0
-      end
-    end
-
-    def previous_milestones(declaration_type)
-      declaration_type_index = Milestone::ALL_DECLARATION_TYPES.index(declaration_type)
-      return [] unless declaration_type_index.positive?
-
-      Milestone::ALL_DECLARATION_TYPES[..(declaration_type_index - 1)]
+    def declarations_scope
+      statement.declarations
     end
 
     def expected_eligible_applications_count_for_course(course)
@@ -138,7 +31,7 @@ module Statements
     end
 
     def expected_eligible_applications
-      remaining_and_completed_applications = statement.milestone_declaration_types.excluding("started")
+      remaining_and_completed_applications = milestone_declaration_types.excluding("started")
         .map { |declaration_type| expected_applications(declaration_type) }
         .reduce(:or) || Application.none
       started_applications = expected_applications("started")
