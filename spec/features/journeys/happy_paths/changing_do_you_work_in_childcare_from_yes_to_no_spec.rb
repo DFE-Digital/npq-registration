@@ -9,7 +9,9 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before { create(:school, :eligible_with_urn_and_address) }
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey changing do you work in childcare from yes to no (with JS)") { run_scenario(js: true) }
@@ -210,7 +212,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
         "course_identifier" => "npq-leading-teaching",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "self",
-        "childcare_identifier" => "School-100000",
+        "childcare_identifier" => "School-#{school.urn}",
         "childcare_name" => js ? "" : "open",
         "employer_name" => "Big company",
         "employment_type" => "hospital_school",

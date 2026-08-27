@@ -774,5 +774,12 @@ RSpec.describe Application do
 
       it { is_expected.to be false }
     end
+
+    context "when funding_eligiblity_status_code is nil" do
+      # older applications may not have a funding_eligiblity_status_code set in the database
+      let(:funding_eligiblity_status_code) { nil }
+
+      it { is_expected.to be_nil }
+    end
   end
 end

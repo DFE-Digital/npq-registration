@@ -13,9 +13,9 @@ module Questionnaires
     end
 
     def previous_step
-      if !wizard.query_store.inside_catchment? && wizard.query_store.teacher_catchment_specified?
+      if !query_store.inside_catchment? && query_store.teacher_catchment_specified?
         :ehco_new_headteacher
-      elsif wizard.query_store.declared_previous_funding?
+      elsif query_store.declared_previous_funding?
         :ineligible_for_funding_previously_funded
       else
         :ineligible_for_funding
@@ -23,7 +23,7 @@ module Questionnaires
     end
 
     def next_step
-      if wizard.query_store.declared_previous_funding?
+      if query_store.declared_previous_funding?
         :work_setting
       else
         :choose_your_provider

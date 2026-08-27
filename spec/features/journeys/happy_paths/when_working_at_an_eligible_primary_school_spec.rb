@@ -9,7 +9,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before do
+  let(:school) do
     School.create!(urn: 100_000,
                    name: "open manchester school",
                    address_1: "street 1", town: "manchester",
@@ -18,6 +18,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
                    number_of_pupils: 150,
                    phase_name: "Primary")
   end
+
+  before { school }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey (with JS)") { run_scenario(js: true) }
@@ -122,7 +124,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -151,7 +153,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "declared_previous_funding" => "no",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "funded",

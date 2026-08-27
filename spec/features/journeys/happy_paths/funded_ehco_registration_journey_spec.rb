@@ -5,7 +5,9 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  before { create(:school, :eligible_with_urn_and_address) }
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
 
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
@@ -105,7 +107,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => "pending",
@@ -140,7 +142,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "ehco_new_headteacher" => "yes",
         "email_template" => "ehco_scholarship_funding",
         "funding_eligiblity_status_code" => "funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "funded",

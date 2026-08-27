@@ -10,7 +10,7 @@ RSpec.feature "Account", :no_js, type: :feature do
   let(:user_uid) { user.uid }
   let(:user) { create(:user, :with_teacher_auth, email: "user@example.com") }
   let(:cohort) { create(:cohort, start_year: 2025) }
-  let(:application) { create(:application, user:, cohort:) }
+  let(:application) { create(:application, user:, cohort:, funding_eligiblity_status_code: FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE) }
 
   before { application }
 
@@ -129,6 +129,8 @@ RSpec.feature "Account", :no_js, type: :feature do
                        scenario "it shows scholarship funding details" do
                          visit "/accounts/user_registrations/#{application.id}"
 
+                         expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+
                          expect(page).to(
                            have_summary_item(
                              "Scholarship funding",
@@ -143,6 +145,29 @@ RSpec.feature "Account", :no_js, type: :feature do
                        end
                      end
                    end
+
+      context "when the application funding_eligiblity_status_code is subject_to_review" do
+        let(:application) { create(:application, user:, cohort:, funding_eligiblity_status_code: FundingEligibility::SUBJECT_TO_REVIEW) }
+
+        scenario "it shows scholarship funding details" do
+          visit "/accounts/user_registrations/#{application.id}"
+          expect(page).to have_summary_item("DfE scholarship funding", "In review")
+        end
+      end
+
+      context "when the application funding_eligiblity_status_code is nil" do
+        let(:application) { create(:application, user:, cohort:, funding_eligiblity_status_code: nil) }
+
+        scenario "it does not show the DfE scholarship funding summary item" do
+          visit "/accounts/user_registrations/#{application.id}"
+          expect(page.all(".govuk-summary-list__key", text: "DfE scholarship funding", exact_text: true)).to be_empty
+        end
+
+        scenario "it does not show the Scholarship funding summary item" do
+          visit "/accounts/user_registrations/#{application.id}"
+          expect(page.all(".govuk-summary-list__key", text: "Scholarship funding", exact_text: true)).to be_empty
+        end
+      end
     end
   end
 

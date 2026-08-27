@@ -9,7 +9,9 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before { create(:school, :eligible_with_urn_and_address) }
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
 
   context "when JavaScript is enabled", :js do
     scenario("applying for EHCO but not a new headteacher") { run_scenario(js: true) }
@@ -99,7 +101,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -130,7 +132,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
         "ehco_new_headteacher" => "no",
         "email_template" => "not_eligible_ehco_funding",
         "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "studying_npqh",

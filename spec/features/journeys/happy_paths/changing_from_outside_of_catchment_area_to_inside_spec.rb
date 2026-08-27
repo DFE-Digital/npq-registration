@@ -9,7 +9,9 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  before { create(:school, :eligible_with_urn_and_address) }
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey changing from outside of catchment area to inside (with JS)") { run_scenario(js: true) }
@@ -168,7 +170,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -197,7 +199,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, ty
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
         "funding_eligiblity_status_code" => "ineligible_establishment_type",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

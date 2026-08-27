@@ -21,7 +21,7 @@ module Questionnaires
         :possible_funding
       elsif query_store.declared_previous_funding?
         :choose_your_provider
-      elsif !wizard.query_store.inside_catchment? && wizard.query_store.teacher_catchment_specified?
+      elsif !query_store.inside_catchment? && query_store.teacher_catchment_specified?
         :funding_your_ehco
       else
         :ineligible_for_funding
