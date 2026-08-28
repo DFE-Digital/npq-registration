@@ -83,11 +83,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.choose("Headship", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      expect(page).to have_text("Have you received DfE funding for this course before?")
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
@@ -105,13 +100,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    # check check-answers page shows ineligible
+    expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
 
-    # check back links
-    # click_link("Back")
-    # expect(page).to have_current_path("/registration/check-funding")
-    # click_link("Back")
-    # expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct
   end
 
   scenario "Spring 2026 cohort" do

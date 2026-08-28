@@ -145,7 +145,7 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
     context "when the user has answered they work outside of England" do
       let(:teacher_catchment) { "another" }
 
-      it_behaves_like "showing the eligibility step"
+      it { is_expected.to be :ineligible_for_funding }
     end
   end
 

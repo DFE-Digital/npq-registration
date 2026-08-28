@@ -80,7 +80,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     context "when having declared previous funding" do
       let(:declared_previous_funding) { "yes" }
 
-      it { is_expected.to be(:funding_your_npq) }
+      it { is_expected.to be(:work_setting) }
     end
 
     context "when EHCO" do
@@ -89,7 +89,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       context "when declared previous funding" do
         let(:declared_previous_funding) { "yes" }
 
-        it { is_expected.to be(:ehco_new_headteacher) }
+        it { is_expected.to be(:work_setting) }
       end
 
       context "when eligible for funding" do

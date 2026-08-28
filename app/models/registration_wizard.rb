@@ -187,8 +187,8 @@ class RegistrationWizard
     end
 
     if course.ehco?
-      array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status)
-      array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher)
+      array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status) if store["npqh_status"]
+      array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher) if store["ehco_new_headteacher"]
     end
 
     if course.npqs?

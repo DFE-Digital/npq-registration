@@ -17,12 +17,12 @@ module Questionnaires
     def previous_step
       return :teacher_catchment unless course
 
-      if !wizard.query_store.inside_catchment? && wizard.query_store.teacher_catchment_specified?
+      if query_store.declared_not_working_in_england? # TODO: test
         :teacher_catchment
       elsif works_in_another_setting? && employment_type_other?
         :choose_your_npq # TODO: test
-      elsif course.ehco?
-        if wizard.query_store.declared_previous_funding?
+      elsif course.ehco? && query_store.cohort_funded? # TODO: test
+        if query_store.declared_previous_funding?
           :funding_history
         else
           :ehco_new_headteacher
@@ -31,8 +31,10 @@ module Questionnaires
         :maths_eligibility_teaching_for_mastery # TODO: test
       elsif course.npqs?
         :senco_in_role # TODO: test
-      else
+      elsif query_store.employment_type_needs_employer_name? # TODO: test
         :your_employer
+      else
+        :work_setting
       end
     end
 
@@ -81,7 +83,7 @@ module Questionnaires
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         user_ecf_id: query_store.user_ecf_id,
-        query_store: wizard.query_store,
+        query_store:,
       )
     end
 

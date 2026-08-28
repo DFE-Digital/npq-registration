@@ -72,7 +72,7 @@ module Questionnaires
     end
 
     def next_step
-      if wizard.query_store.inside_catchment?
+      if query_store.inside_catchment?
         return :choose_school if works_in_school?
         return :kind_of_nursery if works_in_childcare?
         return :referred_by_return_to_teaching_adviser if works_in_other?
@@ -84,12 +84,14 @@ module Questionnaires
     end
 
     def previous_step
-      if wizard.query_store.declared_previous_funding?
-        if wizard.query_store.course&.ehco?
+      if query_store.declared_previous_funding?
+        if query_store.course&.ehco? && query_store.cohort_funded?
           :funding_your_ehco
         else
           :ineligible_for_funding_previously_funded
         end
+      elsif query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england? || !query_store.cohort_funded? # TODO: test
+        :choose_your_npq
       else
         :funding_history
       end

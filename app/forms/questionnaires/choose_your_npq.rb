@@ -45,7 +45,11 @@ module Questionnaires
     end
 
     def next_step
-      :funding_history
+      if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded? # TODO: test, and put logic into base.rb
+        :funding_history
+      else
+        :work_setting
+      end
     end
 
     def previous_step

@@ -29,8 +29,8 @@ class RegistrationQueryStore
     store["teacher_catchment"] == "england"
   end
 
-  def teacher_catchment_specified?
-    store["teacher_catchment"].present? # TODO: test
+  def declared_not_working_in_england?
+    store["teacher_catchment"].present? && !inside_catchment? # TODO: test
   end
 
   def funding_eligiblity_status_code
@@ -170,6 +170,10 @@ class RegistrationQueryStore
     return false unless employment_type_matters?
 
     !(lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?)
+  end
+
+  def employment_type_needs_employer_name?
+    employment_type_hospital_school? || young_offender_institution? # TODO: test
   end
 
   def employer_name_matters?

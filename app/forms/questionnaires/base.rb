@@ -120,9 +120,13 @@ module Questionnaires
     def show_eligibility_step
       if changing_answer?
         :check_answers
-      elsif query_store.course.ehco?
-        :npqh_status
-      elsif wizard.query_store.proceed_without_checking_funding? || wizard.query_store.declared_previous_funding?
+      elsif query_store.course.ehco? && query_store.cohort_funded? && !query_store.proceed_without_checking_funding? && !query_store.declared_previous_funding?
+        if query_store.inside_catchment?
+          :npqh_status
+        else
+          :funding_your_ehco
+        end
+      elsif query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?
         :choose_your_provider
       elsif query_store.course.npqlpm?
         :maths_eligibility_teaching_for_mastery

@@ -1,7 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
-  let(:instance) { described_class.new(course_identifier: course.identifier) }
+  subject(:instance) { described_class.new(wizard:, course_identifier: course.identifier) }
+
+  let(:wizard) { RegistrationWizard.new(current_step: :choose_your_npq, store:, request: nil, current_user: nil) }
+  let(:store) { {} }
   let(:aso_course) { Course.find_by(identifier: "npq-additional-support-offer") }
   let(:ehco_course) { Course.find_by(identifier: "npq-early-headship-coaching-offer") }
   let(:headship_course) { Course.find_by(identifier: "npq-headship") }
@@ -15,15 +18,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   describe "validations" do
     let(:valid_course_identifier) { ehco_course.identifier }
     let(:cohort) { create(:cohort, :next, :with_all_courses_for_provider, suffix: "b") }
-
-    before do
-      subject.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store: { "course_start_cohort" => cohort.identifier },
-        request: nil,
-        current_user: create(:user),
-      )
-    end
+    let(:store) { { course_start_cohort: cohort.identifier }.stringify_keys }
 
     it { is_expected.to validate_presence_of(:course_identifier) }
 

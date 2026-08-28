@@ -150,8 +150,33 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
     )
   end
 
-  scenario "Declared as not previously funded" do
+  scenario "Declared as not previously funded with unfunded cohort" do
     choose_course_start_date(first_option: false)
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      expect(page).to have_text("Choose an NPQ")
+      page.choose("Headship", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: false)
+
+    # check back links
+    click_link("Back")
+    expect(page).to have_current_path("/registration/choose-your-npq")
+  end
+
+  scenario "Declared as not previously funded with funded cohort" do
+    choose_course_start_date
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      expect(page).to have_text("Check if you’re eligible for DfE scholarship funding")
+      click_button("Check funding")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      expect(page).to have_text("Do you work in England?")
+      choose("Yes", visible: :all)
+    end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Choose an NPQ")
@@ -170,5 +195,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
     expect(page).to have_current_path("/registration/funding-history")
     click_link("Back")
     expect(page).to have_current_path("/registration/choose-your-npq")
+    click_link("Back")
+    expect(page).to have_current_path("/registration/teacher-catchment")
+    click_link("Back")
+    expect(page).to have_current_path("/registration/check-funding")
   end
 end

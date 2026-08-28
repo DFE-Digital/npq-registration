@@ -17,7 +17,7 @@ module Questionnaires
     end
 
     def next_step
-      if wizard.query_store.declared_previous_funding?
+      if query_store.declared_previous_funding?
         :work_setting
       else
         :choose_your_provider
@@ -25,7 +25,7 @@ module Questionnaires
     end
 
     def course
-      @course ||= wizard.query_store.course
+      @course ||= query_store.course
     end
 
     def questions

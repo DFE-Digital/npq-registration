@@ -124,25 +124,12 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js: false, name: "open")
-
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      page.choose "I’ve completed it", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
-      page.choose "Yes", visible: :all
-    end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_content("You’re not eligible for scholarship funding for the Early headship coaching offer course as you have selected the Spring 2026 cohort.")
@@ -157,9 +144,11 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("LLSE", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: false)
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      page.check("Yes, I agree to share my information", visible: :all)
+    end
 
-    check_back_journey_is_correct(exclude_current_page: true)
+    check_back_journey_is_correct
   end
 
   scenario "When not working in England" do
@@ -188,22 +177,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      page.choose "I’ve completed it", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
-      page.choose "Yes", visible: :all
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
@@ -215,12 +191,14 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Teach First", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: false)
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      page.check("Yes, I agree to share my information", visible: :all)
+    end
 
-    check_back_journey_is_correct(exclude_current_page: true)
+    check_back_journey_is_correct
   end
 
-  scenario "When having declared previous funding" do
+  scenario "When having declared previous funding and working in England" do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
     end
@@ -261,23 +239,16 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      page.choose "I’ve completed it", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
-      page.choose "Yes", visible: :all
-    end
-
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: false)
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      page.check("Yes, I agree to share my information", visible: :all)
+    end
 
-    check_back_journey_is_correct(exclude_current_page: true)
+    check_back_journey_is_correct
   end
 
   scenario "When continuing without DfE funding" do
@@ -297,93 +268,19 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      page.choose "I’ve completed it", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
-      page.choose "Yes", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      # TODO: this seems like the wrong message
-      expect(page).to have_content("You’re not eligible for DfE scholarship funding because you do not work in England")
-      page.click_link("Continue to register")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      page.choose "I am paying", visible: :all
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       page.choose("Teach First", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: false)
-
-    check_back_journey_is_correct(exclude_current_page: true)
-  end
-
-  scenario "When continuing without DfE funding and declaring previous funding" do
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      page.click_button("Start now")
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
-      click_button("Continue without DfE funding")
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      page.choose("Early headship coaching offer", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/ineligible-for-funding-previously-funded", submit_form: false) do
-      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you have received DfE funding for this course before.")
-      page.click_link("Continue to register")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      page.choose "I am paying", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-      page.choose("Primary school (5 to 11)", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      page.choose "I’ve completed it", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
-      page.choose "Yes", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("Teach First", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: false)
-
-    check_back_journey_is_correct(exclude_current_page: true)
+    check_back_journey_is_correct
   end
 end

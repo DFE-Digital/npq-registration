@@ -13,8 +13,8 @@ module Questionnaires
     end
 
     def previous_step
-      if !query_store.inside_catchment? && query_store.teacher_catchment_specified?
-        :ehco_new_headteacher
+      if query_store.declared_not_working_in_england?
+        :work_setting
       elsif query_store.declared_previous_funding?
         :ineligible_for_funding_previously_funded
       else

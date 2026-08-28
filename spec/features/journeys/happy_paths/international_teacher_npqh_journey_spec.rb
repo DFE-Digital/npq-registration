@@ -39,10 +39,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Headship", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
@@ -154,7 +150,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         "check_funding" => "yes",
         "course_identifier" => "npq-headship",
         "course_start_cohort" => course_start_cohort_value,
-        "declared_previous_funding" => "no",
         "email_template" => "not_england_wrong_catchment",
         "funding" => "school",
         "funding_eligiblity_status_code" => "not_in_england",
