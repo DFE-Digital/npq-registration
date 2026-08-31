@@ -661,7 +661,7 @@ GEM
     site_prism-all_there (3.0.10)
     skylight (7.1.1)
       activesupport (>= 7.2.0)
-    sprockets (4.4.0)
+    sprockets (4.4.1)
       concurrent-ruby (~> 1.1)
       logger
       rack (>= 2.2.4, < 4)
@@ -814,7 +814,7 @@ DEPENDENCIES
   simpleidn
   site_prism (~> 6.0)
   skylight (~> 7.1)
-  sprockets (~> 4.4.0)
+  sprockets (~> 4.4.1)
   sprockets-rails
   state_machines-activerecord
   strong_migrations
