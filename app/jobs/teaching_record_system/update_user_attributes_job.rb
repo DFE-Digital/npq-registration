@@ -4,8 +4,12 @@ module TeachingRecordSystem
       Sentry.capture_exception(exception)
     end
 
-    def perform(user_id:, access_token:)
+    def perform(user_id:)
       user = User.find(user_id)
+      return unless user.access_token
+
+      access_token = user.access_token.token
+      user.access_token.destroy!
       return unless user.verified_trn
 
       trs_person = TeachingRecordSystem::FetchPerson.fetch(access_token:)

@@ -166,8 +166,10 @@ module Users
     end
 
     def schedule_updating_trs_attributes!(user:, access_token:)
+      user.store_access_token!(access_token)
+
       TeachingRecordSystem::UpdateUserAttributesJob
-        .perform_later(user_id: user.id, access_token:)
+        .perform_later(user_id: user.id)
     end
   end
 end

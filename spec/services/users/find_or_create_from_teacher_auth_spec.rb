@@ -62,9 +62,10 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     it "schedules job to update previous_names" do
       subject
 
+      expect(user.access_token).to be_present
+
       expect(TeachingRecordSystem::UpdateUserAttributesJob)
-        .to have_received(:perform_later)
-              .with(user_id: user.id, access_token: be_present)
+        .to have_received(:perform_later).with(user_id: user.id)
     end
   end
 

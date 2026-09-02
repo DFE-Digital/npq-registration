@@ -1,18 +1,23 @@
 require "rails_helper"
 
 RSpec.describe TeachingRecordSystem::UpdateUserAttributesJob, type: :job do
-  subject(:perform_job) { described_class.perform_now(user_id: user.id, access_token:) }
+  subject(:perform_job) { described_class.perform_now(user_id: user.id) }
 
   before { allow(Sentry).to receive(:capture_exception) }
 
-  let(:user) { create(:user, :with_teacher_auth, :with_verified_trn, :with_previous_names) }
-  let(:access_token) { "a-token" }
+  let :user do
+    create(:user,
+           :with_teacher_auth,
+           :with_verified_trn,
+           :with_previous_names,
+           :with_access_token)
+  end
 
   let :stub_person_request do
     stub_request(:get, "#{ENV['TRS_API_URL']}/v3/person")
       .with(
         headers: {
-          "Authorization" => "Bearer #{access_token}",
+          "Authorization" => "Bearer #{user.access_token.token}",
           "X-Api-Version" => "Next",
         },
         query: { "include" => "PreviousNames" },
@@ -33,7 +38,7 @@ RSpec.describe TeachingRecordSystem::UpdateUserAttributesJob, type: :job do
   let(:stub_api) { stub_person_request.to_return(person_api_response) }
 
   context "when the user does not exist" do
-    subject(:perform_job) { described_class.perform_now(user_id: 9999, access_token:) }
+    subject(:perform_job) { described_class.perform_now(user_id: 9999) }
 
     it "notifies sentry but does not reschedule" do
       expect { perform_job }.not_to raise_exception
@@ -46,6 +51,16 @@ RSpec.describe TeachingRecordSystem::UpdateUserAttributesJob, type: :job do
     let(:user) { create(:user, :with_teacher_auth, :without_trn) }
 
     it { expect { perform_job }.to(not_change { user.reload.previous_names }) }
+
+    context "when they have an access token anyway" do
+      let(:user) { create(:user, :with_teacher_auth, :without_trn, :with_access_token) }
+
+      it "clears the access token" do
+        expect { perform_job }.to(not_change { user.reload.previous_names })
+
+        expect(user.access_token).to be_nil
+      end
+    end
   end
 
   context "when the API returns no previous names" do
@@ -65,6 +80,7 @@ RSpec.describe TeachingRecordSystem::UpdateUserAttributesJob, type: :job do
     it "stores the previous name on the user" do
       expect { perform_job }
         .to change { user.reload.previous_names }.to(["Sarah Johnson"])
+        .and(change(user, :access_token).from(be_present).to(be_nil))
     end
   end
 
@@ -95,6 +111,7 @@ RSpec.describe TeachingRecordSystem::UpdateUserAttributesJob, type: :job do
       expect { perform_job }
         .to change { user.reload.previous_names }
               .to(["Sarah Johnson"])
+              .and(change(user, :access_token).from(be_present).to(be_nil))
               .and(not_raise_exception)
 
       expect(Sentry).not_to have_received(:capture_exception)
@@ -111,7 +128,20 @@ RSpec.describe TeachingRecordSystem::UpdateUserAttributesJob, type: :job do
     it "does not change the users previous name or reschedule job" do
       expect { perform_job }
         .to not_change { user.reload.previous_names }
+              .and(change(user, :access_token).from(be_present).to(be_nil))
               .and(not_raise_exception)
+
+      expect(Sentry).to have_received(:capture_exception)
+    end
+  end
+
+  context "when the access token has expired" do
+    before { stub_person_request.to_return(status: 401, body: nil) }
+
+    it "does not change the user but removes the access token" do
+      expect { perform_job }
+        .to not_change { user.reload.previous_names }
+        .and(change(user, :access_token).from(be_present).to(be_nil))
 
       expect(Sentry).to have_received(:capture_exception)
     end
