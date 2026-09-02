@@ -158,7 +158,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "declared_previous_funding" => "no",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
-        "lead_provider_id" => "3",
+        "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "funded",
         "submitted" => true,
         "teacher_catchment" => "england",

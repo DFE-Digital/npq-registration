@@ -39,7 +39,7 @@ Capybara.configure do |config|
   config.default_max_wait_time = 10 # without this, the default is 2
 end
 
-require "capybara-screenshot/rspec"
+require "capybara-screenshot/rspec" unless ENV["NO_CAPYBARA_SCREENSHOTS"] == "true"
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -81,6 +81,7 @@ RSpec.configure do |config|
   config.include Helpers::TempfileHelper
   config.include RSpec::DefaultHttpHeader, type: :request
   config.include AxeHelper, type: :feature
+  config.include DfE::Wizard::Test::RSpecMatchers
 
   # exclude the journey specs that are from the journey as it was before the 2026 'Post-MVP' journey
   config.filter_run_excluding :mvp

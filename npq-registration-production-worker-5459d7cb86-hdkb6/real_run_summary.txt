@@ -1,0 +1,18 @@
+I, [2026-08-25T12:12:00.293966 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Ambition Institute
+I, [2026-08-25T12:12:00.457602 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Church of England
+I, [2026-08-25T12:12:00.573455 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Teach First
+I, [2026-08-25T12:12:00.721126 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: LLSE
+I, [2026-08-25T12:12:00.937873 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: National Institute of Teaching
+I, [2026-08-25T12:12:01.026912 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Best Practice Network
+I, [2026-08-25T12:12:01.105298 #2435]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: UCL Institute of Education
+
+I, [2026-08-25T12:12:01.105361 #2435]  INFO -- : Move retained-2 leadership declarations from July 2026 to August 2026 for 2025a cohort
+
+I, [2026-08-25T12:12:02.108021 #2435]  INFO -- : Migrating declarations from 2026-7 to 2026-8 for 7 providers
+I, [2026-08-25T12:12:02.133627 #2435]  INFO -- : No declarations to migrate for Ambition Institute
+I, [2026-08-25T12:12:02.144689 #2435]  INFO -- : No declarations to migrate for Church of England
+I, [2026-08-25T12:12:02.196587 #2435]  INFO -- : Migrating 1 declarations for Teach First - from statement 2472 to statement 2479
+I, [2026-08-25T12:12:02.230858 #2435]  INFO -- : No declarations to migrate for LLSE
+I, [2026-08-25T12:12:02.242653 #2435]  INFO -- : No declarations to migrate for National Institute of Teaching
+I, [2026-08-25T12:12:02.532817 #2435]  INFO -- : Migrating 1986 declarations for Best Practice Network - from statement 2468 to statement 2475
+I, [2026-08-25T12:12:11.035925 #2435]  INFO -- : Migrating 64 declarations for UCL Institute of Education - from statement 2473 to statement 2480

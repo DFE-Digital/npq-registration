@@ -5,15 +5,15 @@
   },
   "dependencies": {
     "@govuk-one-login/service-header": "^6.0.0",
-    "@ministryofjustice/frontend": "^9.0.0",
+    "@ministryofjustice/frontend": "^10.0.1",
     "accessible-autocomplete": "^3.0.1",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^6.4",
     "lodash.debounce": "^4.0.8",
     "rails-ujs": "^5.2.8",
-    "sass": "^1.102.0",
-    "swagger-ui": "^5.32.11"
+    "sass": "^1.103.1",
+    "swagger-ui": "^5.32.14"
   },
   "resolutions": {
     "react": "^18.3.1",

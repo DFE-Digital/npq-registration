@@ -14,7 +14,7 @@ module Questionnaires
 
     attribute QUESTION_NAME
 
-    validates QUESTION_NAME, presence: true, inclusion: { in: OPTIONS.keys }
+    validates QUESTION_NAME, presence: true, inclusion: { in: OPTIONS.keys, allow_blank: true }
     validate :cohort_exists, if: -> { course_start_cohort.present? }
 
     def self.permitted_params

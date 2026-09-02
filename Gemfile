@@ -8,7 +8,7 @@ gem "azure-blob"
 gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails", github: "commonlit/canonical-rails", ref: "bump-rails-8-1" # the gem has not bumped its rails version yet: https://github.com/jumph4x/canonical-rails/pull/96
-gem "connection_pool", "~> 2.5" # v3 swaps to kwargs, we'll upgrade as part of Rails 8.1
+gem "connection_pool", "~> 3.0" # v3 swaps to kwargs, we'll upgrade as part of Rails 8.1
 gem "countries"
 gem "cssbundling-rails", "~> 1.4"
 gem "daemons"
@@ -17,6 +17,7 @@ gem "delayed_job", "~> 4.1"
 gem "delayed_job_active_record"
 gem "devise", "~> 5.0"
 gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.6"
+gem "dfe-wizard", github: "DFE-Digital/dfe-wizard"
 gem "email_validator", require: "email_validator/strict"
 gem "faraday-retry"
 gem "flipper"
@@ -49,8 +50,8 @@ gem "sentry-delayed_job"
 gem "sentry-rails"
 gem "sentry-ruby"
 gem "simpleidn"
-gem "skylight", "~> 7.0"
-gem "sprockets", "~> 4.2.2"
+gem "skylight", "~> 7.1"
+gem "sprockets", "~> 4.4.1"
 gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "strong_migrations"
@@ -87,7 +88,7 @@ end
 
 group :test do
   gem "axe-core-capybara", "~> 4.7"
-  gem "axe-core-rspec", "~> 4.12"
+  gem "axe-core-rspec", "~> 4.13"
   gem "cuprite"
   gem "rspec-default_http_header"
   gem "shoulda-matchers"

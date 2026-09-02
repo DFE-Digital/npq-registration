@@ -7,11 +7,10 @@ RSpec.describe RegistrationWizardVisualiser do
   before do
     FileUtils.rm_rf dot_file
     allow_any_instance_of(Object).to receive(:system).and_return(true)
+    allow(Rails.configuration.x).to receive(:dfe_wizard).and_return(dfe_wizard)
   end
 
-  describe ".call" do
-    subject { described_class.call }
-
+  shared_examples "a visualisation generator" do
     it "generates an dot graph of the wizard" do
       expect { subject }.to change(dot_file, :exist?).from(false).to(true)
     end
@@ -25,6 +24,22 @@ RSpec.describe RegistrationWizardVisualiser do
         png_file.to_s,
       )
       subject
+    end
+  end
+
+  describe ".call" do
+    subject { described_class.call }
+
+    context "when dfe_wizard is enabled" do
+      let(:dfe_wizard) { true }
+
+      it_behaves_like "a visualisation generator"
+    end
+
+    context "when dfe_wizard is not enabled" do
+      let(:dfe_wizard) { false }
+
+      it_behaves_like "a visualisation generator"
     end
   end
 end

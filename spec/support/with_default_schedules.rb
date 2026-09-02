@@ -18,7 +18,7 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
     ]
 
     # create cohorts since 2021
-    end_year = Date.current.month < 9 ? Date.current.year : Date.current.year.succ # same as 'cohort :next' in the factories
+    end_year = Date.current.year > 2024 || Date.current.month < 9 ? Date.current.year : Date.current.year.succ # same as 'cohort :next' in the factories
     (2021..end_year).each do |start_year|
       FactoryBot.create(:cohort, start_year:)
     end

@@ -22,7 +22,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14-alpine
+        image: postgres:17-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -58,7 +58,7 @@ jobs:
       - name: Run tests
         run: KNAPSACK_GENERATE_REPORT=true bundle exec rake knapsack:rspec
 
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}

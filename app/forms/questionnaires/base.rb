@@ -1,14 +1,14 @@
 module Questionnaires
   class Base
-    include ActiveModel::Model
-    include ActiveModel::Attributes
+    include DfE::Wizard::Step
     include ActiveModel::Validations::Callbacks
-
-    attr_accessor :wizard
 
     def self.permitted_params
       []
     end
+
+    def to_s = self.class.model_name.element
+    def dfe_wizard? = wizard.is_a?(DfE::Wizard)
 
     def skip_step?
       false
@@ -44,7 +44,9 @@ module Questionnaires
 
     def after_render; end
 
-    def attributes
+    def attributes(...)
+      return super if dfe_wizard?
+
       self.class.permitted_params.index_with do |key|
         public_send(key)
       end

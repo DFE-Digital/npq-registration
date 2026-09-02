@@ -16,6 +16,30 @@ RSpec.describe LeadProvider do
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
   end
 
+  describe "scopes" do
+    describe ".alphabetical" do
+      subject { described_class.alphabetical }
+
+      it "returns lead providers in name alphabetical order" do
+        expect(subject).to eq LeadProvider.order(name: :asc)
+      end
+    end
+
+    describe ".active" do
+      subject { described_class.active }
+
+      before do
+        create(:lead_provider, name: "Education Development Trust", ecf_id: "21e61f53-9b34-4384-a8f5-d8224dbf946d")
+        create(:lead_provider, name: "School-Led Network", ecf_id: "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0")
+        create(:lead_provider, name: "Teacher Development Trust", ecf_id: "30fd937e-b93c-4f81-8fff-3c27544193f1")
+      end
+
+      it "returns lead providers in ALL_ACTIVE_PROVIDERS" do
+        expect(subject).to eq LeadProvider.where(ecf_id: LeadProvider::ALL_ACTIVE_PROVIDERS.values)
+      end
+    end
+  end
+
   describe "#for" do
     subject { described_class.for(course:, cohort:).map(&:name) }
 
