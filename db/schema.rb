@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_29_110031) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_03_151401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -660,7 +660,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_110031) do
     t.datetime "archived_at"
     t.string "archived_email"
     t.datetime "created_at", null: false
-    t.date "date_of_birth"
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.string "email"
     t.integer "email_updates_status", default: 0
@@ -668,12 +667,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_110031) do
     t.string "feature_flag_id"
     t.text "full_name"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
-    t.text "national_insurance_number"
     t.boolean "notify_user_for_future_reg", default: false
     t.string "preferred_name"
     t.citext "previous_names", default: [], null: false, array: true
     t.string "provider"
-    t.jsonb "raw_tra_provider_data"
     t.datetime "significantly_updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.text "trn"
     t.boolean "trn_auto_verified", default: false
