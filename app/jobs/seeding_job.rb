@@ -9,7 +9,9 @@ class SeedingJob < ApplicationJob
     return unless Rails.env.in?(%w[development review staging sandbox])
     return unless times.positive?
 
+    papertrail_was = PaperTrail.enabled?
     PaperTrail.enabled = false
+
     Faker::Config.locale = "en-GB"
 
     ApplicationRecord.transaction do
@@ -17,6 +19,8 @@ class SeedingJob < ApplicationJob
       SeedAddDeclarations.new.load(multiplier:)
       SeedAddUsers.new.load if times == 1
     end
+
+    PaperTrail.enabled = papertrail_was
 
     SeedingJob.perform_later(times: times - 1) if times > 1
   end
