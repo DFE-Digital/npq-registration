@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/DFE-Digital/dfe-wizard.git
-  revision: b8fedfc72b7ed606001bcb1704f376b2f90e6b01
+  revision: 3e2c40fa5617ff21c2c8aa8b7129330991d756d6
   specs:
     dfe-wizard (1.0.0)
       activemodel (>= 7.1, < 9)
