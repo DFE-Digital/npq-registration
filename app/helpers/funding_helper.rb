@@ -15,24 +15,17 @@ module FundingHelper
     if application.eligible_for_funding?
       :eligible
     elsif scholarship_eligibility_in_review?(application)
-      :in_review
+      :in_review # TODO: test
     else
       :not_eligible
     end
   end
 
   def scholarship_eligibility_in_review?(application)
-    return false if application.eligible_for_funding?
-    return false if !application.eligible_for_funding? && application.funding_choice.present?
-    return false if application.employment_type == "other"
-    return false unless application.inside_catchment?
-    return true if application.course.ehco? && new_headteacher?(application)
-    return true if application.referred_by_return_to_teaching_adviser == "yes"
-
-    application.work_setting == "another_setting" && application.employment_type != "lead_mentor_for_accredited_itt_provider" && application.course.identifier != "npq-early-headship-coaching-offer"
+    application.eligibility_in_review?
   end
 
   def targeted_support_funding
-    sanitize I18n.t("funding_details.targeted_funding_eligibility")
+    sanitize I18n.t("funding_details.targeted_funding_eligibility") # TODO: test
   end
 end

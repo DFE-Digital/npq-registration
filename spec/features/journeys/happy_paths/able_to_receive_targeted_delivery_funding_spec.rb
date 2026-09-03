@@ -10,6 +10,10 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
+
   context "when JavaScript is enabled", :js do
     scenario("registration journey that is able to receive targeted delivery funding (with JS)") { run_scenario(js: true) }
   end
@@ -19,8 +23,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request(trn: "1234567", response: { trn: "1234567" })
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -43,17 +45,6 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
     end
-
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-      high_pupil_premium: true,
-      number_of_pupils: 100,
-    )
 
     choose_a_school(js:, name: "open")
 
@@ -120,7 +111,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -148,7 +139,7 @@ RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :w
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

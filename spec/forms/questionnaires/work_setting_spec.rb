@@ -145,7 +145,7 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
     context "when the user has answered they work outside of England" do
       let(:teacher_catchment) { "another" }
 
-      it_behaves_like "showing the eligibility step"
+      it { is_expected.to be :ineligible_for_funding }
     end
   end
 
@@ -158,6 +158,17 @@ RSpec.describe Questionnaires::WorkSetting, type: :model do
       let(:declared_previous_funding) { "yes" }
 
       it { is_expected.to be :ineligible_for_funding_previously_funded }
+
+      context "when the course is EHCO" do
+        let(:course) { create(:course, :early_headship_coaching_offer) }
+
+        let(:store) do
+          { declared_previous_funding: declared_previous_funding,
+            course_identifier: course.identifier }.stringify_keys
+        end
+
+        it { is_expected.to be :funding_your_ehco }
+      end
     end
 
     context "when the user has not declared previous funding" do

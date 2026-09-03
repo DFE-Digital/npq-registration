@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_cohorts, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -78,15 +78,31 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, type: :feature do
       click_button("Continue without DfE funding")
     end
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Choose an NPQ")
+      page.choose("Headship", visible: :all)
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/check-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
+
+    choose_a_school(js: false, name: "open")
+
+    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+      expect(page).to have_text("Select your provider")
+      page.choose("Teach First", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      expect(page).to have_text("Sharing your NPQ information")
+      page.check("Yes, I agree to share my information", visible: :all)
+    end
+
+    expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+
+    check_back_journey_is_correct
   end
 
   scenario "Spring 2026 cohort" do

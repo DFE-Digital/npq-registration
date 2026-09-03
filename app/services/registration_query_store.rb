@@ -29,6 +29,10 @@ class RegistrationQueryStore
     store["teacher_catchment"] == "england"
   end
 
+  def declared_not_working_in_england?
+    store["teacher_catchment"].present? && !inside_catchment? # TODO: test
+  end
+
   def funding_eligiblity_status_code
     store["funding_eligiblity_status_code"]
   end
@@ -119,7 +123,7 @@ class RegistrationQueryStore
   end
 
   def new_headteacher?
-    store["ehco_headteacher"] == "yes" && store["ehco_new_headteacher"] == "yes"
+    store["ehco_new_headteacher"] == "yes"
   end
 
   def date_of_birth
@@ -168,6 +172,10 @@ class RegistrationQueryStore
     !(lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?)
   end
 
+  def employment_type_needs_employer_name?
+    employment_type_hospital_school? || young_offender_institution? # TODO: test
+  end
+
   def employer_name_matters?
     return true if referred_by_return_to_teaching_adviser?
     return false unless employment_type_matters?
@@ -205,8 +213,8 @@ class RegistrationQueryStore
     cohort.funded?
   end
 
-  def check_funding?
-    store["check_funding"] == "yes"
+  def proceed_without_checking_funding?
+    store["check_funding"] == "no"
   end
 
   def declared_previous_funding?

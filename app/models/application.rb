@@ -197,6 +197,12 @@ class Application < ApplicationRecord
     }&.reason
   end
 
+  def eligibility_in_review?
+    return unless funding_eligiblity_status_code
+
+    funding_eligiblity_status_code == FundingEligibility::SUBJECT_TO_REVIEW.to_s
+  end
+
 private
 
   def funding_eligibility(with_funded_place:)

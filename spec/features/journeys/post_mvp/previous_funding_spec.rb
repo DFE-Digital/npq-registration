@@ -8,17 +8,10 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
   include_context "with stubbed Teacher Auth OmniAuth responses", stub: false
   include_context "with stubbed Teaching Record System person API", stub: false
 
-  before do
-    # create an eligible school
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-    )
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
 
+  before do
+    school
     user = create(:user, :with_verified_trn, email: user_email, trn: user_trn)
     create(:application, :accepted, :with_funded_place, user:, course: create(:course, :headship))
   end
@@ -110,7 +103,7 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -139,7 +132,7 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
         "declared_previous_funding" => "no",
         "email_template" => "already_funded_not_eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "previously_funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "funded",

@@ -1,3 +1,5 @@
+<% if application.eligible_for_funding || !scholarship_eligibility_in_review?(application).nil? %>
+
 <div class="govuk-summary-list__row">
   <dt class="govuk-summary-list__key">
     Scholarship funding
@@ -18,3 +20,5 @@
     <% end %>
   </dd>
 </div>
+
+<% end %>

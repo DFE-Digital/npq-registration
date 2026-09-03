@@ -45,10 +45,6 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       page.choose("Early years leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
     end
@@ -144,7 +140,6 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
         "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-years-leadership",
-        "declared_previous_funding" => "no",
         "email_template" => "not_england_wrong_catchment",
         "funding" => "school",
         "funding_eligiblity_status_code" => "not_in_england",

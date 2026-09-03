@@ -33,14 +33,16 @@
         </dd>
       </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          DfE scholarship funding
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= eligibility_tag(scholarship_funding_eligibility_status(application)) %>
-        </dd>
-      </div>
+      <% unless application.funding_eligiblity_status_code.nil? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            DfE scholarship funding
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= eligibility_tag(scholarship_funding_eligibility_status(application)) %>
+          </dd>
+        </div>
+      <% end %>
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">

@@ -43,3 +43,9 @@
     end
   %>
 <% end %>
+
+<% if Rails.env.staging? || Rails.env.review? || Rails.env.development? %>
+  <code>
+  <%= Rails.env %> environment only - funding_eligiblity_status_code: "<%= @wizard.query_store.funding_eligiblity_status_code %>"
+  </code>
+<% end  %>

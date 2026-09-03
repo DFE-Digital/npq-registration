@@ -11,7 +11,17 @@ RSpec.shared_examples "showing the eligibility step" do
     context "when the course is EHCO" do
       let(:course) {  Course.find_by(identifier: "npq-early-headship-coaching-offer") }
 
-      it { is_expected.to eq(:npqh_status) }
+      context "when the user works in England" do
+        let(:teacher_catchment) { "england" }
+
+        it { is_expected.to eq(:funding_your_ehco) }
+      end
+
+      context "when the user does not work in England" do
+        let(:teacher_catchment) { "another" }
+
+        it { is_expected.to eq(:funding_your_ehco) }
+      end
     end
 
     context "when the course is Leading primary mathematics" do

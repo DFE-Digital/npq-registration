@@ -9,7 +9,7 @@ module Questionnaires
 
     delegate :inside_catchment?,
              :cohort_funded?,
-             :check_funding?,
+             :proceed_without_checking_funding?,
              to: :query_store
 
     def self.permitted_params
@@ -45,19 +45,21 @@ module Questionnaires
     end
 
     def next_step
-      :funding_history
+      if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded? # TODO: test, and put logic into base.rb
+        :funding_history
+      else
+        :work_setting
+      end
     end
 
     def previous_step
       if cohort_funded?
-        if check_funding?
-          if inside_catchment?
-            :teacher_catchment
-          else
-            :ineligible_for_funding
-          end
-        else
+        if proceed_without_checking_funding?
           :check_funding
+        elsif inside_catchment?
+          :teacher_catchment
+        else
+          :ineligible_for_funding
         end
       else
         :course_start_date

@@ -31,10 +31,7 @@ class RegistrationWizard
     login_callback
     npqh_status
     ehco_unavailable
-    ehco_headteacher
     ehco_new_headteacher
-    ehco_funding_not_available
-    ehco_previously_funded
     ehco_possible_funding
     funding_your_ehco
     itt_provider
@@ -75,6 +72,9 @@ class RegistrationWizard
     confirmation
     dont_have_teacher_reference_number
     dqt_mismatch
+    ehco_funding_not_available
+    ehco_headteacher
+    ehco_previously_funded
     find_school
     find_childcare_provider
     get_an_identity_callback
@@ -187,12 +187,8 @@ class RegistrationWizard
     end
 
     if course.ehco?
-      array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status)
-      array << Answer.new("Headteacher", t("ehco_headteacher"), :ehco_headteacher)
-
-      if store["ehco_headteacher"] == "yes"
-        array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher)
-      end
+      array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status) if store["npqh_status"]
+      array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher) if store["ehco_new_headteacher"]
     end
 
     if course.npqs?

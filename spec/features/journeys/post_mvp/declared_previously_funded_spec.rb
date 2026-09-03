@@ -42,21 +42,16 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.click_link("Continue to register")
     end
 
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      page.choose "I am paying", visible: :all
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js: false, name: "open")
-
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you have received DfE funding for this course before.")
-      page.click_link("Continue to register")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      page.choose "I am paying", visible: :all
-    end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
@@ -110,7 +105,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => default_school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -140,7 +135,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
         "email_template" => "already_funded_not_eligible_scholarship_funding_not_tsf",
         "funding" => "self",
         "funding_eligiblity_status_code" => "previously_funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{default_school.urn}",
         "institution_name" => "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "pre_login_funding_eligiblity_status_code" => "previously_funded",
@@ -155,8 +150,33 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
     )
   end
 
-  scenario "Declared as not previously funded" do
+  scenario "Declared as not previously funded with unfunded cohort" do
     choose_course_start_date(first_option: false)
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      expect(page).to have_text("Choose an NPQ")
+      page.choose("Headship", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: false)
+
+    # check back links
+    click_link("Back")
+    expect(page).to have_current_path("/registration/choose-your-npq")
+  end
+
+  scenario "Declared as not previously funded with funded cohort" do
+    choose_course_start_date
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      expect(page).to have_text("Check if you’re eligible for DfE scholarship funding")
+      click_button("Check funding")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      expect(page).to have_text("Do you work in England?")
+      choose("Yes", visible: :all)
+    end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Choose an NPQ")
@@ -175,5 +195,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
     expect(page).to have_current_path("/registration/funding-history")
     click_link("Back")
     expect(page).to have_current_path("/registration/choose-your-npq")
+    click_link("Back")
+    expect(page).to have_current_path("/registration/teacher-catchment")
+    click_link("Back")
+    expect(page).to have_current_path("/registration/check-funding")
   end
 end
