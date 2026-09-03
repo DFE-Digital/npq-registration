@@ -5,6 +5,13 @@ class Admin::DeclarationsDashboardController < AdminController
 
     @declarations_dashboard = AdminService::DeclarationsDashboard.new(declarations_dashboard_params)
     @show_results = submitted? && @declarations_dashboard.valid?
+
+    if @show_results
+      @calculator = Declarations::DashboardCalculator.new(
+        lead_provider: @declarations_dashboard.lead_provider,
+        cohort: @declarations_dashboard.cohort,
+      )
+    end
   end
 
 private
