@@ -13,7 +13,8 @@ module TeachingRecordSystem
       return unless user.verified_trn
 
       trs_person = TeachingRecordSystem::FetchPerson.fetch(access_token:)
-      user.update!(previous_names: trs_person.previous_names)
+      user.previous_names = trs_person.previous_names
+      user.save!
     end
   end
 end
