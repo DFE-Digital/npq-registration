@@ -1,6 +1,7 @@
 class User < ApplicationRecord
+  self.ignored_columns += %i[date_of_birth national_insurance_number raw_tra_provider_data]
+
   INSIGNIFICANT_ATTRIBUTES = %w[
-    raw_tra_provider_data
     feature_flag_id
     get_an_identity_id_synced_to_ecf
     updated_from_tra_at
@@ -16,7 +17,7 @@ class User < ApplicationRecord
 
   devise :omniauthable, omniauth_providers: OMNIAUTH_PROVIDERS
 
-  has_paper_trail meta: { note: :version_note }, ignore: %i[raw_tra_provider_data updated_at feature_flag_id]
+  has_paper_trail meta: { note: :version_note }, ignore: %i[updated_at feature_flag_id]
 
   has_many :oauth_tokens, dependent: :destroy
   has_many :applications, dependent: :destroy

@@ -9,7 +9,7 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
   end
 
   context "when a model has paper trail enabled" do
-    let(:user) { create(:user, full_name: "John Doe", date_of_birth: 30.years.ago) }
+    let(:user) { create(:user, full_name: "John Doe") }
     let(:user_name) { "Admin 1" }
 
     context "when a record is created" do
@@ -24,7 +24,6 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
           "object_changes" => %w[
             id
             created_at
-            date_of_birth
             ecf_id
             email
             full_name
@@ -75,7 +74,7 @@ RSpec.describe PaperTrailExtensions::Version, :versioning, type: :model do
           "whodunnit" => user_name,
           "created_at" => Time.zone.now,
           "note" => nil,
-          "object_changes" => user.attributes.keys.excluding(%w[updated_at raw_tra_provider_data feature_flag_id]),
+          "object_changes" => user.attributes.keys.excluding(%w[updated_at feature_flag_id]),
         }
       end
 

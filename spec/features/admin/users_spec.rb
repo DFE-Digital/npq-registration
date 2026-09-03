@@ -9,7 +9,7 @@ RSpec.feature "User administration", :no_js, type: :feature do
 
   before do
     users
-    user.update!(national_insurance_number: "QQ123456C", preferred_name: "Jonny D")
+    user.update!(preferred_name: "Jonny D")
     sign_in_as(create(:admin))
   end
 
