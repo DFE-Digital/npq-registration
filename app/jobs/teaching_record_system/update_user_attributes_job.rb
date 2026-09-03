@@ -6,13 +6,13 @@ module TeachingRecordSystem
 
     def perform(user_id:)
       user = User.find(user_id)
-      return unless user.access_token
+      token = user.access_token
+      return unless token
 
-      access_token = user.access_token.token
-      user.access_token.destroy!
+      token.destroy!
       return unless user.verified_trn
 
-      trs_person = TeachingRecordSystem::FetchPerson.fetch(access_token:)
+      trs_person = TeachingRecordSystem::FetchPerson.fetch(access_token: token.token)
       user.previous_names = trs_person.previous_names
       user.save!
     end
