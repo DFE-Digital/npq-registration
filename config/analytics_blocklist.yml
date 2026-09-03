@@ -86,10 +86,7 @@ shared:
     - created_at
     - updated_at
   :users:
-    - date_of_birth
-    - national_insurance_number
     - archived_email
-    - raw_tra_provider_data
     - previous_names
   :oauth_tokens:
     - id
