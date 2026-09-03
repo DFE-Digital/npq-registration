@@ -106,7 +106,6 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       expect(user.trn).to eql("1234567")
       expect(user.trn_verified).to be_truthy
       expect(user.trn_auto_verified).to be true
-      expect(user.national_insurance_number).to be_nil
       expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|

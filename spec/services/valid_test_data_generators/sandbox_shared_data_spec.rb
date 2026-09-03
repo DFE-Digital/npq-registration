@@ -47,7 +47,6 @@ RSpec.describe ValidTestDataGenerators::SandboxSharedData, :with_default_schedul
 
           expect(user.full_name).to eq(params[:name])
           expect(user.trn).to eq(params[:trn])
-          expect(user.date_of_birth.iso8601).to eq(params[:date_of_birth])
 
           if params[:ecf_id].present?
             expect(user.ecf_id).to eq(params[:ecf_id])

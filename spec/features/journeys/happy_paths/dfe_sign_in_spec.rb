@@ -23,6 +23,11 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
   before do
     # Needed for DfE Identity access during change over period
     allow(Feature).to receive(:registration_closed?).and_return(true)
+
+    allow(Users::FindOrCreateFromProviderData).to receive(:new).and_wrap_original do |original, **kwargs|
+      captured_provider_data << kwargs[:provider_data]
+      original.call(**kwargs)
+    end
   end
 
   regenerate_fixtures = false # set to true to regenerate fixtures
@@ -31,6 +36,10 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
 
   let(:email_for_account_with_trn) { "user@example.com" }
   let(:email_for_account_without_trn) { "user+notrn@example.com" }
+
+  # The raw provider payload is no longer stored on the user, so capture it here
+  # to regenerate the fixtures.
+  let(:captured_provider_data) { [] }
 
   def strip_pii(omniauth_hash)
     omniauth_hash.tap do |hash|
@@ -74,7 +83,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
 
     expect(page).to have_current_path "/account"
     File.open(fixtures_path.join("tra_openid_connect_auth_with_trn.json"), "w") do |file|
-      file.write JSON.pretty_generate(strip_pii(User.last.raw_tra_provider_data))
+      file.write JSON.pretty_generate(strip_pii(captured_provider_data.last.as_json))
     end
   end
 
@@ -83,7 +92,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
 
     expect(page).to have_current_path "/account"
     File.open(fixtures_path.join("tra_openid_connect_auth_no_trn.json"), "w") do |file|
-      file.write JSON.pretty_generate(strip_pii(User.last.raw_tra_provider_data))
+      file.write JSON.pretty_generate(strip_pii(captured_provider_data.last.as_json))
     end
   end
 

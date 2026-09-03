@@ -68,13 +68,8 @@ module Users
     def assign_provider_data(user, provider_data)
       extra_info = provider_data.extra&.raw_info
 
-      user.raw_tra_provider_data = provider_data
       user.preferred_name = extra_info&.preferred_name.presence
       user.full_name = provider_data.info.name
-
-      if extra_info&.birthdate.present?
-        user.date_of_birth = Date.parse(extra_info.birthdate, "%Y-%m-%d")
-      end
 
       user.set_trn_from_provider_data(trn: extra_info&.trn, trn_lookup_status: extra_info&.trn_lookup_status)
       user.set_updated_from_tra_at

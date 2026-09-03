@@ -53,7 +53,6 @@ module ValidTestDataGenerators
         full_name: params[:name],
         email: params[:email],
         trn: params[:trn],
-        date_of_birth: params[:date_of_birth],
       )
 
       user
