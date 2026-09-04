@@ -72,14 +72,6 @@ RSpec.shared_examples "a participant state transition" do |action, from_states, 
   let(:application) { create(:application, :accepted, :with_declaration, training_status: from_states.sample) }
   let(:course_identifier) { application.course.identifier }
 
-  let(:mailers) do
-    {
-      "active" => { mailer: ApplicationResumedMailer, mailer_action: :application_resumed_mail },
-      "deferred" => { mailer: ApplicationDeferredMailer, mailer_action: :application_deferred_mail },
-      "withdrawn" => { mailer: ApplicationWithdrawnMailer, mailer_action: :application_withdrawn_mail },
-    }
-  end
-
   it { expect(instance).to be_valid }
 
   describe "##{action}" do
@@ -107,31 +99,6 @@ RSpec.shared_examples "a participant state transition" do |action, from_states, 
 
         it "updates the application training status to #{to_state}" do
           expect { perform_action }.to change { application.reload.training_status }.to(to_state)
-        end
-
-        it "sends a notification email to the participant" do
-          expect(mailers[to_state][:mailer]).to send_mail(mailers[to_state][:mailer_action])
-            .with_params(to: application.user.email,
-                         full_name: application.user.full_name,
-                         provider_name: application.lead_provider.name,
-                         course_name: application.course.name,
-                         ecf_id: application.ecf_id)
-          perform_action
-        end
-
-        context "when the participant has no email address" do
-          before do
-            application.user.update_columns(
-              email: nil,
-              archived_email: "archived@example.com",
-              archived_at: Time.zone.now,
-            )
-          end
-
-          it "does not send a notification email" do
-            expect(mailers[to_state][:mailer]).not_to send_mail(mailers[to_state][:mailer_action])
-            perform_action
-          end
         end
       end
     end

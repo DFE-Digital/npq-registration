@@ -52,6 +52,7 @@ module Applications
 
     def send_email
       return if application.user.email.blank?
+      return unless in_latest_cohort?
 
       ApplicationRejectedMailer.application_rejected_mail(
         to: application.user.email,
@@ -60,6 +61,12 @@ module Applications
         course_name: application.course.name,
         ecf_id: application.ecf_id,
       ).deliver_later
+    end
+
+    def in_latest_cohort?
+      return false if application.cohort.blank?
+
+      application.cohort.start_year == Cohort.order_by_latest.first&.start_year
     end
   end
 end
