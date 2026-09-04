@@ -6,11 +6,13 @@ module Admin::Finance
       before_action :require_super_admin, :set_statement, :set_service
 
       def create
-        if @service.schedule_change
+        if @service.invalid?
+          render :show, status: :unprocessable_content
+        elsif @service.schedule_change
           flash[:success] = "Output statement is being changed and declarations moved - this will take a few minutes"
           redirect_to admin_finance_statement_path(@statement)
         else
-          render :show, status: :unprocessable_content
+          redirect_to admin_finance_statement_path(@statement)
         end
       end
 
@@ -28,7 +30,7 @@ module Admin::Finance
       def statement_change_params
         params
           .fetch(:statements_change_output_fee, {})
-          .permit(:output_fee, :skip_reconcile_statement_check)
+          .permit(:output_fee, :allow_payable_statement_changes)
       end
     end
   end

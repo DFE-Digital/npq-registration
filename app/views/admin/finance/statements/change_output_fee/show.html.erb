@@ -22,6 +22,27 @@
                hint: { text: @service.move_off_hint } %>
       <% end %>
 
+      <% if f.object.requires_payable_override? %>
+        <%= f.govuk_check_boxes_fieldset :allow_payable_statement_changes,
+                                         legend: { text: "Changing a Payable statement" },
+                                         multiple: false do %>
+
+          <p class="govuk-body">
+            This statements deadline date has passed and it has been marked as
+            <%= govuk_tag(text: "Payable", classes: "govuk-tag--red") %>.
+          </p>
+
+          <%= f.govuk_check_box :allow_payable_statement_changes,
+                                1,
+                                0,
+                                multiple: false,
+                                link_errors: true,
+                                small: true,
+                                label: { text: "Confirm changing Payable statements" } %>
+        <% end %>
+      <% end %>
+
+
       <div class="govuk-button-group">
         <%= f.govuk_submit "Change output statement" %>
         <%= govuk_link_to t("shared.cancel"), admin_finance_statement_path(@statement) %>

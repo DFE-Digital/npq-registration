@@ -19,7 +19,7 @@ FactoryBot.define do
     delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
     declaration_type { "started" }
     declaration_date { Date.current }
-    state { "submitted" }
+    state { statement ? "eligible" : "submitted" }
     ecf_id { SecureRandom.uuid }
 
     after(:create) do |declaration, evaluator|
