@@ -124,7 +124,7 @@ module Users
       {
         feature_flag_id:,
         full_name:,
-        # previous_names:,
+        previous_names:,
         trn_auto_verified: true,
       }
     end
@@ -157,7 +157,7 @@ module Users
         email:,
         feature_flag_id:,
         full_name:,
-        previous_names: [],
+        previous_names:,
         trn:,
         trn_auto_verified: trn.present?,
         trn_verified: trn.present?,
