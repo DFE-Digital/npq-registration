@@ -37,8 +37,17 @@ FactoryBot.define do
       end
     end
 
-    deadline_date { extend_from ? (extend_from.deadline_date + 1.month) : Faker::Date.forward(days: 30) }
-    payment_date { deadline_date ? deadline_date + 3.days : Faker::Date.forward(days: 30) }
+    deadline_date do
+      if for_date
+        for_date.beginning_of_month - 1.month + 24.days
+      elsif extend_from
+        (extend_from.deadline_date + 1.month)
+      else
+        Faker::Date.forward(days: 30)
+      end
+    end
+
+    payment_date { deadline_date ? deadline_date + 1.month : Faker::Date.forward(days: 30) }
     cohort { extend_from&.cohort || create(:cohort, :current) }
     lead_provider { extend_from&.lead_provider || declaration&.lead_provider || build(:lead_provider) }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }

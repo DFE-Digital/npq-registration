@@ -751,8 +751,9 @@ en:
             output_fee:
               next_output_statement_required: Later output statement does not exist
               statement_is_paid: Statement has been paid and cannot be changed
-              statement_is_payable: Statement is payable and cannot be changed
-              deadline_date_has_passed: Deadline date for the statement has already passed so cannot be changed
+              payment_date_has_passed: Payment date has already passed so cannot be changed
+            allow_payable_statement_changes:
+              accepted: Confirm you wish to change Payable statements
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"

@@ -15,159 +15,251 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
     it { is_expected.to validate_presence_of(:statement) }
     it { is_expected.not_to allow_value(nil).for(:output_fee) }
 
-    context "when changing output_fee to be true" do
-      subject { service.tap(&:validate) }
-
-      let(:output_fee) { true }
-      let(:original_output_fee) { false }
-
-      context "when statement being changed is open" do
-        context "when there is a later output statement" do
-          before { create(:statement, :open, extend_from: statement) }
-
-          it { is_expected.to be_valid }
-        end
-
-        context "when there is a paid later output statement" do
-          before { create(:statement, :paid, extend_from: statement) }
-
-          it { is_expected.to be_valid }
-        end
-
-        context "when there is not a later output" do
-          it { is_expected.to be_valid }
-        end
-      end
-
-      context "when statement being changed is payable" do
-        let(:state) { :payable }
-
-        context "when the allow payable flag is set" do
-          before { service.allow_payable_statement_changes = true }
-
-          it { is_expected.to be_valid }
-        end
-
-        context "when the allow payable flag is not set" do
-          before { service.allow_payable_statement_changes = false }
-
-          it { is_expected.to have_error :output_fee, :statement_is_payable, "Statement is payable and cannot be changed" }
-        end
-      end
-
-      context "when statement being changed is paid" do
-        let(:state) { :paid }
+    context "when the statement is in the past" do
+      context "when statement is paid" do
+        let(:statement) { create(:statement, :paid, for_date: 2.months.ago) }
 
         it { is_expected.to have_error :output_fee, :statement_is_paid, "Statement has been paid and cannot be changed" }
       end
 
-      context "when deadline_date has passed" do
-        let :statement do
-          create(:statement,
-                 state:,
-                 output_fee: false,
-                 for_date: 20.days.ago,
-                 deadline_date: 3.days.ago)
-        end
-
-        context "when the allow payable flag is set" do
+      context "when statement is payable" do
+        context "with confirmation for changing payable" do
           before { service.allow_payable_statement_changes = true }
 
-          it { is_expected.to be_valid }
+          context "when turning output fee on" do
+            let :statement do
+              create(:statement, state: :payable, for_date: 2.months.ago, output_fee: false)
+            end
+
+            it { is_expected.to have_error :output_fee, :payment_date_has_passed, "Payment date has already passed so cannot be changed" }
+          end
+
+          context "when turning output fee off" do
+            let :statement do
+              create(:statement, state: :payable, for_date: 2.months.ago, output_fee: true)
+            end
+
+            let(:output_fee) { false }
+
+            context "when there is a later statement" do
+              before { create(:statement, :open, for_date: 1.month.from_now, output_fee: true) }
+
+              it { is_expected.to be_valid }
+            end
+
+            context "when there isn't a later statement" do
+              it { is_expected.to be_valid }
+
+              context "and there are declarations" do
+                before { create(:declaration, statement:) }
+
+                it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+              end
+            end
+          end
         end
 
-        context "when the allow payable flag is not set" do
-          before { service.allow_payable_statement_changes = false }
+        context "without confirmation for changing payable" do
+          let :statement do
+            create(:statement, state: :payable, for_date: 2.months.ago, output_fee: true)
+          end
 
-          it { is_expected.to have_error :output_fee, :deadline_date_has_passed, "Deadline date for the statement has already passed so cannot be changed" }
+          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change Payable statements" }
         end
       end
     end
 
-    context "when changing output_fee to be false" do
-      subject { service.tap(&:validate) }
+    context "with the current payable statement" do
+      context "when turning output fee on" do
+        let(:statement) { create(:statement, :payable, output_fee: false) }
 
-      before { create(:declaration, :eligible, statement:) }
+        context "with confirmation of changing payable" do
+          before { service.allow_payable_statement_changes = true }
 
-      let(:output_fee) { false }
-      let(:original_output_fee) { true }
-
-      context "when there is a paid later output statement" do
-        before { create(:statement, :paid, extend_from: statement) }
-
-        it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
-      end
-
-      context "when there is suitable a later output statement" do
-        before { create(:statement, :open, extend_from: statement) }
-
-        context "when statement being changed is open" do
-          it { is_expected.to be_valid }
-        end
-
-        context "when statement being changed is payable" do
-          let(:state) { :payable }
-
-          context "when the allow payable flag is set" do
-            before { service.allow_payable_statement_changes = true }
+          context "with later statement" do
+            before { create(:statement, :open, extend_from: statement, output_fee: true) }
 
             it { is_expected.to be_valid }
           end
 
-          context "when the allow payable flag is not set" do
-            before { service.allow_payable_statement_changes = false }
-
-            it { is_expected.to have_error :output_fee, :statement_is_payable, "Statement is payable and cannot be changed" }
+          context "without later statement" do
+            it { is_expected.to be_valid }
           end
         end
 
-        context "when statement being changed is paid" do
-          let(:state) { :paid }
+        context "without confirmation of changing payable" do
+          before { create(:statement, :open, extend_from: statement, output_fee: true) }
 
-          it { is_expected.to have_error :output_fee, :statement_is_paid, "Statement has been paid and cannot be changed" }
+          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change Payable statements" }
         end
       end
 
-      context "when there is later output statement but it is payable" do
-        before { create(:statement, :payable, extend_from: statement) }
+      context "when turning output fee off" do
+        let(:statement) { create(:statement, :payable, output_fee: true) }
+        let(:output_fee) { false }
 
-        context "when the allow payable flag is set" do
+        context "with confirmation of changing payable" do
           before { service.allow_payable_statement_changes = true }
 
+          context "with later statement" do
+            before { create(:statement, :open, extend_from: statement, output_fee: true) }
+
+            it { is_expected.to be_valid }
+          end
+
+          context "without later statement" do
+            it { is_expected.to be_valid }
+
+            context "with declarations" do
+              before { create(:declaration, statement:) }
+
+              it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+            end
+          end
+        end
+
+        context "without confirmation of changing payable" do
+          before { create(:statement, :open, extend_from: statement, output_fee: true) }
+
+          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change Payable statements" }
+        end
+      end
+    end
+
+    context "with open statement in the future" do
+      context "when turning output fee on" do
+        context "with later statement" do
+          before { create(:statement, :open, extend_from: statement, output_fee: true) }
+
           it { is_expected.to be_valid }
         end
 
-        context "when the allow payable flag is not set" do
-          before { service.allow_payable_statement_changes = false }
-
-          it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+        context "without later statement" do
+          it { is_expected.to be_valid }
         end
       end
 
-      context "when there is not a suitable later output" do
-        context "when other statements is exist but for other LPs and cohorts" do
-          before do
-            create(:statement, :open, extend_from: statement, cohort: create(:cohort, :next))
-            create(:statement, :open, extend_from: statement, lead_provider: create(:lead_provider))
-          end
+      context "when turning output fee off" do
+        let(:output_fee) { false }
+        let(:original_output_fee) { true }
 
-          it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
-        end
-
-        context "when there are milestones but no declarations" do
-          before do
-            StatementItem.delete_all
-            create(:milestone, for_statement: statement)
-          end
-
-          it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
-        end
-
-        context "when there are no declarations or milestones" do
-          before { StatementItem.delete_all }
+        context "with later statement" do
+          before { create(:statement, :open, extend_from: statement, output_fee: true) }
 
           it { is_expected.to be_valid }
         end
+
+        context "without later statement" do
+          it { is_expected.to be_valid }
+
+          context "with declaration" do
+            before { create(:declaration, statement:) }
+
+            it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+          end
+        end
+      end
+    end
+  end
+
+  describe ".can_change_statement?" do
+    it "needs testing"
+  end
+
+  describe "#requires_payable_override?" do
+    context "with open statement" do
+      let(:statement) { create :statement, :next_output_fee }
+
+      it { is_expected.to have_attributes requires_payable_override?: false }
+    end
+
+    context "with payable statement" do
+      let(:statement) { create :statement, :payable, output_fee: true }
+
+      it { is_expected.to have_attributes requires_payable_override?: true }
+    end
+  end
+
+  describe "#next_output_statement" do
+    subject { service.next_output_statement }
+
+    before { later_statement }
+
+    context "with open statement" do
+      let(:statement) { create(:statement, :next_output_fee) }
+
+      context "without future statement" do
+        let(:later_statement) { nil }
+
+        it { is_expected.to be_nil }
+      end
+
+      context "with future non-output statement" do
+        let(:later_statement) { create(:statement, extend_from: statement, output_fee: false) }
+
+        it { is_expected.to be_nil }
+      end
+
+      context "with future statement" do
+        let :later_statement do
+          intermediate = create(:statement, extend_from: statement, output_fee: false)
+          create(:statement, extend_from: intermediate, output_fee: true)
+        end
+
+        it { is_expected.to eq(later_statement) }
+      end
+
+      context "with future statement for another provider" do
+        let :later_statement do
+          create(:statement, extend_from: statement,
+                             output_fee: true,
+                             lead_provider: create(:lead_provider))
+        end
+
+        it { is_expected.to be_nil }
+      end
+
+      context "with future statement for another cohort" do
+        let :later_statement do
+          create(:statement, extend_from: statement,
+                             output_fee: false,
+                             cohort: create(:cohort))
+        end
+
+        it { is_expected.to be_nil }
+      end
+    end
+
+    context "with payable statement" do
+      context "when in past" do
+        let(:statement) { create(:statement, state: :payable, for_date: 2.months.ago, output_fee: true) }
+
+        let :later_statement do
+          last_month = create(:statement, :payable, extend_from: statement, output_fee: true)
+          create(:statement, :payable, extend_from: last_month, output_fee: true).tap do |current_statement|
+            next_open = create(:statement, :open, extend_from: current_statement, output_fee: true)
+            create(:statement, :open, extend_from: next_open, output_fee: true)
+          end
+        end
+
+        it { is_expected.to eq(later_statement) }
+      end
+
+      context "when current statement" do
+        let(:statement) { create(:statement, :payable, output_fee: true) }
+
+        let :later_statement do
+          create(:statement, :open, extend_from: statement, output_fee: true)
+        end
+
+        it { is_expected.to eq(later_statement) }
+      end
+
+      context "without future statement" do
+        let(:statement) { create(:statement, :payable, output_fee: true) }
+        let(:later_statement) { nil }
+
+        it { is_expected.to be_nil }
       end
     end
   end
@@ -184,7 +276,9 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
           expect(Statements::ChangeOutputFeeJob)
             .to have_received(:perform_later)
-                  .with(statement_id: statement.id, output_fee:)
+                  .with(statement_id: statement.id,
+                        output_fee:,
+                        allow_payable_statement_changes: false)
         end
       end
 
@@ -192,7 +286,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         let(:statement) { create(:statement, output_fee:) }
 
         it "does not schedule a change" do
-          expect(service.schedule_change).to be true
+          expect(service.schedule_change).to be false
 
           expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
         end
@@ -313,7 +407,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
       end
 
       context "with later statement" do
-        let(:later) { create(:statement, :open, extend_from: statement) }
+        let(:later) { create(:statement, :open, output_fee: true, extend_from: statement) }
 
         context "without declarations" do
           before { later }
@@ -418,9 +512,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
           end
 
           let :statement do
-            travel_to 1.month.ago do
-              create(:statement, state:, output_fee: false, for_date: Time.zone.now)
-            end
+            create(:statement, state:, output_fee: false, for_date: Time.zone.now)
           end
 
           it "updates output_fee" do

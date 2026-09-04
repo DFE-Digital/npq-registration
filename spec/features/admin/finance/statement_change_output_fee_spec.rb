@@ -30,6 +30,7 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
     expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
     click_button "Change output statement"
     expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
+    expect(page).not_to have_content "statement is being changed"
 
     expect(page).to have_current_path admin_finance_statement_path(statement)
     within(".govuk-summary-list__row", text: "Output statement") do
@@ -62,7 +63,7 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
       expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
 
       expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
-      expect(page).to have_content I18n.t("activemodel.errors.models.statements/change_output_fee.attributes.output_fee.deadline_date_has_passed")
+      expect(page).to have_content I18n.t("activemodel.errors.models.statements/change_output_fee.attributes.allow_payable_statement_changes.accepted")
     end
   end
 end

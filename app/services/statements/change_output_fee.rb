@@ -12,9 +12,16 @@ module Statements
 
     validates :statement, presence: true, validate_and_copy_errors: true
     validates :output_fee, inclusion: [true, false]
+    validates :allow_payable_statement_changes, acceptance: true, if: -> { statement&.payable? }
+    validate :statement_is_not_paid, if: :statement
     validate :next_output_statement_exists
-    validate :deadline_date_has_passed, unless: :allow_payable_statement_changes
-    validate :statement_is_open, if: :statement
+    validate :payment_date_has_passed
+
+    class << self
+      def can_change_statement?(_statement)
+        true
+      end
+    end
 
     def statement=(...)
       super.tap do
@@ -24,13 +31,18 @@ module Statements
       end
     end
 
+    def requires_payable_override?
+      statement&.payable?
+    end
+
     def schedule_change
       statement.output_fee = output_fee
       return false if invalid?
+      return false unless statement.output_fee_changed?
 
-      if statement.output_fee_changed?
-        ChangeOutputFeeJob.perform_later(statement_id: statement.id, output_fee:)
-      end
+      ChangeOutputFeeJob.perform_later(statement_id: statement.id,
+                                       output_fee:,
+                                       allow_payable_statement_changes:)
 
       true
     end
@@ -84,26 +96,23 @@ module Statements
     end
 
     def next_output_statement
-      return unless statement
-
       @next_output_statement ||= statement
         .lead_provider
         .statements
         .with_output_fee
-        .merge(allow_payable_statement_changes ? Statement.unpaid : Statement.open)
+        .merge(statement.payable? ? Statement.unpaid : Statement.open)
         .order(:deadline_date)
         .where(deadline_date: (statement.deadline_date + 1.day)..)
+        .where(payment_date: Time.zone.tomorrow..)
         .where(cohort: statement.cohort)
         .first
     end
 
   private
 
-    def statement_is_open
-      if statement.paid?
+    def statement_is_not_paid
+      if statement&.paid?
         errors.add :output_fee, :statement_is_paid
-      elsif statement.payable? && !allow_payable_statement_changes
-        errors.add :output_fee, :statement_is_payable
       end
     end
 
@@ -116,11 +125,12 @@ module Statements
       errors.add :output_fee, :next_output_statement_required
     end
 
-    def deadline_date_has_passed
+    def payment_date_has_passed
       return unless statement
-      return unless statement.deadline_date.past?
+      return if statement.output_fee
+      return if statement.payment_date > Time.zone.today
 
-      errors.add :output_fee, :deadline_date_has_passed
+      errors.add :output_fee, :payment_date_has_passed
     end
 
     def move_declarations_onto_this_statement
