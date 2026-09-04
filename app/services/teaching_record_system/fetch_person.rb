@@ -20,7 +20,7 @@ module TeachingRecordSystem
         record["firstName"],
         record["middleName"],
         record["lastName"],
-      ].compact.join(" ")
+      ].map(&:presence).compact.join(" ")
     end
 
     def parse_previous_names(record)
@@ -31,7 +31,7 @@ module TeachingRecordSystem
           name["firstName"],
           name["middleName"],
           name["lastName"],
-        ].compact.join(" ")
+        ].map(&:presence).compact.join(" ")
       end
     end
   end

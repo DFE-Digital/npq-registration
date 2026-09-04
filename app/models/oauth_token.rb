@@ -6,6 +6,7 @@ class OauthToken < ApplicationRecord
 
   enum :token_type, {
     refresh_token: "refresh_token",
+    access_token: "access_token",
   }
 
   scope :needs_refresh,

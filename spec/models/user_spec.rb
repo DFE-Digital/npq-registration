@@ -534,6 +534,46 @@ RSpec.describe User do
     end
   end
 
+  describe "#access_token" do
+    subject { user.access_token }
+
+    context "with user who has an access token" do
+      let(:user) { create :user, :with_access_token }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "access_token" }
+      it { is_expected.to be_persisted }
+    end
+
+    context "with a user who does not have a access token" do
+      let(:user) { create :user }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe "#store_access_token!" do
+    subject { user.store_access_token!("some-token") }
+
+    before { freeze_time }
+
+    context "with user who has a access token" do
+      let(:user) { create :user, :with_access_token }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "access_token", token: "some-token", token_updated_at: Time.current }
+      it { is_expected.to be_persisted }
+    end
+
+    context "with a user who does not have a access token" do
+      let(:user) { create :user }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "access_token", token: "some-token", token_updated_at: Time.current }
+      it { is_expected.to be_persisted }
+    end
+  end
+
   describe ".find_by_get_an_identity_id" do
     let(:uid) { SecureRandom.uuid }
     let!(:user) { create(:user, :with_get_an_identity_id, uid:) }
