@@ -13,7 +13,6 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
 
   let(:sent_at) { Time.zone.now }
   let(:old_email) { "mail@example.com" }
-  let(:old_date_of_birth) { 30.years.ago.to_date }
   let(:old_trn) { "1234567" }
   let(:old_trn_verified) { false }
   let(:old_trn_lookup_status) { nil }
@@ -23,7 +22,6 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
     create(:user,
            :with_get_an_identity_id,
            email: old_email,
-           date_of_birth: old_date_of_birth,
            full_name: old_name,
            trn: old_trn,
            trn_lookup_status: old_trn_lookup_status,
@@ -71,7 +69,6 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
         .and change(user, :trn_lookup_status).from(nil).to(new_trn_status)
         .and change(user, :full_name).from("John Doe").to("#{new_first_name} #{new_last_name}")
         .and change(user, :preferred_name).from(nil).to(new_preferred_name)
-        .and change(user, :date_of_birth).from(old_date_of_birth).to(new_date_of_birth)
         .and change(user, :updated_from_tra_at).from(nil).to(sent_at)
     end
 
@@ -133,7 +130,6 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
 
       let(:new_email) { old_email }
       let(:new_name) { old_name }
-      let(:new_date_of_birth) { old_date_of_birth }
       let(:new_trn) { old_trn }
       let(:new_first_name) { "John" }
       let(:new_last_name) { "Doe" }

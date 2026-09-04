@@ -237,7 +237,7 @@ RSpec.describe User do
   describe "touch_significantly_updated_at" do
     let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
     let(:significant_change) { { full_name: "New Name" } }
-    let(:insignificant_change) { { raw_tra_provider_data: { foo: :bar } } }
+    let(:insignificant_change) { { notify_user_for_future_reg: true } }
 
     it "sets significantly_updated_at on creation" do
       expect(user.significantly_updated_at).to be_present
