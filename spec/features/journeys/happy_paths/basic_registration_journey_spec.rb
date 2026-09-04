@@ -13,17 +13,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
   before { school }
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario("registration journey") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario("registration journey") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")

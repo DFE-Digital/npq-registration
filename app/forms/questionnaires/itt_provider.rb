@@ -17,12 +17,12 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      show_eligibility_step
-    end
-
     def previous_step
       :your_employment
+    end
+
+    def next_step
+      show_eligibility_step
     end
 
   private

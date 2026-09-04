@@ -1,7 +1,7 @@
 module Questionnaires
   class FundingEligibilityMaths < Base
     def previous_step
-      if wizard.query_store.maths_understanding?
+      if query_store.maths_understanding?
         :maths_eligibility_teaching_for_mastery
       else
         :maths_understanding_of_approach
@@ -13,7 +13,7 @@ module Questionnaires
     end
 
     def course
-      @course ||= wizard.query_store.course
+      @course ||= query_store.course
     end
 
     def funding_eligible_math

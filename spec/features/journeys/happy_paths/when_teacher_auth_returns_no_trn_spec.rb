@@ -35,6 +35,8 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
         page.check("Yes, I agree to share my information", visible: :all)
       end
 
+      check_back_journey_is_correct
+
       check_answers_log_in_and_submit do
         expect_check_answers_page_to_have_answers(
           {

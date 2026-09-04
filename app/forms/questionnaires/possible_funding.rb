@@ -1,9 +1,5 @@
 module Questionnaires
   class PossibleFunding < Base
-    def next_step
-      :choose_your_provider
-    end
-
     def previous_step
       if course.try(:npqlpm?)
         if maths_understanding?
@@ -11,9 +7,17 @@ module Questionnaires
         else
           :maths_understanding_of_approach
         end
+      elsif query_store.approved_itt_provider?
+        :itt_provider
+      elsif query_store.employment_type_needs_employer_name?
+        :your_employer
       else
         :work_setting
       end
+    end
+
+    def next_step
+      :choose_your_provider
     end
 
     def message_template

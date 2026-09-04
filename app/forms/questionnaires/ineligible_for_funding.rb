@@ -17,32 +17,36 @@ module Questionnaires
     def previous_step
       return :teacher_catchment unless course
 
-      if query_store.declared_not_working_in_england? # TODO: test
+      if query_store.declared_not_working_in_england?
         :teacher_catchment
-      elsif works_in_another_setting? && employment_type_other?
-        :choose_your_npq # TODO: test
-      elsif course.ehco? && query_store.cohort_funded? # TODO: test
-        if query_store.declared_previous_funding?
+      elsif query_store.works_in_another_setting? && query_store.employment_type_other?
+        :choose_your_npq
+      elsif query_store.employment_type_needs_employer_name?
+        :your_employer
+      elsif course.ehco? && query_store.cohort_funded?
+        if !query_store.declared_previous_funding? && query_store.new_headteacher?
           :funding_history
         else
           :ehco_new_headteacher
         end
       elsif course.npqlpm?
-        :maths_eligibility_teaching_for_mastery # TODO: test
-      elsif course.npqs?
-        :senco_in_role # TODO: test
-      elsif query_store.employment_type_needs_employer_name? # TODO: test
-        :your_employer
+        if query_store.maths_understanding?
+          :maths_eligibility_teaching_for_mastery
+        else
+          :maths_understanding_of_approach
+        end
       else
         :work_setting
       end
     end
 
     def next_step
-      if course
-        funding_your_npq_step
+      return :choose_your_npq unless course
+
+      if query_store.course.ehco?
+        :funding_your_ehco
       else
-        :choose_your_npq
+        :funding_your_npq
       end
     end
 
@@ -69,6 +73,7 @@ module Questionnaires
                                when FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO
                                  return EHCO_FUNDING_NOT_AVAILABLE
                                end
+
       raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}" # TODO: test
     end
 
@@ -80,21 +85,13 @@ module Questionnaires
       @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
         institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
+        approved_itt_provider: query_store.approved_itt_provider?,
+        inside_catchment: query_store.inside_catchment?,
         user_ecf_id: query_store.user_ecf_id,
         query_store:,
       )
     end
 
-    delegate :course,
-             :lead_provider,
-             :new_headteacher?,
-             :inside_catchment?,
-             :approved_itt_provider?,
-             :lead_mentor_for_accredited_itt_provider?,
-             :works_in_another_setting?,
-             :employment_type_other?,
-             to: :query_store
+    delegate :course, :lead_provider, to: :query_store
   end
 end

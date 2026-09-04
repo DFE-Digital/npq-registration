@@ -9,6 +9,7 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
   let(:store) { {} }
   let(:funding_eligibility_calculator) { instance_double(FundingEligibility, funding_eligiblity_status_code: calculated_funding_eligiblity_status_code) }
   let(:calculated_funding_eligiblity_status_code) { nil }
+  let(:course) { create(:course) }
 
   let(:wizard) do
     RegistrationWizard.new(
@@ -20,6 +21,107 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
   end
 
   before { allow(FundingEligibility).to receive(:new_from_query_store).and_return(funding_eligibility_calculator) }
+
+  describe "#requirements_met?" do
+    subject { instance.requirements_met? }
+
+    minimum_answers_keys = %w[
+      course_start_cohort
+      course_identifier
+      work_setting
+      lead_provider_id
+      can_share_choices
+      funding_eligiblity_status_code
+    ]
+
+    let(:minimum_answers) do
+      {
+        course_start_cohort: Questionnaires::CourseStartDate::OPTIONS.keys.first,
+        course_identifier: course.identifier,
+        work_setting: Questionnaires::WorkSetting::NESTED_SCHOOL_SETTINGS.first,
+        lead_provider_id: LeadProvider.first.id,
+        can_share_choices: "1",
+        funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
+      }.stringify_keys
+    end
+
+    context "when the minimum set of answers is present" do
+      let(:store) { minimum_answers }
+
+      it { is_expected.to be true }
+    end
+
+    minimum_answers_keys.each do |missing_key|
+      context "when the #{missing_key} is missing" do
+        let(:store) { minimum_answers.except(missing_key) }
+
+        it { is_expected.to be false }
+      end
+    end
+
+    context "when the application is not eligible" do
+      let(:store) do
+        minimum_answers
+          .merge(funding_eligiblity_status_code: FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE,
+                 funding:)
+          .stringify_keys
+      end
+
+      context "when the funding answer is present" do
+        let(:funding) { "self" }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the funding answer is not present" do
+        let(:funding) { nil }
+
+        xit("to be implemented in NPQ-3956") { is_expected.to be false } # rubocop:disable RSpec/PendingWithoutReason
+      end
+
+      context "when the course is EHCO" do
+        let(:store) do
+          minimum_answers
+            .merge(funding_eligiblity_status_code: FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO,
+                   ehco_funding_choice:)
+            .stringify_keys
+        end
+
+        context "when the ehco_funding_choice answer is present" do
+          let(:ehco_funding_choice) { "self" }
+
+          it { is_expected.to be true }
+        end
+
+        context "when the ehco_funding_choice answer is not present" do
+          let(:ehco_funding_choice) { nil }
+
+          xit("to be implemented in NPQ-3956") { is_expected.to be false } # rubocop:disable RSpec/PendingWithoutReason
+        end
+      end
+    end
+
+    context "when the application is subject to review" do
+      let(:store) do
+        minimum_answers
+          .merge(funding_eligiblity_status_code: FundingEligibility::SUBJECT_TO_REVIEW,
+                 funding:)
+          .stringify_keys
+      end
+
+      context "when the funding answer is present" do
+        let(:funding) { "self" }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the funding answer is not present" do
+        let(:funding) { nil }
+
+        it { is_expected.to be true }
+      end
+    end
+  end
 
   describe "#previous_step" do
     subject { described_class.new(wizard:).previous_step }
@@ -43,23 +145,23 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
     subject { instance.show_previously_funded_alert? }
 
     context "when the pre-login funding eligibility status is funded" do
-      before { store["pre_login_funding_eligiblity_status_code"] = :funded }
+      before { store["pre_login_funding_eligiblity_status_code"] = FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
 
       context "when the current funding eligibility status is previously_funded" do
-        let(:calculated_funding_eligiblity_status_code) { :previously_funded }
+        let(:calculated_funding_eligiblity_status_code) { FundingEligibility::PREVIOUSLY_FUNDED }
 
         it { is_expected.to be true }
       end
 
       context "when the current funding eligibility status is not previously_funded" do
-        let(:calculated_funding_eligiblity_status_code) { :funded }
+        let(:calculated_funding_eligiblity_status_code) { FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
 
         it { is_expected.to be false }
       end
     end
 
     context "when the pre-login funding eligibility status is not funded" do
-      before { store["pre_login_funding_eligiblity_status_code"] = :ineligible_setting }
+      before { store["pre_login_funding_eligiblity_status_code"] = FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
 
       it { is_expected.to be false }
     end
@@ -68,22 +170,22 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
   describe "#before_render" do
     subject { instance.before_render }
 
-    let(:store) { { funding_eligiblity_status_code: :funded }.stringify_keys }
+    let(:store) { { funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT }.stringify_keys }
 
     context "when the user is previously funded" do
-      let(:calculated_funding_eligiblity_status_code) { :previously_funded }
+      let(:calculated_funding_eligiblity_status_code) { FundingEligibility::PREVIOUSLY_FUNDED }
 
       it "sets previously_funded in the store" do
         expect { subject }.to change { wizard.store["previously_funded"] }.from(nil).to(true)
       end
 
       it "updates the funding_eligibility_status_code in the store" do
-        expect { subject }.to change { wizard.store["funding_eligiblity_status_code"] }.from(:funded).to(:previously_funded)
+        expect { subject }.to change { wizard.store["funding_eligiblity_status_code"] }.from(FundingEligibility::FUNDED_ELIGIBILITY_RESULT).to(FundingEligibility::PREVIOUSLY_FUNDED)
       end
     end
 
     context "when the user is not previously funded" do
-      let(:calculated_funding_eligiblity_status_code) { :funded }
+      let(:calculated_funding_eligiblity_status_code) { FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
 
       it "does not set previously_funded in the store" do
         expect { subject }.not_to(change { wizard.store["previously_funded"] })

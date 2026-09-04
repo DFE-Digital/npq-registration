@@ -18,17 +18,15 @@ module Questionnaires
       false
     end
 
-    # Previous steps should lead to `closed` when registration is closed.
-    def previous_step
-      return :closed if Feature.registration_closed?
+    def step_requires_login?
+      false
+    end
 
+    def previous_step
       raise NotImplementedError
     end
 
-    # Subsequent steps should lead to `closed` when registration is closed.
     def next_step
-      return :closed if Feature.registration_closed?
-
       raise NotImplementedError
     end
 
@@ -126,32 +124,18 @@ module Questionnaires
         else
           :funding_your_ehco
         end
+      elsif query_store.declared_not_working_in_england?
+        :funding_your_npq
       elsif query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?
         :choose_your_provider
       elsif query_store.course.npqlpm?
         :maths_eligibility_teaching_for_mastery
-      elsif query_store.course.npqs?
+      elsif query_store.course.npqs? && query_store.cohort_funded?
         :senco_in_role
       elsif eligible_for_funding? || funding_eligibility_calculator.subject_to_review?
         :possible_funding
       else
         :ineligible_for_funding
-      end
-    end
-
-    def funding_your_npq_step
-      if query_store.course.ehco?
-        :funding_your_ehco
-      else
-        :funding_your_npq
-      end
-    end
-
-    def check_answers_step
-      if wizard.current_user
-        :check_answers_and_submit
-      else
-        :check_answers
       end
     end
 

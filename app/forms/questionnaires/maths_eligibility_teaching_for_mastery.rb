@@ -27,6 +27,10 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      :work_setting
+    end
+
     def next_step
       if maths_eligibility_teaching_for_mastery == "yes"
         wizard.store["maths_understanding"] = true
@@ -42,10 +46,6 @@ module Questionnaires
         wizard.store["maths_understanding"] = false
         :maths_understanding_of_approach
       end
-    end
-
-    def previous_step
-      :choose_your_npq
     end
 
   private

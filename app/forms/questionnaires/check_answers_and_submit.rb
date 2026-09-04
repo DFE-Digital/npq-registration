@@ -1,15 +1,33 @@
 module Questionnaires
   class CheckAnswersAndSubmit < Base
     def requirements_met?
-      super && wizard.query_store.has_answers?
-      # TODO: check minimum set of answers:
-      # - cohort
-      # - course
-      # - declared funding
-      # - work setting
-      # - if ineligible, funding option
-      # - provider
-      # - sharing infomration agreement
+      super &&
+        query_store.course_start_cohort.present? &&
+        query_store.course.present? &&
+        query_store.work_setting.present? &&
+        query_store.lead_provider.present? &&
+        query_store.can_share_choices.present? &&
+        query_store.funding_eligiblity_status_code.present?
+
+      # TODO: NPQ-3956
+      # where the above is minimal_requirements
+      # if [
+      #   FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
+      #   FundingEligibility::SUBJECT_TO_REVIEW,
+      #   FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER,
+      # ].exclude?(query_store.funding_eligiblity_status_code)
+      #   minimal_requirements && (query_store.funding.present? || query_store.ehco_funding_choice.present?)
+      # else
+      #   minimal_requirements
+      # end
+    end
+
+    def step_requires_login?
+      true
+    end
+
+    def last_step?
+      true
     end
 
     def previous_step
@@ -20,16 +38,8 @@ module Questionnaires
       # This is the last step, so there is no next step.
     end
 
-    def last_step?
-      true
-    end
-
-    def answers
-      @answers ||= Registration::CheckAnswersPresenter.new(wizard)
-    end
-
     def show_previously_funded_alert?
-      wizard.store["pre_login_funding_eligiblity_status_code"] == :funded && user_previously_funded?
+      wizard.store["pre_login_funding_eligiblity_status_code"] == FundingEligibility::FUNDED_ELIGIBILITY_RESULT && user_previously_funded?
     end
 
     def before_render
