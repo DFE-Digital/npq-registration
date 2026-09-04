@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
+RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_nursery, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -68,7 +68,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_nursery, :with_defaul
     end
 
     navigate_to_page(path: "/registration/possible-funding", submit_form: false) do
-      page.click_button("Continue")
+      page.click_button("Continue to register")
     end
 
     navigate_to_page(path: "/registration/choose-your-provider", submit_form: true) do

@@ -651,13 +651,6 @@ GEM
       multi_json (~> 1.10)
     simplecov (1.1.1)
     simpleidn (0.2.3)
-    site_prism (6.0.1)
-      addressable (~> 2.8, >= 2.8.4)
-      base64 (~> 0.3.0)
-      capybara (~> 3.37)
-      logger (~> 1.7)
-      site_prism-all_there (> 3, < 5)
-    site_prism-all_there (3.0.10)
     skylight (7.1.1)
       activesupport (>= 7.2.0)
     sprockets (4.4.1)
@@ -811,7 +804,6 @@ DEPENDENCIES
   shoulda-matchers
   simplecov
   simpleidn
-  site_prism (~> 6.0)
   skylight (~> 7.1)
   sprockets (~> 4.4.1)
   sprockets-rails

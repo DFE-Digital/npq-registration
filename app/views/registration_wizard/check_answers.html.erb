@@ -5,7 +5,8 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-l">Check your answers and submit</h1>
+
+  <h1 class="govuk-heading-l">Check your answers</h1>
 
   <%= render GovukComponent::SummaryListComponent.new do |component|
         if @wizard.is_a?(Registration::Wizard)
@@ -35,9 +36,12 @@
         end
   end %>
 
-  <%= govuk_warning_text(text: "If you enter your information incorrectly, it may result in you not being offered a funded place on an NPQ course.") %>
+  <h2 class="govuk-heading-m">Continue to register</h2>
+  <p class="govuk-body">You can still check or change your answers later.</p>
 
-  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-    <%= f.govuk_submit "Submit" %>
-  <% end %>
+  <%=
+    form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f|
+      f.govuk_submit "Continue"
+    end
+  %>
 <% end %>

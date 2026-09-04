@@ -16,6 +16,10 @@ module Questionnaires
       ]
     end
 
+    def requirements_met?
+      super && query_store.work_setting
+    end
+
     # In the no js scenario we want the step to loop, showing a different screen
     # the second time but without showing an error - hence a negative response to
     # #valid? preventing saving but without appending errors
@@ -25,7 +29,7 @@ module Questionnaires
 
     def next_step
       if institution.in_england?
-        :choose_your_npq
+        show_eligibility_step
       else
         :school_not_in_england
       end

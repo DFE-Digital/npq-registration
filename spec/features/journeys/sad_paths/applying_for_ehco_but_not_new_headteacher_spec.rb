@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,82 +9,39 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
+
   context "when JavaScript is enabled", :js do
-    scenario("applying for EHCO but not new headteacher (with JS)") { run_scenario(js: true) }
+    scenario("applying for EHCO but not a new headteacher") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
-    scenario("applying for EHCO but not new headteacher (without JS)") { run_scenario(js: false) }
+    scenario("applying for EHCO but not a new headteacher") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # expect(page).to be_accessible
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early headship coaching offer",
+      work_setting: "Primary school (5 to 11)",
+    )
 
     choose_a_school(js:, name: "open")
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early headship coaching offer", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h2", text: "What stage are you at with the Headship NPQ?"
-
-      page.choose "None of the above", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
-      expect(page).to have_selector "p", text: "you need to do the Headship NPQ"
-
-      page.click_link("Back")
-    end
-
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h2", text: "What stage are you at with the Headship NPQ?"
-
-      page.choose "I’ve completed it", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/ehco-headteacher", submit_form: true) do
-      expect(page).to have_text("Are you a headteacher?")
-      page.choose("Yes", visible: :all)
+      page.choose "I’m doing it", visible: :all
     end
 
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_text("Are you in your first 5 years of a headship?")
       page.choose "No", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/ehco-funding-not-available", click_continue: true) do
-      expect(page).to have_selector "p", text: "not eligible for the scholarship funding for"
+    expect_page_to_have(path: "/registration/ineligible-for-funding", click_continue: false) do
+      click_link "Continue to register"
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      expect(page).to have_text("How are you funding the Early headship coaching offer?")
       page.choose "I am paying", visible: :all
     end
 
@@ -98,19 +55,21 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_back_journey_is_correct
+
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Early headship coaching offer",
           "Provider" => "Teach First",
           "Course funding" => "I am paying",
           "Workplace" => "open manchester school – street 1, manchester",
-          "Headteacher" => "Yes",
           "First 5 years of headship" => "No",
-          "Headship NPQ stage" => "I’ve completed it",
+          "Headship NPQ stage" => "I’m doing it",
         },
       )
     end
@@ -142,7 +101,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -158,31 +117,32 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
       "works_in_nursery" => nil,
       "works_in_childcare" => false,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "declared_previous_funding" => "no",
         "ehco_funding_choice" => "self",
-        "ehco_headteacher" => "yes",
         "ehco_new_headteacher" => "no",
         "email_template" => "not_eligible_ehco_funding",
         "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "npqh_status" => "completed_npqh",
+        "npqh_status" => "studying_npqh",
+        "pre_login_funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
       },
     )
   end

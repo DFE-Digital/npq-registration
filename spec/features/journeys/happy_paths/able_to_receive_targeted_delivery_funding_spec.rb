@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,6 +9,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
   include_context "Stub Get An Identity Omniauth Responses"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
+
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey that is able to receive targeted delivery funding (with JS)") { run_scenario(js: true) }
@@ -19,8 +23,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request(trn: "1234567", response: { trn: "1234567" })
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -41,18 +43,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
-
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-      high_pupil_premium: true,
-      number_of_pupils: 100,
-    )
 
     choose_a_school(js:, name: "open")
 
@@ -62,9 +54,9 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
 
-      page.click_button("Continue")
+      page.click_button("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -80,9 +72,10 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Senior leadership",
           "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
@@ -118,7 +111,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -134,7 +127,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
@@ -146,13 +139,13 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_el
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
         "works_in_childcare" => "no",
         "works_in_school" => "yes",
       },

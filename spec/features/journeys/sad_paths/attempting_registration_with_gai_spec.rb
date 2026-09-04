@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Registration whilst already signed in with DfE Identity", :no_js, type: :feature do
+RSpec.feature "Registration whilst already signed in with DfE Identity", :mvp, :no_js, type: :feature do
   include Helpers::JourneyAssertionHelper
 
   before { allow(Sentry).to receive(:capture_message) }

@@ -7,10 +7,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 
-require "site_prism"
-Dir[Rails.root.join("spec/page_objects/**/*_section.rb")].sort.each { |f| require f }
-Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f }
-
 # TODO: reinstate axe-rspec
 # this needs one of the following:
 # - cuprite to support it
@@ -86,6 +82,9 @@ RSpec.configure do |config|
   config.include RSpec::DefaultHttpHeader, type: :request
   config.include AxeHelper, type: :feature
   config.include DfE::Wizard::Test::RSpecMatchers
+
+  # exclude the journey specs that are from the journey as it was before the 2026 'Post-MVP' journey
+  config.filter_run_excluding :mvp
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [

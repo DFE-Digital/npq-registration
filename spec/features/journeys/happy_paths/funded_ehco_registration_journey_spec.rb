@@ -5,81 +5,41 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
+
+  before { school }
+
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
   context "when JavaScript is enabled", :js do
-    scenario("funded EHCO registration journey (with JS)") { run_scenario(js: true) }
+    scenario("funded EHCO registration journey") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
-    scenario("funded EHCO registration journey (without JS)") { run_scenario(js: false) }
+    scenario("funded EHCO registration journey") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1", establishment_type_code: "1")
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early headship coaching offer",
+      work_setting: "Primary school (5 to 11)",
+    )
 
     choose_a_school(js:, name: "open")
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early headship coaching offer", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h2", text: "What stage are you at with the Headship NPQ?"
-      page.choose("None of the above", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
-      expect(page).to have_selector "p", text: "Go back if you want to register for Headship NPQ"
-
-      page.click_link("Back")
-    end
-
-    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h2", text: "What stage are you at with the Headship NPQ?"
       page.choose("I’ve completed it", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-headteacher", submit_form: true) do
-      expect(page).to have_text("Are you a headteacher?")
-      page.choose("Yes", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
-      expect(page).to have_text("Are you in your first 5 years of a headship?")
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: true) do
-      expect(page).to have_selector "p", text: "eligible for scholarship funding"
+    expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: false) do
+      click_link "Continue to register"
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -92,16 +52,18 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
+    check_back_journey_is_correct
+
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
-          "Workplace in England" => "Yes",
-          "Work setting" => "A school",
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
+          "Working in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
           "Course" => "Early headship coaching offer",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
-          "Headteacher" => "Yes",
           "First 5 years of headship" => "Yes",
           "Headship NPQ stage" => "I’ve completed it",
         },
@@ -113,7 +75,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     if User.last.applications.count == 1
       navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
         expect(page).to have_text("Teach First")
-        expect(page).to have_text("Your NPQ registration")
+        expect(page).to have_text("Your Early headship coaching offer registration")
       end
     else
       navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
@@ -145,7 +107,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => school.id,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => "pending",
@@ -166,30 +128,31 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
-      "work_setting" => "a_school",
+      "work_setting" => "primary_school",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-early-headship-coaching-offer",
-        "ehco_headteacher" => "yes",
+        "declared_previous_funding" => "no",
         "ehco_new_headteacher" => "yes",
         "email_template" => "ehco_scholarship_funding",
         "funding_eligiblity_status_code" => "funded",
-        "institution_identifier" => "School-100000",
+        "institution_identifier" => "School-#{school.urn}",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "funded",
         "npqh_status" => "completed_npqh",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "work_setting" => "primary_school",
       },
     )
   end

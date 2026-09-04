@@ -1,4 +1,4 @@
-RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
+RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do |stub: true|
   let(:user_first_name) { "John" }
   let(:user_last_name) { "Doe" }
   let(:user_previous_names) { [] }
@@ -77,8 +77,12 @@ RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
     }
   end
 
-  before do
+  def stub_teacher_auth
     OmniAuth.config.test_mode = true
     OmniAuth.config.add_mock(:teacher_auth, stubbed_callback_response)
+  end
+
+  before do
+    stub_teacher_auth if stub
   end
 end

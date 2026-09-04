@@ -27,20 +27,22 @@ module Questionnaires
     end
 
     def previous_step
-      if course&.npqs? && wizard.query_store.inside_catchment?
+      if query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?
+        :work_setting
+      elsif course&.npqs? && query_store.inside_catchment?
         :funding_eligibility_senco
-      elsif !wizard.query_store.inside_catchment? || !wizard.query_store.works_in_school?
-        :funding_your_npq
-      elsif course.npqh? && eligible_for_funding?
-        :possible_funding
-      elsif course.ehco?
-        if eligible_for_funding?
+      elsif course&.ehco?
+        if query_store.declared_previous_funding?
+          :ehco_new_headteacher
+        elsif eligible_for_funding?
           :ehco_possible_funding
         else
           :funding_your_ehco
         end
+      elsif course&.npqh? && eligible_for_funding?
+        :possible_funding
       else
-        :choose_your_npq
+        :funding_your_npq
       end
     end
 
@@ -72,13 +74,12 @@ module Questionnaires
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store: wizard.query_store,
+        query_store:,
       )
     end
 
     def providers
-      LeadProvider.for(course:, cohort: Cohort.find_by(identifier: wizard.query_store.course_start_cohort)).alphabetical
+      LeadProvider.for(course:, cohort: Cohort.find_by(identifier: query_store.course_start_cohort)).alphabetical
     end
 
     def lead_provider

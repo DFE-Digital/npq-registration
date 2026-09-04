@@ -1,5 +1,6 @@
 FactoryBot.define do
   sequence(:urn) { |n| sprintf("1TEST%05d", n % 100_000) }
+  sequence(:real_urn) { |n| sprintf("1%05d", n % 100_000) }
   sequence(:ukprn) { |n| sprintf("TEST%08d", n % 100_000_000) }
 
   factory :school do
@@ -29,6 +30,16 @@ FactoryBot.define do
       town { "town" }
       county { "county" }
       postcode { Faker::Address.postcode }
+    end
+
+    trait :eligible_with_urn_and_address do
+      urn { generate(:real_urn) }
+      ukprn { nil }
+      name { "open manchester school" }
+      address_1 { "street 1" }
+      town { "manchester" }
+      establishment_status_code { "1" }
+      establishment_type_code { "1" }
     end
   end
 end

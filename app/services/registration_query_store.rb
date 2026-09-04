@@ -18,19 +18,19 @@ class RegistrationQueryStore
   end
 
   def user_ecf_id
-    current_user.ecf_id
+    current_user&.ecf_id
   end
 
   def trn_set_via_fallback_verification_question?
     store["trn_set_via_fallback_verification_question"]
   end
 
-  def trn
-    current_user.trn
-  end
-
   def inside_catchment?
     store["teacher_catchment"] == "england"
+  end
+
+  def declared_not_working_in_england?
+    store["teacher_catchment"].present? && !inside_catchment? # TODO: test
   end
 
   def funding_eligiblity_status_code
@@ -123,7 +123,7 @@ class RegistrationQueryStore
   end
 
   def new_headteacher?
-    store["ehco_headteacher"] == "yes" && store["ehco_new_headteacher"] == "yes"
+    store["ehco_new_headteacher"] == "yes"
   end
 
   def date_of_birth
@@ -172,6 +172,10 @@ class RegistrationQueryStore
     !(lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?)
   end
 
+  def employment_type_needs_employer_name?
+    employment_type_hospital_school? || young_offender_institution? # TODO: test
+  end
+
   def employer_name_matters?
     return true if referred_by_return_to_teaching_adviser?
     return false unless employment_type_matters?
@@ -200,5 +204,24 @@ class RegistrationQueryStore
 
   def course_start_cohort
     store["course_start_cohort"]
+  end
+
+  def cohort_funded?
+    cohort = Cohort.find_by(identifier: course_start_cohort)
+    return true unless cohort
+
+    cohort.funded?
+  end
+
+  def proceed_without_checking_funding?
+    store["check_funding"] == "no"
+  end
+
+  def declared_previous_funding?
+    store["declared_previous_funding"] == "yes"
+  end
+
+  def has_answers?
+    store.excluding("current_user_id").any?
   end
 end

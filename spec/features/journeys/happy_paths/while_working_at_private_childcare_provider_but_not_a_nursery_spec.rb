@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_nursery, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -8,6 +8,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
   include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
+
+  before { create(:school, :eligible_with_urn_and_address) }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey while working at private childcare provider but not a nursery (with JS)") { run_scenario(js: true) }
@@ -18,8 +20,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request
-
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_button("Start now")
@@ -42,8 +42,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
     end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       expect(page).to have_text("Which early years setting do you work in?")
@@ -87,7 +85,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("eligible for scholarship funding for the Early years leadership NPQ")
     end
 
@@ -104,12 +102,13 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_nursery, :with_defa
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
           "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
           "Early years setting" => "Private nursery",
         },
       )

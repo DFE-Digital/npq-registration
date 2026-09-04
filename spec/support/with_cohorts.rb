@@ -5,6 +5,11 @@ RSpec.shared_context "with cohorts", shared_context: :metadata do
     # create an unfunded cohort for the next cohort
     unfunded_cohort = FactoryBot.create(:cohort, :unfunded, :next)
 
+    # create a small set of course cohort providers for the next unfunded cohort
+    provider_llse = LeadProvider.find_by(name: "LLSE")
+    FactoryBot.create(:course_cohort, :with_provider, course: create(:course, :headship), cohort: unfunded_cohort, lead_provider: provider_llse)
+    FactoryBot.create(:course_cohort, :with_provider, course: create(:course, :early_headship_coaching_offer), cohort: unfunded_cohort, lead_provider: provider_llse)
+
     # create a capped 'b' cohort for the next cohort
     capped_cohort = FactoryBot.create(:cohort, start_year: unfunded_cohort.start_year, suffix: "b")
 

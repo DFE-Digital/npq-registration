@@ -12,16 +12,20 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      :choose_your_provider
-    end
-
     def previous_step
       :ineligible_for_funding
     end
 
+    def next_step
+      if query_store.declared_previous_funding?
+        :work_setting
+      else
+        :choose_your_provider
+      end
+    end
+
     def course
-      @course ||= wizard.query_store.course
+      @course ||= query_store.course
     end
 
     def questions
