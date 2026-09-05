@@ -163,7 +163,67 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
   end
 
   describe ".can_change_statement?" do
-    it "needs testing"
+    subject { described_class.can_change_statement?(statement) }
+
+    context "with future open statement" do
+      context "with output_fee true" do
+        let(:statement) { build(:statement, :next_output_fee) }
+
+        it { is_expected.to be true }
+      end
+
+      context "with output_fee false" do
+        let(:statement) { build(:statement, :open, output_fee: false) }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context "with current payable statement" do
+      context "with output_fee true" do
+        let(:statement) { build(:statement, :payable, output_fee: true) }
+
+        it { is_expected.to be true }
+      end
+
+      context "with output_fee false" do
+        let(:statement) { build(:statement, :payable, output_fee: false) }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context "with past payable statement" do
+      context "with output statement" do
+        let :statement do
+          build(:statement, state: :payable, for_date: 2.months.ago, output_fee: true)
+        end
+
+        it { is_expected.to be true }
+      end
+
+      context "with non-output statement" do
+        let :statement do
+          build(:statement, state: :payable, for_date: 2.months.ago, output_fee: false)
+        end
+
+        it { is_expected.to be false }
+      end
+    end
+
+    context "with past paid statement" do
+      context "with output_fee true" do
+        let(:statement) { build(:statement, :paid, output_fee: true) }
+
+        it { is_expected.to be false }
+      end
+
+      context "with output_fee false" do
+        let(:statement) { build(:statement, :paid, output_fee: false) }
+
+        it { is_expected.to be false }
+      end
+    end
   end
 
   describe "#requires_payable_override?" do

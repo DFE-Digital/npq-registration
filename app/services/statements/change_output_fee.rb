@@ -18,8 +18,12 @@ module Statements
     validate :payment_date_has_passed
 
     class << self
-      def can_change_statement?(_statement)
-        true
+      def can_change_statement?(statement)
+        if statement.payable?
+          statement.output_fee || statement.payment_date > Time.zone.today
+        else
+          statement.open?
+        end
       end
     end
 
