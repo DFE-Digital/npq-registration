@@ -64,7 +64,7 @@ RSpec.feature "Statement - change deadline date", :no_js, type: :feature do
     scenario "it shows an error" do
       visit(admin_finance_statements_change_deadline_date_path(statement))
 
-      new_deadline_date = statement.payment_date - 1.month
+      new_deadline_date = statement.deadline_date + 1.day
       fill_in "statements_change_deadline_date[deadline_date(3i)]", with: new_deadline_date.day
       fill_in "statements_change_deadline_date[deadline_date(2i)]", with: new_deadline_date.month
       fill_in "statements_change_deadline_date[deadline_date(1i)]", with: new_deadline_date.year
