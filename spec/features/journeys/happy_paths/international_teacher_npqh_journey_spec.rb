@@ -9,11 +9,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled or disabled" do
-    scenario("international teacher NPQH journey", :js, :no_js) { run_scenario(js: false) }
-  end
-
-  def run_scenario(*)
+  scenario "international teacher NPQH journey" do
     navigate_to_page(path: "/", submit_form: false) do
       page.click_button("Start now")
     end
@@ -44,29 +40,14 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding")
-      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
-
-      page.click_link("Continue to register")
-    end
-
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       expect(page).to have_text("How are you funding your course?")
       page.choose "My workplace is covering the cost", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
-    end
+    choose_provider_share_information_and_check_answers(provider: "Teach First")
 
-    # check_back_journey_is_correct # FIXME: ineligible screen shown twice, previous step is always the teacher-cathment step
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
+    check_back_journey_is_correct(exclude_current_page: true)
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(

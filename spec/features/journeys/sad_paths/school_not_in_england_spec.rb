@@ -4,7 +4,6 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
-  include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
@@ -13,11 +12,11 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
     School.create!(urn: 100_099, name: "open wrexham school", address_1: "street 4", town: "wrexham", establishment_status_code: "1", establishment_type_code: "30")
   end
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario("school not in England") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario("school not in England") { run_scenario(js: false) }
   end
 
@@ -31,16 +30,14 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
 
     expect_page_to_have(path: "/registration/school-not-in-england", submit_form: false) do
       expect(page).to have_text("School or college must be in England")
-
-      page.click_link("Back")
+      expect(page).to have_text("This NPQ application can only be completed by teachers working in these locations.")
+      expect(page).not_to have_button("Continue")
     end
 
-    expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
-      expected_text = js ? "What is the name of your workplace?" : "Select your workplace"
-      expect(page).to have_text(expected_text)
-    end
+    check_back_journey_is_correct(exclude_current_page: true)
 
-    expect(retrieve_latest_application_user_data).to match(nil)
-    expect(retrieve_latest_application_data).to match(nil)
+    page.click_link("Back")
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: false)
   end
 end

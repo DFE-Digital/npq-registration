@@ -27,16 +27,16 @@ module Questionnaires
       super(...) && institution_identifier.present? && institution_identifier != "other"
     end
 
+    def previous_step
+      :work_setting
+    end
+
     def next_step
       if institution.in_england?
         show_eligibility_step
       else
         :school_not_in_england
       end
-    end
-
-    def previous_step
-      :work_setting
     end
 
     def questions

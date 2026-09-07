@@ -68,12 +68,6 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
     end
   end
 
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    it { is_expected.to be(:funding_history) }
-  end
-
   describe "#previous_step" do
     subject { instance.previous_step }
 
@@ -127,6 +121,53 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       let(:course_start_cohort) { create(:cohort, :unfunded).identifier }
 
       it { is_expected.to be :course_start_date }
+    end
+  end
+
+  describe "#next_step" do
+    subject { instance.next_step }
+
+    let(:store) do
+      {
+        course_start_cohort:,
+        check_funding:,
+        teacher_catchment:,
+      }.stringify_keys
+    end
+
+    let(:check_funding) { nil }
+    let(:teacher_catchment) { nil }
+
+    context "when the course started in an unfunded cohort" do
+      let(:course_start_cohort) { create(:cohort, :unfunded).identifier }
+
+      it { is_expected.to be(:work_setting) }
+    end
+
+    context "when the course started in a funded cohort" do
+      let(:course_start_cohort) { create(:cohort, :capped).identifier }
+
+      context "and the user has selected to check funding" do
+        let(:check_funding) { "yes" }
+
+        context "and the user works in England" do
+          let(:teacher_catchment) { "england" }
+
+          it { is_expected.to be(:funding_history) }
+        end
+
+        context "and the user does not work in England" do
+          let(:teacher_catchment) { "another" }
+
+          it { is_expected.to be(:work_setting) }
+        end
+      end
+
+      context "and the user has selected to continue without funding" do
+        let(:check_funding) { "no" }
+
+        it { is_expected.to be(:work_setting) }
+      end
     end
   end
 end

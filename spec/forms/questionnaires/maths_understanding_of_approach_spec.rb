@@ -1,7 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::MathsUnderstandingOfApproach, :with_cohorts, type: :model do
-  let(:instance) { described_class.new }
+  subject(:instance) { described_class.new }
+
   let(:course) { create(:course, :leading_primary_mathematics) }
   let(:lead_provider) { LeadProvider.for(course:).first }
 
@@ -19,6 +20,12 @@ RSpec.describe Questionnaires::MathsUnderstandingOfApproach, :with_cohorts, type
       request: nil,
       current_user: create(:user),
     )
+  end
+
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to be :maths_eligibility_teaching_for_mastery }
   end
 
   describe "#next_step" do

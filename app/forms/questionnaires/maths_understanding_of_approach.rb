@@ -28,6 +28,10 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      :maths_eligibility_teaching_for_mastery
+    end
+
     def next_step
       if maths_understanding_of_approach == "cannot_show"
         :maths_cannot_register
@@ -38,10 +42,6 @@ module Questionnaires
       else
         :ineligible_for_funding
       end
-    end
-
-    def previous_step
-      :maths_eligibility_teaching_for_mastery
     end
 
   private

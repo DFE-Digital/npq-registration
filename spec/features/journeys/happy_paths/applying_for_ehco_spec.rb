@@ -17,7 +17,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       choose_a_school(js: false, name: "open")
     end
 
-    scenario "When not doing the Headship NPQ" do
+    scenario "when not doing the Headship NPQ" do
       expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
         expect(page).to have_selector "h1", text: "Eligibility for the Early headship coaching offer"
         expect(page).to have_content "To be eligible for the Early headship coaching offer you need to do the Headship NPQ."
@@ -33,7 +33,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       check_back_journey_is_correct(exclude_current_page: true)
     end
 
-    scenario "When doing the Headship NPQ" do
+    scenario "when doing the Headship NPQ" do
       expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
         page.choose "I’m doing it", visible: :all
       end
@@ -52,12 +52,14 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         click_link "Continue to register"
       end
 
-      check_back_journey_is_correct
+      choose_provider_share_information_and_check_answers(provider: "Teach First") do
+        expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+      end
 
-      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: false)
+      check_back_journey_is_correct(exclude_current_page: true)
     end
 
-    scenario "When having completed the Headship NPQ" do
+    scenario "when having completed the Headship NPQ" do
       expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
         page.choose "I’ve completed it", visible: :all
       end
@@ -71,12 +73,14 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         click_link "Continue to register"
       end
 
-      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: false)
+      choose_provider_share_information_and_check_answers(provider: "Teach First") do
+        expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+      end
 
       check_back_journey_is_correct(exclude_current_page: true)
     end
 
-    scenario "When not a headteacher not in first 5 years of headship" do
+    scenario "when not a headteacher not in first 5 years of headship" do
       expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
         page.choose "I’ve completed it", visible: :all
       end
@@ -97,21 +101,15 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         page.choose "I am paying", visible: :all
       end
 
-      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-        page.choose("Teach First", visible: :all)
+      choose_provider_share_information_and_check_answers(provider: "Teach First") do
+        expect(page).to have_content 'funding_eligiblity_status_code: "not_new_headteacher_requesting_ehco"'
       end
-
-      expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-        page.check("Yes, I agree to share my information", visible: :all)
-      end
-
-      expect_page_to_have(path: "/registration/check-answers", submit_form: false)
 
       check_back_journey_is_correct(exclude_current_page: true)
     end
   end
 
-  scenario "When in the unfunded Spring 2026 cohort" do
+  scenario "when in the unfunded Spring 2026 cohort" do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
     end
@@ -131,6 +129,14 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     choose_a_school(js: false, name: "open")
 
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_content("You’re not eligible for scholarship funding for the Early headship coaching offer course as you have selected the Spring 2026 cohort.")
       page.click_link("Continue to register")
@@ -140,18 +146,14 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose "I am paying", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("LLSE", visible: :all)
+    choose_provider_share_information_and_check_answers(provider: "LLSE") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "unfunded_cohort"'
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
-
-    check_back_journey_is_correct
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
-  scenario "When not working in England" do
+  scenario "when not working in England" do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
     end
@@ -182,23 +184,26 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
       page.choose "I am paying", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"'
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
-
-    check_back_journey_is_correct
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
-  scenario "When having declared previous funding and working in England" do
+  scenario "when having declared previous funding" do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
     end
@@ -239,19 +244,22 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
     end
 
-    check_back_journey_is_correct
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "previously_funded"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
-  scenario "When continuing without DfE funding" do
+  scenario "when continuing without DfE funding" do
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       page.click_button("Start now")
     end
@@ -273,14 +281,47 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("Teach First", visible: :all)
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
     end
 
-    check_back_journey_is_correct
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TOOD: will be fixed in NPQ-3974
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "when the work setting is 'Other'" do
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early headship coaching offer",
+      work_setting: "Other",
+    )
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      expect(page).to have_content "Eligible"
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 end

@@ -16,12 +16,12 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      :your_employer
-    end
-
     def previous_step
       :your_employment
+    end
+
+    def next_step
+      :your_employer
     end
   end
 end

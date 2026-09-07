@@ -31,13 +31,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       expect(page).to have_text("Choose an NPQ")
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/teacher-catchment")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/check-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
   scenario "Autumn 2026 cohort with funding check - does not work in England" do
@@ -60,15 +54,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       expect(page).to have_text("Choose an NPQ")
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/ineligible-for-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/teacher-catchment")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/check-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
   scenario "Autumn 2026 cohort without funding check" do
@@ -112,8 +98,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       expect(page).to have_text("Choose an NPQ")
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 end

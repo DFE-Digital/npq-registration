@@ -3,7 +3,11 @@ Knapsack::Adapters::RSpecAdapter.bind
 
 require "simplecov"
 require "simplecov_json_formatter"
-SimpleCov.start "rails"
+SimpleCov.start "rails" do
+  group "Components", "app/components"
+  group "Forms", "app/forms"
+  group "Services", "app/services"
+end
 
 require "webmock/rspec"
 require "support/helpers/journey_helper"

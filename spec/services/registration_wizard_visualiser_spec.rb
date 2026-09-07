@@ -19,6 +19,7 @@ RSpec.describe RegistrationWizardVisualiser do
       expect_any_instance_of(Object).to receive(:system).with(
         "dot",
         "-Tpng",
+        "-Gdpi=150",
         dot_file.to_s,
         "-o",
         png_file.to_s,
