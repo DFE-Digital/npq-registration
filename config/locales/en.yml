@@ -1088,6 +1088,10 @@ en:
         senco_start_date: For example, 1 2024
         work_setting: Make sure the information you provide is correct, as your course provider will check your details. Register using your current workplace details, even if they will change soon.
 
+      statements_change_output_fee:
+        output_fee_html:
+          You can change whether a statement is an Output statement, this will also move declarations to their earliest appropriate output statement
+
     label:
       applications_change_training_status:
         reason: Reason for change

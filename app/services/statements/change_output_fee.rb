@@ -81,7 +81,7 @@ module Statements
           .where(declaration_date: ..statement.deadline_date)
           .count
 
-        "This will move #{declaration_count} declarations and #{milestone_count} milestones from #{statement_name(next_output_statement)} onto this statement"
+        "This will move #{declaration_count} declarations and #{milestone_count} milestones from the next output statement, #{statement_name(next_output_statement)}, onto this statement"
       else
         "There is no later output statement and no declarations or milestones will be moved"
       end
@@ -93,7 +93,8 @@ module Statements
       if statement.declarations.empty? && statement.milestones.empty?
         "There are no declarations or milestones on this statement"
       elsif next_output_statement
-        "This will move #{statement.declarations.count} declarations and #{statement.milestones.count} milestones from this statement to #{statement_name(next_output_statement)}"
+        statement_state = statement.payable? ? "Unpaid" : "Open"
+        "This will move #{statement.declarations.count} declarations and #{statement.milestones.count} milestones from this statement to the next #{statement_state} output statement which is #{statement_name(next_output_statement)}"
       else
         "There are #{statement.declarations.count} declarations and #{statement.milestones.count} milestones on this statement but no suitable later statement"
       end

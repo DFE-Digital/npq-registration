@@ -382,7 +382,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
         it "includes only declarations declared before this statements deadline date" do
           expect(service.move_onto_hint)
-            .to eq("This will move 2 declarations and 0 milestones from #{later_name} onto this statement")
+            .to eq("This will move 2 declarations and 0 milestones from the next output statement, #{later_name}, onto this statement")
         end
       end
 
@@ -411,7 +411,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
         it "includes declarations count and destination statement" do
           expect(service.move_off_hint)
-            .to eq("This will move 2 declarations and 0 milestones from this statement to #{later_name}")
+            .to eq("This will move 2 declarations and 0 milestones from this statement to the next Open output statement which is #{later_name}")
         end
       end
 
