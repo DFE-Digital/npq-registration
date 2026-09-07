@@ -27,7 +27,7 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
     end
 
     expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
-    click_button "Change output statement"
+    click_button "Change statement"
     expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
     expect(page).not_to have_content "statement is being changed"
 
@@ -39,7 +39,7 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
     expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
     expect(page).to have_content "There is no later output statement and no declarations or milestones will be moved"
     choose "Output statement"
-    click_button "Change output statement"
+    click_button "Change statement"
     expect(Statements::ChangeOutputFeeJob).to have_received(:perform_later)
 
     expect(page).to have_current_path admin_finance_statement_path(statement)
@@ -60,7 +60,7 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
       expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
       expect(page).to have_content "There is no later output statement and no declarations or milestones will be moved"
       choose "Output statement"
-      click_button "Change output statement"
+      click_button "Change statement"
       expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
 
       expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
