@@ -45,7 +45,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
-          "DfE scholarship funding" => "Not eligible",
+          "DfE scholarship funding" => "In review",
           "Cohort" => course_start_cohort_description,
           "Course" => "Senior leadership",
           "Work setting" => "Other",

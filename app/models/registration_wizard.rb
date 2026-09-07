@@ -17,6 +17,12 @@ class RegistrationWizard
     end
   end
 
+  FUNDING_STATUS_TAG_COLOURS = {
+    eligible: "green",
+    in_review: "yellow",
+    not_eligible: "grey",
+  }.freeze
+
   VALID_REGISTRATION_STEPS = %i[
     start
     closed
@@ -216,14 +222,13 @@ class RegistrationWizard
       end
     end
 
-    funded = funding_eligibility_calculator.funded?
     array << Answer.new(
       "DfE scholarship funding",
-      funded ? "Eligible" : "Not eligible",
+      funding_status.to_s.humanize,
       :check_funding,
       "View",
       "/registration/check-funding",
-      funded ? "green" : "grey",
+      FUNDING_STATUS_TAG_COLOURS.fetch(funding_status),
     )
 
     array << Answer.new("Provider", lead_provider&.name, :choose_your_provider)
@@ -277,7 +282,7 @@ private
   end
 
   def funding_eligibility_calculator
-    FundingEligibility.new_from_query_store(
+    @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
       course:,
       institution: institution_from_store,
       approved_itt_provider: approved_itt_provider?,
@@ -285,6 +290,16 @@ private
       user_ecf_id: query_store.user_ecf_id,
       query_store:,
     )
+  end
+
+  def funding_status
+    if funding_eligibility_calculator.funded?
+      :eligible
+    elsif funding_eligibility_calculator.subject_to_review?
+      :in_review
+    else
+      :not_eligible
+    end
   end
 
   def form_class
