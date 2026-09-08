@@ -6,13 +6,6 @@ RSpec.describe Participants::Query do
 
   subject(:query) { described_class.new(**params) }
 
-  # Rails lists every selected column instead of
-  # using "users".* when the model sets ignored columns.
-  # Return the query SQL excluding that list.
-  def sql_after_select_list(scope)
-    scope.to_sql.split(" FROM ", 2).last
-  end
-
   describe "#participants" do
     let(:lead_provider) { create(:lead_provider) }
     let!(:participant1) { create(:user, :with_application, lead_provider:) }
@@ -76,7 +69,7 @@ RSpec.describe Participants::Query do
           it "does not filter by lead provider" do
             condition_string = %("lead_provider_id")
 
-            expect(query.scope.to_sql).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
@@ -84,7 +77,7 @@ RSpec.describe Participants::Query do
           it "does not filter by lead provider" do
             condition_string = %("lead_provider_id")
 
-            expect(query.scope.to_sql).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
       end
@@ -111,7 +104,7 @@ RSpec.describe Participants::Query do
           it "does not filter by updated since" do
             condition_string = %("updated_at")
 
-            expect(sql_after_select_list(query.scope)).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
@@ -119,7 +112,7 @@ RSpec.describe Participants::Query do
           it "does not filter by updated since" do
             condition_string = %("updated_at")
 
-            expect(sql_after_select_list(query.scope)).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
@@ -219,7 +212,7 @@ RSpec.describe Participants::Query do
           it "does not filter by training status" do
             condition_string = %("training_status")
 
-            expect(query.scope.to_sql).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
@@ -229,7 +222,7 @@ RSpec.describe Participants::Query do
           it "does not filter by from training status" do
             condition_string = %("training_status")
 
-            expect(query.scope.to_sql).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
@@ -269,7 +262,7 @@ RSpec.describe Participants::Query do
           it "does not filter by from participant id" do
             condition_string = %("from_participant_id")
 
-            expect(query.scope.to_sql).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
@@ -279,7 +272,7 @@ RSpec.describe Participants::Query do
           it "does not filter by from participant id" do
             condition_string = %("from_participant_id")
 
-            expect(query.scope.to_sql).not_to include(condition_string)
+            expect(query.scope.arel.where_sql).not_to include(condition_string)
           end
         end
 
