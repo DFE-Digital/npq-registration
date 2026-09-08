@@ -6,13 +6,6 @@ RSpec.describe Participants::Query do
 
   subject(:query) { described_class.new(**params) }
 
-  # Rails lists every selected column instead of
-  # using "users".* when the model sets ignored columns.
-  # Return the query SQL excluding that list.
-  def sql_after_select_list(scope)
-    scope.to_sql.split(" FROM ", 2).last
-  end
-
   describe "#participants" do
     let(:lead_provider) { create(:lead_provider) }
     let!(:participant1) { create(:user, :with_application, lead_provider:) }
