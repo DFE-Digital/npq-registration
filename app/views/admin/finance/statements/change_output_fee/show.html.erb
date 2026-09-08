@@ -13,10 +13,10 @@
         legend: { text: "Change #{statement_name(@statement)} statement", tag: "h1", size: "l" } do %>
 
     <%= f.govuk_radio_button :output_fee, true,
-          label: { text: "Output statement" },
+          label: { text: "Payment run" },
           hint: { text: @service.move_onto_hint } %>
     <%= f.govuk_radio_button :output_fee, false,
-           label: { text: "Non-output statement" },
+           label: { text: "Non-payment run" },
            hint: { text: @service.move_off_hint } %>
   <% end %>
 

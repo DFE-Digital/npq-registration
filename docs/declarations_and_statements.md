@@ -12,7 +12,9 @@ In the event a Participant is transferred between Lead Providers, then their Dec
 
 ## Statements
 
-NPQ service has 1 statement per Lead Provider per Cohort per month for the contract period. Only Statements for certain 'nominated' months are intended for Payment - these are referred to as output Statements. Others are referred to as non-output Statements. Statements have an 'output_fee' on/off switch which controls whether they are an 'output Statement' or not.
+NPQ service has 1 statement per Lead Provider per Cohort per month for the contract period. Only Statements for certain 'nominated' months are intended for Payment - these are referred to as either output Statements or payment run statements. Others non payment statements are referred to as non-output Statements or non-payment run statements.
+
+Statements have an 'output_fee' on/off switch which controls whether they are an 'output Statement' or not.
 
 Each statement has 2 dates
 

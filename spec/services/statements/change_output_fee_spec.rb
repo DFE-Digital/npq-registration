@@ -53,7 +53,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
               context "and there are declarations" do
                 before { create(:declaration, statement:) }
 
-                it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+                it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later payment run statement does not exist" }
               end
             end
           end
@@ -113,7 +113,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
             context "with declarations" do
               before { create(:declaration, statement:) }
 
-              it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+              it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later payment run statement does not exist" }
             end
           end
         end
@@ -155,7 +155,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
           context "with declaration" do
             before { create(:declaration, statement:) }
 
-            it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later output statement does not exist" }
+            it { is_expected.to have_error :output_fee, :next_output_statement_required, "Later payment run statement does not exist" }
           end
         end
       end
@@ -382,14 +382,14 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
         it "includes only declarations declared before this statements deadline date" do
           expect(service.move_onto_hint)
-            .to eq("This will move 2 declarations and 0 milestones from the next output statement, #{later_name}, onto this statement")
+            .to eq("This will move 2 declarations and 0 milestones from the next payment run statement, #{later_name}, onto this statement")
         end
       end
 
       context "without later statement" do
         it "says nothing will be moved" do
           expect(service.move_onto_hint)
-            .to eq("There is no later output statement and no declarations or milestones will be moved")
+            .to eq("There is no later payment run statement and no declarations or milestones will be moved")
         end
       end
 
@@ -411,7 +411,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
         it "includes declarations count and destination statement" do
           expect(service.move_off_hint)
-            .to eq("This will move 2 declarations and 0 milestones from this statement to the next Open output statement which is #{later_name}")
+            .to eq("This will move 2 declarations and 0 milestones from this statement to the next Open payment run statement which is #{later_name}")
         end
       end
 
@@ -421,7 +421,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
           it "says change is not possible" do
             expect(service.move_off_hint)
-              .to eq("There are 2 declarations and 0 milestones on this statement but no suitable later statement")
+              .to eq("There are 2 declarations and 0 milestones on this statement but no suitable later payment run statement")
           end
         end
 
@@ -430,7 +430,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
           it "says change is not possible" do
             expect(service.move_off_hint)
-              .to eq("There are 0 declarations and 1 milestones on this statement but no suitable later statement")
+              .to eq("There are 0 declarations and 1 milestones on this statement but no suitable later payment run statement")
           end
         end
 
