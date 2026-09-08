@@ -11,6 +11,7 @@ class FundingEligibility
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
   PREVIOUSLY_FUNDED = :previously_funded
   REFERRED_BY_RETURN_TO_TEACHING_ADVISER = :referred_by_return_to_teaching_adviser
+  REQUESTED_NO_FUNDING = :requested_no_funding
 
   # EHCO
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
@@ -39,6 +40,7 @@ class FundingEligibility
     PREVIOUSLY_FUNDED => :previously_funded,
     REFERRED_BY_RETURN_TO_TEACHING_ADVISER => :subject_to_review,
     SUBJECT_TO_REVIEW => :subject_to_review,
+    REQUESTED_NO_FUNDING => :requested_no_funding,
   }.freeze
 
   def initialize(institution:,
@@ -60,6 +62,7 @@ class FundingEligibility
     @referred_by_return_to_teaching_adviser = query_store.referred_by_return_to_teaching_adviser?
     @work_setting = query_store.work_setting
     @declared_previous_funding = query_store.declared_previous_funding?
+    @proceed_without_checking_funding = query_store.proceed_without_checking_funding?
   end
 
   def funded?
@@ -76,6 +79,7 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
+      return REQUESTED_NO_FUNDING if proceed_without_checking_funding
       return UNFUNDED_COHORT unless cohort&.funded?
       return NOT_IN_ENGLAND unless inside_catchment
       return PREVIOUSLY_FUNDED if declared_previous_funding
@@ -115,7 +119,8 @@ private
               :preschool_class_as_part_of_school,
               :work_setting,
               :referred_by_return_to_teaching_adviser,
-              :declared_previous_funding
+              :declared_previous_funding,
+              :proceed_without_checking_funding
 
   def childcare_policy
     if course.eyl?

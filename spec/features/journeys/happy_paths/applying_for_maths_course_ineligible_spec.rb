@@ -108,7 +108,7 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
             "Provider" => "Church of England",
           },
         )
-        expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+        expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
       end
 
       check_back_journey_is_correct(exclude_current_page: true)
@@ -218,7 +218,7 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
     end
 
     choose_provider_share_information_and_check_answers(provider: "Church of England") do
-      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
     end
 
     check_back_journey_is_correct(exclude_current_page: true)
@@ -255,7 +255,7 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
           "Provider" => "Church of England",
         },
       )
-      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
     end
 
     check_back_journey_is_correct(exclude_current_page: true)

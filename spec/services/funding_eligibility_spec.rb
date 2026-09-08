@@ -14,6 +14,7 @@ RSpec.describe FundingEligibility do
     instance_double(
       RegistrationQueryStore,
       course_start_cohort: course_start_cohort&.identifier,
+      proceed_without_checking_funding?: proceed_without_checking_funding,
       declared_previous_funding?: declared_previous_funding,
       work_setting:,
       employment_type:,
@@ -36,6 +37,7 @@ RSpec.describe FundingEligibility do
   let(:new_headteacher) { false }
   let(:user) { build(:user, :with_teacher_auth) }
   let(:declared_previous_funding) { nil }
+  let(:proceed_without_checking_funding) { false }
   let(:preschool_class_as_part_of_school) { nil }
   let(:childminder) { nil }
 
@@ -81,6 +83,12 @@ RSpec.describe FundingEligibility do
       let(:inside_catchment) { false }
 
       include_examples "funding eligibility", :not_in_england
+    end
+
+    context "and the applicant has requested no funding" do
+      let(:proceed_without_checking_funding) { true }
+
+      include_examples "funding eligibility", :requested_no_funding
     end
 
     context "and the applicant has declared they have had previous funding" do
