@@ -37,13 +37,13 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
     end
 
     expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
-    expect(page).to have_content "There is no later output statement and no declarations or milestones will be moved"
-    choose "Output statement"
+    expect(page).to have_content "There is no later payment run statement and no declarations or milestones will be moved"
+    choose "Payment run"
     click_button "Change statement"
     expect(Statements::ChangeOutputFeeJob).to have_received(:perform_later)
 
     expect(page).to have_current_path admin_finance_statement_path(statement)
-    expect(page).to have_content "Output statement is being changed and declarations moved - this will take a few minutes"
+    expect(page).to have_content "Payment run statement is being changed and declarations moved - this will take a few minutes"
   end
 
   context "when the statement is payable" do
@@ -58,8 +58,8 @@ RSpec.feature "Statement - change output_fee", :no_js, type: :feature do
       end
 
       expect(page).to have_current_path admin_finance_statements_change_output_fee_path(statement)
-      expect(page).to have_content "There is no later output statement and no declarations or milestones will be moved"
-      choose "Output statement"
+      expect(page).to have_content "There is no later payment run statement and no declarations or milestones will be moved"
+      choose "Payment run"
       click_button "Change statement"
       expect(Statements::ChangeOutputFeeJob).not_to have_received(:perform_later)
 

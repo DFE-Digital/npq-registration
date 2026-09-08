@@ -9,7 +9,7 @@ module Admin::Finance
         if @service.invalid?
           render :show, status: :unprocessable_content
         elsif @service.schedule_change
-          flash[:success] = "Output statement is being changed and declarations moved - this will take a few minutes"
+          flash[:success] = "Payment run statement is being changed and declarations moved - this will take a few minutes"
           redirect_to admin_finance_statement_path(@statement)
         else
           redirect_to admin_finance_statement_path(@statement)

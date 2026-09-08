@@ -749,7 +749,7 @@ en:
         statements/change_output_fee:
           attributes:
             output_fee:
-              next_output_statement_required: Later output statement does not exist
+              next_output_statement_required: Later payment run statement does not exist
               statement_is_paid: Statement has been paid and cannot be changed
               payment_date_has_passed: Payment date has already passed so cannot be changed
             allow_payable_statement_changes:
@@ -1090,7 +1090,7 @@ en:
 
       statements_change_output_fee:
         output_fee_html:
-          You can change whether a statement is an Output statement, this will also move declarations to their earliest appropriate output statement
+          You can change whether a statement is an payment run statement, this will also move declarations to their earliest appropriate payment run statement
 
     label:
       applications_change_training_status:
