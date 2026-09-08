@@ -3,15 +3,19 @@ require "rails_helper"
 RSpec.describe Users::FindOrCreateFromTeacherAuth do
   subject { described_class.new(provider_data:, feature_flag_id:).call }
 
+  before do
+    allow(Sentry).to receive(:capture_exception)
+    allow(TeachingRecordSystem::UpdateUserAttributesJob).to receive(:perform_later)
+  end
+
   let(:uid) { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
   let(:feature_flag_id) { SecureRandom.uuid }
   let(:email) { "user@example.com" }
   let(:trn) { "1234567" }
   let(:verified_name) { %w[Test User] }
-  let(:api_previous_names) { [] }
   let(:refresh_token) { nil }
 
-  let(:provider_data) do
+  let :provider_data do
     OpenStruct.new({
       uid:,
       credentials: OpenStruct.new({
@@ -29,17 +33,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         }),
       }),
     })
-  end
-
-  let :stub_person_api do
-    stub_request(:get, "#{ENV['TRS_API_URL']}/v3/person")
-      .with(
-        headers: {
-          "Authorization" => "Bearer some-token",
-          "X-Api-Version" => "Next",
-        },
-        query: { "include" => "PreviousNames" },
-      )
   end
 
   shared_examples "storing the refresh token" do
@@ -65,12 +58,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
     end
   end
 
-  before do
-    if trn.present?
-      stub_person_api
-        .to_return(status: 200, body: { previousNames: api_previous_names }.to_json)
-    else
-      stub_person_api.to_return(status: 403, body: nil)
+  shared_examples "updating TRS attributes" do
+    it "schedules job to update previous_names" do
+      subject
+
+      expect(user.access_token).to be_present
+
+      expect(TeachingRecordSystem::UpdateUserAttributesJob)
+        .to have_received(:perform_later).with(user_id: user.id)
     end
   end
 
@@ -103,57 +98,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
     end
 
-    describe "previous names handling" do
-      context "when the API returns no previous names" do
-        let(:api_previous_names) { [] }
-
-        it "stores an empty array for previous_names on the user" do
-          subject
-          expect(user.reload.previous_names).to eq([])
-        end
-      end
-
-      context "when the API returns one previous name" do
-        let(:api_previous_names) do
-          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
-        end
-
-        it "stores the previous name on the user", skip: "temporarily disabling" do
-          subject
-          expect(user.reload.previous_names).to eq(["Sarah Johnson"])
-        end
-      end
-
-      context "when the API returns multiple previous names" do
-        let(:api_previous_names) do
-          [
-            { "firstName" => "Sarah", "lastName" => "Johnson" },
-            { "firstName" => "Sarah", "middleName" => "Ann", "lastName" => "Williams" },
-          ]
-        end
-
-        it "stores all previous names on the user", skip: "temporarily disabling" do
-          subject
-          expect(user.reload.previous_names).to eq([
-            "Sarah Johnson",
-            "Sarah Ann Williams",
-          ])
-        end
-      end
-
-      context "when the user already has previous_names" do
-        let(:user) { create(:user, trn:, trn_verified: true, previous_names: ["Old Name"]) }
-        let(:api_previous_names) do
-          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
-        end
-
-        it "replaces old previous_names with new data from API", skip: "temporarily disabling" do
-          subject
-          expect(user.reload.previous_names).to eq(["Sarah Johnson"])
-        end
-      end
-    end
-
+    it_behaves_like "updating TRS attributes"
     it_behaves_like "destroying the refresh token"
   end
 
@@ -306,17 +251,7 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
     end
 
-    context "when the API returns previous names" do
-      let(:api_previous_names) do
-        [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
-      end
-
-      it "stores previous_names on the kept user", skip: "temporarily disabling" do
-        subject
-        expect(most_recently_updated_user.reload.previous_names).to eq(["Sarah Johnson"])
-      end
-    end
-
+    it_behaves_like "updating TRS attributes"
     it_behaves_like "destroying the refresh token"
   end
 
@@ -368,33 +303,6 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         it "updates the matched user" do
           subject
           expect(existing_user.reload).to have_attributes(email:, archived_at: nil)
-        end
-      end
-
-      context "when the API returns previous names" do
-        let(:api_previous_names) do
-          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
-        end
-
-        it "updates previous_names on the user", skip: "temporarily disabling" do
-          subject
-          expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
-        end
-      end
-
-      context "when the user already has different previous_names" do
-        let(:existing_user) do
-          create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:,
-                                            previous_names: ["Old Previous Name"])
-        end
-
-        let(:api_previous_names) do
-          [{ "firstName" => "Sarah", "lastName" => "Johnson" }]
-        end
-
-        it "replaces old previous_names with new API data", skip: "temporarily disabling" do
-          subject
-          expect(existing_user.reload.previous_names).to eq(trn ? ["Sarah Johnson"] : [])
         end
       end
     end
@@ -453,46 +361,15 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
           subject
         end
       end
-
-      context "when the API returns no previous names" do
-        let(:api_previous_names) { [] }
-
-        it "creates the user with an empty previous_names array", skip: "temporarily disabling" do
-          subject
-          created_user = User.find_by(provider: "teacher_auth", uid:)
-          expect(created_user.previous_names).to eq([])
-        end
-      end
-
-      context "when the API returns previous names" do
-        let(:api_previous_names) do
-          [
-            { "firstName" => "Sarah", "lastName" => "Johnson" },
-            { "firstName" => "Sarah", "middleName" => "Ann", "lastName" => "Williams" },
-          ]
-        end
-
-        it "creates the user with previous_names from API", skip: "temporarily disabling" do
-          subject
-          created_user = User.find_by(provider: "teacher_auth", uid:)
-
-          if created_user.trn
-            expect(created_user.previous_names).to eq([
-              "Sarah Johnson",
-              "Sarah Ann Williams",
-            ])
-          else
-            expect(created_user.previous_names).to be_empty
-          end
-        end
-      end
     end
   end
 
   context "when the TRN doesn't match a user" do
     let(:user) { User.last }
 
-    it_behaves_like "logging in using provider and UID"
+    it_behaves_like "logging in using provider and UID" do
+      it_behaves_like "updating TRS attributes"
+    end
 
     context "when a user exists with the same provider and UID" do
       let(:existing_user) { create(:user, :with_teacher_auth, email: "oldemail@example.com", uid:, trn: nil) }
@@ -516,6 +393,13 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
     it_behaves_like "logging in using provider and UID"
     it_behaves_like "storing the refresh token"
+
+    it "does not schedule fetching Person details from TRS" do
+      subject
+
+      expect(TeachingRecordSystem::UpdateUserAttributesJob)
+        .not_to have_received(:perform_later)
+    end
 
     it "does not mark the nil TRN as verified" do
       subject

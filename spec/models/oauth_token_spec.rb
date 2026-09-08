@@ -10,7 +10,7 @@ RSpec.describe OauthToken, type: :model do
 
     it "defines the token_type enum backed by a native enum column" do
       expect(oauth_token).to define_enum_for(:token_type)
-        .with_values(refresh_token: "refresh_token")
+        .with_values(refresh_token: "refresh_token", access_token: "access_token")
         .backed_by_column_of_type(:enum)
     end
   end
