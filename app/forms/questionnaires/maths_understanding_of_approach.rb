@@ -52,7 +52,7 @@ module Questionnaires
              :course, to: :query_store
 
     def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
+      @funding_eligibility_calculator ||= FundingEligibility.new(
         course:,
         institution: query_store.institution,
         approved_itt_provider: approved_itt_provider?,

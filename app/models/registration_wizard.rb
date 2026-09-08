@@ -269,7 +269,7 @@ private
   end
 
   def funding_eligibility_calculator
-    FundingEligibility.new_from_query_store(
+    FundingEligibility.new(
       course:,
       institution: institution_from_store,
       approved_itt_provider: approved_itt_provider?,

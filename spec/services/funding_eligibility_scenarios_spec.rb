@@ -3,20 +3,26 @@ require "rails_helper"
 # Test funding eligibility based on a CSV of scenarios
 RSpec.describe FundingEligibility, :eligibility_scenarios do
   subject(:funding_eligibility) do
-    described_class.new(
-      cohort:,
-      institution:,
-      course:,
-      inside_catchment:,
-      user_ecf_id: user_ecf_id,
-      approved_itt_provider:,
-      new_headteacher: false,
-      employment_type:,
-      childminder:,
-      preschool_class_as_part_of_school:,
-      referred_by_return_to_teaching_adviser:,
+    described_class.new(institution:,
+                        course:,
+                        inside_catchment:,
+                        user_ecf_id: user.ecf_id,
+                        approved_itt_provider:,
+                        query_store:)
+  end
+
+  let(:query_store) do
+    instance_double(
+      RegistrationQueryStore,
+      course_start_cohort: cohort.identifier,
+      proceed_without_checking_funding?: false,
+      declared_previous_funding?: false,
       work_setting:,
-      declared_previous_funding: false,
+      employment_type:,
+      referred_by_return_to_teaching_adviser?: referred_by_return_to_teaching_adviser,
+      new_headteacher?: false,
+      preschool_class_as_part_of_school?: preschool_class_as_part_of_school,
+      childminder?: childminder,
     )
   end
 

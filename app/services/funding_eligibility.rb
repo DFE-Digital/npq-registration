@@ -41,72 +41,25 @@ class FundingEligibility
     SUBJECT_TO_REVIEW => :subject_to_review,
   }.freeze
 
-  attr_reader :cohort,
-              :institution,
-              :course,
-              :approved_itt_provider,
-              :user_ecf_id,
-              :inside_catchment,
-              :new_headteacher,
-              :employment_type,
-              :childminder,
-              :preschool_class_as_part_of_school,
-              :work_setting,
-              :referred_by_return_to_teaching_adviser,
-              :declared_previous_funding
-
-  class << self
-    def new_from_query_store(institution:,
-                             course:,
-                             inside_catchment:,
-                             user_ecf_id: nil,
-                             approved_itt_provider: false,
-                             query_store: nil)
-      cohort = Cohort.find_by(identifier: query_store.course_start_cohort)
-
-      new(cohort:,
-          institution:,
-          course:,
-          inside_catchment:,
-          user_ecf_id:,
-          approved_itt_provider:,
-          new_headteacher: query_store.new_headteacher?,
-          employment_type: query_store.employment_type,
-          childminder: query_store.childminder?,
-          preschool_class_as_part_of_school: query_store.preschool_class_as_part_of_school?,
-          referred_by_return_to_teaching_adviser: query_store.referred_by_return_to_teaching_adviser?,
-          work_setting: query_store.work_setting,
-          declared_previous_funding: query_store.declared_previous_funding?)
-    end
-  end
-
-  # FundingEligibilty.new is not actually called outside of this class - only the specs call it directly
-  def initialize(cohort:,
-                 institution:,
+  def initialize(institution:,
                  course:,
                  inside_catchment:,
-                 user_ecf_id:,
-                 approved_itt_provider:,
-                 new_headteacher:,
-                 employment_type:,
-                 childminder:,
-                 preschool_class_as_part_of_school:,
-                 referred_by_return_to_teaching_adviser:,
-                 work_setting:,
-                 declared_previous_funding:)
-    @cohort = cohort
+                 user_ecf_id: nil,
+                 approved_itt_provider: false,
+                 query_store: nil)
+    @cohort = Cohort.find_by(identifier: query_store.course_start_cohort)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
-    @new_headteacher = new_headteacher
+    @new_headteacher = query_store.new_headteacher?
     @approved_itt_provider = approved_itt_provider
     @user_ecf_id = user_ecf_id
-    @employment_type = employment_type
-    @childminder = childminder
-    @preschool_class_as_part_of_school = preschool_class_as_part_of_school
-    @referred_by_return_to_teaching_adviser = referred_by_return_to_teaching_adviser
-    @work_setting = work_setting
-    @declared_previous_funding = declared_previous_funding
+    @employment_type = query_store.employment_type
+    @childminder = query_store.childminder?
+    @preschool_class_as_part_of_school = query_store.preschool_class_as_part_of_school?
+    @referred_by_return_to_teaching_adviser = query_store.referred_by_return_to_teaching_adviser?
+    @work_setting = query_store.work_setting
+    @declared_previous_funding = query_store.declared_previous_funding?
   end
 
   def funded?
@@ -149,6 +102,20 @@ class FundingEligibility
   end
 
 private
+
+  attr_reader :cohort,
+              :institution,
+              :course,
+              :approved_itt_provider,
+              :user_ecf_id,
+              :inside_catchment,
+              :new_headteacher,
+              :employment_type,
+              :childminder,
+              :preschool_class_as_part_of_school,
+              :work_setting,
+              :referred_by_return_to_teaching_adviser,
+              :declared_previous_funding
 
   def childcare_policy
     if course.eyl?

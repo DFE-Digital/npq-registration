@@ -68,7 +68,7 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
                 .to(true)
       end
 
-      it "sets funding_eligibility_status_code" do
+      it "sets funding_eligiblity_status_code" do
         expect { make_change }
           .to change { application.reload.funding_eligiblity_status_code }
                 .from(nil)
@@ -101,7 +101,7 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
                 .to(false)
       end
 
-      it "sets funding_eligibility_status_code" do
+      it "sets funding_eligiblity_status_code" do
         expect { make_change }
           .to change { application.reload.funding_eligiblity_status_code }
                 .from(nil)

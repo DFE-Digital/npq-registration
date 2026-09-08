@@ -19,7 +19,7 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
     )
   end
 
-  before { allow(FundingEligibility).to receive(:new_from_query_store).and_return(funding_eligibility_calculator) }
+  before { allow(FundingEligibility).to receive(:new).and_return(funding_eligibility_calculator) }
 
   describe "#previous_step" do
     subject { described_class.new(wizard:).previous_step }
@@ -77,7 +77,7 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
         expect { subject }.to change { wizard.store["previously_funded"] }.from(nil).to(true)
       end
 
-      it "updates the funding_eligibility_status_code in the store" do
+      it "updates the funding_eligiblity_status_code in the store" do
         expect { subject }.to change { wizard.store["funding_eligiblity_status_code"] }.from(:funded).to(:previously_funded)
       end
     end
@@ -89,7 +89,7 @@ RSpec.describe Questionnaires::CheckAnswersAndSubmit do
         expect { subject }.not_to(change { wizard.store["previously_funded"] })
       end
 
-      it "does not update the funding_eligibility_status_code in the store" do
+      it "does not update the funding_eligiblity_status_code in the store" do
         expect { subject }.not_to(change { wizard.store["show_previously_funded_alert"] })
       end
     end
