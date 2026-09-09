@@ -6,9 +6,10 @@ on:
       environment:
         description: Environment to restore
         required: true
-        default: sandbox
+        default: staging
         type: choice
         options:
+          - staging
           - sandbox
           - production
       confirm-production:

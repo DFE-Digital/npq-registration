@@ -6,7 +6,7 @@ on:
       environment:
         description: Environment to restore
         required: true
-        default: test
+        default: staging
         type: choice
         options:
           - staging
