@@ -15,7 +15,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
-  enable_extension "pg_catalog.plpgsql"
+  # NOTE: Avoid adding plpgsql to the list of extensions - whilst a local schema dump
+  # will add it, Azure's hosted Postgres does not allow it by default. Whilst we can
+  # add it to the list of allowed extensions in terraform, it has been added/removed
+  # from the list of extensions you can add/remove at various times so can lead to
+  # frequent changes to the terraform configs. Since our application doesn't
+  # add the extension in the migrations, or require it, we'll leave the extension
+  # excluded from the db/schema.rb file.
+  # TODO: Leave this comment in place.
   enable_extension "pg_trgm"
 
   # Custom types defined in this database.
