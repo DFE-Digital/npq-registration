@@ -155,8 +155,8 @@ RSpec.describe RegistrationWizard do
       end
     end
 
-    describe "the DfE scholarship funding row" do
-      subject(:row) { registration_wizard.answers.find { |answer| answer.key == "DfE scholarship funding" } }
+    describe "the DfE scholarship funding answer" do
+      subject(:answer) { registration_wizard.answers.find { |answer| answer.key == "DfE scholarship funding" } }
 
       context "when the funding is subject to review because of a return to teaching adviser referral" do
         before do
