@@ -122,31 +122,43 @@ RSpec.describe Statement, type: :model do
   end
 
   describe "scopes" do
-    describe ".paid" do
-      it "selects only paid statements" do
-        expect(Statement.paid.to_sql).to include(%(WHERE "statements"."state" = 'paid'))
-      end
-    end
+    describe "for states" do
+      before { paid && payable && open }
 
-    describe ".unpaid" do
-      it "selects only unpaid statements" do
-        expect(Statement.unpaid.to_sql).to include(%(WHERE "statements"."state" IN ('open', 'payable')))
-      end
-    end
+      let(:paid) { create(:statement, :paid) }
+      let(:payable) { create(:statement, :payable) }
+      let(:open) { create(:statement, :open) }
 
-    describe ".open" do
-      it "selects only open statements" do
-        expect(Statement.open.to_sql).to include(%(WHERE "statements"."state" = 'open'))
-      end
-    end
-
-    describe ".with_state" do
-      it "selects only statements with states matching the provided name" do
-        expect(Statement.with_state("foo").to_sql).to include(%(WHERE "statements"."state" = 'foo'))
+      describe ".paid" do
+        it "selects only paid statements" do
+          expect(described_class.paid).to contain_exactly(paid)
+        end
       end
 
-      it "selects only multiple statements with states matching the provided names" do
-        expect(Statement.with_state("foo", "bar").to_sql).to include(%(WHERE "statements"."state" IN ('foo', 'bar')))
+      describe ".unpaid" do
+        it "selects only unpaid statements" do
+          expect(described_class.unpaid).to contain_exactly(payable, open)
+        end
+      end
+
+      describe ".open" do
+        it "selects only open statements" do
+          expect(described_class.open).to contain_exactly(open)
+        end
+      end
+
+      describe ".with_state" do
+        it "selects only statements with states matching the provided name" do
+          expect(described_class.with_state("open")).to contain_exactly(open)
+        end
+
+        it "selects only multiple statements with states matching the provided names" do
+          expect(described_class.with_state("open", "paid")).to contain_exactly(paid, open)
+        end
+
+        it "raises an exception for invalid states" do
+          expect { described_class.with_state("foo").to_a }.to raise_exception(ActiveRecord::StatementInvalid)
+        end
       end
     end
 

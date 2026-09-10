@@ -64,7 +64,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
             create(:statement, state: :payable, for_date: 2.months.ago, output_fee: true)
           end
 
-          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change Payable statements" }
+          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change payable statements" }
         end
       end
     end
@@ -90,7 +90,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         context "without confirmation of changing payable" do
           before { create(:statement, :open, extend_from: statement, output_fee: true) }
 
-          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change Payable statements" }
+          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change payable statements" }
         end
       end
 
@@ -121,7 +121,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         context "without confirmation of changing payable" do
           before { create(:statement, :open, extend_from: statement, output_fee: true) }
 
-          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change Payable statements" }
+          it { is_expected.to have_error :allow_payable_statement_changes, :accepted, "Confirm you wish to change payable statements" }
         end
       end
     end
@@ -248,19 +248,19 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
     context "with open statement" do
       let(:statement) { create(:statement, :next_output_fee) }
 
-      context "without future statement" do
+      context "without later statement" do
         let(:later_statement) { nil }
 
         it { is_expected.to be_nil }
       end
 
-      context "with future non-output statement" do
+      context "with later non-output statement" do
         let(:later_statement) { create(:statement, extend_from: statement, output_fee: false) }
 
         it { is_expected.to be_nil }
       end
 
-      context "with future statement" do
+      context "with later statement" do
         let :later_statement do
           intermediate = create(:statement, extend_from: statement, output_fee: false)
           create(:statement, extend_from: intermediate, output_fee: true)
@@ -269,22 +269,40 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         it { is_expected.to eq(later_statement) }
       end
 
-      context "with future statement for another provider" do
+      context "with later statement for another provider" do
         let :later_statement do
           create(:statement, extend_from: statement,
-                             output_fee: true,
                              lead_provider: create(:lead_provider))
         end
 
         it { is_expected.to be_nil }
       end
 
-      context "with future statement for another cohort" do
+      context "with later statement for another cohort" do
         let :later_statement do
           create(:statement, extend_from: statement,
-                             output_fee: false,
                              cohort: create(:cohort))
         end
+
+        it { is_expected.to be_nil }
+      end
+
+      context "with multiple later output statements" do
+        let :later_statement do
+          build(:statement, extend_from: statement, output_fee: true) do |later|
+            # ensure the 'earlier' output statement has a earlier in the db table
+            # than then later output statement
+            create(:statement, extend_from: later, output_fee: true)
+            later.save!
+          end
+        end
+
+        it { is_expected.to eq later_statement }
+      end
+
+      context "with past statements still left open by mistake" do
+        let(:statement) { create(:statement, for_date: 1.month.ago) }
+        let(:later_statement) { create(:statement, :payable, extend_from: statement) }
 
         it { is_expected.to be_nil }
       end
@@ -315,12 +333,36 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
         it { is_expected.to eq(later_statement) }
       end
 
-      context "without future statement" do
+      context "without later statement" do
         let(:statement) { create(:statement, :payable, output_fee: true) }
         let(:later_statement) { nil }
 
         it { is_expected.to be_nil }
       end
+
+      context "with later statement which is paid" do
+        let(:statement) { create(:statement, state: "payable", for_date: 2.months.ago) }
+
+        let :later_statement do
+          create(:statement, :paid, extend_from: statement,
+                                    deadline_date: 20.days.ago,
+                                    payment_date: 2.days.from_now)
+        end
+
+        it { is_expected.to be_nil }
+      end
+    end
+
+    context "with paid statement" do
+      let :statement do
+        create(:statement, :paid, for_date: 1.month.ago, output_fee: true)
+      end
+
+      let :later_statement do
+        create(:statement, :paid, extend_from: statement, output_fee: true)
+      end
+
+      it { is_expected.to be_nil }
     end
   end
 

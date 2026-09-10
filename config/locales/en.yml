@@ -753,7 +753,7 @@ en:
               statement_is_paid: Statement has been paid and cannot be changed
               payment_date_has_passed: Payment date has already passed so cannot be changed
             allow_payable_statement_changes:
-              accepted: Confirm you wish to change Payable statements
+              accepted: Confirm you wish to change payable statements
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
