@@ -165,8 +165,8 @@ RSpec.describe RegistrationWizard do
         end
 
         it "shows In review" do
-          expect(row.value).to eq("In review")
-          expect(row.tag_colour).to eq("yellow")
+          expect(answer.value).to eq("In review")
+          expect(answer.tag_colour).to eq("yellow")
         end
       end
 
@@ -180,8 +180,8 @@ RSpec.describe RegistrationWizard do
         end
 
         it "shows In review" do
-          expect(row.value).to eq("In review")
-          expect(row.tag_colour).to eq("yellow")
+          expect(answer.value).to eq("In review")
+          expect(answer.tag_colour).to eq("yellow")
         end
       end
 
@@ -192,8 +192,8 @@ RSpec.describe RegistrationWizard do
         end
 
         it "shows Not eligible" do
-          expect(row.value).to eq("Not eligible")
-          expect(row.tag_colour).to eq("grey")
+          expect(answer.value).to eq("Not eligible")
+          expect(answer.tag_colour).to eq("grey")
         end
       end
 
@@ -205,8 +205,8 @@ RSpec.describe RegistrationWizard do
         end
 
         it "shows Eligible" do
-          expect(row.value).to eq("Eligible")
-          expect(row.tag_colour).to eq("green")
+          expect(answer.value).to eq("Eligible")
+          expect(answer.tag_colour).to eq("green")
         end
       end
     end
