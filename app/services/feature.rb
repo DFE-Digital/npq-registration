@@ -26,7 +26,7 @@ class Feature
       redundant.each(&:remove)
     end
 
-    def registration_closed?(user)
+    def registration_closed?(user = nil)
       !Flipper.enabled?(REGISTRATION_OPEN, user)
     end
 

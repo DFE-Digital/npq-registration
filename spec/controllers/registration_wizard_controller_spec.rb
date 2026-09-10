@@ -86,8 +86,8 @@ RSpec.describe RegistrationWizardController do
                                current_user:)
       end
 
-      it "redirects to course-start-date page" do
-        expect(response).to redirect_to registration_wizard_show_path("provider-check")
+      it "redirects to the check-funding page" do
+        expect(response).to redirect_to registration_wizard_show_path("check-funding")
         expect(wizard).not_to have_received(:save!)
       end
     end

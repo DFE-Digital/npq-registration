@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -44,6 +44,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js:, name: "open")
@@ -53,7 +54,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -72,13 +73,14 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
+          "DfE scholarship funding" => "Not eligible",
           "Course funding" => "My workplace is covering the cost",
-          "Course start" => "Autumn 2026",
+          "Cohort" => "Autumn 2026",
           "Course" => "Headship",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
-          "Work setting" => "A school",
-          "Workplace in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
+          "Working in England" => "Yes",
         },
       )
       page.click_link("Change", href: "/registration/course-start-date/change")
@@ -100,6 +102,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js:, name: "open", already_searched_for_workplace: true)
@@ -109,7 +112,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -137,13 +140,14 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
+          "DfE scholarship funding" => "Not eligible",
           "Course funding" => "My workplace is covering the cost",
-          "Course start" => "Spring 2026",
+          "Cohort" => "Spring 2026",
           "Course" => "Headship",
           "Provider" => "Best Practice Network",
           "Workplace" => "open manchester school – street 1, manchester",
-          "Work setting" => "A school",
-          "Workplace in England" => "Yes",
+          "Work setting" => "Primary school (5 to 11)",
+          "Working in England" => "Yes",
         },
       )
     end

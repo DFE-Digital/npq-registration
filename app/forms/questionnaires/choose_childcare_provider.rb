@@ -44,7 +44,7 @@ module Questionnaires
 
     def next_step
       if institution.in_england? # Right now this is always true when it shouldn't be
-        :choose_your_npq
+        show_eligibility_step
       else
         :childcare_provider_not_in_england
       end

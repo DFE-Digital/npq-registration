@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -39,6 +39,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
 
     navigate_to_page(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js:, name: school_name)
@@ -59,7 +60,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_defa
     end
 
     navigate_to_page(path: "/registration/ineligible-for-funding", submit_form: false) do
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     navigate_to_page(path: "/registration/funding-your-npq", submit_form: true) do

@@ -27,7 +27,7 @@ module Questionnaires
       when "yes"
         :choose_private_childcare_provider
       when "no"
-        :choose_your_npq
+        show_eligibility_step
       end
     end
 

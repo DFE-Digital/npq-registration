@@ -12,4 +12,16 @@
       )
     %>
   <% end %>
+
+  <% if radio_option.nested? %>
+    <div class="govuk-radios govuk-radios--small">
+      <%=
+        render(
+          partial: "registration_wizard/shared/questions/radio_option",
+          locals: { form: form, question: question },
+          collection: radio_option.nested_options
+        )
+      %>
+    </div>
+  <% end %>
 <% end  %>

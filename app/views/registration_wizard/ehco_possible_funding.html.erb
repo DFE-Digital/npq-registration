@@ -1,3 +1,5 @@
+<%= funding_title(:eligible) %>
+
 <%=
   render(
     'registration_wizard/shared/copy_page',
@@ -5,7 +7,18 @@
     wizard: @wizard,
     ) do
 %>
-  <%= render "registration_wizard/possible_funding/eligible_for_scholarship_funding", course: @form.course %>
+  <p class="govuk-body">
+    You’re eligible for DfE scholarship funding for the Early headship coaching offer
+    because you are a headteacher in your first 5 years of headship.
+  </p>
 
-  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+  <%= govuk_inset_text do %>
+    <p class="govuk-body">
+      Being eligible for funding does not guarantee you'll get a funded place.
+      Your provider will confirm if one is available when you apply to them.
+    </p>
+  <% end %>
+
+
+  <%= govuk_button_link_to "Continue to register", registration_wizard_show_path(@wizard.next_step_path) %>
 <% end %>

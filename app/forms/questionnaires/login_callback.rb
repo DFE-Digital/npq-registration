@@ -4,12 +4,12 @@ module Questionnaires
       true
     end
 
-    def next_step
-      first_questionnaire_step
+    def previous_step
+      :continue_to_login
     end
 
-    def previous_step
-      :start
+    def next_step
+      :check_answers_and_submit
     end
   end
 end

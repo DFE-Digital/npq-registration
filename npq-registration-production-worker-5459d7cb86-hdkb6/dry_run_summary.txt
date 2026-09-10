@@ -1,0 +1,23 @@
+I, [2026-08-25T12:04:42.037320 #1831]  INFO -- : DRY RUN: will roll back at end
+
+I, [2026-08-25T12:04:42.585535 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Ambition Institute
+I, [2026-08-25T12:04:42.750276 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Church of England
+I, [2026-08-25T12:04:42.863631 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Teach First
+I, [2026-08-25T12:04:42.993929 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: LLSE
+I, [2026-08-25T12:04:43.236663 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: National Institute of Teaching
+I, [2026-08-25T12:04:43.337421 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: Best Practice Network
+I, [2026-08-25T12:04:43.427772 #1831]  INFO -- : Set output_fee: true on 9/2026 statement, cohort: 2025a, lead provider: UCL Institute of Education
+
+I, [2026-08-25T12:04:43.427847 #1831]  INFO -- : Move retained-2 leadership declarations from July 2026 to August 2026 for 2025a cohort
+
+I, [2026-08-25T12:04:44.494918 #1831]  INFO -- : ~~~ DRY RUN ~~~
+I, [2026-08-25T12:04:44.495015 #1831]  INFO -- : Migrating declarations from 2026-7 to 2026-8 for 7 providers
+I, [2026-08-25T12:04:44.602707 #1831]  INFO -- : No declarations to migrate for Ambition Institute
+I, [2026-08-25T12:04:44.638446 #1831]  INFO -- : No declarations to migrate for Church of England
+I, [2026-08-25T12:04:44.799695 #1831]  INFO -- : Migrating 1 declarations for Teach First - from statement 2472 to statement 2479
+I, [2026-08-25T12:04:44.975155 #1831]  INFO -- : No declarations to migrate for LLSE
+I, [2026-08-25T12:04:45.001043 #1831]  INFO -- : No declarations to migrate for National Institute of Teaching
+I, [2026-08-25T12:04:45.370004 #1831]  INFO -- : Migrating 1986 declarations for Best Practice Network - from statement 2468 to statement 2475
+I, [2026-08-25T12:04:56.048088 #1831]  INFO -- : Migrating 64 declarations for UCL Institute of Education - from statement 2473 to statement 2480
+
+I, [2026-08-25T12:04:56.423084 #1831]  INFO -- : DRY RUN: rolling back transaction

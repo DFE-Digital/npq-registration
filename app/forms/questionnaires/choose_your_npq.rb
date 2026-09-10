@@ -7,21 +7,9 @@ module Questionnaires
     validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
-    delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-
-    delegate :new_headteacher?,
-             :inside_catchment?,
-             :approved_itt_provider?,
-             :works_in_another_setting?,
-             :works_in_school?,
-             :young_offender_institution?,
-             :referred_by_return_to_teaching_adviser?,
-             :employment_type_local_authority_virtual_school?,
-             :has_ofsted_urn?,
-             :employment_type_hospital_school?,
-             :employment_type_other?,
-             :works_in_childcare?,
-             :kind_of_nursery_public?,
+    delegate :inside_catchment?,
+             :cohort_funded?,
+             :proceed_without_checking_funding?,
              to: :query_store
 
     def self.permitted_params
@@ -56,61 +44,25 @@ module Questionnaires
         end
     end
 
-    def after_save
-      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
-      wizard.store["lead_provider_id"] = store_lead_provider_id
-    end
-
     def next_step
-      # If your lead provider remains valid we can progress down the changing answer path
-      # as it is fine for us to end up going back to the check_answers page.
-      # If it is no longer valid due to the NPQ changing though we will need to be
-      # reinserted back into the flow so that later on the user can be asked to
-      # choose a new provider.
-      if changing_answer? && lead_provider_valid?
-        if no_answers_will_change?
-          :check_answers
-        elsif course.ehco?
-          :npqh_status
-        elsif previously_eligible_for_funding? && !eligible_for_funding?
-          if wizard.query_store.works_in_another_setting?
-            :choose_your_provider
-          else
-            :ineligible_for_funding
-          end
-        else
-          :check_answers
-        end
-      elsif course.ehco?
-        :npqh_status
-      elsif course.npqlpm?
-        :maths_eligibility_teaching_for_mastery
-      elsif course.npqs?
-        :senco_in_role
-      elsif funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
-        :possible_funding
+      if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded? # TODO: test, and put logic into base.rb
+        :funding_history
       else
-        :ineligible_for_funding
+        :work_setting
       end
     end
 
     def previous_step
-      if inside_catchment? && referred_by_return_to_teaching_adviser?
-        :referred_by_return_to_teaching_adviser
-      elsif inside_catchment? && works_in_school?
-        :choose_school
-      elsif inside_catchment? && works_in_childcare?
-        if kind_of_nursery_public?
-          :choose_childcare_provider
-        elsif has_ofsted_urn?
-          :choose_private_childcare_provider
+      if cohort_funded?
+        if proceed_without_checking_funding?
+          :check_funding
+        elsif inside_catchment?
+          :teacher_catchment
         else
-          :have_ofsted_urn
+          :ineligible_for_funding
         end
-      elsif inside_catchment? && works_in_another_setting?
-        :your_employment
       else
-        :work_setting
+        :course_start_date
       end
     end
 
@@ -144,32 +96,6 @@ module Questionnaires
 
     def previous_course
       wizard.query_store.course
-    end
-
-    def previously_eligible_for_funding?
-      FundingEligibility.new_from_query_store(
-        course: previous_course,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: wizard.query_store.user_ecf_id,
-        query_store: wizard.query_store,
-      ).funded?
-    end
-
-    def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: wizard.query_store.user_ecf_id,
-        query_store: wizard.query_store,
-      )
-    end
-
-    def eligible_for_funding?
-      funding_eligibility_calculator.funded?
     end
 
     def validate_course_exists

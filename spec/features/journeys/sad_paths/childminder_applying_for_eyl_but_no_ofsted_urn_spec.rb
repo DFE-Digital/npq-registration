@@ -11,25 +11,10 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
   scenario "registration journey while working at a childminder but with no OFSTED URN" do
     stub_participant_validation_request
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early years leadership",
+      work_setting: "Early years or childcare",
+    )
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       page.choose("As a childminder", visible: :all)
@@ -39,15 +24,10 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early years leadership", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("You’re not eligible for scholarship funding for the Early years leadership NPQ")
       expect(page).to have_text("as your workplace is not in the list of EY settings that are eligible for funding")
-      page.click_on("Continue")
+      page.click_on("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -59,22 +39,25 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Teach First", visible: :all)
     end
 
+    # check_back_journey_is_correct # FIXME: this currently fails
+
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
+          "DfE scholarship funding" => "Not eligible",
           "Course funding" => "I am paying",
-          "Course start" => course_start_cohort_description,
+          "Cohort" => course_start_cohort_description,
           "Course" => "Early years leadership",
           "Early years setting" => "As a childminder",
           "Ofsted unique reference number (URN)" => "Not applicable",
           "Provider" => "Teach First",
           "Work setting" => "Early years or childcare",
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

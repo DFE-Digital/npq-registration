@@ -27,7 +27,7 @@ module Questionnaires
     end
 
     def next_step
-      :check_answers
+      check_answers_step
     end
 
     def previous_step

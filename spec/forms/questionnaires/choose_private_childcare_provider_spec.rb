@@ -1,21 +1,21 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
-  subject :instance do
+  subject(:instance) do
     described_class.new(wizard:,
                         private_childcare_identifier: identifier,
                         private_childcare_name: name)
   end
 
   let(:current_step) { :choose_private_childcare_provider }
-  let(:store) { { "works_in_childcare" => "yes" } }
-  let(:request) { nil }
+  let(:course) { Course.first }
+  let(:store) { { works_in_childcare: "yes", course_identifier: course.identifier }.stringify_keys }
   let(:identifier) { "" }
   let(:name) { "" }
   let(:provider) { create :private_childcare_provider, provider_urn: "8329422" }
 
   let(:wizard) do
-    RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
+    RegistrationWizard.new(current_step:, store:, request: nil, current_user: nil)
   end
 
   describe "validations" do
@@ -137,11 +137,11 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   end
 
   describe "#next_step" do
-    before { allow(subject).to receive(:private_childcare_identifier).and_return("12345") }
+    subject { instance.next_step }
 
-    it "is choose_private_childcare_provider" do
-      expect(subject.next_step).to be(:choose_your_npq)
-    end
+    let(:identifier) { "12345" }
+
+    it_behaves_like "showing the eligibility step"
   end
 
   describe "#previous_step" do

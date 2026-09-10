@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -78,7 +78,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re eligible for scholarship funding for the Senior leadership NPQ")
     end
 
@@ -95,13 +95,14 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Senior leadership",
           "Provider" => "Best Practice Network",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
 
@@ -114,11 +115,11 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
-      expect(page).to have_text("Funding")
+      expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re not eligible for scholarship funding for the Executive leadership NPQ course")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
-      page.click_link("Continue")
+      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -140,14 +141,15 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => course_start_cohort_description,
+          "DfE scholarship funding" => "Not eligible",
+          "Cohort" => course_start_cohort_description,
           "Course" => "Executive leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "National Institute of Teaching",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
-          "Workplace in England" => "Yes",
+          "Working in England" => "Yes",
         },
       )
     end

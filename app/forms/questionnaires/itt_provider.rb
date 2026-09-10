@@ -18,7 +18,7 @@ module Questionnaires
     end
 
     def next_step
-      :choose_your_npq
+      show_eligibility_step
     end
 
     def previous_step

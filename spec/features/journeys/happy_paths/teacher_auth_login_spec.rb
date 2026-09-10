@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Happy journeys", :mvp, :no_js, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -27,6 +27,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js: false, name: "open")
@@ -59,7 +60,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My trust is paying",
-          "Work setting" => "A school",
+          "Work setting" => "Primary school (5 to 11)",
           "Workplace in England" => "Yes",
         },
       )

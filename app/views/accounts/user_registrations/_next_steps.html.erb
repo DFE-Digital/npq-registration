@@ -1,0 +1,28 @@
+<h2 class="govuk-heading-m">Next steps</h2>
+
+<p class="govuk-body">Once you&rsquo;ve applied with your provider, they&rsquo;ll:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>check you meet the course suitability requirements</li>
+  <li>confirm whether a funded place is available</li>
+  <li>confirm the course start date</li>
+</ul>
+
+<% if Feature.registration_enabled? %>
+  <% if Feature.registration_closed?(current_user) %>
+    <h2 class="govuk-heading-m">Registration has closed temporarily</h2>
+    <p class="govuk-body">You can request email updates to tell you when registration opens.</p>
+
+    <%=
+      render GovukComponent::ContinueButtonComponent.new(
+        text: "Request email updates",
+        href: new_email_update_path,
+        html_attributes: { params: { request_email_updates: "true" }}
+      )
+    %>
+  <% elsif current_user.teacher_auth_provider? %>
+    <h2 class="govuk-heading-m">Register for another NPQ</h2>
+
+    <%= govuk_start_button(text: "Start now", href: registration_wizard_show_path("course-start-date")) %>
+  <% end %>
+<% end %>

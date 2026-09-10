@@ -1,5 +1,5 @@
 module QuestionTypes
-  RadioOption = Struct.new(:value, :link_errors, :divider, :revealed_question, :label, :hint, keyword_init: true)
+  RadioOption = Struct.new(:value, :link_errors, :divider, :revealed_question, :nested_options, :label, :hint, keyword_init: true)
 
   class RadioOption
     def to_options
@@ -8,6 +8,10 @@ module QuestionTypes
         label: normalize_text_for(label),
         hint: normalize_text_for(hint),
       }.compact
+    end
+
+    def nested?
+      nested_options.present?
     end
 
   private

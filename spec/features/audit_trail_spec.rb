@@ -80,7 +80,7 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
           :user_id => current_user.id,
         })
 
-      patch registration_wizard_update_path(:check_answers)
+      patch registration_wizard_update_path(:check_answers_and_submit)
     end
 
     let(:current_user) { create(:user) }

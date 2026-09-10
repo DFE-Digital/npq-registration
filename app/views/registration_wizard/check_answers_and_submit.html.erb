@@ -1,0 +1,51 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+
+  <% if @form.show_previously_funded_alert? %>
+    <%= govuk_notification_banner(title_text: "Important") do |banner| %>
+      <% banner.with_heading(text: "Our records show that you have previously received funding for this course. This means you are not eligible for further funding.") %>
+    <% end %>
+  <% end %>
+
+  <h1 class="govuk-heading-l">Check your answers</h1>
+
+  <%= render GovukComponent::SummaryListComponent.new do |component|
+        @wizard.answers.each do |answer|
+          component.with_row do |row|
+            row.with_key { answer.key }
+            row.with_value do
+              if answer.tag_colour
+                govuk_tag(text: answer.value, colour: answer.tag_colour)
+              else
+                answer.value
+              end
+            end
+            row.with_action(
+              text: answer.action_text,
+              visually_hidden_text: answer.key,
+              href: answer.action_href,
+            )
+          end
+        end
+  end %>
+
+  <h2 class="govuk-heading-m">Submit your registration</h2>
+  <p class="govuk-body">By submitting your registration to the DfE, you're confirming that all the information you entered is correct.</p>
+
+  <%=
+    form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f|
+      f.govuk_submit "Submit"
+    end
+  %>
+<% end %>
+
+<% if Rails.env.staging? || Rails.env.review? || Rails.env.development? %>
+  <code>
+  <%= Rails.env %> environment only - funding_eligiblity_status_code: "<%= @wizard.query_store.funding_eligiblity_status_code %>"
+  </code>
+<% end  %>

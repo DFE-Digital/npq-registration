@@ -1,0 +1,17 @@
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Personal details</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Your details
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Update your personal details on <%= govuk_link_to "GOV.UK One Login (opens in a new tab)", Rails.configuration.x.teacher_auth.onelogin_home_uri, target: "_blank", rel: "noopener noreferrer" %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

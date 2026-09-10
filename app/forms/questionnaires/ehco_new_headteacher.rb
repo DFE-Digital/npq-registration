@@ -19,15 +19,17 @@ module Questionnaires
         :ehco_possible_funding
       elsif funding_eligibility.subject_to_review?
         :possible_funding
-      elsif funding_eligibility.previously_funded?
-        :ehco_previously_funded
+      elsif query_store.declared_previous_funding?
+        :choose_your_provider
+      elsif query_store.declared_not_working_in_england?
+        :funding_your_ehco
       else
-        :ehco_funding_not_available
+        :ineligible_for_funding
       end
     end
 
     def previous_step
-      :ehco_headteacher
+      :npqh_status
     end
 
     def questions
@@ -60,9 +62,5 @@ module Questionnaires
              :course,
              :inside_catchment?,
              to: :query_store
-
-    def new_headteacher?
-      ehco_new_headteacher == "yes"
-    end
   end
 end
