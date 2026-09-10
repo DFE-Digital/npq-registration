@@ -59,30 +59,12 @@ RSpec.describe Users::FindOrCreateFromProviderData do
       expect(subject).to be_valid
     end
 
-    it "sets raw_tra_provider_data to the provider data" do
-      expect(subject.raw_tra_provider_data).to eq JSON.parse(provider_data.to_json)
-    end
-
     it "sets preferred_name to the preferred name" do
       expect(subject.preferred_name).to eq provider_data_preferred_name
     end
 
     it "sets full_name to the name" do
       expect(subject.full_name).to eq provider_data_name
-    end
-
-    context "when there is a date of birth" do
-      it "sets date_of_birth" do
-        expect(subject.date_of_birth).to eq provider_data_date_of_birth_parsed
-      end
-    end
-
-    context "when there is no date of birth" do
-      let(:provider_data_date_of_birth) { nil }
-
-      it "does not set date_of_birth" do
-        expect { subject }.not_to change(subject, :date_of_birth)
-      end
     end
 
     context "when there is a TRN" do

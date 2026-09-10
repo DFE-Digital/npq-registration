@@ -226,7 +226,6 @@ private
            :employer_name_matters?,
            :employment_type_hospital_school?,
            :employment_type_other?,
-           :formatted_date_of_birth,
            :has_ofsted_urn?,
            :inside_catchment?,
            :itt_provider,

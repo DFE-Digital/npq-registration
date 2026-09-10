@@ -18,18 +18,4 @@ RSpec.describe GetAnIdentity::WebhookMessages::UserUpdatedDecorator do
       it { is_expected.to eq "John Doe" }
     end
   end
-
-  describe "#date_of_birth" do
-    subject { instance.date_of_birth }
-
-    context "with a date of birth" do
-      it { is_expected.to eq Date.new(1995, 1, 1) }
-    end
-
-    context "without a date of birth" do
-      let(:webhook_message) { create(:get_an_identity_webhook_message, date_of_birth: nil) }
-
-      it { is_expected.to be_nil }
-    end
-  end
 end

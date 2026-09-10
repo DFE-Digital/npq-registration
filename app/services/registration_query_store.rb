@@ -126,14 +126,6 @@ class RegistrationQueryStore
     store["ehco_headteacher"] == "yes" && store["ehco_new_headteacher"] == "yes"
   end
 
-  def date_of_birth
-    store["date_of_birth"]
-  end
-
-  def formatted_date_of_birth
-    date_of_birth&.to_fs(:govuk)
-  end
-
   def maths_understanding?
     store["maths_understanding"]
   end
