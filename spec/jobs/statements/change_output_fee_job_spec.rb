@@ -6,12 +6,6 @@ RSpec.describe Statements::ChangeOutputFeeJob, type: :job do
   let(:job) { described_class.new(statement_id:, output_fee:) }
   let(:output_fee) { true }
 
-  before do
-    allow_any_instance_of(Statements::ChangeOutputFee)
-      .to receive(:change_statement_and_reconcile!)
-            .and_return(true)
-  end
-
   context "with unknown statement" do
     let(:statement_id) { 19 }
 
@@ -19,8 +13,32 @@ RSpec.describe Statements::ChangeOutputFeeJob, type: :job do
   end
 
   context "with known statement" do
-    let(:statement_id) { create(:statement, :open, for_date: 30.days.from_now).id }
+    before do
+      allow(Statements::ChangeOutputFee)
+        .to receive(:new).with(**service_args).and_return(service)
 
-    it { is_expected.to be true }
+      perform
+    end
+
+    let :service do
+      instance_double(Statements::ChangeOutputFee,
+                      change_statement_and_reconcile!: true)
+    end
+
+    let(:service_args) { { statement:, output_fee: } }
+    let(:statement_id) { statement.id }
+    let(:statement) { create(:statement, :open, for_date: 30.days.from_now) }
+
+    it { expect(service).to have_received(:change_statement_and_reconcile!) }
+
+    context "with allow_payable_statement_changes" do
+      let(:service_args) { { statement:, output_fee:, allow_payable_statement_changes: true } }
+
+      let :job do
+        described_class.new(statement_id:, output_fee:, allow_payable_statement_changes: true)
+      end
+
+      it { expect(service).to have_received(:change_statement_and_reconcile!) }
+    end
   end
 end
