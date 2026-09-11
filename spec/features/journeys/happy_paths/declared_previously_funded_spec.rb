@@ -42,16 +42,16 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.click_link("Continue to register")
     end
 
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      page.choose "I am paying", visible: :all
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     choose_a_school(js: false, name: "open")
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      page.choose "I am paying", visible: :all
+    end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First")
 

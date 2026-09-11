@@ -17,10 +17,4 @@ RSpec.describe Questionnaires::IttProvider, type: :model do
 
     it { is_expected.to eq(:your_employment) }
   end
-
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    it_behaves_like "showing the eligibility step"
-  end
 end

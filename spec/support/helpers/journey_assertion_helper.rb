@@ -53,6 +53,49 @@ module Helpers
 
     # relies on the entire feature spec using expect_page_to_have to navigate
     def check_back_journey_is_correct(exclude_current_page: false)
+      correct_order = %w[
+        course-start-date
+        check-funding
+        teacher-catchment
+        choose-your-npq
+        funding-history
+        ineligible-for-funding-previously-funded
+        work-setting
+        kind-of-nursery
+        have-ofsted-urn
+        choose-childcare-provider
+        choose-private-childcare-provider
+        childcare-provider-not-in-england
+        choose-school
+        school-not-in-england
+        npqh-status
+        ehco-new-headteacher
+        ehco-unavailable
+        maths-eligibility-teaching-for-mastery
+        maths-understanding-of-approach
+        senco-in-role
+        senco-start-date
+        your-employment
+        your-employer
+        itt-provider
+        referred-by-return-to-teaching-adviser
+        possible-funding
+        ehco-possible-funding
+        funding-eligibility-senco
+        funding-eligibility-maths
+        funding-your-ehco
+        choose-your-provider
+        share-provider
+        check-answers
+      ]
+      steps_that_are_not_in_a_fixed_position = %w[ineligible-for-funding funding-your-npq]
+      steps = @steps_visited.map { |path| path.split("/").last } - steps_that_are_not_in_a_fixed_position
+      spec_missing_steps = (steps - correct_order)
+      fail "unexpected step encountered: #{spec_missing_steps.join(',')}" if spec_missing_steps.any?
+
+      ordered_steps = steps.sort { |x, y| correct_order.index(x) <=> correct_order.index(y) }
+      fail "steps in incorrect order - #{steps.join(',')} should be: #{ordered_steps.join(',')}" unless steps == ordered_steps
+
       starting_path = page.current_path
       until page.current_path == "/registration/course-start-date"
         page.click_link("Back")
@@ -66,7 +109,6 @@ module Helpers
         "/registration/choose-school",
         "/registration/have-ofsted-urn",
         "/registration/kind-of-nursery",
-        "/registration/referred-by-return-to-teaching-adviser",
       ]
       steps_visited = exclude_current_page ? @steps_visited.excluding(starting_path) : @steps_visited
       expect(back_steps.reverse).to match_backlinks steps_visited.excluding(always_skipped_pages_going_back)
