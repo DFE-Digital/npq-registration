@@ -7,13 +7,19 @@ FactoryBot.define do
       paid_statement { nil }
     end
 
-    application { association :application, :accepted, user:, course: }
+    application do
+      application_kwargs = { user:, course: }
+      application_kwargs[:cohort] = statement.cohort if statement
+
+      association :application, :accepted, **application_kwargs
+    end
+
     lead_provider { application&.lead_provider || create(:lead_provider) }
     cohort { application&.cohort || create(:cohort, :current, :without_funding_cap) }
     delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
     declaration_type { "started" }
     declaration_date { Date.current }
-    state { "submitted" }
+    state { statement ? "eligible" : "submitted" }
     ecf_id { SecureRandom.uuid }
 
     after(:create) do |declaration, evaluator|
