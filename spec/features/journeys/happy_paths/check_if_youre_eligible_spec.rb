@@ -86,9 +86,12 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+    expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
+      expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
+    end
 
-    check_back_journey_is_correct
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
   scenario "Spring 2026 cohort" do

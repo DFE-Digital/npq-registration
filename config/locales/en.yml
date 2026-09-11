@@ -920,6 +920,7 @@ en:
     not_entitled_childminder: "You’re not eligible for scholarship funding for the NPQ as you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency."
     scholarship_eligibility: "You’re not eligible for scholarship funding."
     subject_to_review: "You may be eligible for scholarship funding, subject to review of your application by DfE."
+    requested_no_funding: "You requested to continue without DfE funding."
   provider_details:
     expired_status_when_service_is_closed: "Your registration has expired but you can register again later for courses starting in October 2024. You'll receive an email when registrations open. This is usually around June."
   course_start_details:
