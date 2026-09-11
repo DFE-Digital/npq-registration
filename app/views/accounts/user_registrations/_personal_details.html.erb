@@ -1,0 +1,20 @@
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Personal details</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+          If you pass your course, you can sign in to the <%= external_link_to "teaching qualifications service", :access_your_teaching_qualifications %> to view or download your certificate.
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+          To change your personal details, you can go to your <%= govuk_link_to "GOV.UK One Login account", Rails.configuration.x.teacher_auth.onelogin_home_uri %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
