@@ -9,12 +9,6 @@ RSpec.describe Questionnaires::YourEmployment, type: :model do
     it { is_expected.to validate_presence_of(:employment_type) }
   end
 
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    it { is_expected.to eq(:work_setting) }
-  end
-
   describe "#next_step" do
     subject { instance.next_step }
 

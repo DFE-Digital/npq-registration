@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Applying for match course", :no_js, :with_cohorts, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -41,7 +41,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
         expect(page).to have_text("You’re eligible for scholarship funding for the Leading primary mathematics NPQ, but this does not guarantee a funded place is available.")
       end
 
-      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: false)
+      choose_provider_share_information_and_check_answers(provider: "Church of England") do
+        expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+      end
 
       check_back_journey_is_correct(exclude_current_page: true)
     end
@@ -70,17 +72,46 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
     end
   end
 
-  scenario "when the work setting is 'Other'" do
+  scenario "when the work setting is 'Other' - with at least one year of the primary maths Teaching for Mastery programme" do
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Leading primary mathematics",
       work_setting: "Other",
     )
 
+    expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      expect(page).to have_content "In review"
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Church of England") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "referred_by_return_to_teaching_adviser"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "when the work setting is 'Other' - without at least one year of the primary maths Teaching for Mastery programme" do
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Leading primary mathematics",
+      work_setting: "Other",
+    )
+
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/maths-understanding-of-approach", submit_form: true) do
+      page.choose("No – but taken a similar course", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
     end
 

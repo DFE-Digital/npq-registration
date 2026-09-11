@@ -35,10 +35,12 @@ module Questionnaires
     def next_step
       if maths_understanding_of_approach == "cannot_show"
         :maths_cannot_register
+      elsif query_store.works_in_another_setting?
+        :your_employment
+      elsif query_store.works_in_other?
+        :referred_by_return_to_teaching_adviser
       elsif funding_eligibility_calculator.funded?
         :funding_eligibility_maths
-      elsif funding_eligibility_calculator.subject_to_review?
-        :possible_funding
       else
         :ineligible_for_funding
       end

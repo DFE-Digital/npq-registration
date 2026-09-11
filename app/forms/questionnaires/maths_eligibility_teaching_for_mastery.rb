@@ -35,10 +35,12 @@ module Questionnaires
       if maths_eligibility_teaching_for_mastery == "yes"
         wizard.store["maths_understanding"] = true
 
-        if funding_eligibility_calculator.funded?
+        if query_store.works_in_another_setting?
+          :your_employment
+        elsif query_store.works_in_other?
+          :referred_by_return_to_teaching_adviser
+        elsif funding_eligibility_calculator.funded?
           :funding_eligibility_maths
-        elsif funding_eligibility_calculator.subject_to_review?
-          :possible_funding
         else
           :ineligible_for_funding
         end
