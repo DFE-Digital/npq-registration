@@ -144,7 +144,7 @@ module Questionnaires
     end
 
     def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
+      @funding_eligibility_calculator ||= FundingEligibility.new(
         course: query_store.course,
         institution: query_store.institution,
         approved_itt_provider: query_store.approved_itt_provider?,

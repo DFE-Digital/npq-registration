@@ -2,52 +2,46 @@ require "rails_helper"
 
 RSpec.describe FundingEligibility do
   subject(:funding_eligibility) do
-    described_class.new(cohort:,
-                        institution:,
+    described_class.new(institution:,
                         course:,
                         inside_catchment:,
                         user_ecf_id: user.ecf_id,
                         approved_itt_provider:,
-                        new_headteacher: (new_headteacher == "yes"),
-                        employment_type:,
-                        childminder: (kind_of_nursery == "childminder"),
-                        preschool_class_as_part_of_school: (kind_of_nursery == "preschool_class_as_part_of_school"),
-                        referred_by_return_to_teaching_adviser: (referred_by_return_to_teaching_adviser == "yes"),
-                        work_setting:,
-                        declared_previous_funding:)
+                        query_store:)
   end
 
-  let(:store) do
-    {
-      course_start_cohort: course_start_cohort,
-      declared_previous_funding:,
+  let(:query_store) do
+    instance_double(
+      RegistrationQueryStore,
+      course_start_cohort: course_start_cohort&.identifier,
+      declared_previous_funding?: declared_previous_funding,
       work_setting:,
-      kind_of_nursery:,
       employment_type:,
-      referred_by_return_to_teaching_adviser:,
-      ehco_headteacher: new_headteacher,
-      ehco_new_headteacher: new_headteacher,
-    }.stringify_keys
+      referred_by_return_to_teaching_adviser?: referred_by_return_to_teaching_adviser,
+      new_headteacher?: new_headteacher,
+      preschool_class_as_part_of_school?: preschool_class_as_part_of_school,
+      childminder?: childminder,
+    )
   end
 
   let(:unfunded_cohort) { create(:cohort, :current, :unfunded) }
-  let(:cohort) { create(:cohort, :current, suffix: "b", registration_start_date: (unfunded_cohort.registration_start_date + 2.months)) }
-  let(:course_start_cohort) { cohort.identifier }
+  let(:funded_cohort) { create(:cohort, :current, suffix: "b", registration_start_date: (unfunded_cohort.registration_start_date + 2.months)) }
+  let(:course_start_cohort) { funded_cohort }
   let(:inside_catchment) { true }
   let(:approved_itt_provider) { nil }
   let(:institution) { nil }
   let(:work_setting) { nil }
-  let(:kind_of_nursery) { nil }
   let(:employment_type) { nil }
   let(:referred_by_return_to_teaching_adviser) { nil }
-  let(:new_headteacher) { "no" }
-  let(:query_store) { RegistrationQueryStore.new(store:) }
+  let(:new_headteacher) { false }
   let(:user) { build(:user, :with_teacher_auth) }
   let(:declared_previous_funding) { nil }
+  let(:preschool_class_as_part_of_school) { nil }
+  let(:childminder) { nil }
 
   before do
     unfunded_cohort
-    cohort
+    funded_cohort
   end
 
   all_courses_funded = {
@@ -64,76 +58,6 @@ RSpec.describe FundingEligibility do
     senior_leadership: :funded,
   }
 
-  describe ".new_from_query_store" do
-    subject do
-      described_class.new_from_query_store(institution:,
-                                           course:,
-                                           inside_catchment:,
-                                           user_ecf_id: user.ecf_id,
-                                           approved_itt_provider:,
-                                           query_store:)
-    end
-
-    let(:course) { build(:course, :headship) }
-
-    it { is_expected.to have_attributes institution: }
-    it { is_expected.to have_attributes course: }
-    it { is_expected.to have_attributes inside_catchment: }
-    it { is_expected.to have_attributes user_ecf_id: user.ecf_id }
-    it { is_expected.to have_attributes approved_itt_provider: }
-    it { is_expected.to have_attributes new_headteacher: false }
-    it { is_expected.to have_attributes employment_type: }
-    it { is_expected.to have_attributes childminder: false }
-    it { is_expected.to have_attributes preschool_class_as_part_of_school: false }
-    it { is_expected.to have_attributes work_setting: }
-    it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: false }
-    it { is_expected.not_to respond_to :lead_mentor }
-    it { is_expected.not_to respond_to :lead_mentor_for_accredited_itt_provider }
-    it { is_expected.not_to respond_to :query_store }
-
-    context "when the course_start_cohort is in an unfunded cohort" do
-      let(:course_start_cohort) { unfunded_cohort.identifier }
-
-      it { is_expected.to have_attributes cohort: unfunded_cohort }
-    end
-
-    context "when the course_start_cohort is a funded cohort" do
-      let(:course_start_cohort) { cohort.identifier }
-
-      it { is_expected.to have_attributes cohort: cohort }
-    end
-
-    context "with childminder" do
-      before { store["kind_of_nursery"] = "childminder" }
-
-      it { is_expected.to have_attributes childminder: true }
-    end
-
-    context "with preschool class as part of school" do
-      before { store["kind_of_nursery"] = "preschool_class_as_part_of_school" }
-
-      it { is_expected.to have_attributes preschool_class_as_part_of_school: true }
-    end
-
-    context "with new headteacher" do
-      let(:new_headteacher) { "yes" }
-
-      it { is_expected.to have_attributes new_headteacher: true }
-    end
-
-    context "with referred by rtta" do
-      before { store["referred_by_return_to_teaching_adviser"] = "yes" }
-
-      it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: true }
-    end
-
-    context "with declared previous funding" do
-      let(:declared_previous_funding) { "yes" }
-
-      it { is_expected.to have_attributes declared_previous_funding: true }
-    end
-  end
-
   RSpec.shared_examples "funding eligibility" do |result|
     it "returns the funding eligibility status code #{result}" do
       expect(funding_eligibility.funding_eligiblity_status_code).to eq result
@@ -142,13 +66,13 @@ RSpec.describe FundingEligibility do
 
   RSpec.shared_examples "general rules" do
     context "and the cohort chosen is in an unfunded cohort" do
-      let(:cohort) { create(:cohort, :current, :unfunded) }
+      let(:course_start_cohort) { unfunded_cohort }
 
       include_examples "funding eligibility", :unfunded_cohort
     end
 
     context "and the cohort chosen is nil" do
-      let(:cohort) { nil }
+      let(:course_start_cohort) { nil }
 
       include_examples "funding eligibility", :unfunded_cohort
     end
@@ -339,8 +263,12 @@ RSpec.describe FundingEligibility do
         senior_leadership: :early_years_invalid_npq,
       }
 
-      context "and the institution is a Local authority-maintained nursery" do
-        let(:kind_of_nursery) { "local_authority_maintained_nursery" }
+      context "and the institution is a not a preschool or a childminder" do
+        before do
+          allow(query_store).to receive_messages(childminder?: false,
+                                                 preschool_class_as_part_of_school?: false)
+        end
+
         let(:institution) { build(:school, :local_authority_nursery_school) }
 
         include_examples "funding eligibility status codes by course", default_eligibility.merge({
@@ -361,21 +289,25 @@ RSpec.describe FundingEligibility do
       end
 
       context "and the institution is a pre-school or nursery that is part of a school" do
-        let(:kind_of_nursery) { "preschool_class_as_part_of_school" }
+        let(:preschool_class_as_part_of_school) { true }
         let(:institution) { build(:school) }
 
         include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the institution is a private nursery" do
-        let(:kind_of_nursery) { "private_nursery" }
+        before do
+          allow(query_store).to receive_messages(childminder?: false,
+                                                 preschool_class_as_part_of_school?: false)
+        end
+
         let(:institution) { build(:private_childcare_provider) }
 
         include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the institution is a childminder" do
-        let(:kind_of_nursery) { "childminder" }
+        let(:childminder) { true }
         let(:institution) { build(:private_childcare_provider) }
 
         include_examples "funding eligibility status codes by course", default_eligibility.merge({
@@ -387,13 +319,6 @@ RSpec.describe FundingEligibility do
 
           include_examples "funding eligibility status codes by course", default_eligibility
         end
-      end
-
-      context "and the institution is another early years setting" do
-        let(:kind_of_nursery) { "another_early_years_setting" }
-        let(:institution) { build(:private_childcare_provider) }
-
-        include_examples "funding eligibility status codes by course", default_eligibility
       end
     end
 
