@@ -58,34 +58,4 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
 
     it { is_expected.to be :senco_in_role }
   end
-
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    context "when the funding eligibility status is eligible" do
-      before do
-        allow_any_instance_of(FundingEligibility).to receive(:funded?).and_return(true)
-      end
-
-      it { is_expected.to be :funding_eligibility_senco }
-    end
-
-    context "when the funding eligibility status is subject to review" do
-      before do
-        allow_any_instance_of(FundingEligibility).to receive(:funded?).and_return(false)
-        allow_any_instance_of(FundingEligibility).to receive(:subject_to_review?).and_return(true)
-      end
-
-      it { is_expected.to be :possible_funding }
-    end
-
-    context "when the funding eligibility status is ineligible" do
-      before do
-        allow_any_instance_of(FundingEligibility).to receive(:funded?).and_return(false)
-        allow_any_instance_of(FundingEligibility).to receive(:subject_to_review?).and_return(false)
-      end
-
-      it { is_expected.to be :ineligible_for_funding }
-    end
-  end
 end

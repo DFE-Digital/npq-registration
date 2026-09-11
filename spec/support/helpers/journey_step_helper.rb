@@ -2,7 +2,7 @@ module Helpers
   module JourneyStepHelper
     def choose_a_school(js:, name:, already_searched_for_workplace: false)
       if js
-        navigate_to_page(path: "/registration/choose-school", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: name
           end
@@ -10,7 +10,7 @@ module Helpers
           page.find("#school-picker__option--0").click
         end
       else
-        navigate_to_page(path: "/registration/choose-school", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
           unless already_searched_for_workplace
             within ".npq-js-hidden" do
               page.fill_in "What is the name of your workplace?", with: name
@@ -25,7 +25,7 @@ module Helpers
 
     def choose_a_childcare_provider(js:, name:)
       if js
-        navigate_to_page(path: "/registration/choose-childcare-provider", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: "open"
           end
@@ -33,7 +33,7 @@ module Helpers
           page.find("#nursery-picker__option--0").click
         end
       else
-        navigate_to_page(path: "/registration/choose-childcare-provider", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name
           end

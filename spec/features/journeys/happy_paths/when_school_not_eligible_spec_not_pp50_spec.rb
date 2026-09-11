@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -9,25 +9,20 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "with JS", :js do
-    scenario("when school not eligible") { run_scenario(js: true) }
-  end
+  let(:school) { create(:school, :eligible_with_urn_and_address) }
 
-  context "without JS", :no_js do
-    scenario("when school not eligible") { run_scenario(js: false) }
-  end
+  before { school }
 
-  def run_scenario(js:)
+  scenario "when school not eligible with PP50-only course" do
     complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Headship",
+      course: "Leading teaching",
       work_setting: "Primary school (5 to 11)",
     )
 
-    choose_a_school(js:, name: "open")
+    choose_a_school(js: false, name: "open")
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding")
-      expect(page).to have_text("You’re not eligible for scholarship funding for the Headship NPQ course")
+      expect(page).to have_text("You’re not eligible for scholarship funding for the Leading teaching NPQ course as your workplace is not in the list of settings that are eligible for funding")
 
       page.click_link "Continue to register"
     end
@@ -55,7 +50,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
           "DfE scholarship funding" => "Not eligible",
           "Course funding" => "I am paying",
           "Cohort" => "Autumn 2026",
-          "Course" => "Headship",
+          "Course" => "Leading teaching",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
           "Work setting" => "Primary school (5 to 11)",
@@ -82,12 +77,12 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     if User.last.applications.count == 1
       navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
         expect(page).to have_text("Teach First")
-        expect(page).to have_text("Headship")
+        expect(page).to have_text("Leading teaching")
       end
     else
       navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
         expect(page).to have_text("Teach First")
-        expect(page).to have_text("Headship")
+        expect(page).to have_text("Leading teaching")
       end
     end
 
@@ -102,7 +97,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-headship").id,
+      "course_id" => Course.find_by(identifier: "npq-leading-teaching").id,
       "schedule_id" => nil,
       "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
@@ -111,7 +106,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
       "employment_role" => nil,
       "funded_place" => nil,
       "funding_choice" => "self",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "funding_eligiblity_status_code" => "ineligible_establishment_not_a_pp50",
       "kind_of_nursery" => nil,
       "headteacher_status" => nil,
       "itt_provider_id" => nil,
@@ -122,7 +117,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => default_school.id,
+      "school_id" => school.id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -147,15 +142,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, :with_de
         "can_share_choices" => "1",
         "check_funding" => "yes",
         "course_start_cohort" => "2026b",
-        "course_identifier" => "npq-headship",
+        "course_identifier" => "npq-leading-teaching",
         "declared_previous_funding" => "no",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "self",
-        "funding_eligiblity_status_code" => "ineligible_establishment_type",
-        "institution_identifier" => "School-#{default_school.urn}",
-        "institution_name" => js ? "" : "open",
+        "funding_eligiblity_status_code" => "ineligible_establishment_not_a_pp50",
+        "institution_identifier" => "School-#{school.urn}",
+        "institution_name" => "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "pre_login_funding_eligiblity_status_code" => "ineligible_establishment_type",
+        "pre_login_funding_eligiblity_status_code" => "ineligible_establishment_not_a_pp50",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

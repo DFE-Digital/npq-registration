@@ -41,8 +41,6 @@ module Questionnaires
 
         if funding_eligibility.funded?
           :funding_eligibility_senco
-        elsif funding_eligibility.subject_to_review?
-          :possible_funding
         else
           :ineligible_for_funding
         end

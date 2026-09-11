@@ -23,24 +23,24 @@ module Questionnaires
     end
 
     def previous_step
-      if (query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?) && !course&.ehco?
+      if query_store.works_in_another_setting? && query_store.proceed_without_checking_funding?
+        :your_employer
+      elsif query_store.proceed_without_checking_funding? && !course&.ehco?
         :work_setting
-      elsif query_store.works_in_other? && query_store.referred_by_return_to_teaching_adviser?
-        :possible_funding
-      elsif course&.npqs? && query_store.inside_catchment?
-        :funding_eligibility_senco
-      elsif course&.ehco?
-        if query_store.declared_previous_funding? || query_store.proceed_without_checking_funding?
-          :ehco_new_headteacher
-        elsif eligible_for_funding?
-          :ehco_possible_funding
-        else
-          :funding_your_ehco
-        end
-      elsif course.npqlpm? && eligible_for_funding?
-        :funding_eligibility_maths
+      elsif course&.ehco? && query_store.proceed_without_checking_funding?
+        :ehco_new_headteacher
       elsif !eligible_for_funding?
-        :funding_your_npq
+        if course.ehco?
+          :funding_your_ehco
+        else
+          :funding_your_npq
+        end
+      elsif course.ehco?
+        :ehco_possible_funding
+      elsif course.senco? && eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
+        :funding_eligibility_senco
+      elsif course.npqlpm? && eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
+        :funding_eligibility_maths
       else
         :possible_funding
       end

@@ -1,20 +1,12 @@
 module Questionnaires
   class PossibleFunding < Base
     def previous_step
-      if course&.npqlpm?
-        if maths_understanding?
-          :maths_eligibility_teaching_for_mastery
-        else
-          :maths_understanding_of_approach
-        end
-      elsif course&.senco?
-        :senco_start_date
-      elsif course&.ehco?
-        :ehco_new_headteacher
-      elsif query_store.approved_itt_provider?
+      if query_store.approved_itt_provider?
         :itt_provider
-      elsif query_store.employment_type_needs_employer_name?
+      elsif query_store.works_in_another_setting?
         :your_employer
+      elsif query_store.works_in_other?
+        :referred_by_return_to_teaching_adviser
       else
         :work_setting
       end

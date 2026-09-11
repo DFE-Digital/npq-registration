@@ -19,8 +19,8 @@ module Questionnaires
 
       if query_store.declared_not_working_in_england?
         :teacher_catchment
-      elsif query_store.works_in_another_setting? && query_store.employment_type_other?
-        :choose_your_npq
+      elsif query_store.works_in_other?
+        :referred_by_return_to_teaching_adviser
       elsif query_store.employment_type_needs_employer_name?
         :your_employer
       elsif course.ehco?
@@ -30,6 +30,12 @@ module Questionnaires
           :maths_eligibility_teaching_for_mastery
         else
           :maths_understanding_of_approach
+        end
+      elsif course.senco? && query_store.cohort_funded?
+        if query_store.senco_in_role_status?
+          :senco_start_date
+        else
+          :senco_in_role
         end
       else
         :work_setting
@@ -57,13 +63,11 @@ module Questionnaires
                                when FundingEligibility::PREVIOUSLY_FUNDED
                                  return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
-                                 return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY # TODO: test
+                                 return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
-                                 return "not_a_pp50_institution" # TODO: test
+                                 return "not_a_pp50_institution"
                                when FundingEligibility::NOT_ENTITLED_CHILDMINDER
                                  return "not_entitled_ey_institution"
-                               when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING # TODO: test
                                when FundingEligibility::UNFUNDED_COHORT
                                  return UNFUNDED_COHORT
                                when FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO
