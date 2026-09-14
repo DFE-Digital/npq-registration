@@ -22,3 +22,4 @@ learn_about_trns:
   url: "https://www.gov.uk/guidance/teacher-reference-number-trn"
 teaching_identity_cookies:
   url: "https://teaching-identity.education.gov.uk/cookies"
+  skip_check: true
