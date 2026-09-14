@@ -71,7 +71,32 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
         subject
         expect(other_user.reload).to be_archived
         expect(application.reload.user).to eq user
-        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: other_user.ecf_id, to_participant_id: user.ecf_id)
+        expect(user.participant_id_changes.find_by(from_participant_id: other_user.ecf_id)).to have_attributes(to_participant_id: user.ecf_id)
+      end
+    end
+
+    context "when there is an archived user with the same verified TRN and applications" do
+      let(:archived_user) { create(:user, :archived, :with_verified_trn, trn: new_trn, email: nil) }
+      let(:application) { create(:application, :accepted, user: archived_user) }
+
+      before { application }
+
+      it "moves the applications to this user" do
+        subject
+        expect(application.reload.user).to eq user
+      end
+
+      it "creates a participant ID change from the archived user to this user" do
+        subject
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: archived_user.ecf_id, to_participant_id: user.ecf_id)
+      end
+
+      it "keeps the archived user archived" do
+        expect { subject }.not_to(change { archived_user.reload.archived_at })
+      end
+
+      it "marks the webhook message as processed" do
+        expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
       end
     end
 

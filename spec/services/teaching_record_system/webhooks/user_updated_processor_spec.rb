@@ -89,8 +89,34 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
         expect(other_user.reload).to be_archived
         expect(application.reload.user).to eq more_recent_other_user
         expect(application_for_other_user.reload.user).to eq more_recent_other_user
-        expect(more_recent_other_user.participant_id_changes.first).to have_attributes(from_participant_id: other_user.ecf_id, to_participant_id: more_recent_other_user.ecf_id)
-        expect(more_recent_other_user.participant_id_changes.last).to have_attributes(from_participant_id: user.ecf_id, to_participant_id: more_recent_other_user.ecf_id)
+        expect(more_recent_other_user.participant_id_changes.find_by(from_participant_id: other_user.ecf_id)).to have_attributes(to_participant_id: more_recent_other_user.ecf_id)
+        expect(more_recent_other_user.participant_id_changes.find_by(from_participant_id: user.ecf_id)).to have_attributes(to_participant_id: more_recent_other_user.ecf_id)
+      end
+    end
+
+    context "when there is an archived user with the same verified TRN and applications" do
+      let(:archived_user) { create(:user, :archived, :with_get_an_identity_id, :with_verified_trn, trn: new_trn, email: nil, created_at: 1.minute.from_now) }
+      let(:application) { create(:application, :accepted, user: archived_user) }
+
+      before { application }
+
+      it "moves the applications to this user" do
+        subject
+        expect(application.reload.user).to eq user
+      end
+
+      it "creates a participant ID change from the archived user to this user" do
+        subject
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: archived_user.ecf_id, to_participant_id: user.ecf_id)
+      end
+
+      it "keeps the archived user archived" do
+        expect { subject }.not_to(change { archived_user.reload.archived_at })
+      end
+
+      it "does not archive this user" do
+        subject
+        expect(user.reload).not_to be_archived
       end
     end
 

@@ -38,11 +38,11 @@ module TeachingRecordSystem
       end
 
       def merge_and_archive_other_users_with_same_trn
-        users_with_same_trn = User.not_archived.with_trn(new_trn).order(created_at: :desc).to_a
+        users_with_same_trn = User.with_trn(new_trn).order(archived_at: :desc, created_at: :desc).to_a
         user_to_keep = users_with_same_trn[0]
 
         users_with_same_trn[1..].each do |user_to_merge|
-          Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
+          Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false, allow_archived_users: true)
         end
       end
 
