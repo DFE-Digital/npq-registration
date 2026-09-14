@@ -1,13 +1,13 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   before { create(:school, :eligible_with_urn_and_address) }
 
-  context "when applying for Early headship coaching offer (EHCO) in the Autumn 2026 cohort" do
+  context "when in the Autumn 2026 cohort" do
     before do
       complete_journey_as_far_as_choosing_a_work_setting(
         course: "Early headship coaching offer",
@@ -233,10 +233,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.click_link("Continue to register")
     end
 
-    expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      page.choose "I am paying", visible: :all
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
@@ -250,6 +246,10 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
+      page.choose "I am paying", visible: :all
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -290,7 +290,121 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
-      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TOOD: will be fixed in NPQ-3974
+      expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "when the work setting is 'Another setting'" do
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early headship coaching offer",
+      work_setting: "Another setting",
+    )
+
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+      expect(page).to have_text("How are you employed?")
+      page.choose("In an independent hospital education organisation", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
+      page.fill_in "What organisation are you employed by?", with: "Big company"
+    end
+
+    expect_page_to_have(path: "/registration/ehco-possible-funding", submit_form: false) do
+      expect(page).to have_content "You’re eligible for DfE scholarship funding for the Early headship coaching offer"
+      page.click_link("Continue to register")
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "when the work setting is 'Another setting' - lead mentor" do
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early headship coaching offer",
+      work_setting: "Another setting",
+    )
+
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+      expect(page).to have_text("How are you employed?")
+      page.choose("As a lead mentor for an accredited initial teacher training (ITT) provider", visible: :all)
+    end
+
+    choose_an_itt_provider(js: false, name: IttProvider.currently_approved.first.legal_name)
+
+    expect_page_to_have(path: "/registration/ehco-possible-funding", submit_form: false) do
+      expect(page).to have_content "You’re eligible for DfE scholarship funding for the Early headship coaching offer"
+      page.click_link("Continue to register")
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "when the work setting is 'Another setting' and continuing without DfE funding" do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+      page.click_button("Start now")
+    end
+
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Continue without DfE funding")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Early headship coaching offer", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+      expect(page).to have_text("How are you employed?")
+      page.choose("In an independent hospital education organisation", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
+      page.fill_in "What organisation are you employed by?", with: "Big company"
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
     end
 
     check_back_journey_is_correct(exclude_current_page: true)
@@ -302,8 +416,49 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       work_setting: "Other",
     )
 
+    expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+      page.choose "I’m doing it", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
     expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/ehco-possible-funding", submit_form: false) do
+      expect(page).to have_content "You’re eligible for DfE scholarship funding for the Early headship coaching offer because you are a headteacher in your first 5 years of headship."
+      page.click_link("Continue to register")
+    end
+
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "when the work setting is 'Other' and continuing without DfE funding" do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+      page.click_button("Start now")
+    end
+
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Continue without DfE funding")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      page.choose("Early headship coaching offer", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Other", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
@@ -314,12 +469,8 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose "Yes", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_content "Eligible"
-    end
-
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
-      expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
     end
 
     check_back_journey_is_correct(exclude_current_page: true)

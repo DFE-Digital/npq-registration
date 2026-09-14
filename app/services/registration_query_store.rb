@@ -38,7 +38,7 @@ class RegistrationQueryStore
   end
 
   def asked_to_continue_without_checking_funding?
-    store["teacher_catchment"].nil?
+    cohort_funded? && store["teacher_catchment"].nil?
   end
 
   def teacher_catchment_humanized
@@ -195,10 +195,6 @@ class RegistrationQueryStore
 
   def has_answers?
     store.excluding("current_user_id").any?
-  end
-
-  def can_share_choices
-    store["can_share_choices"]
   end
 
 private

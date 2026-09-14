@@ -14,7 +14,7 @@ module Questionnaires
 
     def previous_step
       if query_store.declared_previous_funding?
-        :ineligible_for_funding_previously_funded
+        :ehco_new_headteacher
       elsif query_store.new_headteacher? && query_store.cohort_funded?
         :ehco_new_headteacher
       else
@@ -23,11 +23,7 @@ module Questionnaires
     end
 
     def next_step
-      if query_store.declared_previous_funding?
-        :work_setting
-      else
-        :choose_your_provider
-      end
+      :choose_your_provider
     end
 
     def questions
