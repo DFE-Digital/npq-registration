@@ -613,6 +613,7 @@ en:
           attributes:
             user:
               blank: User not found
+              assign_trn_from_trs: TRN must be assigned using TRS
         declarations/statement_attacher:
           attributes:
             declaration:
