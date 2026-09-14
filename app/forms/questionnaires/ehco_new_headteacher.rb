@@ -48,23 +48,5 @@ module Questionnaires
         build_option_struct(value: "no"),
       ]
     end
-
-  private
-
-    def funding_eligibility
-      FundingEligibility.new(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store:,
-      )
-    end
-
-    delegate :approved_itt_provider?,
-             :course,
-             :inside_catchment?,
-             to: :query_store
   end
 end

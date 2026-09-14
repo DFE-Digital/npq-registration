@@ -37,9 +37,9 @@ module Questionnaires
         end
       elsif course.ehco?
         :ehco_possible_funding
-      elsif course.senco? && eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
+      elsif course.senco? && eligible_for_funding? && !funding_eligibility.subject_to_review?
         :funding_eligibility_senco
-      elsif course.npqlpm? && eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
+      elsif course.npqlpm? && eligible_for_funding? && !funding_eligibility.subject_to_review?
         :funding_eligibility_maths
       else
         :possible_funding
@@ -63,21 +63,10 @@ module Questionnaires
 
     def after_save
       # Not keen on this as adds a potential calculation and only really want to do this if the user has gone back a step
-      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility.funding_eligiblity_status_code
     end
 
   private
-
-    def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store:,
-      )
-    end
 
     def providers
       LeadProvider.for(course:, cohort: Cohort.find_by(identifier: query_store.course_start_cohort)).alphabetical
@@ -87,11 +76,7 @@ module Questionnaires
       providers.find_by(id: lead_provider_id)
     end
 
-    delegate :approved_itt_provider?,
-             :course,
-             :inside_catchment?,
-             :new_headteacher?,
-             to: :query_store
+    delegate :course, to: :query_store
 
     def validate_lead_provider_valid
       if lead_provider.blank?

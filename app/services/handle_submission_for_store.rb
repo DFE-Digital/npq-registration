@@ -164,11 +164,7 @@ private
 
   def funding_eligibility_service
     @funding_eligibility_service ||= FundingEligibility.new(
-      course:,
-      institution: query_store.institution,
       approved_itt_provider:,
-      inside_catchment: inside_catchment?,
-      user_ecf_id: query_store.user_ecf_id,
       query_store:,
     )
   end

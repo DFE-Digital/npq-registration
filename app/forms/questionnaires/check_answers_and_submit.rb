@@ -26,7 +26,7 @@ module Questionnaires
 
     def before_render
       wizard.store["previously_funded"] = true if user_previously_funded?
-      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility.funding_eligiblity_status_code
     end
 
     def after_save

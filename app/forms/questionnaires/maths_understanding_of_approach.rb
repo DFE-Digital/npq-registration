@@ -39,27 +39,11 @@ module Questionnaires
         :your_employment
       elsif query_store.works_in_other?
         :referred_by_return_to_teaching_adviser
-      elsif funding_eligibility_calculator.funded?
+      elsif funding_eligibility.funded?
         :funding_eligibility_maths
       else
         :ineligible_for_funding
       end
-    end
-
-  private
-
-    delegate :inside_catchment?, :approved_itt_provider?, :lead_mentor_for_accredited_itt_provider?,
-             :course, to: :query_store
-
-    def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store:,
-      )
     end
   end
 end

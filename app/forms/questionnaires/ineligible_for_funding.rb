@@ -81,17 +81,6 @@ module Questionnaires
       @funding_eligiblity_status_code ||= funding_eligibility.funding_eligiblity_status_code
     end
 
-    def funding_eligibility
-      @funding_eligibility ||= FundingEligibility.new(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: query_store.approved_itt_provider?,
-        inside_catchment: query_store.inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store:,
-      )
-    end
-
     delegate :course, :lead_provider, to: :query_store
   end
 end

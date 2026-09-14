@@ -235,8 +235,7 @@ class RegistrationWizard
 
 private
 
-  delegate :approved_itt_provider?,
-           :course,
+  delegate :course,
            :employment_type_matters?,
            :employment_role_matters?,
            :employer_name_matters?,
@@ -269,14 +268,7 @@ private
   end
 
   def funding_eligibility_calculator
-    FundingEligibility.new(
-      course:,
-      institution: institution_from_store,
-      approved_itt_provider: approved_itt_provider?,
-      inside_catchment: inside_catchment?,
-      user_ecf_id: query_store.user_ecf_id,
-      query_store:,
-    )
+    FundingEligibility.new(query_store:)
   end
 
   def form_class

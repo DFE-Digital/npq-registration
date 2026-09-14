@@ -53,17 +53,6 @@ module Questionnaires
       end
     end
 
-    def funding_eligibility
-      @funding_eligibility ||= FundingEligibility.new(
-        course:,
-        institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store:,
-      )
-    end
-
     def validate_senco_start_date_in_range?
       if senco_start_date && !senco_start_date.between?(EARLIEST_SENCO_START_DATE, Time.zone.today)
         errors.add(:senco_start_date, :in_future)
@@ -73,8 +62,5 @@ module Questionnaires
     def validate_senco_start_date_valid?
       errors.add(:senco_start_date, :invalid) if @senco_start_date_invalid
     end
-
-    delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?, :referred_by_return_to_teaching_adviser?,
-             :approved_itt_provider?, :works_in_another_setting?, :employment_type_other?, to: :query_store
   end
 end

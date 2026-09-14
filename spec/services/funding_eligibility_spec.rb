@@ -1,26 +1,25 @@
 require "rails_helper"
 
 RSpec.describe FundingEligibility do
-  subject(:funding_eligibility) do
-    described_class.new(institution:,
-                        course:,
-                        inside_catchment:,
-                        user_ecf_id: user.ecf_id,
-                        approved_itt_provider:,
-                        query_store:)
-  end
+  subject(:funding_eligibility) { described_class.new(query_store:) }
 
   let(:query_store) do
     instance_double(
       RegistrationQueryStore,
+      course:,
       course_start_cohort: course_start_cohort&.identifier,
+      proceed_without_checking_funding?: proceed_without_checking_funding,
+      inside_catchment?: inside_catchment,
       declared_previous_funding?: declared_previous_funding,
       work_setting:,
+      institution:,
       employment_type:,
       referred_by_return_to_teaching_adviser?: referred_by_return_to_teaching_adviser,
       new_headteacher?: new_headteacher,
       preschool_class_as_part_of_school?: preschool_class_as_part_of_school,
       childminder?: childminder,
+      approved_itt_provider?: approved_itt_provider,
+      user_ecf_id: user.ecf_id,
     )
   end
 
@@ -36,6 +35,7 @@ RSpec.describe FundingEligibility do
   let(:new_headteacher) { false }
   let(:user) { build(:user, :with_teacher_auth) }
   let(:declared_previous_funding) { nil }
+  let(:proceed_without_checking_funding) { false }
   let(:preschool_class_as_part_of_school) { nil }
   let(:childminder) { nil }
 

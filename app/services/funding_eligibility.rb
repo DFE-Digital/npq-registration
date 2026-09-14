@@ -41,12 +41,12 @@ class FundingEligibility
     SUBJECT_TO_REVIEW => :subject_to_review,
   }.freeze
 
-  def initialize(institution:,
-                 course:,
-                 inside_catchment:,
-                 user_ecf_id: nil,
-                 approved_itt_provider: false,
-                 query_store: nil)
+  def initialize(query_store:,
+                 institution: query_store.institution,
+                 course: query_store.course,
+                 inside_catchment: query_store.inside_catchment?,
+                 user_ecf_id: query_store.user_ecf_id,
+                 approved_itt_provider: query_store.approved_itt_provider?)
     @cohort = Cohort.find_by(identifier: query_store.course_start_cohort)
     @institution = institution
     @course = course

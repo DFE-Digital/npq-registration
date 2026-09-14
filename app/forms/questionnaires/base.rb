@@ -113,6 +113,10 @@ module Questionnaires
       )
     end
 
+    def funding_eligibility
+      @funding_eligibility ||= FundingEligibility.new(query_store:)
+    end
+
   private
 
     def show_eligibility_step
@@ -136,22 +140,11 @@ module Questionnaires
     end
 
     def eligible_for_funding?
-      funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
+      funding_eligibility.funded? || funding_eligibility.subject_to_review?
     end
 
     def user_previously_funded?
-      funding_eligibility_calculator.funding_eligiblity_status_code == :previously_funded
-    end
-
-    def funding_eligibility_calculator
-      @funding_eligibility_calculator ||= FundingEligibility.new(
-        course: query_store.course,
-        institution: query_store.institution,
-        approved_itt_provider: query_store.approved_itt_provider?,
-        inside_catchment: query_store.inside_catchment?,
-        user_ecf_id: query_store.user_ecf_id,
-        query_store:,
-      )
+      funding_eligibility.funding_eligiblity_status_code == :previously_funded
     end
   end
 end
