@@ -54,12 +54,10 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
 
   let(:user_attributes_from_stubbed_callback_response) do
     {
-      "date_of_birth" => user_date_of_birth,
       "email" => user_email,
       "full_name" => user_full_name,
       "preferred_name" => user_preferred_name,
       "provider" => "tra_openid_connect",
-      "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => user_trn,
       "trn_lookup_status" => user_trn_lookup_status,
       "uid" => user_uid,

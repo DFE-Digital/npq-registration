@@ -15,6 +15,16 @@ module Users
     attr_reader :provider_data, :access_token, :uid, :trn, :email, :full_name, :feature_flag_id
 
     def call
+      match_and_update_user!.tap do |user|
+        if user.verified_trn
+          schedule_updating_trs_attributes!(user:, access_token:)
+        end
+      end
+    end
+
+  private
+
+    def match_and_update_user!
       user_matched_using_trn = verified_teacher_auth_matching_users.first || verified_trn_matching_users.first
 
       if user_matched_using_trn
@@ -29,7 +39,7 @@ module Users
               provider: Omniauth::Strategies::TeacherAuth::NAME,
             ),
           )
-          persist_token(user_matched_using_trn, provider_data)
+          persist_refresh_token(user_matched_using_trn, provider_data)
           user_matched_using_trn.unarchive!
         end
 
@@ -48,7 +58,7 @@ module Users
               trn_verified: trn.present?,
             ),
           )
-          persist_token(user_matched_using_uid, provider_data)
+          persist_refresh_token(user_matched_using_uid, provider_data)
           user_matched_using_uid.unarchive!
         end
 
@@ -64,7 +74,7 @@ module Users
               trn_verified: true,
             ),
           )
-          persist_token(unverified_trn_matching_user, provider_data)
+          persist_refresh_token(unverified_trn_matching_user, provider_data)
         end
 
         return unverified_trn_matching_user
@@ -75,15 +85,13 @@ module Users
       user = nil
       ApplicationRecord.transaction do
         user = create_user_with_provider_data
-        persist_token(user, provider_data)
+        persist_refresh_token(user, provider_data)
       end
 
       user
     end
 
-  private
-
-    def persist_token(user, provider_data)
+    def persist_refresh_token(user, provider_data)
       refresh_token = provider_data.credentials&.refresh_token
 
       if user.trn.blank? && refresh_token.present?
@@ -124,7 +132,6 @@ module Users
       {
         feature_flag_id:,
         full_name:,
-        # previous_names:,
         trn_auto_verified: true,
       }
     end
@@ -140,14 +147,9 @@ module Users
 
     def merge_and_archive_other_users(user_to_keep, users_to_merge)
       users_to_merge.each do |user_to_merge|
-        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false, allow_archived_users: true)
+        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:)
+          .call(dry_run: false, allow_archived_users: true)
       end
-    end
-
-    def previous_names
-      return [] if @trn.blank?
-
-      @previous_names ||= TeachingRecordSystem::FetchPerson.fetch(access_token:).previous_names
     end
 
     def create_user_with_provider_data
@@ -157,11 +159,17 @@ module Users
         email:,
         feature_flag_id:,
         full_name:,
-        previous_names: [],
         trn:,
         trn_auto_verified: trn.present?,
         trn_verified: trn.present?,
       )
+    end
+
+    def schedule_updating_trs_attributes!(user:, access_token:)
+      user.store_access_token!(access_token)
+
+      TeachingRecordSystem::UpdateUserAttributesJob
+        .perform_later(user_id: user.id)
     end
   end
 end

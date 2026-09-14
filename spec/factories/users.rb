@@ -79,6 +79,21 @@ FactoryBot.define do
       end
     end
 
+    trait :with_access_token do
+      transient do
+        token { SecureRandom.hex(32) }
+        token_updated_at { Time.current }
+      end
+
+      after(:create) do |user, evaluator|
+        user
+          .oauth_tokens
+          .access_token
+          .create!(token: evaluator.token,
+                   token_updated_at: evaluator.token_updated_at)
+      end
+    end
+
     trait :with_fresh_refresh_token do
       with_refresh_token
 

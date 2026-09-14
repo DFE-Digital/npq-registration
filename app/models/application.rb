@@ -188,6 +188,10 @@ class Application < ApplicationRecord
     declarations.completed.billable_or_voidable.latest_first.first&.participant_outcomes&.latest&.state
   end
 
+  def completed_declarations?
+    declarations.completed.any?
+  end
+
   def lookup_state_change_reason(changed_at:, changed_status:)
     variance = 0.5
     application_states.find { |application_state|

@@ -10,12 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_29_110031) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
-  enable_extension "pg_catalog.plpgsql"
+  # NOTE: Avoid adding plpgsql to the list of extensions - whilst a local schema dump
+  # will add it, Azure's hosted Postgres does not allow it by default. Whilst we can
+  # add it to the list of allowed extensions in terraform, it has been added/removed
+  # from the list of extensions you can add/remove at various times so can lead to
+  # frequent changes to the terraform configs. Since our application doesn't
+  # add the extension in the migrations, or require it, we'll leave the extension
+  # excluded from the db/schema.rb file.
+  # TODO: Leave this comment in place.
   enable_extension "pg_trgm"
 
   # Custom types defined in this database.
@@ -31,7 +38,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_110031) do
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
-  create_enum "oauth_token_types", ["refresh_token"]
+  create_enum "oauth_token_types", ["refresh_token", "access_token"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
   create_enum "reasons_for_rejection", ["registration_expired", "rejected_by_provider", "other_application_in_this_cohort_accepted"]
   create_enum "review_statuses", ["needs_review", "awaiting_information", "reregister", "decision_made"]

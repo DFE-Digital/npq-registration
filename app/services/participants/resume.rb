@@ -7,11 +7,16 @@ module Participants
     def resume
       return false if invalid?
 
+      previously_withdrawn = application.withdrawn_training_status?
+
       ActiveRecord::Base.transaction do
         create_application_state!
         application.active_training_status!
         participant.reload
-        send_email
+        # NPQ-3934: deferred to active notifications are turned off while
+        # providers clean up their course outcome data. Remove the condition to
+        # turn them back on.
+        send_email if previously_withdrawn
       end
 
       true
@@ -26,6 +31,7 @@ module Participants
 
     def send_email
       return if application.user.email.blank?
+      return if application.completed_declarations?
 
       ApplicationResumedMailer.application_resumed_mail(
         to: application.user.email,

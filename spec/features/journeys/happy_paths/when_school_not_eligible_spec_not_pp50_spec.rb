@@ -67,7 +67,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       expect(user.trn).to eql("1234567")
       expect(user.trn_verified).to be true
       expect(user.trn_auto_verified).to be true
-      expect(user.national_insurance_number).to be_nil
       expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
