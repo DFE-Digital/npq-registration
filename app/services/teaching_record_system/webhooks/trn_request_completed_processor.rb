@@ -26,8 +26,8 @@ module TeachingRecordSystem
       end
 
       def merge_and_archive_other_users_with_same_trn
-        User.not_archived.with_trn(new_trn).where.not(id: user.id).find_each do |other_user|
-          Users::MergeAndArchive.new(user_to_merge: other_user, user_to_keep: user).call(dry_run: false)
+        User.with_trn(new_trn).where.not(id: user.id).find_each do |other_user|
+          Users::MergeAndArchive.new(user_to_merge: other_user, user_to_keep: user).call(dry_run: false, allow_archived_users: true)
         end
       end
 
