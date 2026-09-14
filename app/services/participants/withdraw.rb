@@ -60,6 +60,7 @@ module Participants
 
     def send_email
       return if application.user.email.blank?
+      return if application.completed_declarations?
 
       ApplicationWithdrawnMailer.application_withdrawn_mail(
         to: application.user.email,

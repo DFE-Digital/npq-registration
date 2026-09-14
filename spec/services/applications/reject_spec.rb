@@ -78,6 +78,42 @@ RSpec.describe Applications::Reject, type: :model do
       end
     end
 
+    context "when the application is from a past cohort" do
+      let(:application) { create(:application, :pending, cohort: create(:cohort, :previous)) }
+
+      before { create(:cohort, :current) }
+
+      it "does not send an email" do
+        expect(ApplicationRejectedMailer).not_to send_mail(:application_rejected_mail)
+        service.reject
+      end
+    end
+
+    context "when the application cohort starts the same year as the latest cohort" do
+      let(:application) { create(:application, :pending, cohort: create(:cohort, :current)) }
+
+      before { create(:cohort, :current, suffix: "b") }
+
+      it "sends an email" do
+        expect(ApplicationRejectedMailer).to send_mail(:application_rejected_mail)
+          .with_params(to: application.user.email,
+                       full_name: application.user.full_name,
+                       provider_name: application.lead_provider.name,
+                       course_name: application.course.name,
+                       ecf_id: application.ecf_id)
+        service.reject
+      end
+    end
+
+    context "when the application has no cohort" do
+      before { application.update_column(:cohort_id, nil) }
+
+      it "does not send an email" do
+        expect(ApplicationRejectedMailer).not_to send_mail(:application_rejected_mail)
+        service.reject
+      end
+    end
+
     describe "refresh token clearing" do
       let(:user) { create(:user, :with_fresh_refresh_token, trn: nil, token: "live-token") }
       let(:application) { create(:application, :pending, user:) }

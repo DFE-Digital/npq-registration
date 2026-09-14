@@ -98,7 +98,6 @@ module ValidTestDataGenerators
       FactoryBot.create(:user,
                         :with_get_an_identity_id,
                         :with_random_name,
-                        date_of_birth: Date.new(1990, 1, 1),
                         trn: Faker::Number.unique.number(digits: 7),
                         trn_verified: true,
                         trn_auto_verified: true)

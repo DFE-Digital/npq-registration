@@ -237,7 +237,7 @@ RSpec.describe User do
   describe "touch_significantly_updated_at" do
     let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
     let(:significant_change) { { full_name: "New Name" } }
-    let(:insignificant_change) { { raw_tra_provider_data: { foo: :bar } } }
+    let(:insignificant_change) { { notify_user_for_future_reg: true } }
 
     it "sets significantly_updated_at on creation" do
       expect(user.significantly_updated_at).to be_present
@@ -531,6 +531,46 @@ RSpec.describe User do
 
     it "is false when the user has no refresh token" do
       expect(create(:user, trn: nil)).not_to be_needs_token_refresh
+    end
+  end
+
+  describe "#access_token" do
+    subject { user.access_token }
+
+    context "with user who has an access token" do
+      let(:user) { create :user, :with_access_token }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "access_token" }
+      it { is_expected.to be_persisted }
+    end
+
+    context "with a user who does not have a access token" do
+      let(:user) { create :user }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe "#store_access_token!" do
+    subject { user.store_access_token!("some-token") }
+
+    before { freeze_time }
+
+    context "with user who has a access token" do
+      let(:user) { create :user, :with_access_token }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "access_token", token: "some-token", token_updated_at: Time.current }
+      it { is_expected.to be_persisted }
+    end
+
+    context "with a user who does not have a access token" do
+      let(:user) { create :user }
+
+      it { is_expected.to be_instance_of OauthToken }
+      it { is_expected.to have_attributes token_type: "access_token", token: "some-token", token_updated_at: Time.current }
+      it { is_expected.to be_persisted }
     end
   end
 

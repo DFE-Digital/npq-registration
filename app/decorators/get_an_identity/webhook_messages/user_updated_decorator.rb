@@ -29,13 +29,6 @@ module GetAnIdentity
                     .join(" ")
       end
 
-      def date_of_birth
-        raw_dob = message_json.fetch("dateOfBirth")
-        return if raw_dob.blank?
-
-        Date.parse(raw_dob, "%Y-%m-%d")
-      end
-
       def trn
         message_json.fetch("trn")
       end

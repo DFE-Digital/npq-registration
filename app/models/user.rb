@@ -1,6 +1,7 @@
 class User < ApplicationRecord
+  self.ignored_columns += %i[date_of_birth national_insurance_number raw_tra_provider_data]
+
   INSIGNIFICANT_ATTRIBUTES = %w[
-    raw_tra_provider_data
     feature_flag_id
     get_an_identity_id_synced_to_ecf
     updated_from_tra_at
@@ -16,7 +17,7 @@ class User < ApplicationRecord
 
   devise :omniauthable, omniauth_providers: OMNIAUTH_PROVIDERS
 
-  has_paper_trail meta: { note: :version_note }, ignore: %i[raw_tra_provider_data updated_at feature_flag_id]
+  has_paper_trail meta: { note: :version_note }, ignore: %i[updated_at feature_flag_id]
 
   has_many :oauth_tokens, dependent: :destroy
   has_many :applications, dependent: :destroy
@@ -55,6 +56,13 @@ class User < ApplicationRecord
   scope :archived, -> { where.not(archived_at: nil) }
   scope :with_trn, ->(trn) { where(trn:, trn_verified: true).where.not(trn: nil) }
 
+  EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
+  EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
+
+  enum :email_updates_status, EMAIL_UPDATES_ALL_STATES, suffix: true
+
+  attr_accessor :version_note, :skip_touch_significantly_updated_at
+
   def refresh_token
     oauth_tokens.refresh_token.first
   end
@@ -70,12 +78,16 @@ class User < ApplicationRecord
     trn.blank? && refresh_token.present?
   end
 
-  EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
-  EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
+  def access_token
+    oauth_tokens.access_token.first
+  end
 
-  enum :email_updates_status, EMAIL_UPDATES_ALL_STATES, suffix: true
+  def store_access_token!(token)
+    return if token.blank?
 
-  attr_accessor :version_note, :skip_touch_significantly_updated_at
+    (access_token || oauth_tokens.access_token.build)
+      .tap { |t| t.store!(token) }
+  end
 
   def latest_participant_outcome(lead_provider, course_identifier)
     declarations.eligible_for_outcomes(lead_provider, course_identifier)

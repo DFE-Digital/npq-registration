@@ -150,6 +150,19 @@ RSpec.describe Statement, type: :model do
       end
     end
 
+    describe ".past" do
+      let!(:last_month_statement) { create(:statement, for_date: 1.month.ago) }
+
+      before do
+        create(:statement, for_date: Time.zone.today)
+        create(:statement, for_date: 1.month.from_now)
+      end
+
+      it "selects only the statements before the current month" do
+        expect(described_class.past).to contain_exactly(last_month_statement)
+      end
+    end
+
     describe ".next_output_fee_statements" do
       let(:next_output_fee_statement_1) { create(:statement, :open, :next_output_fee, deadline_date: 5.days.from_now) }
       let(:next_output_fee_statement_2) { create(:statement, :open, :next_output_fee, deadline_date: 1.day.from_now) }

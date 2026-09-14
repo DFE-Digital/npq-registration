@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe TeachingRecordSystem::FetchPerson do
   let(:access_token) { "test-token" }
   let(:trn) { "1234567" }
-  let(:teaching_record) do
+
+  let :teaching_record do
     {
       "trn" => trn,
       "firstName" => "Sarah",
@@ -134,6 +135,33 @@ RSpec.describe TeachingRecordSystem::FetchPerson do
           "Sarah Johnson",
           "Sarah Ann Williams",
         ])
+      end
+    end
+
+    context "when teaching record has a blank middle name" do
+      subject(:result) { described_class.fetch(access_token:) }
+
+      let(:teaching_record) do
+        {
+          "firstName" => "Sarah",
+          "middleName" => "",
+          "lastName" => "Smith",
+          "previousNames" => [
+            { "firstName" => "Sarah", "middleName" => "", "lastName" => "Johnson" },
+          ],
+        }
+      end
+
+      before do
+        allow(person_service).to receive(:find_with_token).and_return(teaching_record)
+      end
+
+      it "formats full name correctly" do
+        expect(result.full_name).to eq("Sarah Smith")
+      end
+
+      it "formats previous names correctly" do
+        expect(result.previous_names).to eq(["Sarah Johnson"])
       end
     end
   end

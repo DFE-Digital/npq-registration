@@ -24,7 +24,9 @@ module Participants
         create_application_state!(state: :deferred, reason:)
         application.deferred_training_status!
         participant.reload
-        send_email
+        # NPQ-3934: deferred notifications are turned off while providers clean
+        # up their course outcome data. Uncomment to turn them back on.
+        # send_email
       end
 
       true
@@ -45,16 +47,19 @@ module Participants
       errors.add(:participant_id, :no_declarations) if application&.declarations&.none?
     end
 
-    def send_email
-      return if application.user.email.blank?
-
-      ApplicationDeferredMailer.application_deferred_mail(
-        to: application.user.email,
-        full_name: application.user.full_name,
-        provider_name: application.lead_provider.name,
-        course_name: application.course.name,
-        ecf_id: application.ecf_id,
-      ).deliver_later
-    end
+    # Turned off. See the note in #defer.
+    #
+    # def send_email
+    #   return if application.user.email.blank?
+    #   return if application.completed_declarations?
+    #
+    #   ApplicationDeferredMailer.application_deferred_mail(
+    #     to: application.user.email,
+    #     full_name: application.user.full_name,
+    #     provider_name: application.lead_provider.name,
+    #     course_name: application.course.name,
+    #     ecf_id: application.ecf_id,
+    #   ).deliver_later
+    # end
   end
 end

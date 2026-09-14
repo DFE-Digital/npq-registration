@@ -49,4 +49,50 @@ RSpec.describe Participants::Withdraw, type: :model do
       end
     end
   end
+
+  describe "email notifications" do
+    let(:application) { create(:application, :accepted, :with_declaration) }
+    let(:instance) do
+      described_class.new(
+        lead_provider: application.lead_provider,
+        participant_id: application.user.ecf_id,
+        course_identifier: application.course.identifier,
+        reason: described_class::WITHDRAWAL_REASONS.sample,
+      )
+    end
+
+    it "sends a withdrawn notification email" do
+      expect(ApplicationWithdrawnMailer).to send_mail(:application_withdrawn_mail)
+        .with_params(to: application.user.email,
+                     full_name: application.user.full_name,
+                     provider_name: application.lead_provider.name,
+                     course_name: application.course.name,
+                     ecf_id: application.ecf_id)
+      instance.withdraw
+    end
+
+    context "when the participant has no email address" do
+      before do
+        application.user.update_columns(
+          email: nil,
+          archived_email: "archived@example.com",
+          archived_at: Time.zone.now,
+        )
+      end
+
+      it "does not send a withdrawn notification email" do
+        expect(ApplicationWithdrawnMailer).not_to send_mail(:application_withdrawn_mail)
+        instance.withdraw
+      end
+    end
+
+    context "when the application has a completed declaration" do
+      before { create(:declaration, application:, declaration_type: "completed") }
+
+      it "does not send a withdrawn notification email" do
+        expect(ApplicationWithdrawnMailer).not_to send_mail(:application_withdrawn_mail)
+        instance.withdraw
+      end
+    end
+  end
 end

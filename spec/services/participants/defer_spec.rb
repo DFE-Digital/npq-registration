@@ -34,4 +34,58 @@ RSpec.describe Participants::Defer, type: :model do
       end
     end
   end
+
+  describe "email notifications" do
+    let(:application) { create(:application, :accepted, :with_declaration) }
+    let(:instance) do
+      described_class.new(
+        lead_provider: application.lead_provider,
+        participant_id: application.user.ecf_id,
+        course_identifier: application.course.identifier,
+        reason: described_class::DEFERRAL_REASONS.sample,
+      )
+    end
+
+    it "does not send a deferred notification email" do
+      expect(ApplicationDeferredMailer).not_to send_mail(:application_deferred_mail)
+      instance.defer
+    end
+
+    # NPQ-3934: deferred notifications are turned off. Swap the examples below
+    # when they are turned on again.
+    #
+    # it "sends a deferred notification email" do
+    #   expect(ApplicationDeferredMailer).to send_mail(:application_deferred_mail)
+    #     .with_params(to: application.user.email,
+    #                  full_name: application.user.full_name,
+    #                  provider_name: application.lead_provider.name,
+    #                  course_name: application.course.name,
+    #                  ecf_id: application.ecf_id)
+    #   instance.defer
+    # end
+    #
+    # context "when the participant has no email address" do
+    #   before do
+    #     application.user.update_columns(
+    #       email: nil,
+    #       archived_email: "archived@example.com",
+    #       archived_at: Time.zone.now,
+    #     )
+    #   end
+    #
+    #   it "does not send a deferred notification email" do
+    #     expect(ApplicationDeferredMailer).not_to send_mail(:application_deferred_mail)
+    #     instance.defer
+    #   end
+    # end
+    #
+    # context "when the application has a completed declaration" do
+    #   before { create(:declaration, application:, declaration_type: "completed") }
+    #
+    #   it "does not send a deferred notification email" do
+    #     expect(ApplicationDeferredMailer).not_to send_mail(:application_deferred_mail)
+    #     instance.defer
+    #   end
+    # end
+  end
 end
