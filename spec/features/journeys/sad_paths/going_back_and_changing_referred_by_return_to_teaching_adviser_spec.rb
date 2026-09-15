@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journey", :mvp, :no_js, :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Sad journey", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -62,15 +62,14 @@ RSpec.feature "Sad journey", :mvp, :no_js, :with_cohorts, :with_default_schedule
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       click_link "Back"
     end
-    expect_page_to_have(path: "/registration/work-setting", submit_form: false) do
-      click_button "Continue"
-    end
 
     expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true)
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      expect(page).to have_text("In review")
+    end
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true)
     expect_page_to_have(path: "/registration/share-provider", submit_form: true)
 
@@ -78,7 +77,7 @@ RSpec.feature "Sad journey", :mvp, :no_js, :with_cohorts, :with_default_schedule
       {
         "Cohort" => "Autumn 2026",
         "Course" => "Senior leadership",
-        "DfE scholarship funding" => "Not eligible",
+        "DfE scholarship funding" => "In review",
         "Provider" => "Teach First",
         "Referred by return to teaching adviser" => "Yes",
         "Work setting" => "Other",

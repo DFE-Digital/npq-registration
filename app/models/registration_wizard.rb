@@ -7,13 +7,13 @@ class RegistrationWizard
   class InvalidStep < StandardError; end
   class RemovedStep < StandardError; end
 
-  Answer = Struct.new(:key, :value, :change_step, :action_text, :action_href, :tag_colour) do
-    def action_text
-      self[:action_text] || "Change"
+  Answer = Struct.new(:key, :value, :change_step, :changeable, :tag_colour) do
+    def changeable
+      self[:changeable].nil? || self[:changeable]
     end
 
     def action_href
-      self[:action_href] || "/registration/#{change_step.to_s.dasherize}/change"
+      "/registration/#{change_step.to_s.dasherize}/change"
     end
   end
 
@@ -224,8 +224,7 @@ class RegistrationWizard
       "DfE scholarship funding",
       funding_status.to_s.humanize,
       :check_funding,
-      "View",
-      "/registration/check-funding",
+      false,
       FUNDING_STATUS_TAG_COLOURS.fetch(funding_status),
     )
 

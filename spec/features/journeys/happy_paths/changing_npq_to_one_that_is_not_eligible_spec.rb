@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -8,6 +8,9 @@ RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
   include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
+
+  let(:public_kind_of_nursery_key) { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.first }
+  let(:public_kind_of_nursery) { I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options") }
 
   before do
     cohort = create(:cohort, :next, suffix: "b")
@@ -28,52 +31,18 @@ RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
            ukprn: "TEST00000001")
   end
 
-  context "with JS", :js do
-    scenario("registration journey changing course to one that is not eligible for funding") { run_scenario(js: true) }
-  end
-
-  context "without JS", :no_js do
-    scenario("registration journey changing course to one that is not eligible for funding") { run_scenario(js: false) }
-  end
-
-  def run_scenario(js:)
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
-    end
-
-    public_kind_of_nursery_key = Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.first
-    public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
+  scenario "registration journey changing course to one that is not eligible for funding" do
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Senior leadership",
+      work_setting: "Early years or childcare",
+    )
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       expect(page).to have_text("Which early years setting do you work in?")
       page.choose(public_kind_of_nursery, visible: :all)
     end
 
-    choose_a_childcare_provider(js:, name: "open")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
-    end
+    choose_a_childcare_provider(js: false, name: "open")
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
       expect(page).to have_text("DfE scholarship funding")
@@ -109,8 +78,19 @@ RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq/change", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Executive leadership", visible: :all) # Needs changing to an early years course once added
+      page.choose("Executive leadership", visible: :all)
     end
+
+    expect_page_to_have(path: "/registration/funding-history/change", submit_form: true) do
+      expect(page).to have_text("Have you received DfE funding for this course before?")
+      page.choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting/change", submit_form: true)
+
+    expect_page_to_have(path: "/registration/kind-of-nursery/change", submit_form: true)
+
+    expect_page_to_have(path: "/registration/choose-childcare-provider/change", submit_form: true)
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
       expect(page).to have_text("DfE scholarship funding")
@@ -136,7 +116,7 @@ RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
+    check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
         {
           "DfE scholarship funding" => "Not eligible",
@@ -202,16 +182,18 @@ RSpec.feature "Happy journeys", :mvp, :with_default_schedules, type: :feature do
       "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
-        "chosen_provider" => "yes",
+        "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
+        "declared_previous_funding" => "no",
         "course_identifier" => "npq-executive-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
         "funding_eligiblity_status_code" => "early_years_invalid_npq",
         "childcare_identifier" => "School-100000",
-        "childcare_name" => js ? "" : "open",
+        "childcare_name" => "open",
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "National Institute of Teaching").id.to_s,
+        "pre_login_funding_eligiblity_status_code" => "early_years_invalid_npq",
         "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
