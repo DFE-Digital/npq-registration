@@ -84,10 +84,6 @@ module Questionnaires
       wizard.store.slice(*self.class.permitted_params.map(&:to_s)) == attributes.stringify_keys
     end
 
-    def return_to_new_registration_flow?
-      wizard.current_user.present? && wizard.current_step == :change_your_course_or_provider
-    end
-
     def requirements_met?
       # basic check to determine if user has completed a registration and is attempting to go directly to a step in the journey
       query_store.has_answers?

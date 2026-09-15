@@ -67,10 +67,6 @@ module Questionnaires
       end
     end
 
-    def return_to_regular_flow_on_change?
-      true
-    end
-
     def previous_step
       if query_store.course.npqlpm?
         if query_store.maths_understanding?

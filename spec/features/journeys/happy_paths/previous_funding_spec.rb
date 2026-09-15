@@ -24,9 +24,7 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      page.click_button "Continue to register"
-    end
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true)
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       page.choose("Teach First", visible: :all)
