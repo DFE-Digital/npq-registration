@@ -14,13 +14,15 @@ RSpec.describe FundingEligibility do
                         preschool_class_as_part_of_school: (kind_of_nursery == "preschool_class_as_part_of_school"),
                         referred_by_return_to_teaching_adviser: (referred_by_return_to_teaching_adviser == "yes"),
                         work_setting:,
-                        declared_previous_funding:)
+                        declared_previous_funding:,
+                        proceed_without_checking_funding:)
   end
 
   let(:store) do
     {
       course_start_cohort: course_start_cohort,
       declared_previous_funding:,
+      check_funding:,
       work_setting:,
       kind_of_nursery:,
       employment_type:,
@@ -44,6 +46,8 @@ RSpec.describe FundingEligibility do
   let(:query_store) { RegistrationQueryStore.new(store:) }
   let(:user) { build(:user, :with_teacher_auth) }
   let(:declared_previous_funding) { nil }
+  let(:proceed_without_checking_funding) { nil }
+  let(:check_funding) { nil }
 
   before do
     unfunded_cohort
@@ -132,6 +136,18 @@ RSpec.describe FundingEligibility do
 
       it { is_expected.to have_attributes declared_previous_funding: true }
     end
+
+    context "with proceed with checking funding" do
+      let(:check_funding) { "yes" }
+
+      it { is_expected.to have_attributes proceed_without_checking_funding: false }
+    end
+
+    context "with proceed without checking funding" do
+      let(:check_funding) { "no" }
+
+      it { is_expected.to have_attributes proceed_without_checking_funding: true }
+    end
   end
 
   RSpec.shared_examples "funding eligibility" do |result|
@@ -157,6 +173,12 @@ RSpec.describe FundingEligibility do
       let(:inside_catchment) { false }
 
       include_examples "funding eligibility", :not_in_england
+    end
+
+    context "and the applicant has requested no funding" do
+      let(:proceed_without_checking_funding) { true }
+
+      include_examples "funding eligibility", :requested_no_funding
     end
 
     context "and the applicant has declared they have had previous funding" do
