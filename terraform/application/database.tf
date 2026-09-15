@@ -1,25 +1,45 @@
-module "redis-cache" {
-  source = "./vendor/modules/aks//aks/redis"
+module "redis-managed-cache" {
+  source = "./vendor/modules/aks//aks/redis_managed"
 
-  namespace                 = var.namespace
-  environment               = local.environment
-  azure_resource_prefix     = var.azure_resource_prefix
-  service_name              = var.service_name
-  service_short             = var.service_short
-  config_short              = var.config_short
-  azure_capacity            = var.redis_cache_capacity
-  azure_family              = var.redis_cache_family
-  azure_sku_name            = var.redis_cache_sku_name
-  name                      = "cache"
-  azure_maxmemory_policy    = "allkeys-lru"
-  azure_patch_schedule      = [{ "day_of_week" : "Sunday", "start_hour_utc" : 01 }]
+  name          = "cache"
+  namespace     = var.namespace
+  environment   = local.environment
+  service_name  = var.service_name
+  service_short = var.service_short
+  config_short  = var.config_short
 
   cluster_configuration_map = module.cluster_data.configuration_map
 
-  use_azure                 = var.deploy_azure_backing_services
-  azure_enable_monitoring   = var.enable_monitoring
+  use_azure = var.deploy_azure_backing_services
 
-  count                     = var.deploy_redis_cache ? 1 : 0
+  azure_resource_prefix   = var.azure_resource_prefix
+  azure_enable_monitoring = var.enable_monitoring
+  azure_managed_redis_sku = var.redis_managed_cache_sku_name
+  azure_maxmemory_policy  = "AllKeysLRU"
+}
+
+module "redis-cache" {
+  source = "./vendor/modules/aks//aks/redis"
+
+  namespace              = var.namespace
+  environment            = local.environment
+  azure_resource_prefix  = var.azure_resource_prefix
+  service_name           = var.service_name
+  service_short          = var.service_short
+  config_short           = var.config_short
+  azure_capacity         = var.redis_cache_capacity
+  azure_family           = var.redis_cache_family
+  azure_sku_name         = var.redis_cache_sku_name
+  name                   = "cache"
+  azure_maxmemory_policy = "allkeys-lru"
+  azure_patch_schedule   = [{ "day_of_week" : "Sunday", "start_hour_utc" : 01 }]
+
+  cluster_configuration_map = module.cluster_data.configuration_map
+
+  use_azure               = var.deploy_azure_backing_services
+  azure_enable_monitoring = var.enable_monitoring
+
+  count = var.deploy_redis_cache ? 1 : 0
 }
 
 module "postgres" {
