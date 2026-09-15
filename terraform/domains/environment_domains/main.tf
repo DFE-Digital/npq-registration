@@ -11,4 +11,6 @@ module "domains" {
   null_host_header    = try(each.value.null_host_header, false)
   cached_paths        = try(each.value.cached_paths, [])
   rate_limit          = try(var.rate_limit, null)
+  allow_aks           = var.allow_aks
+  block_ip            = var.block_ip
 }
