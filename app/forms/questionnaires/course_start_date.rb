@@ -52,10 +52,6 @@ module Questionnaires
       end
     end
 
-    def return_to_regular_flow_on_change?
-      false
-    end
-
   private
 
     def cohort_exists
