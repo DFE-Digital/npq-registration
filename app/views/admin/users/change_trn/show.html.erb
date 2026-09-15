@@ -16,9 +16,9 @@
           row.with_key(text: "TRN")
           row.with_value(text: @user.trn || tag.em("- not set -"))
 
-          if @user.verified_trn
+          if @user.trn
             row.with_action(href: "#") do # needs href (anything) for Action component to render
-              govuk_link_to("View teaching record", "#{ENV['TRS_URL']}/persons?Search=#{@user.verified_trn}", new_tab: "")
+              govuk_link_to("View teaching record", trs_person_url(@user.trn), new_tab: "")
             end
           end
         end
@@ -32,13 +32,13 @@
         <p>
           This user was created via Teacher Auth and One Login and their TRN is
           allocated by the Teaching Record System
-        <p>
+        </p>
 
         <ul class="govuk-list govuk-list--bullet">
           <li>
-            If they have already have a Teaching Record and it is not linked to
-            their TeacherAuth account them in TRS.
-            <%= govuk_link_to "Search teaching records", "#{ENV['TRS_URL']}/persons", new_tab: "" %>
+            If they already have a Teaching Record and it is not linked to their
+            TeacherAuth account in TRS.
+            <%= govuk_link_to "Search teaching records", trs_search_url, new_tab: "" %>
           </li>
           <li>
             If they do not have a Teaching Record then one will be assigned
