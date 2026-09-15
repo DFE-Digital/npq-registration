@@ -88,5 +88,27 @@ RSpec.feature "Account", :no_js, type: :feature do
 
       expect(page).to have_current_path("/")
     end
+
+    context "when logged in" do
+      before do
+        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+          page.click_button("Start now")
+        end
+
+        visit(accounts_user_registration_path(application.id))
+      end
+
+      scenario "it shows the personal details section" do
+        expect(page).to have_css("h2", text: "Personal details")
+      end
+
+      scenario "it links to the teaching qualifications service" do
+        expect(page).to have_link("teaching qualifications service", href: ExternalLink.fetch(:access_your_teaching_qualifications).url)
+      end
+
+      scenario "it links to the GOV.UK One Login account" do
+        expect(page).to have_link("GOV.UK One Login account", href: Rails.configuration.x.teacher_auth.onelogin_home_uri)
+      end
+    end
   end
 end
