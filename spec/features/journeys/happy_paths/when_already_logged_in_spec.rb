@@ -39,7 +39,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    # check_back_journey_is_correct # FIXME: this currently fails
+    check_back_journey_is_correct
 
     expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(

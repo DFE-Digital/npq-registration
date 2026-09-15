@@ -8,7 +8,5 @@
 
   <%= render "registration_wizard/possible_funding/#{@form.funding_eligibility_senco}", course: @form.course %>
 
-  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-    <%= f.govuk_submit %>
-  <% end %>
+  <%= govuk_button_link_to "Continue to register", registration_wizard_show_path(@wizard.next_step_path) %>
 <% end %>

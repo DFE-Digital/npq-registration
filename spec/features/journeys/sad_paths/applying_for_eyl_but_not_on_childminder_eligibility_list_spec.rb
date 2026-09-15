@@ -9,8 +9,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_nursery, :w
   include_context "with stubbed Teaching Record System person API"
 
   scenario "registration journey while working at a childminder but not on the childminder eligibility list" do
-    stub_participant_validation_request
-
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Early years leadership",
       work_setting: "Early years or childcare",

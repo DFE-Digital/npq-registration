@@ -23,7 +23,7 @@ RSpec.describe Questionnaires::FundingYourEhco, type: :model do
       context "and the user is outside the catchment" do
         let(:teacher_catchment) { "another" }
 
-        it { is_expected.to be :work_setting }
+        it { is_expected.to be :ineligible_for_funding }
       end
     end
 
