@@ -291,7 +291,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
       expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
-      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
     end
 
     check_back_journey_is_correct(exclude_current_page: true)
@@ -404,7 +404,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
-      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
     end
 
     check_back_journey_is_correct(exclude_current_page: true)
@@ -470,7 +470,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
-      expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"' # TODO: will be fixed in NPQ-3974
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
     end
 
     check_back_journey_is_correct(exclude_current_page: true)
