@@ -177,12 +177,10 @@ class RegistrationWizard
       end
     end
 
-    if inside_catchment?
-      if works_in_school?
-        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_school)
-      elsif works_in_childcare? && kind_of_nursery_public?
-        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_childcare_provider)
-      end
+    if works_in_school?
+      array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_school)
+    elsif works_in_childcare? && kind_of_nursery_public?
+      array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_childcare_provider)
     end
 
     if employment_type_matters?
@@ -202,7 +200,7 @@ class RegistrationWizard
       array << Answer.new("Special educational needs co-ordinator (SENCO)", value, :senco_in_role)
     end
 
-    if course.npqlpm?
+    if course.npqlpm? && store["maths_eligibility_teaching_for_mastery"].present?
       value = if store["maths_eligibility_teaching_for_mastery"] == "yes"
                 store["maths_eligibility_teaching_for_mastery"].capitalize
               else

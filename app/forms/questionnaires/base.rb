@@ -118,15 +118,15 @@ module Questionnaires
     def show_eligibility_step
       if changing_answer?
         :check_answers
-      elsif query_store.course.ehco?
+      elsif query_store.course.ehco? && !query_store.works_in_another_setting? && !query_store.works_in_other?
         :npqh_status
-      elsif query_store.declared_not_working_in_england?
+      elsif query_store.declared_not_working_in_england? || query_store.declared_previous_funding?
         :funding_your_npq
-      elsif query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?
+      elsif query_store.proceed_without_checking_funding?
         :choose_your_provider
       elsif query_store.course.npqlpm?
         :maths_eligibility_teaching_for_mastery
-      elsif query_store.course.npqs? && query_store.cohort_funded?
+      elsif query_store.course.senco? && query_store.cohort_funded?
         :senco_in_role
       elsif eligible_for_funding?
         :possible_funding

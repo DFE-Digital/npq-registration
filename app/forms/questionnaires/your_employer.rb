@@ -25,7 +25,11 @@ module Questionnaires
     end
 
     def next_step
-      if eligible_for_funding?
+      if query_store.proceed_without_checking_funding?
+        :choose_your_provider
+      elsif query_store.course.ehco? && eligible_for_funding?
+        :ehco_possible_funding
+      elsif eligible_for_funding?
         :possible_funding
       else
         :ineligible_for_funding
