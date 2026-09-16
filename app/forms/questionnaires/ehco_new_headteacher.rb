@@ -19,16 +19,16 @@ module Questionnaires
     def next_step
       wizard.store["ehco_new_headteacher"] = ehco_new_headteacher
 
-      if query_store.works_in_other?
-        :possible_funding
+      if query_store.works_in_another_setting?
+        :your_employment
+      elsif query_store.works_in_other? && !query_store.proceed_without_checking_funding?
+        :referred_by_return_to_teaching_adviser
       elsif funding_eligibility.funded?
         :ehco_possible_funding
-      elsif funding_eligibility.subject_to_review?
-        :possible_funding
       elsif query_store.declared_not_working_in_england?
         :funding_your_ehco
       elsif query_store.declared_previous_funding?
-        :choose_your_provider
+        :funding_your_ehco
       elsif query_store.proceed_without_checking_funding?
         :choose_your_provider
       else

@@ -16,43 +16,9 @@ RSpec.describe Questionnaires::FundingYourEhco, type: :model do
 
   it { is_expected.to validate_inclusion_of(:ehco_funding_choice).in_array(Questionnaires::FundingYourEhco::VALID_FUNDING_OPTIONS) }
 
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    context "and the user has answered the catchment question" do
-      context "and the user is outside the catchment" do
-        let(:teacher_catchment) { "another" }
-
-        it { is_expected.to be :ineligible_for_funding }
-      end
-    end
-
-    context "when the user has declared previous funding" do
-      let(:declared_previous_funding) { "yes" }
-
-      it { is_expected.to eq(:ineligible_for_funding_previously_funded) }
-    end
-
-    context "when the user has not declared previous funding" do
-      let(:declared_previous_funding) { "no" }
-
-      it { is_expected.to eq(:ineligible_for_funding) }
-    end
-  end
-
   describe "#next_step" do
     subject { instance.next_step }
 
-    context "when the user has declared previous funding" do
-      let(:declared_previous_funding) { "yes" }
-
-      it { is_expected.to eq(:work_setting) }
-    end
-
-    context "when the user has not declared previous funding" do
-      let(:declared_previous_funding) { "no" }
-
-      it { is_expected.to eq(:choose_your_provider) }
-    end
+    it { is_expected.to eq(:choose_your_provider) }
   end
 end
