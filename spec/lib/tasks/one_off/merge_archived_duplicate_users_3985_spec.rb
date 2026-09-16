@@ -40,7 +40,7 @@ RSpec.describe "one_off:merge_archived_duplicate_users" do
     end
   end
 
-  context "when there is no not archived user with the same TRN" do
+  context "when there is no not archived TeacherAuth user with the same TRN" do
     let!(:user_to_keep) { create(:user, :with_teacher_auth, :with_verified_trn, trn: "7654321") }
 
     it "does not move the applications" do
@@ -49,7 +49,7 @@ RSpec.describe "one_off:merge_archived_duplicate_users" do
     end
   end
 
-  context "when the not archived user with the same TRN is not verified" do
+  context "when the not archived TeacherAuth user with the same TRN is not verified" do
     let!(:user_to_keep) { create(:user, :with_teacher_auth, trn:, trn_verified: false) }
 
     it "does not move the applications" do
@@ -58,8 +58,8 @@ RSpec.describe "one_off:merge_archived_duplicate_users" do
     end
   end
 
-  context "when there is more than one not archived user with the same TRN" do
-    before { create(:user, :with_get_an_identity_id, :with_verified_trn, trn:) }
+  context "when there is more than one not archived TeacherAuth user with the same TRN" do
+    before { create(:user, :with_teacher_auth, :with_verified_trn, trn:) }
 
     it "does not move the applications" do
       run_task
@@ -67,12 +67,20 @@ RSpec.describe "one_off:merge_archived_duplicate_users" do
     end
   end
 
-  context "when the archived user only has rejected applications" do
-    let!(:application) { create(:application, :rejected, user: archived_user) }
+  context "when the not archived user with the same TRN is not a TeacherAuth user" do
+    let!(:user_to_keep) { create(:user, :with_get_an_identity_id, :with_verified_trn, trn:) }
 
     it "does not move the applications" do
       run_task
       expect(application.reload.user).to eq archived_user
+    end
+  end
+
+  context "when the archived user has no applications" do
+    let!(:application) { nil }
+
+    it "does not create a participant ID change" do
+      expect { run_task }.not_to change(ParticipantIdChange, :count)
     end
   end
 
