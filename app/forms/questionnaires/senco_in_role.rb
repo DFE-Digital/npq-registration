@@ -28,6 +28,10 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      :work_setting
+    end
+
     def next_step
       if senco_in_role == "yes"
         wizard.store["senco_in_role_status"] = true
@@ -37,16 +41,10 @@ module Questionnaires
 
         if funding_eligibility.funded?
           :funding_eligibility_senco
-        elsif funding_eligibility.subject_to_review?
-          :possible_funding
         else
           :ineligible_for_funding
         end
       end
-    end
-
-    def previous_step
-      :choose_your_npq
     end
 
     def funding_eligibility

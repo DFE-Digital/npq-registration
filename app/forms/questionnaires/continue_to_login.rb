@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      :check_answers_and_submit
+      # next_step not used here - the login callback handles this
     end
   end
 end

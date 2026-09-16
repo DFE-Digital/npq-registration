@@ -71,30 +71,35 @@ module Questionnaires
       true
     end
 
-    def next_step
-      if query_store.inside_catchment?
-        return :choose_school if works_in_school?
-        return :kind_of_nursery if works_in_childcare?
-        return :referred_by_return_to_teaching_adviser if works_in_other?
-
-        return :your_employment
-      end
-
-      show_eligibility_step
-    end
-
     def previous_step
       if query_store.declared_previous_funding?
-        if query_store.course&.ehco? && query_store.cohort_funded?
-          :funding_your_ehco
-        else
-          :ineligible_for_funding_previously_funded
-        end
-      elsif query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england? || !query_store.cohort_funded? # TODO: test
+        :ineligible_for_funding_previously_funded
+      elsif !query_store.cohort_funded? || query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england?
         :choose_your_npq
       else
         :funding_history
       end
+    end
+
+    def next_step
+      return :npqh_status if query_store.course&.ehco? &&
+        (query_store.declared_not_working_in_england? ||
+         query_store.proceed_without_checking_funding? ||
+         query_store.works_in_another_setting? ||
+         query_store.works_in_other?)
+
+      return :maths_eligibility_teaching_for_mastery if query_store.course&.npqlpm? && (query_store.works_in_another_setting? || query_store.works_in_other?) && !query_store.proceed_without_checking_funding?
+      return :senco_in_role if query_store.course&.senco? && (query_store.works_in_another_setting? || query_store.works_in_other?) && !query_store.proceed_without_checking_funding?
+      return :your_employment if query_store.works_in_another_setting?
+
+      if query_store.inside_catchment? || !query_store.cohort_funded? || query_store.proceed_without_checking_funding?
+        return :choose_school if works_in_school?
+        return :kind_of_nursery if works_in_childcare?
+        return :referred_by_return_to_teaching_adviser if works_in_other? && !query_store.proceed_without_checking_funding?
+        return :choose_your_provider if query_store.proceed_without_checking_funding?
+      end
+
+      :funding_your_npq
     end
 
     def questions
@@ -144,10 +149,6 @@ module Questionnaires
 
     def works_in_childcare?
       CHILDCARE_SETTINGS.include?(work_setting)
-    end
-
-    def works_in_another_setting?
-      ANOTHER_SETTING_SETTINGS.include?(work_setting)
     end
 
     def works_in_other?

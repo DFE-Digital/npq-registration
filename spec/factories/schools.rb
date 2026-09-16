@@ -41,5 +41,9 @@ FactoryBot.define do
       establishment_status_code { "1" }
       establishment_type_code { "1" }
     end
+
+    trait :with_real_urn do
+      urn { generate(:real_urn) }
+    end
   end
 end

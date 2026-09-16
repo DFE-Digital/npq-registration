@@ -12,16 +12,16 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      :work_setting
+    end
+
     def next_step
       if npqh_status == "none"
         :ehco_unavailable
       else
         :ehco_new_headteacher
       end
-    end
-
-    def previous_step
-      :work_setting
     end
 
     def questions
