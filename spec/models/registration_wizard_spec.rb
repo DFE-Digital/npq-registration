@@ -154,5 +154,61 @@ RSpec.describe RegistrationWizard do
         end
       end
     end
+
+    describe "the DfE scholarship funding answer" do
+      subject(:answer) { registration_wizard.answers.find { |answer| answer.key == "DfE scholarship funding" } }
+
+      context "when the funding is subject to review because of a return to teaching adviser referral" do
+        before do
+          store["work_setting"] = "other"
+          store["referred_by_return_to_teaching_adviser"] = "yes"
+        end
+
+        it "shows In review" do
+          expect(answer.value).to eq("In review")
+          expect(answer.tag_colour).to eq("yellow")
+        end
+      end
+
+      context "when the funding is subject to review because of the work setting and employment type" do
+        before do
+          create(:course, :senior_leadership)
+
+          store["course_identifier"] = "npq-senior-leadership"
+          store["work_setting"] = "another_setting"
+          store["employment_type"] = "local_authority_virtual_school"
+        end
+
+        it "shows In review" do
+          expect(answer.value).to eq("In review")
+          expect(answer.tag_colour).to eq("yellow")
+        end
+      end
+
+      context "when the funding is not eligible" do
+        before do
+          store["work_setting"] = "other"
+          store["referred_by_return_to_teaching_adviser"] = "no"
+        end
+
+        it "shows Not eligible" do
+          expect(answer.value).to eq("Not eligible")
+          expect(answer.tag_colour).to eq("grey")
+        end
+      end
+
+      context "when the funding is eligible" do
+        before do
+          store["work_setting"] = "a_school"
+          store["works_in_school"] = "yes"
+          store["institution_identifier"] = "School-#{school.urn}"
+        end
+
+        it "shows Eligible" do
+          expect(answer.value).to eq("Eligible")
+          expect(answer.tag_colour).to eq("green")
+        end
+      end
+    end
   end
 end

@@ -387,7 +387,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
-      expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+      expect(page).to have_summary_item("DfE scholarship funding", "In review")
       expect(page).to have_content 'funding_eligiblity_status_code: "subject_to_review"'
     end
 
