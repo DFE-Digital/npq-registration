@@ -11,7 +11,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
     end
   end
 
-  # TODO: before { allow(Cohorts::ExtendStatementsJob).to receive(:perform_later) }
+  before { allow(Cohorts::ExtendStatementsJob).to receive(:perform_later) }
 
   scenario "extending a cohort" do
     sign_in_as create(:super_admin)
@@ -36,7 +36,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
 
     expect(page).to have_content "Extend end of Cohort"
     expect(page).to have_content "There is a problem"
-    # TODO: expect(Cohorts::ExtendStatementsJob).not_to have_received(:perform_later)
+    expect(Cohorts::ExtendStatementsJob).not_to have_received(:perform_later)
 
     fill_in "Month", with: "20"
     fill_in "Year", with: 5.years.from_now.year
@@ -44,14 +44,14 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
 
     expect(page).to have_content "Extend end of Cohort"
     expect(page).to have_content "There is a problem"
-    # TODO: expect(Cohorts::ExtendStatementsJob).not_to have_received(:perform_later)
+    expect(Cohorts::ExtendStatementsJob).not_to have_received(:perform_later)
 
     fill_in "Month", with: "12"
     fill_in "Year", with: 5.years.from_now.year
     click_on "Continue"
 
     expect(page).to have_current_path admin_cohort_path(cohort)
-    # TODO: expect(Cohorts::ExtendStatementsJob).to have_received(:perform_later)
+    expect(Cohorts::ExtendStatementsJob).to have_received(:perform_later)
     expect(page).to have_content "Cohort is being extended"
   end
 
