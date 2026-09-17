@@ -21,7 +21,6 @@ module Cohorts
         .select("DISTINCT ON (lead_providers.name, lead_provider_id) statements.*")
         .includes(:lead_provider)
         .order("lead_providers.name": :asc, lead_provider_id: :asc, year: :desc, month: :desc)
-        .index_by(&:lead_provider)
     end
 
     def last_statement
@@ -40,9 +39,44 @@ module Cohorts
     end
 
     def extend_statements!
-      validate!
+      Statement.transaction do
+        Statement.with_advisory_lock!("lock-cohort-#{cohort.identifier}") do
+          validate!
 
-      true
+          last_output_statements = ending_statements
+            .with_output_fee
+            .preload(:contracts) # Cannot use includes() with DISTINCT ON
+            .index_by(&:lead_provider)
+
+          ending_statements.includes(:contracts).each do |existing| # rubocop:disable Rails/FindEach - find_each doesn't work inside advisory lock
+            existing_date = Date.new(existing.year, existing.month, 2)
+            statement_months = (existing_date..extension_date).select { |d| d.day == 1 }
+
+            statement_months.each do |month|
+              statement = Statement.create!(
+                lead_provider: existing.lead_provider,
+                cohort_id: existing.cohort_id,
+                month: month.month,
+                year: month.year,
+                deadline_date: (month - 1.month + 24.days),
+                payment_date: (month + 24.days),
+                output_fee: month == statement_months.last,
+                state: (month - 1.month + 24.days).future? ? "open" : "payable",
+              )
+
+              last_output_statements[existing.lead_provider].contracts.each do |contract|
+                Contract.create!(
+                  course_id: contract.course_id,
+                  contract_template_id: contract.contract_template_id,
+                  statement:,
+                )
+              end
+            end
+          end
+
+          true
+        end
+      end
     end
 
   private

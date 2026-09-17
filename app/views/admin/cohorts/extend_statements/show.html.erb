@@ -47,9 +47,9 @@
     <%=
       govuk_summary_card(title: "Ending statements for Lead Providers") do
         govuk_summary_list do |summary|
-          @service.ending_statements.each do |lead_provider, statement|
+          @service.ending_statements.each do |statement|
             summary.with_row do |row|
-              row.with_key(text: lead_provider.name)
+              row.with_key(text: statement.lead_provider.name)
               row.with_value(text: statement_name(statement))
             end
           end
