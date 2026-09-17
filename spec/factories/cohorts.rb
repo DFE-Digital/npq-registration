@@ -61,5 +61,11 @@ FactoryBot.define do
         end
       end
     end
+
+    trait :with_statement do
+      after(:create) do |cohort, _evaluator|
+        create(:statement, cohort:, for_date: 1.month.from_now, output_fee: true)
+      end
+    end
   end
 end

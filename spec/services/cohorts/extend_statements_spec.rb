@@ -12,13 +12,8 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
   end
 
   describe "validations" do
+    let(:cohort) { create(:cohort, :current, :with_statement) }
     let(:extension_date) { 2.years.from_now }
-
-    let :cohort do
-      create(:cohort, :current).tap do |cohort|
-        create(:statement, cohort:, for_date: 1.month.from_now)
-      end
-    end
 
     it { is_expected.to validate_presence_of :cohort }
     it { is_expected.to validate_presence_of(:extension_date).with_message("Enter a date to extend statements to") }
@@ -80,6 +75,32 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
   end
 
   describe "#schedule_change" do
+    subject(:schedule) { service.schedule_change }
+
+    before { allow(Cohorts::ExtendStatementsJob).to receive(:perform_later) }
+
+    context "with valid change" do
+      let(:cohort) { create(:cohort, :current, :with_statement) }
+      let(:extension_date) { 3.months.from_now.to_date }
+
+      it "schedules the job" do
+        expect(schedule).to be true
+
+        expect(Cohorts::ExtendStatementsJob)
+          .to have_received(:perform_later).with(cohort_id: cohort.id, extension_date:)
+      end
+    end
+
+    context "with invalid change" do
+      it "does not schedule the job" do
+        expect(schedule).to be false
+
+        expect(Cohorts::ExtendStatementsJob).not_to have_received(:perform_later)
+      end
+    end
+  end
+
+  describe "#extend_statements!" do
     pending "implementation"
   end
 end
