@@ -1,0 +1,60 @@
+<%= govuk_back_link href: admin_cohort_path(@cohort) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @service, url: admin_cohort_extend_statements_path(@cohort) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-l">
+        Extend end of Cohort
+      </h1>
+
+      <%=
+        govuk_summary_list do |sl|
+          sl.with_row do |row|
+            row.with_key(text: "Identifier")
+            row.with_value(text: @cohort.identifier)
+          end
+
+          sl.with_row do |row|
+            row.with_key(text: "Name")
+            row.with_value(text: @cohort.name)
+          end
+
+          sl.with_row do |row|
+            row.with_key(text: "Description")
+            row.with_value(text: @cohort.description)
+          end
+
+          sl.with_row do |row|
+            row.with_key(text: "Current last statement")
+            row.with_value(text: statement_name(@service.last_statement))
+          end
+        end
+      %>
+
+      <%= f.govuk_date_field :extension_date,
+                             omit_day: true,
+                             legend: { text: "New last output statement" },
+                             hint: { text: "For example, #{2.months.from_now.month} #{2.months.from_now.year}" } %>
+
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Continue" %>
+        <%= govuk_link_to t("shared.cancel"), admin_cohort_path(f.object.cohort) %>
+      </div>
+    <% end %>
+
+    <%=
+      govuk_summary_card(title: "Ending statements for Lead Providers") do
+        govuk_summary_list do |summary|
+          @service.ending_statements.each do |lead_provider, statement|
+            summary.with_row do |row|
+              row.with_key(text: lead_provider.name)
+              row.with_value(text: statement_name(statement))
+            end
+          end
+        end
+      end
+    %>
+  </div>
+</div>

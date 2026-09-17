@@ -43,11 +43,29 @@ RSpec.feature "Managing cohorts", type: :feature do
       expect(summary_list).to have_summary_item("Registration start date", "3 April 2026")
       expect(summary_list).to have_summary_item("Funding", "capped")
     end
+
+    expect(page).not_to have_link(edit_button_text)
+    expect(page).not_to have_link(delete_button_text)
+    expect(page).not_to have_link(download_contracts_button_text)
+    expect(page).not_to have_link("Create statements from CSV")
+    expect(page).not_to have_link("Add extra statements")
   end
 
   context "when logged in as a super admin" do
     before do
       admin.update! super_admin: true
+    end
+
+    scenario "viewing details" do
+      navigate_to_cohort
+
+      expect(page).to have_css("h1", text: "Cohort 2026 to 2027")
+
+      expect(page).to have_link(edit_button_text)
+      expect(page).to have_link(delete_button_text)
+      expect(page).to have_link(download_contracts_button_text)
+      expect(page).to have_link("Create statements from CSV")
+      expect(page).to have_link("Add extra statements")
     end
 
     scenario "creation" do
@@ -125,28 +143,6 @@ RSpec.feature "Managing cohorts", type: :feature do
       wait_for_file_to_be_created(csv_file)
       csv = CSV.read(csv_file)
       expect(csv.count).to eq(ContractTemplate.count + 1)
-    end
-  end
-
-  context "when logged in as a normal admin" do
-    scenario "cannot create" do
-      visit_index
-      expect(page).not_to have_link(new_button_text)
-    end
-
-    scenario "cannot edit" do
-      navigate_to_cohort
-      expect(page).not_to have_link(edit_button_text)
-    end
-
-    scenario "cannot delete" do
-      navigate_to_cohort
-      expect(page).not_to have_link(delete_button_text)
-    end
-
-    scenario "cannot download contracts CSV" do
-      navigate_to_cohort
-      expect(page).not_to have_link(download_contracts_button_text)
     end
   end
 

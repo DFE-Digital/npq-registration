@@ -190,6 +190,9 @@ Rails.application.routes.draw do
       end
       resources :statements, only: %i[new create show]
       member { get :download_contracts, path: "download-contracts" }
+      scope module: :cohorts do
+        resource :extend_statements, only: %i[show create]
+      end
     end
 
     resources :delivery_partners, path: "delivery-partners", except: %i[destroy] do
