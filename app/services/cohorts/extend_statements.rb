@@ -32,7 +32,17 @@ module Cohorts
     end
 
     def schedule_change
-      valid?
+      return false if invalid?
+
+      ExtendStatementsJob.perform_later(cohort_id: cohort.id, extension_date:)
+
+      true
+    end
+
+    def extend_statements!
+      validate!
+
+      true
     end
 
   private
