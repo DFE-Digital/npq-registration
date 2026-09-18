@@ -67,10 +67,6 @@ module Questionnaires
       end
     end
 
-    def return_to_regular_flow_on_change?
-      true
-    end
-
     def previous_step
       if query_store.declared_previous_funding?
         :ineligible_for_funding_previously_funded

@@ -84,10 +84,6 @@ module Questionnaires
       wizard.store.slice(*self.class.permitted_params.map(&:to_s)) == attributes.stringify_keys
     end
 
-    def return_to_new_registration_flow?
-      wizard.current_user.present? && wizard.current_step == :change_your_course_or_provider
-    end
-
     def requirements_met?
       # basic check to determine if user has completed a registration and is attempting to go directly to a step in the journey
       query_store.has_answers?
@@ -116,9 +112,7 @@ module Questionnaires
   private
 
     def show_eligibility_step
-      if changing_answer?
-        :check_answers
-      elsif query_store.course.ehco? && !query_store.works_in_another_setting? && !query_store.works_in_other?
+      if query_store.course.ehco? && !query_store.works_in_another_setting? && !query_store.works_in_other?
         :npqh_status
       elsif query_store.declared_not_working_in_england? || query_store.declared_previous_funding?
         :funding_your_npq

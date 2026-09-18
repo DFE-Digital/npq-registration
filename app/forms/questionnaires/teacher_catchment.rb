@@ -18,10 +18,6 @@ module Questionnaires
       wizard.store["teacher_catchment_country"] = nil
     end
 
-    def return_to_regular_flow_on_change?
-      true
-    end
-
     def previous_step
       :check_funding
     end

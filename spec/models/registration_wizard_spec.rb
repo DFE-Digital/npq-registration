@@ -101,10 +101,9 @@ RSpec.describe RegistrationWizard do
           row = subject.find { |answer| answer.key == "DfE scholarship funding" }
 
           expect(row).to be_present
-          expect(row.action_text).to eq("View")
-          expect(row.action_href).to eq("/registration/check-funding")
-          expect(row.value).to be_in(["Eligible", "Not eligible"])
-          expect(row.tag_colour).to be_in(%w[green grey])
+          expect(row.changeable).to be false
+          expect(row.value).to eq "Not eligible"
+          expect(row.tag_colour).to eq "grey"
         end
       end
     end
