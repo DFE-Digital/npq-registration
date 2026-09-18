@@ -17,6 +17,9 @@ class RegistrationWizard
     end
   end
 
+  STORE_SESSION_KEY = "registration_store_v2".freeze
+  OUTDATED_STORE_SESSION_KEY = "registration_store".freeze
+
   FUNDING_STATUS_TAG_COLOURS = {
     eligible: "green",
     in_review: "yellow",

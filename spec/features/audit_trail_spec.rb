@@ -76,7 +76,7 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
 
       allow_any_instance_of(RegistrationWizardController)
         .to receive(:session).and_return({
-          "registration_store" => wizard_store,
+          RegistrationWizard::STORE_SESSION_KEY => wizard_store,
           :user_id => current_user.id,
         })
 
