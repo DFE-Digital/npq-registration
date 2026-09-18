@@ -1,4 +1,5 @@
 class RegistrationWizardController < PublicPagesController
+  before_action :discard_outdated_registration_store
   before_action :registration_closed
   before_action :set_wizard
   before_action :set_form
@@ -66,7 +67,7 @@ class RegistrationWizardController < PublicPagesController
     sign_in user
     wizard = RegistrationWizard.new(
       current_step: :login_callback,
-      store: session["registration_store"],
+      store: session[RegistrationWizard::STORE_SESSION_KEY],
       params: {},
       request:,
       current_user: user,
@@ -138,7 +139,16 @@ private
   end
 
   def store
-    session["registration_store"] ||= {}
+    session[RegistrationWizard::STORE_SESSION_KEY] ||= {}
+  end
+
+  # Registrations started on an older version of the journey can't continue,
+  # so their answers are deleted and the user starts again.
+  def discard_outdated_registration_store
+    return unless session.key?(RegistrationWizard::OUTDATED_STORE_SESSION_KEY)
+
+    session.delete(RegistrationWizard::OUTDATED_STORE_SESSION_KEY)
+    redirect_to root_path unless params[:step] == "start"
   end
 
   def wizard_params
