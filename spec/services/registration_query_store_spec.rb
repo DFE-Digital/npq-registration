@@ -8,12 +8,14 @@ RSpec.describe RegistrationQueryStore do
       course_start_cohort:,
       check_funding:,
       declared_previous_funding:,
+      pre_login_funding_eligiblity_status_code:,
     }.stringify_keys
   end
 
   let(:course_start_cohort) { nil }
   let(:check_funding) { nil }
   let(:declared_previous_funding) { nil }
+  let(:pre_login_funding_eligiblity_status_code) { nil }
 
   describe "#cohort_funded?" do
     subject { described_class.new(store:).cohort_funded? }
@@ -99,7 +101,7 @@ RSpec.describe RegistrationQueryStore do
     end
   end
 
-  describe "#new_headteacher" do
+  describe "#new_headteacher?" do
     subject { described_class.new(store:).new_headteacher? }
 
     context "when ehco_new_headteacher is 'yes'" do
@@ -110,6 +112,22 @@ RSpec.describe RegistrationQueryStore do
 
     context "when ehco_new_headteacher is 'no'" do
       let(:store) { { ehco_new_headteacher: "no" }.stringify_keys }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#user_eligible_for_funding_before_login?" do
+    subject { described_class.new(store:).user_eligible_for_funding_before_login? }
+
+    context "when pre_login_funding_eligiblity_status_code is 'funded'" do
+      let(:pre_login_funding_eligiblity_status_code) { FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
+
+      it { is_expected.to be true }
+    end
+
+    context "when pre_login_funding_eligiblity_status_code is not 'funded'" do
+      let(:pre_login_funding_eligiblity_status_code) { FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
 
       it { is_expected.to be false }
     end

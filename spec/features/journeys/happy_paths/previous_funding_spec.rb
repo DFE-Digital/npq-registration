@@ -13,147 +13,291 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
   before do
     school
     user = create(:user, :with_verified_trn, email: user_email, trn: user_trn)
-    create(:application, :accepted, :with_funded_place, user:, course: create(:course, :headship))
+    create(:application, :accepted, :with_funded_place, user:, course:)
   end
 
-  scenario "when not logged in - checks for previous applications after login" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Headship",
-      work_setting: "Primary school (5 to 11)",
-    )
+  context "when the course is not EHCO" do
+    let(:course) { create(:course, :headship) }
 
-    choose_a_school(js: false, name: "open")
-
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      page.click_button "Continue to register"
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("Teach First", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
-
-    check_back_journey_is_correct
-
-    expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
-      expect_check_answers_page_to_have_answers(
-        {
-          "Cohort" => "Autumn 2026",
-          "Course" => "Headship",
-          "DfE scholarship funding" => "Eligible",
-          "Provider" => "Teach First",
-          "Work setting" => "Primary school (5 to 11)",
-          "Working in England" => "Yes",
-          "Workplace" => "open manchester school – street 1, manchester",
-        },
+    scenario "when not logged in - shows ineligible due to previous funding after login" do
+      complete_journey_as_far_as_choosing_a_work_setting(
+        course: "Headship",
+        work_setting: "Primary school (5 to 11)",
       )
-    end
 
-    stub_teacher_auth
-    stub_trs
+      choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
-      expect(page).to have_text("Continue through GOV.UK One Login")
-    end
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+        page.click_button "Continue to register"
+      end
 
-    # TODO: NPQ-3956
-    # expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-    #   expect(page).to have_text("DfE scholarship funding")
-    #   expect(page).to have_text("You’re not eligible for scholarship funding for the Headship NPQ course")
-    #   expect(page).to have_text("Our records show that you have previously received funding for this course. " \
-    #                             "This means you are not eligible for further funding.")
-    #   page.click_link "Continue to register"
-    # end
+      choose_provider_share_information_and_check_answers(provider: "Teach First") do
+        expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+      end
 
-    # expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-    #   expect(page).to have_text("How are you funding your course?")
-    #   page.choose "I am paying", visible: :all
-    # end
+      check_back_journey_is_correct(exclude_current_page: true)
 
-    expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: false) do
-      expect_check_answers_page_to_have_answers(
-        {
-          "Cohort" => "Autumn 2026",
-          "Course" => "Headship",
-          "DfE scholarship funding" => "Not eligible",
-          "Provider" => "Teach First",
-          "Work setting" => "Primary school (5 to 11)",
-          "Working in England" => "Yes",
-          "Workplace" => "open manchester school – street 1, manchester",
-        },
-      )
-      page.click_button "Submit"
-    end
+      expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+        expect_check_answers_page_to_have_answers(
+          {
+            "Cohort" => "Autumn 2026",
+            "Course" => "Headship",
+            "DfE scholarship funding" => "Eligible",
+            "Provider" => "Teach First",
+            "Work setting" => "Primary school (5 to 11)",
+            "Working in England" => "Yes",
+            "Workplace" => "open manchester school – street 1, manchester",
+          },
+        )
+      end
 
-    expect_applicant_reached_end_of_journey(total_number_of_created_applications: 2)
+      stub_teacher_auth
+      stub_trs
 
-    deep_compare_application_data(
-      "accepted_at" => nil,
-      "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-headship").id,
-      "schedule_id" => nil,
-      "ecf_id" => latest_application.ecf_id,
-      "eligible_for_funding" => false,
-      "employer_name" => nil,
-      "employment_type" => nil,
-      "employment_role" => nil,
-      "funded_place" => nil,
-      "funding_choice" => nil,
-      "funding_eligiblity_status_code" => "previously_funded",
-      "kind_of_nursery" => nil,
-      "headteacher_status" => nil,
-      "itt_provider_id" => nil,
-      "lead_mentor" => false,
-      "lead_provider_approval_status" => "pending",
-      "participant_outcome_state" => nil,
-      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
-      "notes" => nil,
-      "private_childcare_provider_id" => nil,
-      "referred_by_return_to_teaching_adviser" => nil,
-      "school_id" => school.id,
-      "targeted_delivery_funding_eligibility" => false,
-      "targeted_support_funding_eligibility" => false,
-      "teacher_catchment" => "england",
-      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
-      "teacher_catchment_iso_country_code" => "GBR",
-      "teacher_catchment_synced_to_ecf" => false,
-      "training_status" => nil,
-      "ukprn" => nil,
-      "primary_establishment" => false,
-      "number_of_pupils" => nil,
-      "tsf_primary_eligibility" => false,
-      "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => false,
-      "works_in_nursery" => nil,
-      "works_in_school" => true,
-      "work_setting" => "primary_school",
-      "senco_in_role" => nil,
-      "senco_start_date" => nil,
-      "on_submission_trn" => nil,
-      "review_status" => nil,
-      "raw_application_data" => {
-        "can_share_choices" => "1",
-        "check_funding" => "yes",
-        "course_start_cohort" => "2026b",
-        "course_identifier" => "npq-headship",
-        "declared_previous_funding" => "no",
-        "email_template" => "already_funded_not_eligible_scholarship_funding_not_tsf",
+      expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+        expect(page).to have_text("Continue through GOV.UK One Login")
+      end
+
+      expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+        expect(page).to have_text("Our records show that you have previously received funding for this course. " \
+                                  "This means you are not eligible for further funding.")
+        expect(page).to have_text("How are you funding your course?")
+        page.choose "I am paying", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: false) do
+        expect_check_answers_page_to_have_answers(
+          {
+            "Cohort" => "Autumn 2026",
+            "Course" => "Headship",
+            "DfE scholarship funding" => "Not eligible",
+            "Provider" => "Teach First",
+            "Work setting" => "Primary school (5 to 11)",
+            "Working in England" => "Yes",
+            "Workplace" => "open manchester school – street 1, manchester",
+          },
+        )
+        page.click_button "Submit"
+      end
+
+      expect_applicant_reached_end_of_journey(total_number_of_created_applications: 2)
+
+      deep_compare_application_data(
+        "accepted_at" => nil,
+        "cohort_id" => Cohort.current.id,
+        "course_id" => Course.find_by(identifier: "npq-headship").id,
+        "schedule_id" => nil,
+        "ecf_id" => latest_application.ecf_id,
+        "eligible_for_funding" => false,
+        "employer_name" => nil,
+        "employment_type" => nil,
+        "employment_role" => nil,
+        "funded_place" => nil,
+        "funding_choice" => "self",
         "funding_eligiblity_status_code" => "previously_funded",
-        "institution_identifier" => "School-#{school.urn}",
-        "institution_name" => "open",
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "pre_login_funding_eligiblity_status_code" => "funded",
-        "previously_funded" => true,
-        "submitted" => true,
+        "kind_of_nursery" => nil,
+        "headteacher_status" => nil,
+        "itt_provider_id" => nil,
+        "lead_mentor" => false,
+        "lead_provider_approval_status" => "pending",
+        "participant_outcome_state" => nil,
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+        "notes" => nil,
+        "private_childcare_provider_id" => nil,
+        "referred_by_return_to_teaching_adviser" => nil,
+        "school_id" => school.id,
+        "targeted_delivery_funding_eligibility" => false,
+        "targeted_support_funding_eligibility" => false,
         "teacher_catchment" => "england",
-        "teacher_catchment_country" => nil,
+        "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+        "teacher_catchment_iso_country_code" => "GBR",
+        "teacher_catchment_synced_to_ecf" => false,
+        "training_status" => nil,
+        "ukprn" => nil,
+        "primary_establishment" => false,
+        "number_of_pupils" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
+        "works_in_childcare" => false,
+        "works_in_nursery" => nil,
+        "works_in_school" => true,
         "work_setting" => "primary_school",
-        "works_in_childcare" => "no",
-        "works_in_school" => "yes",
-      },
-    )
+        "senco_in_role" => nil,
+        "senco_start_date" => nil,
+        "on_submission_trn" => nil,
+        "review_status" => nil,
+        "raw_application_data" => {
+          "can_share_choices" => "1",
+          "check_funding" => "yes",
+          "course_start_cohort" => "2026b",
+          "course_identifier" => "npq-headship",
+          "declared_previous_funding" => "no",
+          "email_template" => "already_funded_not_eligible_scholarship_funding_not_tsf",
+          "funding" => "self",
+          "funding_eligiblity_status_code" => "previously_funded",
+          "institution_identifier" => "School-#{school.urn}",
+          "institution_name" => "open",
+          "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+          "pre_login_funding_eligiblity_status_code" => "funded",
+          "previously_funded" => true,
+          "submitted" => true,
+          "teacher_catchment" => "england",
+          "teacher_catchment_country" => nil,
+          "work_setting" => "primary_school",
+          "works_in_childcare" => "no",
+          "works_in_school" => "yes",
+        },
+      )
+    end
+  end
+
+  context "when the course is EHCO" do
+    let(:course) { create(:course, :early_headship_coaching_offer) }
+
+    scenario "when not logged in - shows ineligible due to previous funding after login" do
+      complete_journey_as_far_as_choosing_a_work_setting(
+        course: "Early headship coaching offer",
+        work_setting: "Primary school (5 to 11)",
+      )
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+        page.choose "I’ve completed it", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+        expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
+        page.choose "Yes", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: false) do
+        click_link "Continue to register"
+      end
+
+      choose_provider_share_information_and_check_answers(provider: "Teach First") do
+        expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
+      end
+
+      check_back_journey_is_correct(exclude_current_page: true)
+
+      expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+        expect_check_answers_page_to_have_answers(
+          {
+            "Cohort" => "Autumn 2026",
+            "Course" => "Early headship coaching offer",
+            "DfE scholarship funding" => "Eligible",
+            "First 5 years of headship" => "Yes",
+            "Headship NPQ stage" => "I’ve completed it",
+            "Provider" => "Teach First",
+            "Work setting" => "Primary school (5 to 11)",
+            "Working in England" => "Yes",
+            "Workplace" => "open manchester school – street 1, manchester",
+          },
+        )
+      end
+
+      stub_teacher_auth
+      stub_trs
+
+      expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+        expect(page).to have_text("Continue through GOV.UK One Login")
+      end
+
+      expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
+        expect(page).to have_text("Our records show that you have previously received funding for this course. " \
+                                  "This means you are not eligible for further funding.")
+        expect(page).to have_text("How are you funding the Early headship coaching offer?")
+        page.choose "I am paying", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/check-answers-and-submit", submit_button_text: "Submit", submit_form: false) do
+        expect_check_answers_page_to_have_answers(
+          {
+            "Cohort" => "Autumn 2026",
+            "Course" => "Early headship coaching offer",
+            "DfE scholarship funding" => "Not eligible",
+            "First 5 years of headship" => "Yes",
+            "Headship NPQ stage" => "I’ve completed it",
+            "Provider" => "Teach First",
+            "Work setting" => "Primary school (5 to 11)",
+            "Working in England" => "Yes",
+            "Workplace" => "open manchester school – street 1, manchester",
+          },
+        )
+        page.click_button "Submit"
+      end
+
+      expect_applicant_reached_end_of_journey(total_number_of_created_applications: 2)
+
+      deep_compare_application_data(
+        "accepted_at" => nil,
+        "cohort_id" => Cohort.current.id,
+        "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
+        "schedule_id" => nil,
+        "ecf_id" => latest_application.ecf_id,
+        "eligible_for_funding" => false,
+        "employer_name" => nil,
+        "employment_type" => nil,
+        "employment_role" => nil,
+        "funded_place" => nil,
+        "funding_choice" => "self",
+        "funding_eligiblity_status_code" => "previously_funded",
+        "kind_of_nursery" => nil,
+        "headteacher_status" => "yes_in_first_five_years",
+        "itt_provider_id" => nil,
+        "lead_mentor" => false,
+        "lead_provider_approval_status" => "pending",
+        "participant_outcome_state" => nil,
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+        "notes" => nil,
+        "private_childcare_provider_id" => nil,
+        "referred_by_return_to_teaching_adviser" => nil,
+        "school_id" => school.id,
+        "targeted_delivery_funding_eligibility" => false,
+        "targeted_support_funding_eligibility" => false,
+        "teacher_catchment" => "england",
+        "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+        "teacher_catchment_iso_country_code" => "GBR",
+        "teacher_catchment_synced_to_ecf" => false,
+        "training_status" => nil,
+        "ukprn" => nil,
+        "primary_establishment" => false,
+        "number_of_pupils" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
+        "works_in_childcare" => false,
+        "works_in_nursery" => nil,
+        "works_in_school" => true,
+        "work_setting" => "primary_school",
+        "senco_in_role" => nil,
+        "senco_start_date" => nil,
+        "on_submission_trn" => nil,
+        "review_status" => nil,
+        "raw_application_data" => {
+          "can_share_choices" => "1",
+          "check_funding" => "yes",
+          "course_start_cohort" => "2026b",
+          "course_identifier" => "npq-early-headship-coaching-offer",
+          "declared_previous_funding" => "no",
+          "ehco_funding_choice" => "self",
+          "ehco_new_headteacher" => "yes",
+          "email_template" => "already_funded_not_elgible_ehco_funding",
+          "funding_eligiblity_status_code" => "previously_funded",
+          "institution_identifier" => "School-#{school.urn}",
+          "institution_name" => "open",
+          "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+          "npqh_status" => "completed_npqh",
+          "pre_login_funding_eligiblity_status_code" => "funded",
+          "previously_funded" => true,
+          "submitted" => true,
+          "teacher_catchment" => "england",
+          "teacher_catchment_country" => nil,
+          "work_setting" => "primary_school",
+          "works_in_childcare" => "no",
+          "works_in_school" => "yes",
+        },
+      )
+    end
   end
 end
