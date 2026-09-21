@@ -37,10 +37,6 @@ class RegistrationQueryStore
     store["teacher_catchment"].present? && !inside_catchment?
   end
 
-  def asked_to_continue_without_checking_funding?
-    cohort_funded? && store["teacher_catchment"].nil?
-  end
-
   def teacher_catchment_humanized
     case store["teacher_catchment"]
     when "another"
