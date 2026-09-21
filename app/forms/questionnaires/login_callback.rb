@@ -9,7 +9,15 @@ module Questionnaires
     end
 
     def next_step
-      :check_answers_and_submit
+      if show_previously_funded_alert?
+        if query_store.course.ehco?
+          :funding_your_ehco
+        else
+          :funding_your_npq
+        end
+      else
+        :check_answers_and_submit
+      end
     end
   end
 end

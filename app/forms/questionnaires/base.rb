@@ -109,6 +109,10 @@ module Questionnaires
       )
     end
 
+    def show_previously_funded_alert?
+      query_store.user_eligible_for_funding_before_login? && user_previously_funded?
+    end
+
   private
 
     def show_eligibility_step
