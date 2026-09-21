@@ -1,0 +1,13 @@
+<%= govuk_summary_list(actions: false, card: { title: "Personal details" }) do |summary_list| %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_value do %>
+      If you pass your course, you can sign in to the <%= external_link_to "teaching qualifications service", :access_your_teaching_qualifications %> to view or download your certificate.
+    <% end %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_value do %>
+      To change your personal details, you can go to your <%= govuk_link_to "GOV.UK One Login account", Rails.configuration.x.teacher_auth.onelogin_home_uri %>
+    <% end %>
+  <% end %>
+<% end %>

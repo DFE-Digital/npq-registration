@@ -15,7 +15,7 @@ class ExternalLink
 
   private
 
-    def mapping = @mapping ||= YAML.load_file(CONFIG_PATH).with_indifferent_access
+    def mapping = @mapping ||= YAML.load(ERB.new(File.read(CONFIG_PATH)).result).with_indifferent_access
   end
 
   attr_reader :url, :skip_check
