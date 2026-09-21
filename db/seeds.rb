@@ -77,12 +77,6 @@ ApplicationRecord.descendants.each(&:reset_column_information)
 end
 
 # add_applications.rb, add_declarations.rb and add_users.rb are dealt with separately
-if Rails.env.local?
-  load_using_seed_class("applications", "add_applications.rb", "SeedAddApplications")
-  load_using_seed_class("declarations", "add_declarations.rb", "SeedAddDeclarations")
-  load_using_seed_class("users", "add_users.rb", "SeedAddUsers")
-else
-  # use background job to speed up review app deployment
-  Rails.logger.info("seeding applications and declarations in background")
-  SeedingJob.perform_later(multiplier: 4)
-end
+load_using_seed_class("applications", "add_applications.rb", "SeedAddApplications")
+load_using_seed_class("declarations", "add_declarations.rb", "SeedAddDeclarations")
+load_using_seed_class("users", "add_users.rb", "SeedAddUsers")
