@@ -3,6 +3,7 @@ Knapsack::Adapters::RSpecAdapter.bind
 
 require "simplecov"
 require "simplecov_json_formatter"
+
 SimpleCov.start "rails" do
   group "Components", "app/components"
   group "Forms", "app/forms"

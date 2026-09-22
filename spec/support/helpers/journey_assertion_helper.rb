@@ -101,7 +101,10 @@ module Helpers
         page.click_link("Back")
         back_steps ||= []
         back_steps << page.current_path
-        fail "infinite loop detected in back journey: #{back_steps.join(',')}" if back_steps.length > 30
+
+        if back_steps.length > RegistrationWizard::VALID_REGISTRATION_STEPS.length
+          fail "infinite loop detected in back journey: #{back_steps.join(',')}"
+        end
       end
       always_skipped_pages_going_back = [
         "/registration/choose-childcare-provider",
