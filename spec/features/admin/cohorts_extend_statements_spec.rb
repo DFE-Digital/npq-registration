@@ -32,7 +32,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
     click_on "Add extra statements"
 
     expect(page).to have_content "Extend end of Cohort"
-    click_on "Continue"
+    click_on "Add additional statements"
 
     expect(page).to have_content "Extend end of Cohort"
     expect(page).to have_content "There is a problem"
@@ -40,7 +40,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
 
     fill_in "Month", with: "20"
     fill_in "Year", with: 5.years.from_now.year
-    click_on "Continue"
+    click_on "Add additional statements"
 
     expect(page).to have_content "Extend end of Cohort"
     expect(page).to have_content "There is a problem"
@@ -48,7 +48,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
 
     fill_in "Month", with: "12"
     fill_in "Year", with: 5.years.from_now.year
-    click_on "Continue"
+    click_on "Add additional statements"
 
     expect(page).to have_current_path admin_cohort_path(cohort)
     expect(Cohorts::ExtendStatementsJob).to have_received(:perform_later)
