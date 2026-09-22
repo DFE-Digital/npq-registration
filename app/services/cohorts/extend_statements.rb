@@ -43,34 +43,17 @@ module Cohorts
         Statement.with_advisory_lock!("lock-cohort-#{cohort.identifier}") do
           validate!
 
-          last_output_statements = ending_statements
-            .with_output_fee
-            .preload(:contracts) # Cannot use includes() with DISTINCT ON
-            .index_by(&:lead_provider)
-
-          ending_statements.includes(:contracts).each do |existing| # rubocop:disable Rails/FindEach - find_each doesn't work inside advisory lock
-            existing_date = Date.new(existing.year, existing.month, 2)
+          ending_statements.includes(:contracts).each do |existing_statement| # rubocop:disable Rails/FindEach - find_each doesn't work inside advisory lock
+            existing_date = Date.new(existing_statement.year, existing_statement.month, 2)
             statement_months = (existing_date..extension_date).select { |d| d.day == 1 }
 
             statement_months.each do |month|
-              statement = Statement.create!(
-                lead_provider: existing.lead_provider,
-                cohort_id: existing.cohort_id,
-                month: month.month,
-                year: month.year,
-                deadline_date: (month - 1.month + 24.days),
-                payment_date: (month + 24.days),
-                output_fee: month == statement_months.last,
-                state: (month - 1.month + 24.days).future? ? "open" : "payable",
-              )
+              new_statement =
+                clone_statement!(existing_statement, month, month == statement_months.last)
 
-              last_output_statements[existing.lead_provider].contracts.each do |contract|
-                Contract.create!(
-                  course_id: contract.course_id,
-                  contract_template_id: contract.contract_template_id,
-                  statement:,
-                )
-              end
+              last_output_statement_for_provider(existing_statement.lead_provider)
+                .contracts
+                .each { |existing_contract| clone_contract!(existing_contract, new_statement) }
             end
           end
 
@@ -104,6 +87,38 @@ module Cohorts
       return if last_statement
 
       errors.add :extension_date, :no_existing_statements
+    end
+
+    def clone_statement!(existing, target_month, output_fee)
+      Statement.create!(
+        lead_provider: existing.lead_provider,
+        cohort_id: existing.cohort_id,
+        month: target_month.month,
+        year: target_month.year,
+        deadline_date: (target_month - 1.month + 24.days),
+        payment_date: (target_month + 24.days),
+        output_fee:,
+        state: (target_month - 1.month + 24.days).future? ? "open" : "payable",
+      )
+    end
+
+    def clone_contract!(existing, new_statement)
+      Contract.create!(
+        course_id: existing.course_id,
+        contract_template_id: existing.contract_template_id,
+        statement: new_statement,
+      )
+    end
+
+    def last_output_statement_for_provider(provider)
+      last_output_statements_by_provider[provider]
+    end
+
+    def last_output_statements_by_provider
+      @last_output_statements_by_provider ||= ending_statements
+        .with_output_fee
+        .preload(:contracts) # Cannot use includes() with DISTINCT ON
+        .index_by(&:lead_provider)
     end
   end
 end
