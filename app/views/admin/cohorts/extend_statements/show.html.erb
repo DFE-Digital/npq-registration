@@ -33,28 +33,55 @@
         end
       %>
 
+      <p class="govuk-body">
+        This cohort currently has statements through until
+        <strong><%= statement_name(@service.last_statement) %></strong>.
+      </p>
+
+      <p class="govuk-body">
+        You add set an extension date and further statements will be added beyond
+        the current last statement.
+      </p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>
+          Add non-output fee statements for the months between the current last
+          statement and the month to extend to, one for each lead provider with
+          existing statements in the cohort.
+        </li>
+
+        <li>
+          Add an output fee statement for the month of the extension date, one
+          for each lead provider with existing statements in the cohort.
+        </li>
+
+        <li>
+          Add courses to each statement being added, cloning from the
+          existing last output statement in the cohort
+        </li>
+
+        <li>
+          Set a default payment date of the 25th of the month of the provided
+          extension date, this can be later edited when viewing a
+          statement in the Finance section.
+        </li>
+
+        <li>
+          Set a default deadline date of the 25th of the month preceding the
+          extension date, this can also be edited later when viewing a statement
+          in the Finance section.
+        </li>
+      </ul>
+
       <%= f.govuk_date_field :extension_date,
                              omit_day: true,
-                             legend: { text: "New last output statement" },
+                             legend: { text: "Extension date" },
                              hint: { text: "For example, #{2.months.from_now.month} #{2.months.from_now.year}" } %>
 
       <div class="govuk-button-group">
-        <%= f.govuk_submit "Continue" %>
+        <%= f.govuk_submit "Add additional statements" %>
         <%= govuk_link_to t("shared.cancel"), admin_cohort_path(f.object.cohort) %>
       </div>
     <% end %>
-
-    <%=
-      govuk_summary_card(title: "Ending statements for Lead Providers") do
-        govuk_summary_list do |summary|
-          @service.ending_statements.each do |statement|
-            summary.with_row do |row|
-              row.with_key(text: statement.lead_provider.name)
-              row.with_value(text: statement_name(statement))
-            end
-          end
-        end
-      end
-    %>
   </div>
 </div>
