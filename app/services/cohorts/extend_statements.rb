@@ -99,6 +99,7 @@ module Cohorts
         payment_date: (target_month + 24.days),
         output_fee:,
         state: (target_month - 1.month + 24.days).future? ? "open" : "payable",
+        reconcile_amount: 0,
       )
     end
 
