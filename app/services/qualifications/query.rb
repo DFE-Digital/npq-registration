@@ -14,6 +14,7 @@ module Qualifications
         .where(state: "passed")
         .joins(declaration: [{ application: :user }])
         .where("users.trn": trn)
+        .where.not("users.id": User::LOCKED)
         .order(completion_date: :desc)
     end
 

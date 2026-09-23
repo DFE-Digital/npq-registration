@@ -149,6 +149,8 @@ RSpec.configure do |config|
   config.include GovukComponentsHelper, type: :helper
   config.include Devise::Test::ControllerHelpers, type: :controller
 
+  config.before { stub_const("User::LOCKED", []) }
+
   config.before(:each, type: :feature) do
     Capybara.current_session.driver.browser.try(:download_path=, Capybara.save_path)
   end

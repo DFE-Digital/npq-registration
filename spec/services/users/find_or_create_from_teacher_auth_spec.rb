@@ -98,6 +98,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
     end
 
+    context "when the user is locked" do
+      before { stub_const("User::LOCKED", [user.id]) }
+
+      it "raises an exception" do
+        expect { subject }.to raise_exception(described_class::LockedUser)
+      end
+    end
+
     it_behaves_like "updating TRS attributes"
     it_behaves_like "destroying the refresh token"
   end
@@ -119,6 +127,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       end
 
       it_behaves_like "destroying the refresh token"
+
+      context "when the user is locked" do
+        before { stub_const("User::LOCKED", [user.id]) }
+
+        it "raises an exception" do
+          expect { subject }.to raise_exception(described_class::LockedUser)
+        end
+      end
     end
 
     context "when the email does not match a user" do
@@ -266,6 +282,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         expect(subject).to eq existing_user
       end
 
+      context "when the user is locked" do
+        before { stub_const("User::LOCKED", [existing_user.id]) }
+
+        it "raises an exception" do
+          expect { subject }.to raise_exception(described_class::LockedUser)
+        end
+      end
+
       context "when users details have updated" do
         it "updates the user" do
           subject
@@ -319,6 +343,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
       it "unarchives the user" do
         subject
         expect(existing_user.reload).not_to be_archived
+      end
+
+      context "when the user is locked" do
+        before { stub_const("User::LOCKED", [existing_user.id]) }
+
+        it "raises an exception" do
+          expect { subject }.to raise_exception(described_class::LockedUser)
+        end
       end
     end
 
