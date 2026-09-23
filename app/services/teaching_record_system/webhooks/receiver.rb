@@ -23,7 +23,7 @@ module TeachingRecordSystem
         return true unless webhook_message.new_record?
 
         if webhook_message.save
-          webhook_message.enqueue_processing_job
+          # webhook_message.enqueue_processing_job
           return true
         end
 
