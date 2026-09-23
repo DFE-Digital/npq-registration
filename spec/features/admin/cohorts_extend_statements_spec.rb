@@ -11,7 +11,9 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
     end
   end
 
-  before { allow(Cohorts::ExtendStatementsJob).to receive(:perform_later) }
+  before do
+    allow(Cohorts::ExtendStatementsJob).to receive(:perform_later).and_call_original
+  end
 
   scenario "extending a cohort" do
     sign_in_as create(:super_admin)
@@ -53,6 +55,13 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
     expect(page).to have_current_path admin_cohort_path(cohort)
     expect(Cohorts::ExtendStatementsJob).to have_received(:perform_later)
     expect(page).to have_content "Cohort is being extended"
+
+    perform_enqueued_jobs
+
+    last_statement = Statement.order(:id).last
+    visit admin_finance_statement_path(last_statement)
+
+    expect(page).to have_content "#{last_statement.lead_provider.name}, December #{5.years.from_now.year}"
   end
 
   scenario "when attempting to change output as a regular admin" do
