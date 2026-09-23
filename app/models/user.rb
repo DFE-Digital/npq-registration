@@ -63,6 +63,12 @@ class User < ApplicationRecord
 
   attr_accessor :version_note, :skip_touch_significantly_updated_at
 
+  LOCKED = Rails.root.join("config/data/locked_users.txt").read.split("\n").map(&:to_i).freeze
+
+  def locked?
+    LOCKED.include?(id)
+  end
+
   def refresh_token
     oauth_tokens.refresh_token.first
   end

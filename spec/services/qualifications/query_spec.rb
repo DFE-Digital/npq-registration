@@ -21,6 +21,12 @@ RSpec.describe Qualifications::Query do
       ]
     end
 
+    context "when the user is locked" do
+      before { stub_const("User::LOCKED", [user.id]) }
+
+      it { is_expected.to be_empty }
+    end
+
     context "when there are matching entries in legacy participant outcomes" do
       let!(:older_legacy_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 2.years.ago) }
       let!(:less_old_legacy_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 2.weeks.ago) }

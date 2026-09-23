@@ -867,4 +867,21 @@ RSpec.describe User do
       it { is_expected.to be_nil }
     end
   end
+
+  describe "LOCKED" do
+    subject { User::LOCKED }
+
+    it { is_expected.to be_many }
+    it { is_expected.to all be_instance_of Integer }
+  end
+
+  describe "#locked?" do
+    it "is true for user on list" do
+      expect(create(:user, id: User::LOCKED[0]).locked?).to be true
+    end
+
+    it "is false for user not on list" do
+      expect(create(:user, id: 999_999).locked?).to be false
+    end
+  end
 end

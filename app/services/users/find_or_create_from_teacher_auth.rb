@@ -2,6 +2,8 @@
 
 module Users
   class FindOrCreateFromTeacherAuth
+    class LockedUser < RuntimeError; end
+
     def initialize(provider_data:, feature_flag_id:)
       @provider_data = provider_data
       @access_token = provider_data.credentials.token
@@ -26,6 +28,7 @@ module Users
 
     def match_and_update_user!
       user_matched_using_trn = verified_teacher_auth_matching_users.first || verified_trn_matching_users.first
+      raise LockedUser if user_matched_using_trn&.locked?
 
       if user_matched_using_trn
         ApplicationRecord.transaction do
@@ -47,6 +50,7 @@ module Users
       end
 
       user_matched_using_uid = User.find_by(provider: Omniauth::Strategies::TeacherAuth::NAME, uid:)
+      raise LockedUser if user_matched_using_uid&.locked?
 
       if user_matched_using_uid
         blank_clashing_email_user(except: user_matched_using_uid)
@@ -66,6 +70,8 @@ module Users
       end
 
       if unverified_trn_matching_user
+        raise LockedUser if unverified_trn_matching_user&.locked?
+
         ApplicationRecord.transaction do
           unverified_trn_matching_user.update!(
             always_updated_attributes.merge(
