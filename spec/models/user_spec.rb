@@ -871,13 +871,24 @@ RSpec.describe User do
   describe "LOCKED" do
     subject { User::LOCKED }
 
+    before do
+      stub_const(
+        "User::LOCKED",
+        Rails.root.join("config/data/locked_users.txt").read.split("\n").map(&:to_i).freeze,
+      )
+    end
+
     it { is_expected.to be_many }
     it { is_expected.to all be_instance_of Integer }
   end
 
   describe "#locked?" do
+    before { stub_const("User::LOCKED", [user.id]) }
+
+    let(:user) { create(:user) }
+
     it "is true for user on list" do
-      expect(create(:user, id: User::LOCKED[0]).locked?).to be true
+      expect(user.locked?).to be true
     end
 
     it "is false for user not on list" do
