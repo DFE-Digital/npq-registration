@@ -22,7 +22,7 @@ RSpec.describe Qualifications::Query do
     end
 
     context "when the user is locked" do
-      before { stub_const("User::LOCKED", [user.id]) }
+      before { stub_const("User::LOCKED", [user.id, different_user_with_same_trn.id]) }
 
       it { is_expected.to be_empty }
     end
