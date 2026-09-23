@@ -21,6 +21,8 @@ private
   delegate :message, to: :webhook_message
 
   def user
+    return if user_uid.blank?
+
     @user ||= User.find_by(uid: user_uid)
   end
 
