@@ -5,7 +5,9 @@ on:
   push:
     branches:
       - main
-  pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -19,9 +21,6 @@ jobs:
         with:
           ruby-version: 3.4.10
           bundler-cache: true
-
-      - name: Install yarn
-        run: npm install yarn -g --ignore-scripts
 
       - name: Install Graphviz
         run: sudo apt install graphviz
