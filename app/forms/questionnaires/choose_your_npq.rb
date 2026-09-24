@@ -62,7 +62,7 @@ module Questionnaires
       if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded?
         :funding_history
       else
-        :work_setting
+        show_appropriate_course_step
       end
     end
 

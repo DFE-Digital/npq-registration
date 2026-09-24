@@ -42,15 +42,7 @@ module Questionnaires
     end
 
     def next_step
-      if query_store.works_in_another_setting?
-        :your_employment
-      elsif query_store.works_in_other?
-        :referred_by_return_to_teaching_adviser
-      elsif funding_eligibility.funded?
-        :funding_eligibility_senco
-      else
-        :ineligible_for_funding
-      end
+      :work_setting
     end
 
     def funding_eligibility

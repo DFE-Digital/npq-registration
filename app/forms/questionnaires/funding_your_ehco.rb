@@ -13,10 +13,8 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.declared_previous_funding?
-        :ehco_new_headteacher
-      elsif query_store.new_headteacher? && query_store.cohort_funded?
-        :ehco_new_headteacher
+      if shown_ineligible_step_during_journey?
+        :work_setting
       else
         :ineligible_for_funding
       end

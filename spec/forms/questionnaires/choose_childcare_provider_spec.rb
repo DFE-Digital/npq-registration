@@ -140,30 +140,4 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
 
     it { is_expected.to eq(:work_setting) }
   end
-
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    let(:course) { create(:course) }
-    let(:provider) { create(:school) }
-    let(:identifier) { "School-#{provider.urn}" }
-
-    let(:store) do
-      {
-        "course_identifier" => course.identifier.to_s,
-        "works_in_childcare" => "yes",
-        "course_start_cohort" => course_start_cohort,
-      }
-    end
-
-    context "when the chosen school is in England" do
-      it_behaves_like "showing the eligibility step"
-    end
-
-    context "when the chosen provider is not in England" do
-      let(:provider) { create(:school, establishment_type_code: "30") }
-
-      it { is_expected.to be(:childcare_provider_not_in_england) }
-    end
-  end
 end

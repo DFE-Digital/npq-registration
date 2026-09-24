@@ -19,24 +19,6 @@ module Questionnaires
 
       if query_store.declared_not_working_in_england?
         :teacher_catchment
-      elsif query_store.works_in_other?
-        :referred_by_return_to_teaching_adviser
-      elsif query_store.employment_type_needs_employer_name?
-        :your_employer
-      elsif course.ehco?
-        :ehco_new_headteacher
-      elsif course.npqlpm?
-        if query_store.maths_understanding?
-          :maths_eligibility_teaching_for_mastery
-        else
-          :maths_understanding_of_approach
-        end
-      elsif course.senco? && query_store.cohort_funded?
-        if query_store.senco_in_role_status?
-          :senco_start_date
-        else
-          :senco_in_role
-        end
       else
         :work_setting
       end

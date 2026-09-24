@@ -28,22 +28,14 @@ module Questionnaires
     end
 
     def previous_step
-      :work_setting
+      previous_funding_or_choose_npq_step
     end
 
     def next_step
       if maths_eligibility_teaching_for_mastery == "yes"
         wizard.store["maths_understanding"] = true
 
-        if query_store.works_in_another_setting?
-          :your_employment
-        elsif query_store.works_in_other?
-          :referred_by_return_to_teaching_adviser
-        elsif funding_eligibility_calculator.funded?
-          :funding_eligibility_maths
-        else
-          :ineligible_for_funding
-        end
+        :work_setting
       else
         wizard.store["maths_understanding"] = false
         :maths_understanding_of_approach

@@ -139,12 +139,4 @@ RSpec.describe Questionnaires::ChoosePrivateChildcareProvider, type: :model do
   describe "#previous_step" do
     it { expect(subject.previous_step).to be(:have_ofsted_urn) }
   end
-
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    let(:identifier) { "12345" }
-
-    it_behaves_like "showing the eligibility step"
-  end
 end

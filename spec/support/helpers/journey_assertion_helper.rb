@@ -60,6 +60,13 @@ module Helpers
         choose-your-npq
         funding-history
         ineligible-for-funding-previously-funded
+        npqh-status
+        ehco-new-headteacher
+        ehco-unavailable
+        maths-eligibility-teaching-for-mastery
+        maths-understanding-of-approach
+        senco-in-role
+        senco-start-date
         work-setting
         kind-of-nursery
         have-ofsted-urn
@@ -68,27 +75,18 @@ module Helpers
         childcare-provider-not-in-england
         choose-school
         school-not-in-england
-        npqh-status
-        ehco-new-headteacher
-        ehco-unavailable
-        maths-eligibility-teaching-for-mastery
-        maths-understanding-of-approach
-        senco-in-role
-        senco-start-date
         your-employment
         your-employer
         itt-provider
         referred-by-return-to-teaching-adviser
         possible-funding
-        ehco-possible-funding
-        funding-eligibility-senco
-        funding-eligibility-maths
         funding-your-ehco
+        funding-your-npq
         choose-your-provider
         share-provider
         check-answers
       ]
-      steps_that_are_not_in_a_fixed_position = %w[ineligible-for-funding funding-your-npq]
+      steps_that_are_not_in_a_fixed_position = %w[ineligible-for-funding]
       steps = @steps_visited.map { |path| path.split("/").last } - steps_that_are_not_in_a_fixed_position
       spec_missing_steps = (steps - correct_order)
       fail "unexpected step encountered: #{spec_missing_steps.join(',')}" if spec_missing_steps.any?
@@ -106,15 +104,19 @@ module Helpers
           fail "infinite loop detected in back journey: #{back_steps.join(',')}"
         end
       end
-      always_skipped_pages_going_back = [
+      optional_work_setting_questions = [
         "/registration/choose-childcare-provider",
         "/registration/choose-private-childcare-provider",
         "/registration/choose-school",
         "/registration/have-ofsted-urn",
+        "/registration/itt-provider",
         "/registration/kind-of-nursery",
+        "/registration/referred-by-return-to-teaching-adviser",
+        "/registration/your-employer",
+        "/registration/your-employment",
       ]
       steps_visited = exclude_current_page ? @steps_visited.excluding(starting_path) : @steps_visited
-      expect(back_steps.reverse).to match_backlinks steps_visited.excluding(always_skipped_pages_going_back)
+      expect(back_steps.reverse).to match_backlinks steps_visited.excluding(optional_work_setting_questions)
       visit starting_path
     end
 

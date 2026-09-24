@@ -22,12 +22,7 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
   end
 
   def run_scenario(js:)
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Early headship coaching offer",
-      work_setting: "Primary school (5 to 11)",
-    )
-
-    choose_a_school(js:, name: "open")
+    complete_journey_as_far_as_funding_history(course: "Early headship coaching offer")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
@@ -37,9 +32,14 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
       page.choose "No", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", click_continue: false) do
-      click_link "Continue to register"
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
+
+    choose_a_school(js:, name: "open")
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register")
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
       page.choose "I am paying", visible: :all

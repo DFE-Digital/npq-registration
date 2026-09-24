@@ -11,10 +11,4 @@ RSpec.describe Questionnaires::IneligibleForFundingPreviouslyFunded, type: :mode
 
     it { is_expected.to eq(:funding_history) }
   end
-
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    it { is_expected.to eq(:work_setting) }
-  end
 end

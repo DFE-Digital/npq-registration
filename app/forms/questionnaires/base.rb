@@ -115,24 +115,54 @@ module Questionnaires
 
   private
 
-    def show_eligibility_step
-      if changing_answer?
-        :check_answers
-      elsif query_store.course.ehco? && !query_store.works_in_another_setting? && !query_store.works_in_other?
+    def show_appropriate_course_step
+      if query_store.course.ehco?
         :npqh_status
-      elsif query_store.declared_not_working_in_england? || query_store.declared_previous_funding?
-        :funding_your_npq
-      elsif query_store.proceed_without_checking_funding?
-        :choose_your_provider
       elsif query_store.course.npqlpm?
         :maths_eligibility_teaching_for_mastery
-      elsif query_store.course.senco? && query_store.cohort_funded?
+      elsif query_store.course.senco?
         :senco_in_role
-      elsif eligible_for_funding?
-        :possible_funding
       else
-        :ineligible_for_funding
+        :work_setting
       end
+    end
+
+    def show_funding_step
+      if query_store.course.ehco?
+        :funding_your_ehco
+      else
+        :funding_your_npq
+      end
+    end
+
+    def show_eligibility_step
+      if query_store.proceed_without_checking_funding?
+        :choose_your_provider
+      elsif !query_store.declared_not_working_in_england? && !query_store.declared_previous_funding?
+        if eligible_for_funding?
+          :possible_funding
+        else
+          :ineligible_for_funding
+        end
+      else
+        show_funding_step
+      end
+    end
+
+    def previous_funding_or_choose_npq_step
+      if !query_store.proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded?
+        if query_store.declared_previous_funding?
+          :ineligible_for_funding_previously_funded
+        else
+          :funding_history
+        end
+      else
+        :choose_your_npq
+      end
+    end
+
+    def shown_ineligible_step_during_journey?
+      query_store.declared_not_working_in_england? || query_store.declared_previous_funding?
     end
 
     def eligible_for_funding?

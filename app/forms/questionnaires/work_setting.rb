@@ -72,34 +72,39 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.declared_previous_funding?
-        :ineligible_for_funding_previously_funded
-      elsif !query_store.cohort_funded? || query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england?
-        :choose_your_npq
+      if query_store.course.npqlpm?
+        if query_store.maths_understanding?
+          :maths_eligibility_teaching_for_mastery
+        else
+          :maths_understanding_of_approach
+        end
+      elsif query_store.course.senco?
+        if query_store.senco_in_role_status?
+          :senco_start_date
+        else
+          :senco_in_role
+        end
+      elsif query_store.course.ehco?
+        :ehco_new_headteacher
       else
-        :funding_history
+        previous_funding_or_choose_npq_step
       end
     end
 
     def next_step
-      return :npqh_status if query_store.course&.ehco? &&
-        (query_store.declared_not_working_in_england? ||
-         query_store.proceed_without_checking_funding? ||
-         query_store.works_in_another_setting? ||
-         query_store.works_in_other?)
-
-      return :maths_eligibility_teaching_for_mastery if query_store.course&.npqlpm? && (query_store.works_in_another_setting? || query_store.works_in_other?) && !query_store.proceed_without_checking_funding?
-      return :senco_in_role if query_store.course&.senco? && (query_store.works_in_another_setting? || query_store.works_in_other?) && !query_store.proceed_without_checking_funding?
-      return :your_employment if query_store.works_in_another_setting?
-
-      if query_store.inside_catchment? || !query_store.cohort_funded? || query_store.proceed_without_checking_funding?
-        return :choose_school if works_in_school?
-        return :kind_of_nursery if works_in_childcare?
-        return :referred_by_return_to_teaching_adviser if works_in_other? && !query_store.proceed_without_checking_funding?
-        return :choose_your_provider if query_store.proceed_without_checking_funding?
+      if query_store.declared_not_working_in_england?
+        show_eligibility_step
+      elsif works_in_school?
+        :choose_school
+      elsif works_in_childcare?
+        :kind_of_nursery
+      elsif query_store.works_in_another_setting?
+        :your_employment
+      elsif works_in_other?
+        :referred_by_return_to_teaching_adviser
+      else
+        raise "unexpected work setting #{work_setting}"
       end
-
-      :funding_your_npq
     end
 
     def questions

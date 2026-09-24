@@ -31,21 +31,7 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.course.ehco?
-        :ehco_new_headteacher
-      elsif query_store.proceed_without_checking_funding?
-        :work_setting
-      elsif query_store.course.senco?
-        :senco_start_date
-      elsif query_store.course.npqlpm?
-        if query_store.maths_understanding?
-          :maths_eligibility_teaching_for_mastery
-        else
-          :maths_understanding_of_approach
-        end
-      else
-        :work_setting
-      end
+      :work_setting
     end
 
     def next_step

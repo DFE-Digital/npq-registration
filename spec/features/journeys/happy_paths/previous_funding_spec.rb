@@ -60,12 +60,11 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
     end
 
     # TODO: NPQ-3956
-    # expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    # expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
     #   expect(page).to have_text("DfE scholarship funding")
     #   expect(page).to have_text("You’re not eligible for scholarship funding for the Headship NPQ course")
     #   expect(page).to have_text("Our records show that you have previously received funding for this course. " \
     #                             "This means you are not eligible for further funding.")
-    #   page.click_link "Continue to register"
     # end
 
     # expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do

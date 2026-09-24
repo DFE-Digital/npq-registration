@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      :work_setting
+      show_appropriate_course_step
     end
   end
 end

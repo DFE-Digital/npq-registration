@@ -19,9 +19,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
 
       choose_a_school(js: false, name: "open")
 
-      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-        page.click_link("Continue to register")
-      end
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register")
 
       expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
         page.choose "My trust is paying", visible: :all

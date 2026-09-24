@@ -1,15 +1,7 @@
 module Questionnaires
   class PossibleFunding < Base
     def previous_step
-      if query_store.approved_itt_provider?
-        :itt_provider
-      elsif query_store.works_in_another_setting?
-        :your_employer
-      elsif query_store.works_in_other?
-        :referred_by_return_to_teaching_adviser
-      else
-        :work_setting
-      end
+      :work_setting
     end
 
     def next_step
@@ -19,6 +11,12 @@ module Questionnaires
     def message_template
       return "private_childcare_provider" if query_store.institution.is_a?(PrivateChildcareProvider)
       return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?
+
+      unless is_funding_eligibility_unclear?
+        return "funding_eligibility_maths" if query_store.course.npqlpm?
+        return "ehco_possible_funding" if query_store.course.ehco?
+      end
+
       return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
 
       "eligible_for_scholarship_funding_not_tsf"

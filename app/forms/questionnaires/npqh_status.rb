@@ -13,7 +13,7 @@ module Questionnaires
     end
 
     def previous_step
-      :work_setting
+      previous_funding_or_choose_npq_step
     end
 
     def next_step

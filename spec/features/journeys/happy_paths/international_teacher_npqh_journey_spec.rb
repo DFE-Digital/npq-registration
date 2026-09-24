@@ -24,11 +24,9 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
-
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do

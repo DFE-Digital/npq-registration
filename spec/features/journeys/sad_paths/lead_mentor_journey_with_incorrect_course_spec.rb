@@ -36,12 +36,10 @@ RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, type: :fea
 
     choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("DfE scholarship funding")
       expect(page).to have_text("such as state-funded schools")
       expect(page).to have_text("This means that you would need to pay for the course another way")
-
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do

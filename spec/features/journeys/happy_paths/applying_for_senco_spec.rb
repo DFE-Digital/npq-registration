@@ -16,12 +16,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
 
   context "when in the Autumn 2026 cohort" do
     scenario "when working as a special educational needs co-ordinator in a school" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Special educational needs co-ordinator (SENCO)",
-        work_setting: "Secondary school (11 to 16)",
-      )
-
-      choose_a_school(js: false, name: "open")
+      complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
       expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
         expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
@@ -34,10 +29,16 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
         page.fill_in "Year", with: "2026"
       end
 
-      expect_page_to_have(path: "/registration/funding-eligibility-senco", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Secondary school (11 to 16)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
         expect(page).to have_selector "h1", text: "DfE scholarship funding"
         expect(page).to have_content "Eligible"
-        page.click_link "Continue to register"
       end
 
       choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -48,16 +49,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
     end
 
     scenario "when working as a special educational needs co-ordinator in a nursery" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Special educational needs co-ordinator (SENCO)",
-        work_setting: "Early years or childcare",
-      )
-
-      expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-        page.choose("Local authority-maintained nursery", visible: :all)
-      end
-
-      choose_a_childcare_provider(js: false, name: "nursery")
+      complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
       expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
         expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
@@ -70,10 +62,20 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
         page.fill_in "Year", with: "2026"
       end
 
-      expect_page_to_have(path: "/registration/funding-eligibility-senco", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Early years or childcare", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+        page.choose("Local authority-maintained nursery", visible: :all)
+      end
+
+      choose_a_childcare_provider(js: false, name: "nursery")
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
         expect(page).to have_selector "h1", text: "DfE scholarship funding"
         expect(page).to have_content "Eligible"
-        page.click_link "Continue to register"
       end
 
       choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -84,12 +86,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
     end
 
     scenario "when working as a special educational needs co-ordinator in an ineligible school" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Special educational needs co-ordinator (SENCO)",
-        work_setting: "Secondary school (11 to 16)",
-      )
-
-      choose_a_school(js: false, name: "ineligible")
+      complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
       expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
         expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
@@ -102,9 +99,15 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
         page.fill_in "Year", with: "2026"
       end
 
-      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Secondary school (11 to 16)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "ineligible")
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
         expect(page).to have_content "You’re not eligible for scholarship funding"
-        page.click_link "Continue to register"
       end
 
       expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -119,22 +122,23 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
     end
 
     scenario "when planning on becoming a special educational needs co-ordinator" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Special educational needs co-ordinator (SENCO)",
-        work_setting: "Secondary school (11 to 16)",
-      )
-
-      choose_a_school(js: false, name: "open")
+      complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
       expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
         expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
         page.choose "No, but I plan to become one", visible: :all
       end
 
-      expect_page_to_have(path: "/registration/funding-eligibility-senco", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Secondary school (11 to 16)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
         expect(page).to have_selector "h1", text: "DfE scholarship funding"
         expect(page).to have_content "Eligible"
-        page.click_link "Continue to register"
       end
 
       choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -144,52 +148,24 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       check_back_journey_is_correct(exclude_current_page: true)
     end
 
-    scenario "when planning on becoming a special educational needs co-ordinator - ineligible school" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Special educational needs co-ordinator (SENCO)",
-        work_setting: "Secondary school (11 to 16)",
-      )
-
-      choose_a_school(js: false, name: "ineligible")
-
-      expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
-        expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
-        page.choose "No, but I plan to become one", visible: :all
-      end
-
-      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-        expect(page).to have_content "You’re not eligible for scholarship funding"
-        page.click_link "Continue to register"
-      end
-
-      expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-        page.choose "I am paying", visible: :all
-      end
-
-      choose_provider_share_information_and_check_answers(provider: "Teach First") do
-        expect(page).to have_content 'funding_eligiblity_status_code: "ineligible_establishment_type"'
-      end
-
-      check_back_journey_is_correct(exclude_current_page: true)
-    end
-
     scenario "when not planning on becoming a special educational needs co-ordinator" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Special educational needs co-ordinator (SENCO)",
-        work_setting: "Secondary school (11 to 16)",
-      )
-
-      choose_a_school(js: false, name: "open")
+      complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
       expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
         expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
         page.choose "No, I do not plan to be a SENCO", visible: :all
       end
 
-      expect_page_to_have(path: "/registration/funding-eligibility-senco", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Secondary school (11 to 16)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
         expect(page).to have_selector "h1", text: "DfE scholarship funding"
         expect(page).to have_content "Eligible"
-        page.click_link "Continue to register"
       end
 
       choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -213,6 +189,15 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       page.choose("Special educational needs co-ordinator (SENCO)", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+      page.fill_in "Month", with: "1"
+      page.fill_in "Year", with: "2026"
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
@@ -220,9 +205,8 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_content("You’re not eligible for scholarship funding for the Special educational needs co-ordinator (SENCO) NPQ course as you have selected the Spring 2026 cohort.")
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -253,13 +237,21 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
-      click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       page.choose("Special educational needs co-ordinator (SENCO)", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+      page.fill_in "Month", with: "1"
+      page.fill_in "Year", with: "2026"
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -303,9 +295,17 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding-previously-funded", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding-previously-funded", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you have received DfE funding for this course before.")
-      page.click_link("Continue to register")
+    end
+
+    expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+      page.fill_in "Month", with: "1"
+      page.fill_in "Year", with: "2026"
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -343,6 +343,15 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       page.choose("Special educational needs co-ordinator (SENCO)", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+      page.fill_in "Month", with: "1"
+      page.fill_in "Year", with: "2026"
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
       page.choose("Primary school (5 to 11)", visible: :all)
@@ -359,10 +368,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
   end
 
   scenario "when the work setting is 'Another setting'" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Special educational needs co-ordinator (SENCO)",
-      work_setting: "Another setting",
-    )
+    complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
     expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
       page.choose "Yes", visible: :all
@@ -371,6 +377,10 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
     expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
       page.fill_in "Month", with: "1"
       page.fill_in "Year", with: "2026"
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
@@ -411,6 +421,15 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       page.choose("Special educational needs co-ordinator (SENCO)", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+      page.fill_in "Month", with: "1"
+      page.fill_in "Year", with: "2026"
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Another setting", visible: :all)
     end
@@ -433,10 +452,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
   end
 
   scenario "when the work setting is 'Other'" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Special educational needs co-ordinator (SENCO)",
-      work_setting: "Other",
-    )
+    complete_journey_as_far_as_funding_history(course: "Special educational needs co-ordinator (SENCO)")
 
     expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
       page.choose "Yes", visible: :all
@@ -445,6 +461,10 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
     expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
       page.fill_in "Month", with: "1"
       page.fill_in "Year", with: "2026"
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Other", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
@@ -479,8 +499,21 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       page.choose("Special educational needs co-ordinator (SENCO)", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+      page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+      page.fill_in "Month", with: "1"
+      page.fill_in "Year", with: "2026"
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Other", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("Yes", visible: :all)
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do

@@ -22,12 +22,9 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   end
 
   def run_scenario(js:)
-    complete_journey_as_far_as_choosing_a_work_setting(
+    complete_journey_as_far_as_funding_history(
       course: "Early headship coaching offer",
-      work_setting: "Primary school (5 to 11)",
     )
-
-    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose("I’ve completed it", visible: :all)
@@ -37,8 +34,15 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: false) do
-      click_link "Continue to register"
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
+
+    choose_a_school(js:, name: "open")
+
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      # click_button "Continue to register"
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do

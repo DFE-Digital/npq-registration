@@ -35,7 +35,6 @@ class RegistrationWizard
     npqh_status
     ehco_unavailable
     ehco_new_headteacher
-    ehco_possible_funding
     funding_your_ehco
     itt_provider
     choose_your_npq
@@ -43,9 +42,7 @@ class RegistrationWizard
     maths_understanding_of_approach
     maths_cannot_register
     senco_in_role
-    funding_eligibility_senco
     senco_start_date
-    funding_eligibility_maths
     choose_your_provider
     choose_school
     choose_childcare_provider
@@ -79,9 +76,12 @@ class RegistrationWizard
     dqt_mismatch
     ehco_funding_not_available
     ehco_headteacher
+    ehco_possible_funding
     ehco_previously_funded
     find_childcare_provider
     find_school
+    funding_eligibility_maths
+    funding_eligibility_senco
     get_an_identity_callback
     provider_check
     qualified_teacher_check

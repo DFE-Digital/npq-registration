@@ -22,15 +22,7 @@ module Questionnaires
     end
 
     def next_step
-      if eligible_for_funding?
-        if query_store.course.ehco?
-          :ehco_possible_funding
-        else
-          :possible_funding
-        end
-      else
-        :ineligible_for_funding
-      end
+      show_eligibility_step
     end
 
   private

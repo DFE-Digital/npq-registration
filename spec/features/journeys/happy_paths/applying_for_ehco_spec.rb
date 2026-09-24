@@ -8,14 +8,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
   before { create(:school, :eligible_with_urn_and_address) }
 
   context "when in the Autumn 2026 cohort" do
-    before do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Early headship coaching offer",
-        work_setting: "Secondary school (11 to 16)",
-      )
-
-      choose_a_school(js: false, name: "open")
-    end
+    before { complete_journey_as_far_as_funding_history(course: "Early headship coaching offer") }
 
     scenario "when not doing the Headship NPQ" do
       expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
@@ -43,13 +36,19 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
         page.choose "Yes", visible: :all
       end
 
-      expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Primary school (5 to 11)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
         expect(page).to have_selector "h1", text: "DfE scholarship funding"
         expect(page).to have_selector "p", text: "You’re eligible for DfE scholarship funding for the Early headship" \
           " coaching offer because you are a headteacher in your first 5 years of headship."
         expect(page).to have_content "Being eligible for funding does not guarantee you'll get a funded place." \
           " Your provider will confirm if one is available when you apply to them."
-        click_link "Continue to register"
       end
 
       choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -69,9 +68,14 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
         page.choose "Yes", visible: :all
       end
 
-      expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: false) do
-        click_link "Continue to register"
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Primary school (5 to 11)", visible: :all)
       end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: true)
 
       choose_provider_share_information_and_check_answers(provider: "Teach First") do
         expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
@@ -90,11 +94,17 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
         page.choose "No", visible: :all
       end
 
-      expect_page_to_have(path: "/registration/ineligible-for-funding", click_continue: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Primary school (5 to 11)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
         expect(page).to have_selector "h1", text: "DfE scholarship funding"
         expect(page).to have_selector "p", text: "You’re not eligible for DfE scholarship funding because you are not a headteacher in your first 5 years of headship."
         expect(page).to have_link("learn more about who is eligible for funding")
-        click_link "Continue to register"
       end
 
       expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
@@ -122,13 +132,6 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-      page.choose("Primary school (5 to 11)", visible: :all)
-    end
-
-    choose_a_school(js: false, name: "open")
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
     end
@@ -137,9 +140,15 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose "Yes", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
+
+    choose_a_school(js: false, name: "open")
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_content("You’re not eligible for scholarship funding for the Early headship coaching offer course as you have selected the Spring 2026 cohort.")
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
@@ -170,18 +179,12 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
-      click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       page.choose("Early headship coaching offer", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
@@ -190,6 +193,11 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
 
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
@@ -228,17 +236,9 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding-previously-funded", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding-previously-funded", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you have received DfE funding for this course before.")
-      page.click_link("Continue to register")
     end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-      page.choose("Primary school (5 to 11)", visible: :all)
-    end
-
-    choose_a_school(js: false, name: "open")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
@@ -247,6 +247,13 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
     end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
+
+    choose_a_school(js: false, name: "open")
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
       page.choose "I am paying", visible: :all
@@ -276,11 +283,6 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-      page.choose("Primary school (5 to 11)", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
     end
@@ -288,6 +290,13 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
     end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
+
+    choose_a_school(js: false, name: "open")
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
       expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
@@ -298,10 +307,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
   end
 
   scenario "when the work setting is 'Another setting'" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Early headship coaching offer",
-      work_setting: "Another setting",
-    )
+    complete_journey_as_far_as_funding_history(course: "Early headship coaching offer")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
@@ -309,6 +315,10 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
 
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
@@ -320,9 +330,8 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.fill_in "What organisation are you employed by?", with: "Big company"
     end
 
-    expect_page_to_have(path: "/registration/ehco-possible-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_content "You’re eligible for DfE scholarship funding for the Early headship coaching offer"
-      page.click_link("Continue to register")
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -333,10 +342,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
   end
 
   scenario "when the work setting is 'Another setting' - lead mentor" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Early headship coaching offer",
-      work_setting: "Another setting",
-    )
+    complete_journey_as_far_as_funding_history(course: "Early headship coaching offer")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
@@ -346,6 +352,10 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose "Yes", visible: :all
     end
 
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("As a lead mentor for an accredited initial teacher training (ITT) provider", visible: :all)
@@ -353,9 +363,8 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
 
     choose_an_itt_provider(js: false, name: IttProvider.currently_approved.first.legal_name)
 
-    expect_page_to_have(path: "/registration/ehco-possible-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_content "You’re eligible for DfE scholarship funding for the Early headship coaching offer"
-      page.click_link("Continue to register")
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -382,16 +391,16 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Another setting", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
     end
 
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
@@ -411,10 +420,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
   end
 
   scenario "when the work setting is 'Other'" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Early headship coaching offer",
-      work_setting: "Other",
-    )
+    complete_journey_as_far_as_funding_history(course: "Early headship coaching offer")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
@@ -424,13 +430,16 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose "Yes", visible: :all
     end
 
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Other", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-possible-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_content "You’re eligible for DfE scholarship funding for the Early headship coaching offer because you are a headteacher in your first 5 years of headship."
-      page.click_link("Continue to register")
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
@@ -457,16 +466,20 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       page.choose("Early headship coaching offer", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Other", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose "I’m doing it", visible: :all
     end
 
     expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       page.choose "Yes", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Other", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("Yes", visible: :all)
     end
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do

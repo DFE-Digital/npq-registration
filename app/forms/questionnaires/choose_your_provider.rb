@@ -23,26 +23,12 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.works_in_another_setting? && query_store.proceed_without_checking_funding?
-        :your_employer
-      elsif query_store.proceed_without_checking_funding? && !course&.ehco?
+      if query_store.proceed_without_checking_funding?
         :work_setting
-      elsif course&.ehco? && query_store.proceed_without_checking_funding?
-        :ehco_new_headteacher
-      elsif !eligible_for_funding?
-        if course.ehco?
-          :funding_your_ehco
-        else
-          :funding_your_npq
-        end
-      elsif course.ehco?
-        :ehco_possible_funding
-      elsif course.senco? && eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
-        :funding_eligibility_senco
-      elsif course.npqlpm? && eligible_for_funding? && !funding_eligibility_calculator.subject_to_review?
-        :funding_eligibility_maths
-      else
+      elsif eligible_for_funding?
         :possible_funding
+      else
+        show_funding_step
       end
     end
 

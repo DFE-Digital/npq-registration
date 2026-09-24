@@ -125,7 +125,7 @@ module Helpers
       end
     end
 
-    def complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting:)
+    def complete_journey_as_far_as_funding_history(course:)
       navigate_to_page(path: "/", submit_form: false) do
         page.click_button("Start now")
       end
@@ -147,6 +147,10 @@ module Helpers
       expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
         page.choose("No", visible: :all)
       end
+    end
+
+    def complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting:)
+      complete_journey_as_far_as_funding_history(course:)
 
       expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
         page.choose("A school", visible: :all)
@@ -188,17 +192,6 @@ module Helpers
       expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
         block.call if block_given?
       end
-    end
-
-    def course_identifiers_offered_in_chosen_cohort
-      form = Questionnaires::ChooseYourNpq.new
-      form.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store: { "course_start_cohort" => course_start_cohort_value },
-        request: nil,
-        current_user: nil,
-      )
-      form.options.map(&:value)
     end
 
     def check_answers_log_in_and_submit(&block)

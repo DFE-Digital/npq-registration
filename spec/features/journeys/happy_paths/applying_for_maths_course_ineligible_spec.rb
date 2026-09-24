@@ -6,14 +6,7 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
   include ApplicationHelper
 
   context "when not having taken at least one year of the primary maths Teaching for Mastery programme" do
-    before do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Leading primary mathematics",
-        work_setting: "Primary school (5 to 11)",
-      )
-
-      choose_a_school(js: false, name: "open")
-    end
+    before { complete_journey_as_far_as_funding_history(course: "Leading primary mathematics") }
 
     scenario "when taking a similar course" do
       expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
@@ -26,10 +19,16 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
         page.choose("No – but taken a similar course", visible: :all)
       end
 
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Primary school (5 to 11)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
       expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
         expect(page).to have_text("DfE scholarship funding")
         expect(page).to have_text("You’re not eligible for scholarship funding for the Leading primary mathematics NPQ course")
-        page.click_link("Continue to register")
       end
 
       expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -54,10 +53,16 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
         page.choose("No – but can show understanding of mastery approaches another way", visible: :all)
       end
 
-      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Primary school (5 to 11)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
         expect(page).to have_text("DfE scholarship funding")
         expect(page).to have_text("You’re not eligible for scholarship funding for the Leading primary mathematics NPQ course")
-        page.click_link("Continue to register")
       end
 
       expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -88,6 +93,10 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
         page.choose("Leading primary mathematics", visible: :all)
       end
 
+      expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
+        page.choose("Yes", visible: :all)
+      end
+
       expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
         page.choose("A school", visible: :all)
         page.choose("Primary school (5 to 11)", visible: :all)
@@ -116,13 +125,14 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
   end
 
   scenario "when the work setting is 'Another setting' with maths understanding of approach" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Leading primary mathematics",
-      work_setting: "Another setting",
-    )
+    complete_journey_as_far_as_funding_history(course: "Leading primary mathematics")
 
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
@@ -134,9 +144,8 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
       page.fill_in "What organisation are you employed by?", with: "Big company"
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("You’re not eligible for scholarship funding for the Leading primary mathematics NPQ course")
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -151,10 +160,7 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
   end
 
   scenario "when the work setting is 'Another setting' without maths understanding of approach" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Leading primary mathematics",
-      work_setting: "Another setting",
-    )
+    complete_journey_as_far_as_funding_history(course: "Leading primary mathematics")
 
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
       page.choose("No", visible: :all)
@@ -162,6 +168,10 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
 
     expect_page_to_have(path: "/registration/maths-understanding-of-approach", submit_form: true) do
       page.choose("No – but taken a similar course", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Another setting", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
@@ -173,9 +183,8 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
       page.fill_in "What organisation are you employed by?", with: "Big company"
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
       expect(page).to have_text("You’re not eligible for scholarship funding for the Leading primary mathematics NPQ course")
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
@@ -202,6 +211,10 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       page.choose("Leading primary mathematics", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
+      page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -239,8 +252,16 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
       page.choose("Leading primary mathematics", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Other", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("Yes", visible: :all)
     end
 
     choose_provider_share_information_and_check_answers(provider: "Church of England")
@@ -267,22 +288,23 @@ RSpec.feature "Applying for maths course", :no_js, :with_cohorts, :with_default_
     include_context "with stubbed Teaching Record System person API"
 
     scenario "registration journey when choosing Leading primary mathematics journey" do
-      complete_journey_as_far_as_choosing_a_work_setting(
-        course: "Leading primary mathematics",
-        work_setting: "Primary school (5 to 11)",
-      )
-
-      choose_a_school(js: false, name: "open")
+      complete_journey_as_far_as_funding_history(course: "Leading primary mathematics")
 
       expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
         expect(page).to have_text("Have you taken at least one year of the primary maths Teaching for Mastery programme?")
         page.choose("Yes", visible: :all)
       end
 
-      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("A school", visible: :all)
+        page.choose("Primary school (5 to 11)", visible: :all)
+      end
+
+      choose_a_school(js: false, name: "open")
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
         expect(page).to have_text("DfE scholarship funding")
         expect(page).to have_text("You’re not eligible for scholarship funding for the Leading primary mathematics NPQ course")
-        page.click_link("Continue to register")
       end
 
       expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do

@@ -14,6 +14,12 @@ RSpec.describe Questionnaires::PossibleFunding do
     )
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to be(:work_setting) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 
@@ -55,7 +61,7 @@ RSpec.describe Questionnaires::PossibleFunding do
     context "when the course is EHCO" do
       let(:course) { create(:course, :early_headship_coaching_offer) }
 
-      it { is_expected.to eq("eligible_for_scholarship_funding_not_tsf") }
+      it { is_expected.to eq("ehco_possible_funding") }
     end
 
     context "when the course is not EHCO" do

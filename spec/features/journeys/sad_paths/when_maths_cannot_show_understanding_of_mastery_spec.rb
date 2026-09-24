@@ -6,12 +6,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
   include ApplicationHelper
 
   scenario "registration journey when choosing Leading primary mathematics journey but cannot show understanding of mastery approaches to teaching maths" do
-    complete_journey_as_far_as_choosing_a_work_setting(
-      course: "Leading primary mathematics",
-      work_setting: "Primary school (5 to 11)",
-    )
-
-    choose_a_school(js: false, name: "open")
+    complete_journey_as_far_as_funding_history(course: "Leading primary mathematics")
 
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
       expect(page).to have_text("Have you taken at least one year of the primary maths Teaching for Mastery programme?")
