@@ -31,13 +31,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       expect(page).to have_text("Choose an NPQ")
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/teacher-catchment")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/check-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
   scenario "Autumn 2026 cohort with funding check - does not work in England" do
@@ -51,24 +45,15 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
-      click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
       expect(page).to have_text("Choose an NPQ")
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/ineligible-for-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/teacher-catchment")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/check-funding")
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 
   scenario "Autumn 2026 cohort without funding check" do
@@ -112,8 +97,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, typ
       expect(page).to have_text("Choose an NPQ")
     end
 
-    # check back links
-    click_link("Back")
-    expect(page).to have_current_path("/registration/course-start-date")
+    check_back_journey_is_correct(exclude_current_page: true)
   end
 end

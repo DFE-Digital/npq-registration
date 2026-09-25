@@ -10,25 +10,21 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
   before { school }
 
   include_context "retrieve latest application data"
-  include_context "Stub Get An Identity Omniauth Responses"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario("funded EHCO registration journey") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario("funded EHCO registration journey") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
-    complete_journey_as_far_as_choosing_a_work_setting(
+    complete_journey_as_far_as_funding_history(
       course: "Early headship coaching offer",
-      work_setting: "Primary school (5 to 11)",
     )
-
-    choose_a_school(js:, name: "open")
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       page.choose("I’ve completed it", visible: :all)
@@ -38,21 +34,22 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: false) do
-      click_link "Continue to register"
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
+    choose_a_school(js:, name: "open")
+
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      # click_button "Continue to register"
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree to share my information", visible: :all)
+    choose_provider_share_information_and_check_answers(provider: "Teach First") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "funded"'
     end
 
-    check_back_journey_is_correct
+    check_back_journey_is_correct(exclude_current_page: true)
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(

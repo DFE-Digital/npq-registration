@@ -2,7 +2,7 @@ module Helpers
   module JourneyStepHelper
     def choose_a_school(js:, name:, already_searched_for_workplace: false)
       if js
-        navigate_to_page(path: "/registration/choose-school", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: name
           end
@@ -10,7 +10,7 @@ module Helpers
           page.find("#school-picker__option--0").click
         end
       else
-        navigate_to_page(path: "/registration/choose-school", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
           unless already_searched_for_workplace
             within ".npq-js-hidden" do
               page.fill_in "What is the name of your workplace?", with: name
@@ -25,7 +25,7 @@ module Helpers
 
     def choose_a_childcare_provider(js:, name:)
       if js
-        navigate_to_page(path: "/registration/choose-childcare-provider", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: "open"
           end
@@ -33,7 +33,7 @@ module Helpers
           page.find("#nursery-picker__option--0").click
         end
       else
-        navigate_to_page(path: "/registration/choose-childcare-provider", submit_form: true) do
+        expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name
           end
@@ -125,14 +125,14 @@ module Helpers
       end
     end
 
-    def complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting:)
+    def complete_journey_as_far_as_funding_history(course:)
       navigate_to_page(path: "/", submit_form: false) do
         page.click_button("Start now")
       end
 
       choose_course_start_date
 
-      expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      expect_page_to_have(path: "/registration/check-funding", submit_form: false) do
         click_button("Check funding")
       end
 
@@ -147,6 +147,10 @@ module Helpers
       expect_page_to_have(path: "/registration/funding-history", submit_form: true) do
         page.choose("No", visible: :all)
       end
+    end
+
+    def complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting:)
+      complete_journey_as_far_as_funding_history(course:)
 
       expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
         page.choose("A school", visible: :all)
@@ -154,15 +158,40 @@ module Helpers
       end
     end
 
-    def course_identifiers_offered_in_chosen_cohort
-      form = Questionnaires::ChooseYourNpq.new
-      form.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store: { "course_start_cohort" => course_start_cohort_value },
-        request: nil,
-        current_user: nil,
-      )
-      form.options.map(&:value)
+    def complete_journey_as_far_as_check_answers
+      complete_journey_as_far_as_choosing_a_work_setting(course: "Senior leadership", work_setting: "Other")
+
+      expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+        page.choose("Yes", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+        page.click_button("Continue to register")
+      end
+
+      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+        page.choose("Teach First", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+        page.check("Yes, I agree to share my information", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/check-answers", submit_form: false)
+    end
+
+    def choose_provider_share_information_and_check_answers(provider:, &block)
+      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+        page.choose(provider, visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+        page.check("Yes, I agree to share my information", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
+        block.call if block_given?
+      end
     end
 
     def check_answers_log_in_and_submit(&block)

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
+RSpec.feature "Sad journeys", :with_cohorts, :with_default_schedules, :with_default_school, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -10,36 +10,21 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, :wit
 
   let(:school_name) { "open" }
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario("going back to the choose childcare provider step") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario("going back to the choose childcare provider step") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
     # first, get past the choose childcare provider step
 
-    stub_participant_validation_request
-
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      page.click_button("Start now")
-    end
-
-    choose_course_start_date
-
-    navigate_to_page(path: "/registration/provider-check", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    navigate_to_page(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    navigate_to_page(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
-    end
+    complete_journey_as_far_as_choosing_a_work_setting(
+      course: "Early years leadership",
+      work_setting: "Early years or childcare",
+    )
 
     navigate_to_page(path: "/registration/kind-of-nursery", submit_form: true) do
       page.choose("Local authority-maintained nursery", visible: :all)
@@ -47,20 +32,20 @@ RSpec.feature "Sad journeys", :mvp, :with_cohorts, :with_default_schedules, :wit
 
     choose_a_childcare_provider(js:, name: school_name)
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false)
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: false)
 
     # go back to the choose childcare provider step
 
     click_link "Back"
+    expect(page).to have_checked_field("Early years or childcare", visible: :all)
+    click_button "Continue"
+    expect(page).to have_checked_field("Local authority-maintained nursery", visible: :all)
+    click_button "Continue"
     expect_childcare_provider_picker_to_have_selected(js:, nursery: default_school)
 
     # go to the check your answers page and then back to the choose childcare provider step
 
     click_button "Continue"
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      page.choose("Early years leadership", visible: :all)
-    end
 
     navigate_to_page(path: "/registration/possible-funding", submit_form: false) do
       page.click_button("Continue to register")

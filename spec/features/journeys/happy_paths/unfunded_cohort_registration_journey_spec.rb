@@ -45,22 +45,19 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     choose_a_school(js: false, name: "open")
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_content("You’re not eligible for scholarship funding for the Headship NPQ course as you have selected the Spring 2026 cohort.")
-      page.click_link("Continue to register")
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
       page.choose "I am paying", visible: :all
     end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      page.choose("LLSE", visible: :all)
+    choose_provider_share_information_and_check_answers(provider: "LLSE") do
+      expect(page).to have_content 'funding_eligiblity_status_code: "unfunded_cohort"'
     end
 
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
+    check_back_journey_is_correct(exclude_current_page: true)
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(
@@ -71,7 +68,6 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
           "Provider" => "LLSE",
           "Course funding" => "I am paying",
           "Work setting" => "Primary school (5 to 11)",
-          "Working in England" => "",
         },
       )
     end

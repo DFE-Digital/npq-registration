@@ -71,29 +71,39 @@ module Questionnaires
       true
     end
 
-    def next_step
-      if query_store.inside_catchment?
-        return :choose_school if works_in_school?
-        return :kind_of_nursery if works_in_childcare?
-        return :referred_by_return_to_teaching_adviser if works_in_other?
-
-        return :your_employment
+    def previous_step
+      if query_store.course.npqlpm?
+        if query_store.maths_understanding?
+          :maths_eligibility_teaching_for_mastery
+        else
+          :maths_understanding_of_approach
+        end
+      elsif query_store.course.senco?
+        if query_store.senco_in_role_status?
+          :senco_start_date
+        else
+          :senco_in_role
+        end
+      elsif query_store.course.ehco?
+        :ehco_new_headteacher
+      else
+        previous_funding_or_choose_npq_step
       end
-
-      show_eligibility_step
     end
 
-    def previous_step
-      if query_store.declared_previous_funding?
-        if query_store.course&.ehco? && query_store.cohort_funded?
-          :funding_your_ehco
-        else
-          :ineligible_for_funding_previously_funded
-        end
-      elsif query_store.proceed_without_checking_funding? || query_store.declared_not_working_in_england? || !query_store.cohort_funded? # TODO: test
-        :choose_your_npq
+    def next_step
+      if query_store.declared_not_working_in_england?
+        show_eligibility_step
+      elsif works_in_school?
+        :choose_school
+      elsif works_in_childcare?
+        :kind_of_nursery
+      elsif query_store.works_in_another_setting?
+        :your_employment
+      elsif works_in_other?
+        :referred_by_return_to_teaching_adviser
       else
-        :funding_history
+        raise "unexpected work setting #{work_setting}"
       end
     end
 
@@ -144,10 +154,6 @@ module Questionnaires
 
     def works_in_childcare?
       CHILDCARE_SETTINGS.include?(work_setting)
-    end
-
-    def works_in_another_setting?
-      ANOTHER_SETTING_SETTINGS.include?(work_setting)
     end
 
     def works_in_other?

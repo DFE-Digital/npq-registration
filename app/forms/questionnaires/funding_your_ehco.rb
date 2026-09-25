@@ -13,21 +13,15 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.declared_not_working_in_england?
+      if shown_ineligible_step_during_journey?
         :work_setting
-      elsif query_store.declared_previous_funding?
-        :ineligible_for_funding_previously_funded
       else
         :ineligible_for_funding
       end
     end
 
     def next_step
-      if query_store.declared_previous_funding?
-        :work_setting
-      else
-        :choose_your_provider
-      end
+      :choose_your_provider
     end
 
     def questions

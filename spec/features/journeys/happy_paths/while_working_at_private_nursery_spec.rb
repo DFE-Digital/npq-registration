@@ -1,11 +1,10 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_default_nursery, :with_default_schedules, :with_eligibility_list_entries, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
@@ -14,174 +13,166 @@ RSpec.feature "Happy journeys", :mvp, :with_default_nursery, :with_default_sched
     create(:school, :eligible_with_urn_and_address)
   end
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey while working at private nursery (with JS)") { run_scenario(js: true) }
+  ineligible_courses_that_do_not_have_optional_questions = Course.pluck(:identifier)
+    .excluding(
+      "npq-additional-support-offer",
+      "npq-early-headship-coaching-offer",
+      "npq-early-years-leadership",
+      "npq-leading-primary-mathematics",
+      "npq-senco",
+    )
+    .map { |identifier| I18n.t(identifier, scope: "course.name") }
+
+  ineligible_courses_that_do_not_have_optional_questions.each do |course|
+    context "with course #{course}" do
+      let(:course) { course }
+
+      scenario "registration journey while working at private nursery" do
+        complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting: "Early years or childcare")
+
+        expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+          page.choose("Private nursery", visible: :all)
+        end
+
+        expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
+          expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
+          page.choose("Yes", visible: :all)
+        end
+
+        choose_a_private_childcare_provider(js: false, urn: default_nursery.provider_urn, name: default_nursery.name)
+
+        expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+          expect(page).to have_text("You can go back and select the Early years leadership")
+        end
+      end
+    end
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey while working at private nursery (without JS)") { run_scenario(js: false) }
-  end
+  context "with course npq-early-headship-coaching-offer" do
+    let(:course) { I18n.t("npq-early-headship-coaching-offer", scope: "course.name") }
 
-  def run_scenario(js:)
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
-    end
+    scenario "registration journey while working at private nursery" do
+      complete_journey_as_far_as_funding_history(course:)
 
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-      expect(page).to have_text("Which early years setting do you work in?")
-      page.choose("Private nursery", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
-      expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
-      page.choose("Yes", visible: :all)
-    end
-
-    choose_a_private_childcare_provider(js:, urn: default_nursery.provider_urn, name: default_nursery.name)
-
-    eyl_course = ["Early years leadership"]
-    ehco_course = ["Early headship coaching offer"]
-    npqlpm_course = ["Leading primary mathematics"]
-
-    ineligible_courses_list = course_identifiers_offered_in_chosen_cohort
-
-    ineligible_courses = ineligible_courses_list.map { |name|
-      I18n.t("course.name.#{name}")
-    } - eyl_course - ehco_course - npqlpm_course
-
-    ineligible_courses.each do |course|
-      expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-        expect(page).to have_text("Which NPQ do you want to do?")
-        page.choose(course, visible: :all)
+      expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
+        page.choose "I’m doing it", visible: :all
       end
 
-      expect(page).to have_text("You can go back and select the Early years leadership") unless course.in?(["Leading primary mathematics", "Special educational needs co-ordinator (SENCO)"])
-      expect(page).to have_text("Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths.") if course == "Leading primary mathematics"
-      expect(page).to have_text("Do you work as a special educational needs co-ordinator (SENCO)?") if course == "Special educational needs co-ordinator (SENCO)"
-      page.click_link("Back")
+      expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
+        expect(page).to have_selector "h1", text: "Are you a headteacher in your first 5 years of a headship?"
+        page.choose "Yes", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("Early years or childcare", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+        page.choose("Private nursery", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
+        expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
+        page.choose("Yes", visible: :all)
+      end
+
+      choose_a_private_childcare_provider(js: false, urn: default_nursery.provider_urn, name: default_nursery.name)
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+        expect(page).to have_text("You’re eligible for scholarship funding for the Early headship coaching offer")
+      end
     end
+  end
 
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early years leadership", visible: :all)
+  context "with course npq-early-years-leadership" do
+    let(:course) { I18n.t("npq-early-years-leadership", scope: "course.name") }
+
+    scenario "registration journey while working at private nursery" do
+      complete_journey_as_far_as_choosing_a_work_setting(course:, work_setting: "Early years or childcare")
+
+      expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+        page.choose("Private nursery", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
+        expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
+        page.choose("Yes", visible: :all)
+      end
+
+      choose_a_private_childcare_provider(js: false, urn: default_nursery.provider_urn, name: default_nursery.name)
+
+      expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+        expect(page).to have_text("You’re eligible for scholarship funding for the Early years leadership NPQ")
+      end
     end
+  end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("DfE scholarship funding")
-      expect(page).to have_text("eligible for scholarship funding")
+  context "with course npq-leading-primary-mathematics" do
+    let(:course) { I18n.t("npq-leading-primary-mathematics", scope: "course.name") }
+
+    scenario "registration journey while working at private nursery" do
+      complete_journey_as_far_as_funding_history(course:)
+
+      expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
+        page.choose("Yes", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("Early years or childcare", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+        page.choose("Private nursery", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
+        expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
+        page.choose("Yes", visible: :all)
+      end
+
+      choose_a_private_childcare_provider(js: false, urn: default_nursery.provider_urn, name: default_nursery.name)
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+        expect(page).to have_text("You can go back and select the Early years leadership")
+      end
     end
+  end
 
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
+  context "with course npq-senco" do
+    let(:course) { I18n.t("npq-senco", scope: "course.name") }
+
+    scenario "registration journey while working at private nursery" do
+      complete_journey_as_far_as_funding_history(course:)
+
+      expect_page_to_have(path: "/registration/senco-in-role", submit_form: true) do
+        expect(page).to have_selector "h1", text: "Do you work as a special educational needs co-ordinator (SENCO)?"
+        page.choose "Yes", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/senco-start-date", submit_form: true) do
+        expect(page).to have_selector "h1", text: "When did you become a SENCO?"
+        page.fill_in "Month", with: "1"
+        page.fill_in "Year", with: "2026"
+      end
+
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose("Early years or childcare", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+        page.choose("Private nursery", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
+        expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
+        page.choose("Yes", visible: :all)
+      end
+
+      choose_a_private_childcare_provider(js: false, urn: default_nursery.provider_urn, name: default_nursery.name)
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+        expect(page).to have_text("You can go back and select the Early years leadership")
+      end
     end
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
-      expect_check_answers_page_to_have_answers(
-        {
-          "DfE scholarship funding" => "Eligible",
-          "Cohort" => course_start_cohort_description,
-          "Course" => "Early years leadership",
-          "Work setting" => "Early years or childcare",
-          "Provider" => "Teach First",
-          "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
-          "Early years setting" => "Private nursery",
-          "Working in England" => "Yes",
-        },
-      )
-    end
-
-    expect_applicant_reached_end_of_journey
-
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
-
-    deep_compare_application_data(
-      "accepted_at" => nil,
-      "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
-      "schedule_id" => nil,
-      "ecf_id" => latest_application.ecf_id,
-      "eligible_for_funding" => true,
-      "employer_name" => nil,
-      "employment_type" => nil,
-      "employment_role" => nil,
-      "funded_place" => nil,
-      "funding_choice" => nil,
-      "funding_eligiblity_status_code" => "funded",
-      "headteacher_status" => nil,
-      "itt_provider_id" => nil,
-      "lead_mentor" => false,
-      "lead_provider_approval_status" => "pending",
-      "participant_outcome_state" => nil,
-      "kind_of_nursery" => "private_nursery",
-      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
-      "notes" => nil,
-      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY487263").id,
-      "school_id" => nil,
-      "targeted_delivery_funding_eligibility" => false,
-      "targeted_support_funding_eligibility" => false,
-      "teacher_catchment" => "england",
-      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
-      "teacher_catchment_iso_country_code" => "GBR",
-      "teacher_catchment_synced_to_ecf" => false,
-      "training_status" => nil,
-      "ukprn" => nil,
-      "primary_establishment" => false,
-      "referred_by_return_to_teaching_adviser" => nil,
-      "number_of_pupils" => 0,
-      "tsf_primary_eligibility" => false,
-      "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => true,
-      "works_in_nursery" => nil,
-      "works_in_school" => false,
-      "work_setting" => "early_years_or_childcare",
-      "senco_in_role" => nil,
-      "senco_start_date" => nil,
-      "on_submission_trn" => nil,
-      "review_status" => nil,
-      "raw_application_data" => {
-        "email_template" => "eligible_scholarship_funding_not_tsf",
-        "funding_eligiblity_status_code" => "funded",
-        "can_share_choices" => "1",
-        "chosen_provider" => "yes",
-        "course_start_cohort" => course_start_cohort_value,
-        "course_identifier" => "npq-early-years-leadership",
-        "has_ofsted_urn" => "yes",
-        "private_childcare_identifier" => "PrivateChildcareProvider-EY487263",
-        "private_childcare_name" => js ? "" : "EY487263",
-        "kind_of_nursery" => "private_nursery",
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "submitted" => true,
-        "teacher_catchment" => "england",
-        "teacher_catchment_country" => nil,
-        "works_in_childcare" => "yes",
-        "works_in_school" => "no",
-        "work_setting" => "early_years_or_childcare",
-      },
-    )
   end
 end
