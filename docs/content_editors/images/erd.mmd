@@ -147,7 +147,7 @@ erDiagram
 		integer lead_provider_id FK
 	}
 	"EligibilityList::Entry" {
-		string identifier
+		string identifier FK
 		string identifier_type
 	}
 	IttProvider {
@@ -298,7 +298,6 @@ erDiagram
 		boolean active_alert
 		datetime archived_at
 		string archived_email
-		date date_of_birth
 		uuid ecf_id
 		string email
 		integer email_updates_status
@@ -306,12 +305,10 @@ erDiagram
 		string feature_flag_id
 		text full_name
 		boolean get_an_identity_id_synced_to_ecf
-		text national_insurance_number
 		boolean notify_user_for_future_reg
 		string preferred_name
 		citext previous_names
 		string provider
-		jsonb raw_tra_provider_data
 		datetime significantly_updated_at
 		text trn
 		boolean trn_auto_verified
@@ -391,4 +388,6 @@ erDiagram
 	Statement ||--}o MilestoneStatement : ""
 	User ||--}o OauthToken : ""
 	User ||--}o ParticipantIdChange : ""
+	PrivateChildcareProvider o|--}o "EligibilityList::Entry" : ""
+	School o|--}o "EligibilityList::Entry" : ""
 	Statement ||--}o StatementItem : ""
