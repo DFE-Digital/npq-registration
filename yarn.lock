@@ -151,10 +151,10 @@
   dependencies:
     nunjucks "^3.2.4"
 
-"@ministryofjustice/frontend@^11.0.1":
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/@ministryofjustice/frontend/-/frontend-11.0.1.tgz#a04e50a9c5c021de7f71e2b07f9deab4d643143e"
-  integrity sha512-cK7ixMbKBL6DepQEUcMNszsKFipSyBIG7uxBeSBN9MMR/519DM73EjdE2xEDsZf1OTBEgMAPmS06uKqZej7VMw==
+"@ministryofjustice/frontend@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@ministryofjustice/frontend/-/frontend-11.1.0.tgz#2abc4957b75f37dcdf8abbf08f89e2b8e93fa123"
+  integrity sha512-1bkUbm2M4DpcpX/pOmumQRBsbJco9W2RwmJv5h/ZC/ZqrAOn2/FjpF+A7vS0gs7oMXBizr9O5huDrSYbLx73Nw==
 
 "@parcel/watcher-android-arm64@2.5.1":
   version "2.5.1"
