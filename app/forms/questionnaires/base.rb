@@ -38,6 +38,8 @@ module Questionnaires
       reset_store! if wizard.store["submitted"]
     end
 
+    def before_save; end
+
     def after_save; end
 
     def after_render; end

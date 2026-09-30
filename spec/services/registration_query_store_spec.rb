@@ -114,4 +114,44 @@ RSpec.describe RegistrationQueryStore do
       it { is_expected.to be false }
     end
   end
+
+  describe "#clear_optional_work_setting_answers!" do
+    subject { described_class.new(store:).clear_optional_work_setting_answers! }
+
+    let(:answers_before_work_setting) do
+      {
+        check_funding: "yes",
+        course_start_cohort: "2026b",
+        declared_previous_funding: "no",
+        npq_course_identifier: "npq-headship",
+        teacher_catchment: "england",
+      }.stringify_keys
+    end
+
+    let(:optional_work_setting_answers) do
+      {
+        childcare_identifier: "123",
+        childcare_name: "ABC Nursery",
+        employer_name: "XYZ School",
+        employment_role: "Teacher",
+        employment_type: "Full-time",
+        has_ofsted_urn: "yes",
+        institution_identifier: "456",
+        institution_name: "DEF School",
+        kind_of_nursery: "Private",
+        private_childcare_identifier: "789",
+        private_childcare_name: "GHI Nursery",
+        referred_by_return_to_teaching_adviser: "no",
+      }.stringify_keys
+    end
+
+    let(:store) do
+      answers_before_work_setting.merge(optional_work_setting_answers)
+    end
+
+    it "removes all optional work setting answers from the store" do
+      subject
+      expect(store).to eq(answers_before_work_setting)
+    end
+  end
 end

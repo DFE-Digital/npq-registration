@@ -154,8 +154,6 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
         "check_funding" => "yes",
         "course_start_cohort" => course_start_cohort_value,
         "course_identifier" => "npq-leading-teaching",
-        "employer_name" => "Big company",
-        "employment_type" => "hospital_school",
         "funding" => "self",
         "declared_previous_funding" => "no",
         "email_template" => "eligible_scholarship_funding_not_tsf",

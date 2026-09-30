@@ -8,7 +8,7 @@ class RegistrationWizard
   class RemovedStep < StandardError; end
 
   Answer = Struct.new(:key, :value, :change_step, :changeable, :tag_colour) do
-    def changeable
+    def changeable?
       self[:changeable].nil? || self[:changeable]
     end
 
@@ -137,6 +137,7 @@ class RegistrationWizard
   end
 
   def save!
+    form.before_save
     form.attributes.each { |k, v| store[k.to_s] = v }
     form.after_save
   end

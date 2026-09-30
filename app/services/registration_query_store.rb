@@ -197,6 +197,25 @@ class RegistrationQueryStore
     store.excluding("current_user_id").any?
   end
 
+  def clear_optional_work_setting_answers!
+    %w[
+      childcare_identifier
+      childcare_name
+      employer_name
+      employment_role
+      employment_type
+      has_ofsted_urn
+      institution_identifier
+      institution_name
+      kind_of_nursery
+      private_childcare_identifier
+      private_childcare_name
+      referred_by_return_to_teaching_adviser
+    ].each do |field|
+      store.delete(field)
+    end
+  end
+
 private
 
   def employment_type_hospital_school?
