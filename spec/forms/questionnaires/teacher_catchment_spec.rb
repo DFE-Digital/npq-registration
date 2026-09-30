@@ -29,7 +29,7 @@ RSpec.describe Questionnaires::TeacherCatchment, type: :model do
     context "when the user is not in England" do
       let(:teacher_catchment) { "another" }
 
-      it { is_expected.to eq(:ineligible_for_funding) }
+      it { is_expected.to eq(:ineligible_for_funding_not_in_england) }
     end
   end
 end

@@ -23,7 +23,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, ty
     check_funding
     funding_your_npq
     teacher_catchment
-    ineligible_for_funding
+    ineligible_for_funding_not_in_england
     choose_your_npq
   ]
 

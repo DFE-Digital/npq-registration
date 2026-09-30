@@ -102,8 +102,6 @@ module Questionnaires
         :your_employment
       elsif works_in_other?
         :referred_by_return_to_teaching_adviser
-      else
-        raise "unexpected work setting #{work_setting}"
       end
     end
 

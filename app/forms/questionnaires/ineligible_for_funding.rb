@@ -15,18 +15,10 @@ module Questionnaires
     attribute :version
 
     def previous_step
-      return :teacher_catchment unless course
-
-      if query_store.declared_not_working_in_england?
-        :teacher_catchment
-      else
-        :work_setting
-      end
+      :work_setting
     end
 
     def next_step
-      return :choose_your_npq unless course
-
       if query_store.course.ehco?
         :funding_your_ehco
       else

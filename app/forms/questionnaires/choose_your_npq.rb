@@ -51,7 +51,7 @@ module Questionnaires
         elsif inside_catchment?
           :teacher_catchment
         else
-          :ineligible_for_funding
+          :ineligible_for_funding_not_in_england
         end
       else
         :course_start_date
@@ -59,10 +59,10 @@ module Questionnaires
     end
 
     def next_step
-      if !proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded?
-        :funding_history
-      else
+      if proceed_without_checking_funding? || query_store.declared_not_working_in_england? || !query_store.cohort_funded?
         show_appropriate_course_step
+      else
+        :funding_history
       end
     end
 

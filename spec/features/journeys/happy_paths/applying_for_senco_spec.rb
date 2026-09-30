@@ -237,7 +237,7 @@ RSpec.feature "Applying for Special educational needs co-ordinator (SENCO)", :no
       choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding-not-in-england", submit_form: true) do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
     end
 

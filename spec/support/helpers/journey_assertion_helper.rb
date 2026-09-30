@@ -57,6 +57,7 @@ module Helpers
         course-start-date
         check-funding
         teacher-catchment
+        ineligible-for-funding-not-in-england
         choose-your-npq
         funding-history
         ineligible-for-funding-previously-funded
@@ -80,14 +81,14 @@ module Helpers
         itt-provider
         referred-by-return-to-teaching-adviser
         possible-funding
+        ineligible-for-funding
         funding-your-ehco
         funding-your-npq
         choose-your-provider
         share-provider
         check-answers
       ]
-      steps_that_are_not_in_a_fixed_position = %w[ineligible-for-funding]
-      steps = @steps_visited.map { |path| path.split("/").last } - steps_that_are_not_in_a_fixed_position
+      steps = @steps_visited.map { |path| path.split("/").last }
       spec_missing_steps = (steps - correct_order)
       fail "unexpected step encountered: #{spec_missing_steps.join(',')}" if spec_missing_steps.any?
 

@@ -16,7 +16,7 @@ class RegistrationWizardController < PublicPagesController
     Questionnaires::TeacherCatchment,
     Questionnaires::ChooseYourNpq,
     Questionnaires::FundingYourNpq,
-    Questionnaires::IneligibleForFunding,
+    Questionnaires::IneligibleForFundingNotInEngland,
     Questionnaires::Closed,
   ].freeze
 

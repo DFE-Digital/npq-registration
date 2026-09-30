@@ -12,14 +12,15 @@ module Questionnaires
       return "private_childcare_provider" if query_store.institution.is_a?(PrivateChildcareProvider)
       return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?
 
-      unless is_funding_eligibility_unclear?
-        return "funding_eligibility_maths" if query_store.course.npqlpm?
-        return "ehco_possible_funding" if query_store.course.ehco?
+      if is_funding_eligibility_unclear?
+        "funding_eligibility_unclear"
+      elsif query_store.course.npqlpm?
+        "funding_eligibility_maths"
+      elsif query_store.course.ehco?
+        "ehco_possible_funding"
+      else
+        "eligible_for_scholarship_funding_not_tsf"
       end
-
-      return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
-
-      "eligible_for_scholarship_funding_not_tsf"
     end
 
   private

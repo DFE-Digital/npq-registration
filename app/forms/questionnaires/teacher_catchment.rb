@@ -30,7 +30,7 @@ module Questionnaires
       if teacher_catchment == "england"
         :choose_your_npq
       else
-        :ineligible_for_funding
+        :ineligible_for_funding_not_in_england
       end
     end
 

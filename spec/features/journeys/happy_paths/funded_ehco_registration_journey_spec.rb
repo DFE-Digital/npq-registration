@@ -41,9 +41,7 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
     choose_a_school(js:, name: "open")
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      # click_button "Continue to register"
-    end
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true)
 
     choose_provider_share_information_and_check_answers(provider: "Teach First") do
       expect(page).to have_content 'funding_eligiblity_status_code: "funded"'

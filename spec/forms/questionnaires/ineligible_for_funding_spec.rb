@@ -10,22 +10,16 @@ RSpec.describe Questionnaires::IneligibleForFunding, type: :model do
   describe "#next_step" do
     subject { instance.next_step }
 
-    context "when the user has not chosen a course" do
-      it { is_expected.to eq(:choose_your_npq) }
+    context "when the course is EHCO" do
+      before { wizard.store["course_identifier"] = "npq-early-headship-coaching-offer" }
+
+      it { is_expected.to eq(:funding_your_ehco) }
     end
 
-    context "when the user has chosen a course" do
-      context "and the course is EHCO" do
-        before { wizard.store["course_identifier"] = "npq-early-headship-coaching-offer" }
+    context "when the course is not EHCO" do
+      before { wizard.store["course_identifier"] = "npq-senior-leadership" }
 
-        it { is_expected.to eq(:funding_your_ehco) }
-      end
-
-      context "and the course is not EHCO" do
-        before { wizard.store["course_identifier"] = "npq-senior-leadership" }
-
-        it { is_expected.to eq(:funding_your_npq) }
-      end
+      it { is_expected.to eq(:funding_your_npq) }
     end
   end
 end

@@ -56,6 +56,7 @@ class RegistrationWizard
     childcare_provider_not_in_england
     possible_funding
     ineligible_for_funding
+    ineligible_for_funding_not_in_england
     ineligible_for_funding_previously_funded
     funding_your_npq
     share_provider

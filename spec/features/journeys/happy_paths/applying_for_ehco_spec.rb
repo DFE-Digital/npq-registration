@@ -179,7 +179,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: true, submit_button_text: "Continue to register") do
+    expect_page_to_have(path: "/registration/ineligible-for-funding-not-in-england", submit_form: true, submit_button_text: "Continue to register") do
       expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
     end
 
