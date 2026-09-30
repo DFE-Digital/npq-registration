@@ -171,5 +171,11 @@ RSpec.describe RegistrationQueryStore do
 
       it { is_expected.to be false }
     end
+
+    context "when pre_login_funding_eligiblity_status_code is nil" do
+      let(:pre_login_funding_eligiblity_status_code) { nil }
+
+      it { is_expected.to be false }
+    end
   end
 end

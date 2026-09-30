@@ -212,6 +212,11 @@ class RegistrationQueryStore
     end
   end
 
+  def user_eligible_for_funding_before_login?
+    store["pre_login_funding_eligiblity_status_code"] == FundingEligibility::FUNDED_ELIGIBILITY_RESULT ||
+      FundingEligibility.subject_to_review?(store["pre_login_funding_eligiblity_status_code"]&.to_sym)
+  end
+
 private
 
   def employment_type_hospital_school?
