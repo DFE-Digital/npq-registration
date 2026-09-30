@@ -42,6 +42,10 @@ module Questionnaires
       %i[work_setting]
     end
 
+    def before_save
+      query_store.clear_optional_work_setting_answers! if changing_answer? && answers_will_change?
+    end
+
     def after_save
       # we are inferring `works_in_school` and `works_in_childcare` to maintain
       # consistency with older records

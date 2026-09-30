@@ -22,7 +22,7 @@
                 answer.value
               end
             end
-            if answer.changeable
+            if answer.changeable?
               row.with_action(
                 text: "Change",
                 visually_hidden_text: answer.key,
