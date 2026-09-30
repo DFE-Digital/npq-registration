@@ -134,9 +134,21 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
 
     context "when the user UID is blank" do
       let(:webhook_message) { create(:trs_trn_request_completed_webhook_message, user_uid: nil, user_trn: new_trn) }
+      let(:user_without_uid) { create(:user, uid: nil, trn: nil) }
+
+      before { user_without_uid }
 
       it "marks the webhook message as processed" do
         expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+      end
+
+      it "does not update an existing user without UID" do
+        expect { subject }.not_to(change { user_without_uid.reload.attributes })
+      end
+
+      it "does not send a TRN allocated email" do
+        expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
+        subject
       end
     end
   end
