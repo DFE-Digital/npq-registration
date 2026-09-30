@@ -160,6 +160,114 @@ RSpec.feature "Previous funded application", :no_js, :with_cohorts, :with_defaul
         },
       )
     end
+
+    context "when pre-login eligibility is 'In review' due to working in Other" do
+      scenario "when not logged in - shows ineligible due to previous funding after login" do
+        complete_journey_as_far_as_choosing_a_work_setting(
+          course: "Headship",
+          work_setting: "Other",
+        )
+
+        expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+          page.choose("Yes", visible: :all)
+        end
+
+        expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+          expect(page).to have_content "In review"
+        end
+
+        choose_provider_share_information_and_check_answers(provider: "Teach First") do
+          expect(page).to have_content 'funding_eligiblity_status_code: "referred_by_return_to_teaching_adviser"'
+        end
+
+        check_back_journey_is_correct(exclude_current_page: true)
+
+        expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+          expect_check_answers_page_to_have_answers(
+            {
+              "Cohort" => "Autumn 2026",
+              "Course" => "Headship",
+              "DfE scholarship funding" => "In review",
+              "Provider" => "Teach First",
+              "Referred by return to teaching adviser" => "Yes",
+              "Work setting" => "Other",
+              "Working in England" => "Yes",
+            },
+          )
+        end
+
+        stub_teacher_auth
+        stub_trs
+
+        expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+          expect(page).to have_text("Continue through GOV.UK One Login")
+        end
+
+        expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+          expect(page).to have_text("Our records show that you have previously received funding for this course. " \
+                                    "This means you are not eligible for further funding.")
+          expect(page).to have_text("How are you funding your course?")
+          page.choose "I am paying", visible: :all
+        end
+      end
+    end
+
+    context "when pre-login eligibility is 'In review' due to working in Another setting" do
+      scenario "when not logged in - shows ineligible due to previous funding after login" do
+        complete_journey_as_far_as_choosing_a_work_setting(
+          course: "Headship",
+          work_setting: "Another setting",
+        )
+
+        expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+          expect(page).to have_text("How are you employed?")
+          page.choose("In an independent hospital education organisation", visible: :all)
+        end
+
+        expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
+          page.fill_in "What organisation are you employed by?", with: "Big company"
+        end
+
+        expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+          expect(page).to have_content "In review"
+        end
+
+        choose_provider_share_information_and_check_answers(provider: "Teach First") do
+          expect(page).to have_content 'funding_eligiblity_status_code: "subject_to_review"'
+        end
+
+        check_back_journey_is_correct(exclude_current_page: true)
+
+        expect_page_to_have(path: "/registration/check-answers", submit_form: true) do
+          expect_check_answers_page_to_have_answers(
+            {
+              "Cohort" => "Autumn 2026",
+              "Course" => "Headship",
+              "DfE scholarship funding" => "In review",
+              "Employer" => "Big company",
+              "Employment type" => "In an independent hospital education organisation",
+              "Provider" => "Teach First",
+              "Work setting" => "Another setting",
+              "Working in England" => "Yes",
+            },
+          )
+        end
+
+        stub_teacher_auth
+        stub_trs
+
+        expect_page_to_have(path: "/registration/continue-to-login", submit_form: true) do
+          expect(page).to have_text("Continue through GOV.UK One Login")
+        end
+
+        expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+          expect(page).to have_text("Our records show that you have previously received funding for this course. " \
+                                    "This means you are not eligible for further funding.")
+          expect(page).to have_text("How are you funding your course?")
+          page.choose "I am paying", visible: :all
+        end
+      end
+    end
   end
 
   context "when the course is EHCO" do
