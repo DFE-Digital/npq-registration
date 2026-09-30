@@ -46,6 +46,7 @@ class RegistrationWizardController < PublicPagesController
     return redirect_to root_path unless @form.requirements_met?
 
     if @form.valid?
+      @form.before_save
       @wizard.save!
 
       if @form.redirect_to_change_path?
