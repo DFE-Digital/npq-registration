@@ -19,9 +19,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
            lead_provider: provider)
   end
 
-  scenario("registration journey while not currently working at school") do
-    stub_participant_validation_request
-
+  scenario "registration journey while not currently working at school" do
     complete_journey_as_far_as_choosing_a_work_setting(
       course: "Executive leadership",
       work_setting: "Another setting",
@@ -38,6 +36,7 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("DfE scholarship funding")
+      expect(page).to have_text("Not eligible")
       page.click_on("Continue to register")
     end
 
@@ -51,12 +50,12 @@ RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, 
       page.choose("Teach First", visible: :all)
     end
 
-    check_back_journey_is_correct
-
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(

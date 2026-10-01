@@ -37,14 +37,12 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      :senco_in_role
+    end
+
     def next_step
-      if funding_eligibility.funded?
-        :funding_eligibility_senco
-      elsif funding_eligibility.subject_to_review?
-        :possible_funding
-      else
-        :ineligible_for_funding
-      end
+      :work_setting
     end
 
     def funding_eligibility
@@ -56,10 +54,6 @@ module Questionnaires
         user_ecf_id: query_store.user_ecf_id,
         query_store:,
       )
-    end
-
-    def previous_step
-      :senco_in_role
     end
 
     def validate_senco_start_date_in_range?

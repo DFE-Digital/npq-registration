@@ -222,4 +222,26 @@ RSpec.feature "Account", :no_js, type: :feature do
       end
     end
   end
+
+  describe "showing Targeted support funding" do
+    let(:application) do
+      create(
+        :application,
+        user:, cohort:,
+        targeted_delivery_funding_eligibility: true,
+        created_at: (APRIL_2024_CUTOFF_DATE - 1.day)
+      )
+    end
+
+    before do
+      navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+        page.click_button("Sign in")
+      end
+    end
+
+    scenario "it shows the targeted support funding summary item" do
+      visit("/accounts/user_registrations/#{application.id}")
+      expect(page).to have_summary_item("Targeted support funding", strip_tags("Eligible"))
+    end
+  end
 end

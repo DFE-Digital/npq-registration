@@ -19,7 +19,7 @@ RSpec.feature "Choose a school page", :with_cohorts, :with_default_schedules, ty
     )
   end
 
-  context "when JavaScript is enabled", :js do
+  context "with JS", :js do
     scenario "choosing a school" do
       expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
         expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js: true)
@@ -47,7 +47,7 @@ RSpec.feature "Choose a school page", :with_cohorts, :with_default_schedules, ty
     end
   end
 
-  context "when JavaScript is disabled", :no_js do
+  context "without JS", :no_js do
     scenario "choosing a school" do
       expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
         expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js: false)

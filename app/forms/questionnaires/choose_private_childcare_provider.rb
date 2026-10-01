@@ -23,12 +23,12 @@ module Questionnaires
       super(...) && private_childcare_identifier.present? && private_childcare_identifier != "other"
     end
 
-    def next_step
-      show_eligibility_step
-    end
-
     def previous_step
       :have_ofsted_urn
+    end
+
+    def next_step
+      show_eligibility_step
     end
 
     def questions

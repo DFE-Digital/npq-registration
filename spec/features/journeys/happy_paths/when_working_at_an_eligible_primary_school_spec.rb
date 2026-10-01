@@ -21,12 +21,12 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
 
   before { school }
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey (with JS)") { run_scenario(js: true) }
+  context "with JS", :js do
+    scenario("registration journey") { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey (without JS)") { run_scenario(js: false) }
+  context "without JS", :no_js do
+    scenario("registration journey") { run_scenario(js: false) }
   end
 
   def run_scenario(js:)
@@ -50,6 +50,8 @@ RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :f
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
+
+    check_back_journey_is_correct
 
     check_answers_log_in_and_submit do
       expect_check_answers_page_to_have_answers(

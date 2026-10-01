@@ -17,20 +17,4 @@ RSpec.describe Questionnaires::FundingHistory, type: :model do
 
     it { is_expected.to eq(:choose_your_npq) }
   end
-
-  describe "#next_step" do
-    subject { instance.next_step }
-
-    context "when declared_previous_funding is 'yes'" do
-      let(:declared_previous_funding) { "yes" }
-
-      it { is_expected.to eq(:ineligible_for_funding_previously_funded) }
-    end
-
-    context "when declared_previous_funding is 'no'" do
-      let(:declared_previous_funding) { "no" }
-
-      it { is_expected.to eq(:work_setting) }
-    end
-  end
 end

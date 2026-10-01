@@ -38,7 +38,7 @@ module Questionnaires
       if declared_previous_funding == "yes"
         :ineligible_for_funding_previously_funded
       else
-        :work_setting
+        show_appropriate_course_step
       end
     end
   end

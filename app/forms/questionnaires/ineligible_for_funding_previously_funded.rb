@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      funding_your_npq_step
+      show_appropriate_course_step
     end
   end
 end

@@ -8,6 +8,8 @@
 
   <%= render "registration_wizard/ineligible_for_funding/already_funded/not_eligible_scholarship_funding" %>
 
-  <%= govuk_button_link_to "Continue to register", registration_wizard_show_path(@wizard.next_step_path) %>
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit "Continue to register" %>
+  <% end %>
 
 <% end %>

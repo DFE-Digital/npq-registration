@@ -18,17 +18,15 @@ module Questionnaires
       false
     end
 
-    # Previous steps should lead to `closed` when registration is closed.
-    def previous_step
-      return :closed if Feature.registration_closed?
+    def step_requires_login?
+      false
+    end
 
+    def previous_step
       raise NotImplementedError
     end
 
-    # Subsequent steps should lead to `closed` when registration is closed.
     def next_step
-      return :closed if Feature.registration_closed?
-
       raise NotImplementedError
     end
 
@@ -117,29 +115,19 @@ module Questionnaires
 
   private
 
-    def show_eligibility_step
-      if changing_answer?
-        :check_answers
-      elsif query_store.course.ehco? && query_store.cohort_funded? && !query_store.proceed_without_checking_funding? && !query_store.declared_previous_funding?
-        if query_store.inside_catchment?
-          :npqh_status
-        else
-          :funding_your_ehco
-        end
-      elsif query_store.proceed_without_checking_funding? || query_store.declared_previous_funding?
-        :choose_your_provider
+    def show_appropriate_course_step
+      if query_store.course.ehco?
+        :npqh_status
       elsif query_store.course.npqlpm?
         :maths_eligibility_teaching_for_mastery
-      elsif query_store.course.npqs?
+      elsif query_store.course.senco?
         :senco_in_role
-      elsif eligible_for_funding? || funding_eligibility_calculator.subject_to_review?
-        :possible_funding
       else
-        :ineligible_for_funding
+        :work_setting
       end
     end
 
-    def funding_your_npq_step
+    def show_funding_step
       if query_store.course.ehco?
         :funding_your_ehco
       else
@@ -147,16 +135,38 @@ module Questionnaires
       end
     end
 
-    def check_answers_step
-      if wizard.current_user
-        :check_answers_and_submit
+    def show_eligibility_step
+      if query_store.proceed_without_checking_funding?
+        :choose_your_provider
+      elsif !query_store.declared_not_working_in_england? && !query_store.declared_previous_funding?
+        if eligible_for_funding?
+          :possible_funding
+        else
+          :ineligible_for_funding
+        end
       else
-        :check_answers
+        show_funding_step
       end
     end
 
+    def previous_funding_or_choose_npq_step
+      if !query_store.proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded?
+        if query_store.declared_previous_funding?
+          :ineligible_for_funding_previously_funded
+        else
+          :funding_history
+        end
+      else
+        :choose_your_npq
+      end
+    end
+
+    def shown_ineligible_step_during_journey?
+      query_store.declared_not_working_in_england? || query_store.declared_previous_funding?
+    end
+
     def eligible_for_funding?
-      funding_eligibility_calculator.funded?
+      funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
     end
 
     def user_previously_funded?

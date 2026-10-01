@@ -72,69 +72,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     end
   end
 
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    let(:mock_funding_service) { instance_double(FundingEligibility, "funded?": true) }
-
-    context "when having declared previous funding" do
-      let(:declared_previous_funding) { "yes" }
-
-      it { is_expected.to be(:work_setting) }
-    end
-
-    context "when EHCO" do
-      let(:course) { Course.find_by(identifier: "npq-early-headship-coaching-offer") }
-
-      context "when declared previous funding" do
-        let(:declared_previous_funding) { "yes" }
-
-        it { is_expected.to be(:work_setting) }
-      end
-
-      context "when eligible for funding" do
-        before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service) }
-
-        it { is_expected.to be(:ehco_possible_funding) }
-      end
-
-      context "when not eligible for funding" do
-        it { is_expected.to be(:funding_your_ehco) }
-      end
-    end
-
-    context "when NPQH and eligible for funding" do
-      let(:course) { Course.find_by(identifier: "npq-headship") }
-
-      before { allow(FundingEligibility).to receive(:new).and_return(mock_funding_service) }
-
-      it "returns :possible_funding" do
-        expect(subject).to be(:possible_funding)
-      end
-    end
-
-    context "international journey" do
-      let(:store) do
-        {
-          "teacher_catchment" => "another",
-          "course_start_cohort" => cohort.identifier,
-        }
-      end
-
-      it "returns :funding_your_npq" do
-        expect(subject).to be(:funding_your_npq)
-      end
-    end
-
-    context "when not working in school" do
-      let(:works_in_school) { "no" }
-
-      it "returns :funding_your_npq" do
-        expect(subject).to be(:funding_your_npq)
-      end
-    end
-  end
-
   describe "#next_step" do
     subject { instance.next_step }
 

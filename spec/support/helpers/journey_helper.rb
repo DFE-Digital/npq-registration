@@ -29,31 +29,5 @@ module Helpers
       expect(latest_application_data.except("raw_application_data")).to match(default_application_data.merge(expected_data).except("raw_application_data"))
       expect(latest_application_data["raw_application_data"]).to match(expected_data["raw_application_data"])
     end
-
-    def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", nino: "AB123456C", response: {})
-      stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
-        .with(
-          headers: {
-            "Accept" => "*/*",
-            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-            "Authorization" => "Bearer test-apikey",
-            "User-Agent" => "Ruby",
-          },
-        )
-        .to_return(status: 200, body: dqt_response_body(**response), headers: {})
-    end
-
-    def stub_inactive_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", nino: "AB123456C")
-      stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
-        .with(
-          headers: {
-            "Accept" => "*/*",
-            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-            "Authorization" => "Bearer test-apikey",
-            "User-Agent" => "Ruby",
-          },
-        )
-        .to_return(status: 200, body: dqt_inactive_response_body, headers: {})
-    end
   end
 end

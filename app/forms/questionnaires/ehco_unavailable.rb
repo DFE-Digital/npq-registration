@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      :choose_your_provider
+      # you cannot proceed any further from this step
     end
   end
 end
