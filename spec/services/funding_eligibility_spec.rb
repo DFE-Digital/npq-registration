@@ -150,6 +150,34 @@ RSpec.describe FundingEligibility do
     end
   end
 
+  describe ".subject_to_review?" do
+    subject { described_class.subject_to_review?(funding_eligiblity_status_code) }
+
+    context "when the funding eligibility status code is subject_to_review" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::SUBJECT_TO_REVIEW }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the funding eligibility status code is referred_by_return_to_teaching_adviser" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the funding eligibility status code is not subject_to_review or referred_by_return_to_teaching_adviser" do
+      FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS
+        .except(FundingEligibility::SUBJECT_TO_REVIEW, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER)
+        .each_key do |code|
+        context "when the funding eligibility status code is #{code}" do
+          let(:funding_eligiblity_status_code) { code }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
+  end
+
   RSpec.shared_examples "funding eligibility" do |result|
     it "returns the funding eligibility status code #{result}" do
       expect(funding_eligibility.funding_eligiblity_status_code).to eq result

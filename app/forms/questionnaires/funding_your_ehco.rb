@@ -13,7 +13,7 @@ module Questionnaires
     end
 
     def previous_step
-      if shown_ineligible_step_during_journey?
+      if shown_ineligible_step_during_journey? || show_previously_funded_alert?
         :work_setting
       else
         :ineligible_for_funding
@@ -21,7 +21,11 @@ module Questionnaires
     end
 
     def next_step
-      :choose_your_provider
+      if show_previously_funded_alert?
+        :check_answers_and_submit
+      else
+        :choose_your_provider
+      end
     end
 
     def questions

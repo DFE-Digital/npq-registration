@@ -19,11 +19,9 @@ module Questionnaires
     end
 
     def next_step
-      if query_store.course.ehco?
-        :funding_your_ehco
-      else
-        :funding_your_npq
-      end
+      return :choose_your_npq unless course
+
+      show_funding_step
     end
 
     def ineligible_template

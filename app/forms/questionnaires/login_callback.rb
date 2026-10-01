@@ -9,7 +9,7 @@ module Questionnaires
     end
 
     def next_step
-      :check_answers_and_submit
+      show_previously_funded_alert? ? show_funding_step : :check_answers_and_submit
     end
   end
 end
