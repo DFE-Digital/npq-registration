@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  self.ignored_columns += %i[date_of_birth national_insurance_number raw_tra_provider_data]
-
   INSIGNIFICANT_ATTRIBUTES = %w[
     feature_flag_id
     get_an_identity_id_synced_to_ecf
