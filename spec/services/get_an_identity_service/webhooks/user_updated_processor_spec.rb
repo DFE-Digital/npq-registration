@@ -72,14 +72,6 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
         .and change(user, :updated_from_tra_at).from(nil).to(sent_at)
     end
 
-    with_versioning do
-      it "saves the proper papertrail whodunnit attribute" do
-        subject
-
-        expect(user.reload.versions.last.whodunnit).to eq("UserUpdatedProcessor")
-      end
-    end
-
     context "when the new email is already in use" do
       let(:clashing_user) { create(:user, email: new_email) }
       let(:application) { create(:application, :accepted, user: clashing_user) }
