@@ -15,17 +15,46 @@
         sl.with_row do |row|
           row.with_key(text: "TRN")
           row.with_value(text: @user.trn || tag.em("- not set -"))
+
+          if @user.trn
+            row.with_action(href: "#") do # needs href (anything) for Action component to render
+              govuk_link_to("View teaching record", trs_person_url(@user.trn), new_tab: "")
+            end
+          end
         end
       end
     %>
-    <%= form_for @change_trn,
-                 url: admin_users_change_trn_path(@user) do |f| %>
-      <%= f.govuk_text_field :trn, label: { text: 'New TRN' }, width: 'one-quarter' %>
 
-      <div class="govuk-button-group">
-        <%= f.govuk_submit "Continue" %>
-        <%= govuk_link_to t("shared.cancel"), admin_user_path(@user) %>
-      </div>
+    <% if @user.teacher_auth_provider? %>
+      <%= govuk_inset_text do %>
+        <h2 class="govuk-heading-m">Teacher Auth user</h2>
+
+        <p>
+          This user was created via Teacher Auth and One Login and their TRN is
+          allocated by the Teaching Record System
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+          <li>
+            If they already have a Teaching Record and it is not linked to their
+            TeacherAuth account in TRS.
+            <%= govuk_link_to "Search teaching records", trs_search_url, new_tab: "" %>
+          </li>
+          <li>
+            If they do not have a Teaching Record then one will be assigned
+            automatically if they are accepted onto a course.
+          </li>
+        </ul>
+      <% end %>
+    <% else %>
+      <%= form_for @change_trn, url: admin_users_change_trn_path(@user) do |f| %>
+        <%= f.govuk_text_field :trn, label: { text: 'New TRN' }, width: 'one-quarter' %>
+
+        <div class="govuk-button-group">
+          <%= f.govuk_submit "Continue" %>
+          <%= govuk_link_to t("shared.cancel"), admin_user_path(@user) %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>
