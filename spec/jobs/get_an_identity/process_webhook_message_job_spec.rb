@@ -40,13 +40,31 @@ RSpec.describe GetAnIdentity::ProcessWebhookMessageJob do
       end
     end
 
-    context "when the webhook message_type is UserUpdated" do
-      let(:message_type) { "UserUpdated" }
-      let(:message) { {} }
+    context "with a valid webhook message", :versioning do
+      before do
+        allow(TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor)
+          .to receive(:call).and_call_original
+      end
 
-      it "sends webhook message to the UserUpdatedProcessor" do
-        expect(GetAnIdentityService::Webhooks::UserUpdatedProcessor).to receive(:call).with(webhook_message:)
-        described_class.perform_now(webhook_message:)
+      let(:user) { create(:user, :with_teacher_auth, :without_trn) }
+      let(:user_trn) { "2345678" }
+
+      let :webhook_message do
+        create(:trs_trn_request_completed_webhook_message, user_uid: user.uid, user_trn:)
+      end
+
+      let :expected_whodunnit do
+        "Webhook: #{webhook_message.message_type}: #{webhook_message.id}"
+      end
+
+      it "processes the webhook" do
+        expect { described_class.perform_now(webhook_message:) }
+          .to change { user.reload.trn }.from(nil).to(user_trn)
+              .and(change { user.versions.count }.by(1))
+              .and(change { user.versions.last&.whodunnit }.from(nil).to(expected_whodunnit))
+
+        expect(TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor)
+          .to have_received(:call).with(webhook_message:)
       end
     end
   end
