@@ -1,3 +1,5 @@
+@use "govuk-frontend/dist/govuk" as *;
+
 // this is an abridged version of the contents list found in `govuk_publishing_components`
 // https://github.com/alphagov/govuk_publishing_components/blob/main/app/assets/stylesheets/govuk_publishing_components/components/_contents-list.scss
 .contents-list {

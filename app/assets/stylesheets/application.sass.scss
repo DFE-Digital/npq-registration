@@ -1,23 +1,18 @@
-// Entry point for your Sass build
-$govuk-images-path: "";
-$govuk-fonts-path: "";
-$govuk-global-styles: true;
+@forward "@ministryofjustice/frontend/moj/moj-frontend.min";
+@forward "@govuk-one-login/service-header/dist/styles/service-header.min";
 
-@forward "@ministryofjustice/frontend/moj/components/timeline/timeline";
+@use "govuk-frontend/dist/govuk" with (
+  $govuk-images-path: "/assets/",
+  $govuk-fonts-path: "/assets/",
+  $govuk-global-styles: true
+);
 
-@import "govuk-frontend/dist/govuk/base";
-@import "govuk-frontend/dist/govuk/core/index";
-@import "govuk-frontend/dist/govuk/objects/index";
-@import "govuk-frontend/dist/govuk/components/index";
-@import "govuk-frontend/dist/govuk/utilities/index";
-@import "govuk-frontend/dist/govuk/overrides/index";
-@import "@govuk-one-login/service-header/dist/styles/service-header-no-imports";
-@import "accessible-autocomplete/src/autocomplete";
-@import "contents-list";
-@import "subnav";
-@import "admin";
-@import "api_guidance";
-@import "panel" ;
+@forward "accessible-autocomplete/src/autocomplete";
+@forward "contents-list";
+@forward "subnav";
+@forward "admin";
+@forward "api_guidance";
+@forward "panel" ;
 
 h1.govuk-fieldset__heading {
   margin-bottom: 10px;
@@ -75,5 +70,5 @@ div.eligibility-page-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  @include govuk-responsive-margin(8, "bottom");
+  // @include govuk-responsive-margin(8, "bottom");
 }
