@@ -193,3 +193,6 @@ variable "uploads_container_delete_retention_days" {
   default = 7
   type    = number
 }
+
+# pg_airbyte_enabled used in the postgres module
+variable "pg_airbyte_enabled" { default = false }
