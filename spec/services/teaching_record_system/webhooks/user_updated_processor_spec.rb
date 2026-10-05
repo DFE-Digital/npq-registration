@@ -35,6 +35,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
     end
 
+    it_behaves_like "it locks whilst processing the webhook"
+
     context "when the user has a refresh token" do
       let(:user) { create(:user, :with_teacher_auth, :with_refresh_token) }
 
