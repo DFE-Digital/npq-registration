@@ -4,11 +4,9 @@ module TeachingRecordSystem
       WEBHOOK_NAME = "TRN request completed webhook".freeze
 
       def process!
-        User.transaction do
-          user.update!(trn: new_trn, trn_verified: true, trn_auto_verified: true)
-          merge_and_archive_other_users_with_same_trn
-          user.refresh_token&.destroy!
-        end
+        user.update!(trn: new_trn, trn_verified: true, trn_auto_verified: true)
+        merge_and_archive_other_users_with_same_trn
+        user.refresh_token&.destroy!
 
         if user.trn_previously_changed?(from: nil) && user.email.present?
           TrnAllocatedMailer.trn_allocated_mail(to: user.email, full_name: user.full_name, trn: new_trn).deliver_later

@@ -14,6 +14,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
 
       before { application_on_deactivated_user }
 
+      it_behaves_like "it locks whilst processing the webhook"
+
       context "and there are no users matching the merged with person" do
         it "updates the TRN on the matching deactivated person users" do
           subject
@@ -36,8 +38,6 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
         it "marks the webhook message as processed" do
           expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
         end
-
-        it_behaves_like "it locks whilst processing the webhook"
       end
 
       context "when there is a user matching the merged-with person" do
@@ -62,8 +62,6 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
           it "marks the webhook message as processed" do
             expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
           end
-
-          it_behaves_like "it locks whilst processing the webhook"
         end
 
         context "and the matching merged-with user is an archived teacher auth user" do
@@ -86,8 +84,6 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
           it "marks the webhook message as processed" do
             expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
           end
-
-          it_behaves_like "it locks whilst processing the webhook"
 
           context "and there are also archived GAI users matching the merged-with person" do
             let(:archived_gai_user_matching_merged_with_trn) { create(:user, :with_get_an_identity_id, :archived, trn: merged_with_trn) }
@@ -130,8 +126,6 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
         it "marks the webhook message as processed" do
           expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
         end
-
-        it_behaves_like "it locks whilst processing the webhook"
       end
 
       context "when there is a user matching the merged-with person" do
@@ -152,8 +146,6 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
           it "marks the webhook message as processed" do
             expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
           end
-
-          it_behaves_like "it locks whilst processing the webhook"
         end
 
         context "and the merged-with matching user matches archived teacher auth users" do

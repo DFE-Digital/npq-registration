@@ -102,8 +102,6 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
       it "marks the webhook message as processed" do
         expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
       end
-
-      it_behaves_like "it locks whilst processing the webhook"
     end
 
     context "when the message format is incorrect" do

@@ -12,10 +12,13 @@ class TeachingRecordSystem::Webhooks::Base
   def call
     return incorrect_format_failure unless correct_format?
 
-    with_webhook_lock do
-      process! if user
+    ApplicationRecord.transaction do
+      with_webhook_lock do
+        process! if user
+      end
+
+      webhook_message.make_processed!
     end
-    webhook_message.make_processed!
   end
 
 private
