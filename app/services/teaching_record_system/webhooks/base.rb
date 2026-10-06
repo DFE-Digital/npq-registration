@@ -1,4 +1,6 @@
 class TeachingRecordSystem::Webhooks::Base
+  ADVISORY_LOCK = "lock-trs-webhooks".freeze
+
   def self.call(webhook_message:)
     new(webhook_message:).call
   end
@@ -10,8 +12,13 @@ class TeachingRecordSystem::Webhooks::Base
   def call
     return incorrect_format_failure unless correct_format?
 
-    process! if user
-    webhook_message.make_processed!
+    ApplicationRecord.transaction do
+      with_webhook_lock do
+        process! if user
+      end
+
+      webhook_message.make_processed!
+    end
   end
 
 private
@@ -19,6 +26,10 @@ private
   attr_accessor :webhook_message
 
   delegate :message, to: :webhook_message
+
+  def with_webhook_lock(&block)
+    User.with_advisory_lock!(ADVISORY_LOCK, blocking: true, transaction: true, &block)
+  end
 
   def user
     return if user_uid.blank?

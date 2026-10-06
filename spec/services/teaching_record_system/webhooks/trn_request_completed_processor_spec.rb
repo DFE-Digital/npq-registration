@@ -55,6 +55,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
           expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
           subject
         end
+
+        it_behaves_like "it locks whilst processing the webhook"
       end
     end
 
@@ -73,6 +75,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
         expect(application.reload.user).to eq user
         expect(user.participant_id_changes.find_by(from_participant_id: other_user.ecf_id)).to have_attributes(to_participant_id: user.ecf_id)
       end
+
+      it_behaves_like "it locks whilst processing the webhook"
     end
 
     context "when there is an archived user with the same verified TRN and applications" do
