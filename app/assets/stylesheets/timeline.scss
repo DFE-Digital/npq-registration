@@ -1,0 +1,68 @@
+// Timeline styles copied from @ministryofjustice/frontend
+// https://github.com/ministryofjustice/moj-frontend/blob/main/src/moj/components/timeline/_timeline.scss
+//
+// We copy them because the MOJ package loads govuk-frontend with its own
+// settings. That turns off the GDS Transport font and breaks our image paths.
+
+.moj-timeline {
+  position: relative;
+  margin-bottom: govuk-spacing(4);
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: govuk-spacing(2);
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background-color: govuk-functional-colour(brand);
+  }
+}
+
+.moj-timeline--full {
+  margin-bottom: 0;
+
+  &::before {
+    height: calc(100% - 75px);
+  }
+}
+
+.moj-timeline__item {
+  position: relative;
+  padding-bottom: govuk-spacing(6);
+  padding-left: govuk-spacing(4);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: govuk-spacing(2);
+    left: 0;
+    width: 15px;
+    height: 5px;
+    background-color: govuk-functional-colour(brand);
+  }
+}
+
+.moj-timeline__title {
+  display: inline;
+  @include govuk-font($size: 19, $weight: bold);
+}
+
+.moj-timeline__byline {
+  display: inline;
+  margin: 0;
+  color: govuk-functional-colour(secondary-text);
+  @include govuk-font($size: 19);
+}
+
+.moj-timeline__date {
+  margin-top: govuk-spacing(1);
+  margin-bottom: 0;
+  @include govuk-font($size: 16);
+}
+
+.moj-timeline__description {
+  margin-top: govuk-spacing(4);
+  @include govuk-font($size: 19);
+}
