@@ -340,7 +340,7 @@ GEM
       rack (>= 2.2, < 4.0)
       starry (~> 0.2)
       uri (~> 1.0, >= 1.0.2)
-    listen (3.10.0)
+    listen (3.10.1)
       logger
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
