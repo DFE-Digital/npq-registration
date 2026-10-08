@@ -99,13 +99,17 @@ module ApplicationHelper
     options = {
       environment: Sentry.configuration.environment,
       release: Sentry.configuration.release,
-      allowUrls: [request.base_url],
       ignoreErrors: SENTRY_JAVASCRIPT_IGNORED_ERRORS,
     }.compact
 
-    sentry_on_load = nonced_javascript_tag do
-      "window.sentryOnLoad = function() { Sentry.init(#{options.to_json}); };".html_safe
-    end
+    # allowUrls is set in the browser, as Rails may see a different host behind the CDN
+    sentry_on_load = nonced_javascript_tag(<<~JS)
+      window.sentryOnLoad = function() {
+        var options = #{options.to_json};
+        options.allowUrls = [window.location.origin];
+        Sentry.init(options);
+      };
+    JS
 
     sentry_on_load + javascript_include_tag("https://js.sentry-cdn.com/#{dsn}.min.js", crossorigin: "anonymous")
   end
