@@ -36,4 +36,24 @@ RSpec.feature "Cookies", type: :feature do
     expect(page).to be_accessible
     expect(page).not_to have_content("You’ve accepted additional cookies")
   end
+
+  scenario "when saving the choice fails" do
+    page.driver.browser.network.intercept
+    page.driver.browser.on(:request) do |request|
+      if request.match?(%r{/cookie_preferences})
+        request.respond(responseCode: 500, body: "")
+      else
+        request.continue
+      end
+    end
+
+    visit "/"
+    expect(page).not_to have_content("Sorry, there is a problem with the service. Try again later.")
+    click_button("Reject additional cookies")
+
+    expect(page).to have_current_path("/")
+    expect(page).to have_content("Sorry, there is a problem with the service. Try again later.")
+    expect(page).to have_button("Reject additional cookies")
+    expect(page.driver.cookies["consented-to-cookies"]).to be_nil
+  end
 end

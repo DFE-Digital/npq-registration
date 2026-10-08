@@ -222,4 +222,31 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe "#sentry_javascript_tag" do
+    subject { helper.sentry_javascript_tag }
+
+    before { allow(Sentry.configuration).to receive_messages(dsn:, environment: "production", release: "abc123") }
+
+    context "when Sentry has no DSN" do
+      let(:dsn) { Sentry::DSN.new("disabled") }
+
+      it { is_expected.to be_nil }
+    end
+
+    context "when Sentry has a DSN" do
+      let(:dsn) { Sentry::DSN.new("https://publickey@o1.ingest.sentry.io/1") }
+
+      it { is_expected.to include('src="https://js.sentry-cdn.com/publickey.min.js"') }
+      it { is_expected.to include('"environment":"production"') }
+      it { is_expected.to include('"release":"abc123"') }
+      it { is_expected.to include("options.allowUrls = [window.location.origin];") }
+      it { is_expected.to include('"ignoreErrors":["Non-Error exception captured"') }
+      it { is_expected.to match(/<script nonce="[^"]+">window\.sentryOnLoad/) }
+
+      it "configures Sentry before the loader script" do
+        expect(subject.index("window.sentryOnLoad")).to be < subject.index("js.sentry-cdn.com")
+      end
+    end
+  end
 end

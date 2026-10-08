@@ -18,11 +18,11 @@ if (cookieBannerEl) {
       body,
     })
       .then((res) => {
-        if (res.status >= 200 && res.status < 300) {
+        if (res.ok) {
           return res;
         }
 
-        throw new Error(res);
+        throw new Error(`Cookie preferences request failed with status ${res.status}`);
       })
       .then((res) => res.json())
       .then(({ message }) => {
@@ -35,6 +35,9 @@ if (cookieBannerEl) {
         cookieBannerEl
           .querySelector(".js-cookie-banner__success")
           .removeAttribute("hidden");
+      })
+      .catch(() => {
+        cookieBannerEl.querySelector(".js-cookie-error").removeAttribute("hidden");
       });
 
     e.preventDefault();

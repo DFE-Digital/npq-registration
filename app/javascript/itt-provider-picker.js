@@ -14,7 +14,6 @@ $allIttProvidersAutoCompleteElements.forEach((component) => {
       })
     }
   })
-  console.log(window.opts = optionsMap)
 
   openregisterLocationPicker({
     selectElement: component.querySelector('select'),
