@@ -16,7 +16,7 @@ RSpec.describe Questionnaires::Start, type: :model do
     it { is_expected.to validate_acceptance_of(:started) }
   end
 
-  describe "#next_step?", skip: Rails.configuration.x.dfe_wizard do
+  describe "#next_step", skip: Rails.configuration.x.dfe_wizard do
     subject { instance.next_step }
 
     it { is_expected.to eq :course_start_date }

@@ -30,6 +30,10 @@ module Questionnaires
       end
     end
 
+    def previous_step
+      :work_setting
+    end
+
     def next_step
       case employment_type
       when Application.employment_types[:lead_mentor_for_accredited_itt_provider]
@@ -40,10 +44,6 @@ module Questionnaires
       else
         :your_role
       end
-    end
-
-    def previous_step
-      :work_setting
     end
   end
 end

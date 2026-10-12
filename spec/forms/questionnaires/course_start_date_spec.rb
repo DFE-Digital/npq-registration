@@ -48,6 +48,12 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     it { is_expected.to be true }
   end
 
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to eq(:start) }
+  end
+
   describe "#next_step" do
     subject { instance.next_step }
 
@@ -64,15 +70,9 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     end
   end
 
-  describe "#previous_step" do
-    subject { instance.previous_step }
-
-    it { is_expected.to eq(:start) }
-  end
-
   describe "#return_to_regular_flow_on_change?" do
     subject { instance.return_to_regular_flow_on_change? }
 
-    it { is_expected.to be(true) }
+    it { is_expected.to be(false) }
   end
 end

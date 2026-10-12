@@ -68,7 +68,7 @@ class RegistrationWizardVisualiser
   }.freeze
 
   EDGE_STYLES = {
-    penwidth: "7",
+    penwidth: "3",
   }.freeze
 
   INFORMATION_CLUSTER_STYLES = {
@@ -137,7 +137,7 @@ private
 
   def generate_png_output
     Rails.logger.debug("Generating #{output_png_filename}")
-    generate_png_command_array = "dot", "-Tpng", output_dot_filename, "-o", output_png_filename
+    generate_png_command_array = "dot", "-Tpng", "-Gdpi=150", output_dot_filename, "-o", output_png_filename
 
     Rails.logger.debug(generate_png_command_array.join(" "))
     result = system(*generate_png_command_array)
@@ -225,9 +225,22 @@ private
     end
   end
 
+  def helper_method_steps(next_step_source, f, method_name)
+    return [] unless next_step_source.scan(/#{method_name}/).any?
+
+    helper_method_source = f.new.method(method_name.to_sym).source
+    extract_steps_from_source(helper_method_source)
+  end
+
   def step_node_structs
     @step_node_structs ||= step_options.map do |f|
-      next_steps = extract_steps_from_source(f.new.method(:next_step).source)
+      next_step_source = f.new.method(:next_step).source
+      next_steps = extract_steps_from_source(next_step_source)
+
+      next_steps += helper_method_steps(next_step_source, f, "show_eligibility_step")
+      next_steps += helper_method_steps(next_step_source, f, "show_appropriate_course_step")
+      next_steps += helper_method_steps(next_step_source, f, "show_funding_step")
+      next_steps += helper_method_steps(next_step_source, f, "previous_funding_or_choose_npq_step")
 
       Node.new(
         name: f.to_s.underscore.split("/").last,

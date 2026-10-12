@@ -8,12 +8,12 @@ module Questionnaires
       %i[referred_by_return_to_teaching_adviser]
     end
 
-    def next_step
-      show_eligibility_step
-    end
-
     def previous_step
       :work_setting
+    end
+
+    def next_step
+      show_eligibility_step
     end
 
     def after_save

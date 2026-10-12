@@ -13,19 +13,15 @@ module Questionnaires
     end
 
     def previous_step
-      :ineligible_for_funding
-    end
-
-    def next_step
-      if query_store.declared_previous_funding?
+      if query_store.declared_previous_funding? || query_store.asked_to_continue_without_checking_funding? || query_store.declared_not_working_in_england?
         :work_setting
       else
-        :choose_your_provider
+        :ineligible_for_funding
       end
     end
 
-    def course
-      @course ||= query_store.course
+    def next_step
+      :choose_your_provider
     end
 
     def questions

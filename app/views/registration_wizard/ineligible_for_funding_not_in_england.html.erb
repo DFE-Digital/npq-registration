@@ -6,9 +6,10 @@
     ) do
 %>
 
-  <%= render "registration_wizard/possible_funding/#{@form.funding_eligibility_senco}", course: @form.course %>
+  <%= render "registration_wizard/ineligible_for_funding/not_in_england" %>
 
   <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-    <%= f.govuk_submit %>
+    <%= f.govuk_submit "Continue to register" %>
   <% end %>
+
 <% end %>

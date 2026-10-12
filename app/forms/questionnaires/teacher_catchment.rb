@@ -22,16 +22,16 @@ module Questionnaires
       true
     end
 
+    def previous_step
+      :check_funding
+    end
+
     def next_step
       if teacher_catchment == "england"
         :choose_your_npq
       else
-        :ineligible_for_funding
+        :ineligible_for_funding_not_in_england
       end
-    end
-
-    def previous_step
-      :check_funding
     end
 
     def questions

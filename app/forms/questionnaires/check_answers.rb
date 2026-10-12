@@ -1,7 +1,7 @@
 module Questionnaires
   class CheckAnswers < Base
     def requirements_met?
-      super && wizard.query_store.has_answers?
+      super && query_store.has_answers?
     end
 
     def previous_step
@@ -17,7 +17,7 @@ module Questionnaires
     end
 
     def before_render
-      wizard.store["pre_login_funding_eligiblity_status_code"] = wizard.query_store.funding_eligiblity_status_code
+      wizard.store["pre_login_funding_eligiblity_status_code"] = query_store.funding_eligiblity_status_code
     end
 
     def change_path(step_id)
