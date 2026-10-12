@@ -21,6 +21,7 @@ RSpec.feature "Applying for Early headship coaching offer (EHCO)", :no_js, :with
       expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
         expect(page).to have_selector "p", text: "you need to do the Headship NPQ"
         expect(page).not_to have_link("Continue to register")
+        expect(page).not_to have_button("Continue to register")
       end
 
       check_back_journey_is_correct(exclude_current_page: true)

@@ -38,6 +38,8 @@ module Questionnaires
       reset_store! if wizard.store["submitted"]
     end
 
+    def before_save; end
+
     def after_save; end
 
     def after_render; end
@@ -82,10 +84,6 @@ module Questionnaires
 
     def no_answers_will_change?
       wizard.store.slice(*self.class.permitted_params.map(&:to_s)) == attributes.stringify_keys
-    end
-
-    def return_to_new_registration_flow?
-      wizard.current_user.present? && wizard.current_step == :change_your_course_or_provider
     end
 
     def requirements_met?

@@ -28,7 +28,7 @@ module Questionnaires
     # TODO: test these scenarios
     def is_funding_eligibility_unclear?
       return false if course.ehco?
-      return true if referred_by_return_to_teaching_adviser?
+      return true if works_in_other? && referred_by_return_to_teaching_adviser?
       return true if works_in_another_setting? && employment_type_local_authority_virtual_school?
       return true if works_in_another_setting? && local_authority_supply_teacher?
 

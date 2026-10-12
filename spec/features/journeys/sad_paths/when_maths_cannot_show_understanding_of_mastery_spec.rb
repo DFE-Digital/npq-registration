@@ -22,6 +22,7 @@ RSpec.feature "Sad journeys", :no_js, :with_cohorts, :with_default_schedules, :w
       expect(page).to have_text("You cannot register for the leading primary mathematics NPQ")
       expect(page).not_to have_button("Continue")
       expect(page).not_to have_link("Continue to register")
+      expect(page).not_to have_button("Continue to register")
     end
   end
 end
