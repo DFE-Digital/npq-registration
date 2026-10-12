@@ -44,7 +44,7 @@
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to "Change", admin_users_change_trn_path(@user) %>
           <br>
-          <%= govuk_link_to "View teaching record", "#{ENV['TRS_URL']}/persons?Search=#{@user.trn}", new_tab: "" %>
+          <%= govuk_link_to "View teaching record", trs_person_url(@user.trn), new_tab: "" %>
         </dd>
         </dd>
       </div>

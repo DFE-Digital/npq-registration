@@ -33,6 +33,14 @@ RSpec.describe Participants::ChangeTrn, type: :model do
     it "does not allow a nil user" do
       expect(subject).not_to allow_value(nil).for(:user).with_message("User not found")
     end
+
+    context "when the user is a TeacherAuth user" do
+      let(:user) { create(:user, :with_teacher_auth) }
+
+      it "refuses to change the TRN" do
+        expect(subject).to have_error(:user, :assign_trn_from_trs, "TRN must be assigned using TRS")
+      end
+    end
   end
 
   describe "#change_trn" do
