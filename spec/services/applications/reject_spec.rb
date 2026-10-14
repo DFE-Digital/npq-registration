@@ -69,7 +69,17 @@ RSpec.describe Applications::Reject, type: :model do
     end
 
     context "when the user has no email address" do
-      let(:user) { create(:user, :archived, email: nil) }
+      let(:user) { create(:user, :email_reused) }
+      let(:application) { create(:application, :pending, user:) }
+
+      it "does not send an email" do
+        expect(ApplicationRejectedMailer).not_to send_mail(:application_rejected_mail)
+        service.reject
+      end
+    end
+
+    context "when the user is archived" do
+      let(:user) { create(:user, :archived) }
       let(:application) { create(:application, :pending, user:) }
 
       it "does not send an email" do

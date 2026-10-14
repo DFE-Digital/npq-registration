@@ -48,6 +48,21 @@ RSpec.describe Participants::Resume, type: :model do
           application.user.update_columns(
             email: nil,
             archived_email: "archived@example.com",
+            email_reused_at: Time.zone.now,
+          )
+        end
+
+        it "does not send a resumed notification email" do
+          expect(ApplicationResumedMailer).not_to send_mail(:application_resumed_mail)
+          instance.resume
+        end
+      end
+
+      context "when the participant is archived" do
+        before do
+          application.user.update_columns(
+            email: "archived-user@exapmle.com",
+            archived_email: "user@example.com",
             archived_at: Time.zone.now,
           )
         end
