@@ -70,12 +70,12 @@ RSpec.describe User do
     it { is_expected.to validate_uniqueness_of(:uid).allow_blank }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 
-    it "allows a nil email when the user is archived" do
-      user = build(:user, :archived, email: nil)
+    it "allows a nil email when the user has email_reused_at" do
+      user = build(:user, email: nil, email_reused_at: Time.zone.now)
       expect(user).to be_valid
     end
 
-    it "does not allow a nil email when the user is not archived" do
+    it "does not allow a nil email when the user does not have email_reused_at set" do
       user = build(:user, email: nil)
       expect(user).not_to be_valid
     end
@@ -428,6 +428,59 @@ RSpec.describe User do
 
       it "unarchives the user" do
         expect { subject }.to change(user, :archived_at).to(nil).and change(user, :archived_email).to(nil)
+      end
+    end
+  end
+
+  describe "#active?" do
+    context "when user is archived" do
+      let(:user) { build(:user, :archived) }
+
+      it "returns false" do
+        expect(user.active?).to be(false)
+      end
+    end
+
+    context "when the user has had their email reused" do
+      let(:user) { build(:user, email: nil, email_reused_at: Time.zone.now) }
+
+      it "returns false" do
+        expect(user.active?).to be(false)
+      end
+    end
+
+    context "when user is archived and had their email reused" do
+      let(:user) { build(:user, :archived, email: nil, email_reused_at: Time.zone.now) }
+
+      # shouldn't be possible?
+      it "returns false" do
+        expect(user.active?).to be(false)
+      end
+    end
+
+    context "when user is not archived or had their email reused" do
+      let(:user) { build(:user) }
+
+      it "returns true" do
+        expect(user.active?).to be(true)
+      end
+    end
+  end
+
+  describe "#email_reused?" do
+    context "when user has had their email reused" do
+      let(:user) { build(:user, email: nil, email_reused_at: Time.zone.now) }
+
+      it "returns true" do
+        expect(user.email_reused?).to be(true)
+      end
+    end
+
+    context "when user has not had their email reused" do
+      let(:user) { build(:user) }
+
+      it "returns false" do
+        expect(user.email_reused?).to be(false)
       end
     end
   end
@@ -865,6 +918,45 @@ RSpec.describe User do
       let(:trn_verified) { false }
 
       it { is_expected.to be_nil }
+    end
+  end
+
+  describe "#blank_reused_email!" do
+    subject { user.blank_reused_email! }
+
+    let(:user) { create(:user, :with_teacher_auth) }
+
+    it "blanks the email" do
+      expect { subject }.to change { user.reload.email }.from(user.email).to(nil)
+    end
+
+    it "sets the email_reused_at timestamp" do
+      expect { subject }.to change { user.reload.email_reused_at }.from(nil).to be_present
+    end
+
+    it "sets the archived_email to the previous email" do
+      expect { subject }.to change { user.reload.archived_email }.from(nil).to(user.email)
+    end
+
+    it "blanks the UID and auth provider" do
+      expect { subject }.to change { user.reload.uid }.to(nil)
+        .and change(user, :provider).to(nil)
+    end
+
+    it "does not change the user's TRN" do
+      expect { subject }.not_to(change { user.reload.trn })
+    end
+
+    it "does not change the user's trn_verified" do
+      expect { subject }.not_to(change { user.reload.trn_verified })
+    end
+
+    context "when the user has already had their email blanked" do
+      let(:user) { create(:user, email: nil, email_reused_at: 1.day.ago, archived_email: "some-email@example.com") }
+
+      it "raises an ArgumentError" do
+        expect { subject }.to raise_error(ArgumentError, "User email already blanked")
+      end
     end
   end
 end
