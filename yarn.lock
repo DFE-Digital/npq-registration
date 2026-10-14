@@ -1855,10 +1855,10 @@ swagger-client@^3.38.2:
     "@swagger-api/apidom-parser-adapter-openapi-yaml-3-2" "1.11.6"
     "@swagger-api/apidom-parser-adapter-yaml-1-2" "1.11.6"
 
-swagger-ui@^5.33.0:
-  version "5.33.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.33.0.tgz#5a8d5cf9442538069b01503301d6de6640dbcfe5"
-  integrity sha512-E93oVGnUfNuxtBKhhJdglYc6nfPqihQ1kgwh8I707pU+hOfR4DA+twpJJdkqSQ42asVqIaklYvej3M23HScLfg==
+swagger-ui@^5.33.1:
+  version "5.33.1"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.33.1.tgz#9a91d6749fa11eb56c940ee2cf8edc63cc162d69"
+  integrity sha512-JA18ZGrQqupJkfr8GTmpYVmLJWXV0dC6PGwLaD6q3inJ+4up022A/B0/wPzmiDcDrxnLAKro9lsxXzTs6cW+lA==
   dependencies:
     "@babel/runtime-corejs3" "^7.27.1"
     "@scarf/scarf" "=1.4.0"
