@@ -2,7 +2,7 @@
 
 class SeedAddUsers
   def load
-    # create some users that have been archived with blanked emails
+    # create some users with blanked emails
 
     cohorts_with_teacher_auth_users = Cohort.where(start_year: 2025..)
 
@@ -13,11 +13,11 @@ class SeedAddUsers
       .where.not(email: nil)
       .order(id: :desc)
       .limit(40).each do |user|
-      # archive the user and blank the email
+      # blank the email
       email = user.email
       full_name = user.full_name
       trn = user.trn
-      Users::Archiver.new(user:).archive!(blank_email: true, notify_sentry: false)
+      user.blank_reused_email!(notify_sentry: false)
 
       # create a new user with the same name, email address and an application
       FactoryBot.create(
