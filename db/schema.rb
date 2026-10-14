@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_162600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -670,6 +670,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
     t.date "date_of_birth"
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.string "email"
+    t.datetime "email_reused_at"
     t.integer "email_updates_status", default: 0
     t.string "email_updates_unsubscribe_key"
     t.string "feature_flag_id"
