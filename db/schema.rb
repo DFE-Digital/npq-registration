@@ -674,6 +674,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
     t.date "date_of_birth"
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.string "email"
+    t.datetime "email_reused_at"
     t.integer "email_updates_status", default: 0
     t.string "email_updates_unsubscribe_key"
     t.string "feature_flag_id"
@@ -697,6 +698,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
     t.index ["created_at"], name: "index_users_on_created_at_desc", order: :desc
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email_reused_at"], name: "index_users_on_email_reused_at"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["significantly_updated_at"], name: "index_users_on_significantly_updated_at"
     t.index ["trn"], name: "index_users_on_trn"
