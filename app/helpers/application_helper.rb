@@ -1,6 +1,14 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  SENTRY_JAVASCRIPT_IGNORED_ERRORS = [
+    # Something (not our code) threw a Non-Error object
+    "Non-Error exception captured",
+    "Non-Error promise rejection captured",
+    # Something to do with browser extensions (not our code)
+    "runtime.sendMessage",
+  ].freeze
+
   def application_count_based_account_url
     current_user.applications.size == 1 ? accounts_user_registration_path(current_user.applications.first) : account_path
   end
@@ -81,11 +89,29 @@ module ApplicationHelper
     govuk_tag(text: lead_provider_approval_status.humanize, colour:)
   end
 
+  # Configure Sentry errors to be reported:
+  #   - Only errors from our own scripts
+  #   - Some browser and extension errors are excluded
   def sentry_javascript_tag
     dsn = Sentry.configuration.dsn.public_key
     return if dsn.blank?
 
-    javascript_include_tag "https://js.sentry-cdn.com/#{dsn}.min.js", crossorigin: "anonymous"
+    options = {
+      environment: Sentry.configuration.environment,
+      release: Sentry.configuration.release,
+      ignoreErrors: SENTRY_JAVASCRIPT_IGNORED_ERRORS,
+    }.compact
+
+    # allowUrls is set in the browser, as Rails may see a different host behind the CDN
+    sentry_on_load = nonced_javascript_tag(<<~JS)
+      window.sentryOnLoad = function() {
+        var options = #{options.to_json};
+        options.allowUrls = [window.location.origin];
+        Sentry.init(options);
+      };
+    JS
+
+    sentry_on_load + javascript_include_tag("https://js.sentry-cdn.com/#{dsn}.min.js", crossorigin: "anonymous")
   end
 
   def join_with_commas(*args)
