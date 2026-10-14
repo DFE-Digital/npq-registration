@@ -90,7 +90,7 @@ RSpec.describe TeachingRecordSystem::AllocateTrnJob, type: :job do
         end
 
         context "when the user's email is nil" do
-          let(:user) { create(:user, :with_teacher_auth, :with_fresh_refresh_token, :archived, trn:, email: nil) }
+          let(:user) { create(:user, :with_teacher_auth, :with_fresh_refresh_token, :email_reused, trn:) }
 
           it "does not send a TRN allocated email" do
             expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail, deliver_now: true)
