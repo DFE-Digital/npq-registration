@@ -185,7 +185,7 @@ module Applications
     end
 
     def send_email
-      return if user.email.blank?
+      return if user.email.blank? || user.archived?
 
       ApplicationAcceptedMailer.application_accepted_mail(
         to: user.email,

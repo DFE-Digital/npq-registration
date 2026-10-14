@@ -50,7 +50,7 @@ module Participants
     # Turned off. See the note in #defer.
     #
     # def send_email
-    #   return if application.user.email.blank?
+    #   return if application.user.email.blank? || application.user.archived?
     #   return if application.completed_declarations?
     #
     #   ApplicationDeferredMailer.application_deferred_mail(
