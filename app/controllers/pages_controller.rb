@@ -1,14 +1,5 @@
 class PagesController < PublicPagesController
-  PAGES = %w[
-    accessibility
-    choose_an_npq_and_provider
-    closed_registration_exception
-    cookies
-  ].freeze
-
   def show
-    raise ActionController::RoutingError, "Not Found" unless PAGES.include?(params[:page])
-
     if params[:page] == "closed_registration_exception"
       unless Feature.registration_closed?(current_user)
         return redirect_to root_path
@@ -22,5 +13,7 @@ class PagesController < PublicPagesController
     respond_to do |format|
       format.html { render template: "pages/#{params[:page]}" }
     end
+  rescue ActionView::MissingTemplate
+    raise ActionController::RoutingError, "Not Found"
   end
 end
