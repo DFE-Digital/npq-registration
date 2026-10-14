@@ -136,7 +136,7 @@ GEM
     brakeman (8.0.6)
       racc
     builder (3.3.0)
-    bullet (8.2.0)
+    bullet (8.3.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     capybara (3.40.0)
@@ -694,7 +694,7 @@ GEM
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
     uniform_notifier (1.18.0)
-    uri (1.1.1)
+    uri (1.1.2)
     useragent (0.16.11)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
