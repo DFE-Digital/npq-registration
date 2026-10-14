@@ -2,16 +2,6 @@ locals {
   environment  = "${var.environment}${var.pull_request_number}"
   service_name = "cpd-npq"
   domain       = var.environment == "review" ? "npq-registration-${local.environment}-web.test.teacherservices.cloud" : module.web_application.hostname
-
-  redis = {
-    legacy = {
-      cache_url = try(module.redis-cache[0].url, null)
-    }
-    managed = {
-      cache_url = try(module.redis-managed-cache.url, null)
-    }
-  }
-  selected_redis = local.redis[var.redis_mode]
 }
 
 module "application_configuration" {
@@ -43,7 +33,7 @@ module "application_configuration" {
   }
   secret_variables = {
     DATABASE_URL             = module.postgres.url
-    REDIS_CACHE_URL          = local.selected_redis.cache_url
+    REDIS_CACHE_URL          = module.redis-managed-cache.url
     GOOGLE_CLOUD_CREDENTIALS = var.enable_dfe_analytics_federated_auth ? module.dfe_analytics[0].google_cloud_credentials : null
 
     AZURE_STORAGE_ACCESS_KEY = azurerm_storage_account.uploads.primary_access_key
