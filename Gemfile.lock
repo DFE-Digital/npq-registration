@@ -121,7 +121,7 @@ GEM
       axe-core-api (= 4.13.0)
     axe-core-rspec (4.13.0)
       axe-core-api (= 4.13.0)
-    azure-blob (0.8.0)
+    azure-blob (0.9.0)
       cgi
       rexml
     base64 (0.3.0)
