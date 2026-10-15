@@ -82,6 +82,10 @@ class FundingEligibility
           declared_previous_funding: query_store.declared_previous_funding?,
           proceed_without_checking_funding: query_store.proceed_without_checking_funding?)
     end
+
+    def subject_to_review?(funding_eligiblity_status_code)
+      funding_eligiblity_status_code.in? [SUBJECT_TO_REVIEW, REFERRED_BY_RETURN_TO_TEACHING_ADVISER]
+    end
   end
 
   # FundingEligibilty.new is not actually called outside of this class - only the specs call it directly
@@ -120,7 +124,7 @@ class FundingEligibility
   end
 
   def subject_to_review?
-    funding_eligiblity_status_code.in? [SUBJECT_TO_REVIEW, REFERRED_BY_RETURN_TO_TEACHING_ADVISER]
+    self.class.subject_to_review?(funding_eligiblity_status_code)
   end
 
   def previously_funded?

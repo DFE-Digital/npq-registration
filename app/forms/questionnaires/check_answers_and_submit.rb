@@ -13,15 +13,15 @@ module Questionnaires
     end
 
     def previous_step
-      :share_provider
+      if show_previously_funded_alert?
+        show_funding_step
+      else
+        :share_provider
+      end
     end
 
     def next_step
       # This is the last step, so there is no next step.
-    end
-
-    def show_previously_funded_alert?
-      wizard.store["pre_login_funding_eligiblity_status_code"] == FundingEligibility::FUNDED_ELIGIBILITY_RESULT && user_previously_funded?
     end
 
     def before_render

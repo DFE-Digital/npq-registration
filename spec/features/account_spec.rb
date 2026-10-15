@@ -120,6 +120,7 @@ RSpec.feature "Account", :no_js, type: :feature do
         .excluding(:MissingMandatoryInstitution,
                    :FUNDING_STATUS_CODE_DESCRIPTIONS,
                    :FUNDED_ELIGIBILITY_RESULT,
+                   :REFERRED_BY_RETURN_TO_TEACHING_ADVISER,
                    :SUBJECT_TO_REVIEW).each do |funding_eligiblity_status|
                      context "when the application funding_eligiblity_status_code is #{funding_eligiblity_status}" do
                        let(:application) { create(:application, :without_funded_place, user:, cohort:, funding_eligiblity_status_code:) }
@@ -148,6 +149,15 @@ RSpec.feature "Account", :no_js, type: :feature do
 
       context "when the application funding_eligiblity_status_code is subject_to_review" do
         let(:application) { create(:application, user:, cohort:, funding_eligiblity_status_code: FundingEligibility::SUBJECT_TO_REVIEW) }
+
+        scenario "it shows scholarship funding details" do
+          visit "/accounts/user_registrations/#{application.id}"
+          expect(page).to have_summary_item("DfE scholarship funding", "In review")
+        end
+      end
+
+      context "when the application funding_eligiblity_status_code is referred_by_return_to_teaching_adviser" do
+        let(:application) { create(:application, user:, cohort:, funding_eligiblity_status_code: FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER) }
 
         scenario "it shows scholarship funding details" do
           visit "/accounts/user_registrations/#{application.id}"

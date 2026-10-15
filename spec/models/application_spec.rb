@@ -769,6 +769,12 @@ RSpec.describe Application do
       it { is_expected.to be true }
     end
 
+    context "when funding_eligiblity_status_code is REFERRED_BY_RETURN_TO_TEACHING_ADVISER" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER }
+
+      it { is_expected.to be true }
+    end
+
     context "when funding_eligiblity_status_code is not SUBJECT_TO_REVIEW" do
       let(:funding_eligiblity_status_code) { FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
 

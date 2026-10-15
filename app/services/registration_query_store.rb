@@ -37,10 +37,6 @@ class RegistrationQueryStore
     store["teacher_catchment"].present? && !inside_catchment?
   end
 
-  def asked_to_continue_without_checking_funding?
-    cohort_funded? && store["teacher_catchment"].nil?
-  end
-
   def teacher_catchment_humanized
     case store["teacher_catchment"]
     when "another"
@@ -214,6 +210,11 @@ class RegistrationQueryStore
     ].each do |field|
       store.delete(field)
     end
+  end
+
+  def user_eligible_for_funding_before_login?
+    store["pre_login_funding_eligiblity_status_code"] == FundingEligibility::FUNDED_ELIGIBILITY_RESULT ||
+      FundingEligibility.subject_to_review?(store["pre_login_funding_eligiblity_status_code"]&.to_sym)
   end
 
 private

@@ -204,7 +204,7 @@ class Application < ApplicationRecord
   def eligibility_in_review?
     return unless funding_eligiblity_status_code
 
-    funding_eligiblity_status_code == FundingEligibility::SUBJECT_TO_REVIEW.to_s
+    FundingEligibility.subject_to_review?(funding_eligiblity_status_code.to_sym)
   end
 
 private

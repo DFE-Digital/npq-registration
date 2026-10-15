@@ -1,3 +1,7 @@
+<% if @form.show_previously_funded_alert? %>
+  <%= render "registration_wizard/shared/previously_funded_banner" %>
+<% end %>
+
 <%=
   render(
     'registration_wizard/shared/questions_page',
