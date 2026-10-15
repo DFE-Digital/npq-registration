@@ -1,21 +1,21 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseSchool, type: :model do
-  subject :instance do
+  subject(:instance) do
     described_class.new(wizard:,
                         institution_identifier: identifier,
                         institution_name: name)
   end
 
   let(:current_step) { :choose_school }
-  let(:store) { {} }
-  let(:request) { nil }
+  let(:store) { { course_identifier: course.identifier }.stringify_keys }
+  let(:course) { Course.first }
   let(:identifier) { "" }
   let(:name) { "" }
   let(:school) { create :school, urn: "8329422" }
 
   let(:wizard) do
-    RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
+    RegistrationWizard.new(current_step:, store:, request: nil, current_user: nil)
   end
 
   describe "validations" do
@@ -134,20 +134,23 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
     end
   end
 
-  describe "#next_step" do
-    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
+  describe "#requirements_met?" do
+    subject { instance.requirements_met? }
 
-    let(:course) { create(:course) }
-    let(:store) do
-      {
-        "course_identifier" => course.identifier.to_s,
-        "works_in_school" => "yes",
-      }
-    end
-    let(:school) { create(:school) }
+    context "when a work setting has been chosen" do
+      before { wizard.store["work_setting"] = "other" }
 
-    it "goes to choose_your_npq" do
-      expect(subject.next_step).to be(:choose_your_npq)
+      it { is_expected.to be_truthy }
     end
+
+    context "when a work setting has not been chosen" do
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe "#previous_step" do
+    subject { instance.previous_step }
+
+    it { is_expected.to be :work_setting }
   end
 end

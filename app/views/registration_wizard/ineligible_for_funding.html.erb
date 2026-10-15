@@ -1,0 +1,24 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+  ) do
+%>
+
+  <%= render "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}",
+    course: @form.course,
+    lead_provider: @form.lead_provider.try(:name),
+    chosen_cohort: Questionnaires::CourseStartDate::OPTIONS.dig(@wizard.store["course_start_cohort"], :cohort_description)
+  %>
+
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit "Continue to register" %>
+  <% end %>
+
+<% end %>
+
+<% if Rails.env.staging? || Rails.env.development? %>
+  "<%= @form.funding_eligiblity_status_code %>"
+  <br />
+<% end  %>

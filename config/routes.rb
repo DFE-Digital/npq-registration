@@ -46,7 +46,9 @@ Rails.application.routes.draw do
   resource :account
 
   namespace :accounts do
-    resources :user_registrations, only: [:show]
+    resources :user_registrations, only: [:show] do
+      get :registration_complete, path: "registration-complete", on: :member
+    end
   end
 
   get "/cookies", to: "pages#show", page: "cookies"

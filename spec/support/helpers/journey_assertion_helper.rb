@@ -23,37 +23,101 @@ module Helpers
     end
 
     def expect_check_answers_page_to_have_answers(values)
-      check_answers_page = CheckAnswersPage.new
-
-      expect(check_answers_page).to be_displayed
-
-      summary_data = check_answers_page.summary_list.rows.map { |summary_item|
-        [summary_item.key, summary_item.value]
-      }.to_h
-
-      expect(summary_data).to eql(values)
+      within(".govuk-summary-list") do
+        values.each do |key, value|
+          expect(page).to have_summary_item(key, value)
+        end
+      end
     end
 
     def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1, course_start: "Autumn 2026")
-      expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.reload.id}?success=true", submit_form: false) do
-        expect(page).to have_text("Registration successfully submitted")
-        expect(page).to have_text("Application ID: #{latest_application.ecf_id}")
+      latest_application.reload
+
+      expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}/registration-complete", submit_form: false) do
+        expect(page).to have_text("Registration complete")
+        expect(page).to have_text("Your Registration ID")
+        expect(page).to have_text(latest_application.ecf_id)
+        expect(page).to have_text("We have sent you a confirmation email")
+        page.click_link("Review a summary of your registration")
+      end
+
+      expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}", submit_form: false) do
+        expect(page).to have_text("Registration ID: #{latest_application.ecf_id}")
         expect(page).to have_summary_item("Course start", course_start)
-        expect(page).to have_link("Register for another NPQ", href: registration_wizard_show_path("course-start-date"))
+        expect(page).to have_link("Start now", href: registration_wizard_show_path("course-start-date"))
       end
 
       expect(User.count).to be(1)
       expect(Application.count).to be(total_number_of_created_applications)
     end
 
-    def check_back_journey_is_correct
+    # relies on the entire feature spec using expect_page_to_have to navigate
+    def check_back_journey_is_correct(exclude_current_page: false)
+      correct_order = %w[
+        course-start-date
+        check-funding
+        teacher-catchment
+        ineligible-for-funding-not-in-england
+        choose-your-npq
+        funding-history
+        ineligible-for-funding-previously-funded
+        npqh-status
+        ehco-new-headteacher
+        ehco-unavailable
+        maths-eligibility-teaching-for-mastery
+        maths-understanding-of-approach
+        senco-in-role
+        senco-start-date
+        work-setting
+        kind-of-nursery
+        have-ofsted-urn
+        choose-childcare-provider
+        choose-private-childcare-provider
+        childcare-provider-not-in-england
+        choose-school
+        school-not-in-england
+        your-employment
+        your-employer
+        itt-provider
+        referred-by-return-to-teaching-adviser
+        possible-funding
+        ineligible-for-funding
+        funding-your-ehco
+        funding-your-npq
+        choose-your-provider
+        share-provider
+        check-answers
+      ]
+      steps = @steps_visited.map { |path| path.split("/").last }
+      spec_missing_steps = (steps - correct_order)
+      fail "unexpected step encountered: #{spec_missing_steps.join(',')}" if spec_missing_steps.any?
+
+      ordered_steps = steps.sort { |x, y| correct_order.index(x) <=> correct_order.index(y) }
+      fail "steps in incorrect order - #{steps.join(',')} should be: #{ordered_steps.join(',')}" unless steps == ordered_steps
+
       starting_path = page.current_path
       until page.current_path == "/registration/course-start-date"
         page.click_link("Back")
         back_steps ||= []
         back_steps << page.current_path
+
+        if back_steps.length > RegistrationWizard::VALID_REGISTRATION_STEPS.length
+          fail "infinite loop detected in back journey: #{back_steps.join(',')}"
+        end
       end
-      expect(back_steps.reverse).to eq @steps_visited
+      optional_work_setting_questions = [
+        "/registration/choose-childcare-provider",
+        "/registration/choose-private-childcare-provider",
+        "/registration/choose-school",
+        "/registration/have-ofsted-urn",
+        "/registration/itt-provider",
+        "/registration/kind-of-nursery",
+        "/registration/referred-by-return-to-teaching-adviser",
+        "/registration/your-employer",
+        "/registration/your-employment",
+      ]
+      steps_visited = exclude_current_page ? @steps_visited.excluding(starting_path) : @steps_visited
+      expect(back_steps.reverse).to match_backlinks steps_visited.excluding(optional_work_setting_questions)
       visit starting_path
     end
 

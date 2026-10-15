@@ -7,35 +7,21 @@ module Questionnaires
     NOT_IN_ENGLAND = "not_in_england".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
     LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
+    EHCO_FUNDING_NOT_AVAILABLE = "ehco_funding_not_available".freeze
 
     # Already funded
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
-    ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
 
     attribute :version
 
-    def next_step
-      :funding_your_npq
+    def previous_step
+      :work_setting
     end
 
-    def previous_step
-      if works_in_another_setting? && employment_type_other?
-        :choose_your_npq
-      elsif course.npqlpm?
-        if wizard.query_store.maths_understanding?
-          :maths_eligibility_teaching_for_mastery
-        else
-          :maths_understanding_of_approach
-        end
-      elsif course.npqs?
-        if wizard.query_store.senco_in_role_status?
-          :senco_start_date
-        else
-          :senco_in_role
-        end
-      else
-        :choose_your_npq
-      end
+    def next_step
+      return :choose_your_npq unless course
+
+      show_funding_step
     end
 
     def ineligible_template
@@ -47,20 +33,20 @@ module Questionnaires
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::PREVIOUSLY_FUNDED
-                                 return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
+                                 return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
                                  return "not_a_pp50_institution"
                                when FundingEligibility::NOT_ENTITLED_CHILDMINDER
                                  return "not_entitled_ey_institution"
-                               when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::UNFUNDED_COHORT
                                  return UNFUNDED_COHORT
+                               when FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO
+                                 return EHCO_FUNDING_NOT_AVAILABLE
                                end
 
-      raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}"
+      raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}" # TODO: test
     end
 
     def funding_eligiblity_status_code
@@ -71,21 +57,13 @@ module Questionnaires
       @funding_eligibility ||= FundingEligibility.new_from_query_store(
         course:,
         institution: query_store.institution,
-        approved_itt_provider: approved_itt_provider?,
-        inside_catchment: inside_catchment?,
+        approved_itt_provider: query_store.approved_itt_provider?,
+        inside_catchment: query_store.inside_catchment?,
         user_ecf_id: query_store.user_ecf_id,
-        query_store: wizard.query_store,
+        query_store:,
       )
     end
 
-    delegate :course,
-             :lead_provider,
-             :new_headteacher?,
-             :inside_catchment?,
-             :approved_itt_provider?,
-             :lead_mentor_for_accredited_itt_provider?,
-             :works_in_another_setting?,
-             :employment_type_other?,
-             to: :query_store
+    delegate :course, :lead_provider, to: :query_store
   end
 end

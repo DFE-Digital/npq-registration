@@ -13,12 +13,16 @@ RSpec.describe FundingEligibility do
                         childminder: (kind_of_nursery == "childminder"),
                         preschool_class_as_part_of_school: (kind_of_nursery == "preschool_class_as_part_of_school"),
                         referred_by_return_to_teaching_adviser: (referred_by_return_to_teaching_adviser == "yes"),
-                        work_setting:)
+                        work_setting:,
+                        declared_previous_funding:,
+                        proceed_without_checking_funding:)
   end
 
   let(:store) do
     {
       course_start_cohort: course_start_cohort,
+      declared_previous_funding:,
+      check_funding:,
       work_setting:,
       kind_of_nursery:,
       employment_type:,
@@ -41,6 +45,9 @@ RSpec.describe FundingEligibility do
   let(:new_headteacher) { "no" }
   let(:query_store) { RegistrationQueryStore.new(store:) }
   let(:user) { build(:user, :with_teacher_auth) }
+  let(:declared_previous_funding) { nil }
+  let(:proceed_without_checking_funding) { nil }
+  let(:check_funding) { nil }
 
   before do
     unfunded_cohort
@@ -123,6 +130,52 @@ RSpec.describe FundingEligibility do
 
       it { is_expected.to have_attributes referred_by_return_to_teaching_adviser: true }
     end
+
+    context "with declared previous funding" do
+      let(:declared_previous_funding) { "yes" }
+
+      it { is_expected.to have_attributes declared_previous_funding: true }
+    end
+
+    context "with proceed with checking funding" do
+      let(:check_funding) { "yes" }
+
+      it { is_expected.to have_attributes proceed_without_checking_funding: false }
+    end
+
+    context "with proceed without checking funding" do
+      let(:check_funding) { "no" }
+
+      it { is_expected.to have_attributes proceed_without_checking_funding: true }
+    end
+  end
+
+  describe ".subject_to_review?" do
+    subject { described_class.subject_to_review?(funding_eligiblity_status_code) }
+
+    context "when the funding eligibility status code is subject_to_review" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::SUBJECT_TO_REVIEW }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the funding eligibility status code is referred_by_return_to_teaching_adviser" do
+      let(:funding_eligiblity_status_code) { FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the funding eligibility status code is not subject_to_review or referred_by_return_to_teaching_adviser" do
+      FundingEligibility::FUNDING_STATUS_CODE_DESCRIPTIONS
+        .except(FundingEligibility::SUBJECT_TO_REVIEW, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER)
+        .each_key do |code|
+        context "when the funding eligibility status code is #{code}" do
+          let(:funding_eligiblity_status_code) { code }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
   end
 
   RSpec.shared_examples "funding eligibility" do |result|
@@ -138,16 +191,32 @@ RSpec.describe FundingEligibility do
       include_examples "funding eligibility", :unfunded_cohort
     end
 
+    context "and the cohort chosen is nil" do
+      let(:cohort) { nil }
+
+      include_examples "funding eligibility", :unfunded_cohort
+    end
+
     context "and the applicant is outside England" do
       let(:inside_catchment) { false }
 
       include_examples "funding eligibility", :not_in_england
     end
 
+    context "and the applicant has requested no funding" do
+      let(:proceed_without_checking_funding) { true }
+
+      include_examples "funding eligibility", :requested_no_funding
+    end
+
+    context "and the applicant has declared they have had previous funding" do
+      let(:declared_previous_funding) { "yes" }
+
+      include_examples "funding eligibility", :previously_funded
+    end
+
     context "and the applicant has previously received funding" do
-      before do
-        create(:application, :with_funded_place, :accepted, user:, course:)
-      end
+      before { create(:application, :with_funded_place, :accepted, user:, course:) }
 
       include_examples "funding eligibility", :previously_funded
     end
@@ -540,6 +609,32 @@ RSpec.describe FundingEligibility do
       let(:institution) { build(:school) }
 
       it { is_expected.to be_truthy }
+    end
+  end
+
+  describe "#previously_funded?" do
+    subject { funding_eligibility.previously_funded? }
+
+    let(:course) { build(:course, :headship) }
+
+    context "when the applicant has previously received funding" do
+      before { create(:application, :with_funded_place, :accepted, user:, course:) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the applicant has not previously received funding" do
+      context "when the user has declared previous funding" do
+        let(:declared_previous_funding) { true }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the applicant has not declared previous funding" do
+        let(:declared_previous_funding) { false }
+
+        it { is_expected.to be false }
+      end
     end
   end
 end

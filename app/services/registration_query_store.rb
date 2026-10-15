@@ -6,11 +6,19 @@ class RegistrationQueryStore
   end
 
   def current_user
-    store["current_user"] || User.find_by(id: store["current_user_id"])
+    User.find_by(id: store["current_user_id"])
   end
 
   def itt_provider
     store["itt_provider"]
+  end
+
+  def funding_eligiblity_status_code
+    store["funding_eligiblity_status_code"]
+  end
+
+  def employment_type
+    store["employment_type"]
   end
 
   def approved_itt_provider?
@@ -18,23 +26,15 @@ class RegistrationQueryStore
   end
 
   def user_ecf_id
-    current_user.ecf_id
-  end
-
-  def trn_set_via_fallback_verification_question?
-    store["trn_set_via_fallback_verification_question"]
-  end
-
-  def trn
-    current_user.trn
+    current_user&.ecf_id
   end
 
   def inside_catchment?
     store["teacher_catchment"] == "england"
   end
 
-  def funding_eligiblity_status_code
-    store["funding_eligiblity_status_code"]
+  def declared_not_working_in_england?
+    store["teacher_catchment"].present? && !inside_catchment?
   end
 
   def teacher_catchment_humanized
@@ -44,10 +44,6 @@ class RegistrationQueryStore
     when "england"
       "Yes"
     end
-  end
-
-  def employment_type
-    store["employment_type"]
   end
 
   def lead_mentor_for_accredited_itt_provider?
@@ -66,20 +62,8 @@ class RegistrationQueryStore
     employment_type == Application.employment_types[:local_authority_supply_teacher]
   end
 
-  def employment_type_hospital_school?
-    employment_type == Application.employment_types[:hospital_school]
-  end
-
-  def young_offender_institution?
-    employment_type == Application.employment_types[:young_offender_institution]
-  end
-
-  def teacher_catchment_england?
-    store["teacher_catchment"] == "england"
-  end
-
   def valid_employent_type_for_england?
-    teacher_catchment_england? && !employment_type_other? && !lead_mentor_for_accredited_itt_provider?
+    inside_catchment? && !employment_type_other? && !lead_mentor_for_accredited_itt_provider?
   end
 
   def works_in_school?
@@ -123,23 +107,15 @@ class RegistrationQueryStore
   end
 
   def new_headteacher?
-    store["ehco_headteacher"] == "yes" && store["ehco_new_headteacher"] == "yes"
+    store["ehco_new_headteacher"] == "yes"
   end
 
   def maths_understanding?
     store["maths_understanding"]
   end
 
-  def senco_in_role
-    store["senco_in_role"]
-  end
-
   def senco_in_role_status?
     store["senco_in_role_status"]
-  end
-
-  def senco_start_date
-    store["senco_start_date"]
   end
 
   def childminder?
@@ -162,6 +138,10 @@ class RegistrationQueryStore
     return false unless employment_type_matters?
 
     !(lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?)
+  end
+
+  def employment_type_needs_employer_name?
+    employment_type_hospital_school? || young_offender_institution?
   end
 
   def employer_name_matters?
@@ -192,5 +172,58 @@ class RegistrationQueryStore
 
   def course_start_cohort
     store["course_start_cohort"]
+  end
+
+  def cohort_funded?
+    cohort = Cohort.find_by(identifier: course_start_cohort)
+    return true unless cohort
+
+    cohort.funded?
+  end
+
+  def proceed_without_checking_funding?
+    store["check_funding"] == "no"
+  end
+
+  def declared_previous_funding?
+    store["declared_previous_funding"] == "yes"
+  end
+
+  def has_answers?
+    store.excluding("current_user_id").any?
+  end
+
+  def clear_optional_work_setting_answers!
+    %w[
+      childcare_identifier
+      childcare_name
+      employer_name
+      employment_role
+      employment_type
+      has_ofsted_urn
+      institution_identifier
+      institution_name
+      kind_of_nursery
+      private_childcare_identifier
+      private_childcare_name
+      referred_by_return_to_teaching_adviser
+    ].each do |field|
+      store.delete(field)
+    end
+  end
+
+  def user_eligible_for_funding_before_login?
+    store["pre_login_funding_eligiblity_status_code"] == FundingEligibility::FUNDED_ELIGIBILITY_RESULT ||
+      FundingEligibility.subject_to_review?(store["pre_login_funding_eligiblity_status_code"]&.to_sym)
+  end
+
+private
+
+  def employment_type_hospital_school?
+    employment_type == Application.employment_types[:hospital_school]
+  end
+
+  def young_offender_institution?
+    employment_type == Application.employment_types[:young_offender_institution]
   end
 end
