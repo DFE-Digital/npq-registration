@@ -10,6 +10,10 @@ class PagesController < PublicPagesController
       end
     end
 
-    render template: "pages/#{params[:page]}"
+    respond_to do |format|
+      format.html { render template: "pages/#{params[:page]}" }
+    end
+  rescue ActionView::MissingTemplate
+    raise ActionController::RoutingError, "Not Found"
   end
 end

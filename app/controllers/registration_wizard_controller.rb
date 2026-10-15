@@ -28,7 +28,9 @@ class RegistrationWizardController < PublicPagesController
     return redirect_to registration_wizard_show_path(@wizard.next_step_path) if @wizard.skip_step?
     return redirect_to root_path unless @form.requirements_met?
 
-    render @wizard.current_step
+    respond_to do |format|
+      format.html { render @wizard.current_step }
+    end
 
     @wizard.after_render
   rescue ActionView::Template::Error => e

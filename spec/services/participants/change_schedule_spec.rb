@@ -16,13 +16,15 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
   let(:lead_provider) { create(:lead_provider) }
   let(:course) { create(:course, :senior_leadership) }
   let(:course_identifier) { course.identifier }
-  let(:schedule) { create(:schedule, :npq_leadership_spring, cohort:) }
+  let(:applies_from) { 2.months.ago }
+  let(:applies_to) { 1.month.ago }
+  let(:schedule) { create(:schedule, :npq_leadership_spring, cohort:, applies_from:, applies_to:) }
   let(:application_trait) { :accepted }
   let!(:application) { create(:application, application_trait, cohort:, lead_provider:, course:, schedule:) }
   let(:participant) { application.user }
   let(:participant_id) { participant.ecf_id }
   let(:new_cohort) { create(:cohort, :next) }
-  let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
+  let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort, applies_from:, applies_to:) }
   let(:new_schedule_identifier) { new_schedule.identifier }
   let(:statement) { create(:statement, cohort:, lead_provider:) }
   let!(:contract) { create(:contract, statement:, course:) }

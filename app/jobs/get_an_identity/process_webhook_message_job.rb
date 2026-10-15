@@ -10,7 +10,10 @@ module GetAnIdentity
       webhook_processor_klass = webhook_message.processor_klass
 
       if webhook_processor_klass.present?
-        webhook_processor_klass.call(webhook_message:)
+        whodunnit = "Webhook: #{webhook_message.message_type}: #{webhook_message.id}"
+        PaperTrail.request(whodunnit:) do
+          webhook_processor_klass.call(webhook_message:)
+        end
       elsif webhook_message.ignored_message_type?
         webhook_message.update!(
           status: :unhandled_message_type,

@@ -1,5 +1,5 @@
 variable "command" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 variable "pull_request_number" {
@@ -51,10 +51,11 @@ variable "deploy_snapshot_database" {
   type    = string
   default = false
 }
-variable "deploy_redis_cache" {
-  type    = bool
-  default = true
-}
+
+variable "redis_managed_cache_sku_name" { default = "Balanced_B1" }
+
+variable "redis_managed_queue_sku_name" { default = "Balanced_B1" }
+
 variable "enable_postgres_ssl" {
   default     = true
   description = "Enforce SSL connection from the client side"
@@ -71,24 +72,12 @@ variable "external_url" {
   description = "Healthcheck URL for StatusCake monitoring"
 }
 variable "statuscake_contact_groups" {
-  default     = [291418,282453,343307]
+  default     = [291418, 282453, 343307]
   description = "ID of the contact group in statuscake web UI"
 }
 variable "enable_monitoring" {
   default     = false
   description = "Enable monitoring and alerting"
-}
-
-variable "redis_cache_capacity" {
-  default = 1
-}
-
-variable "redis_cache_family" {
-  default = "C"
-}
-
-variable "redis_cache_sku_name" {
-  default = "Standard"
 }
 
 variable "webapp_memory_max" {
@@ -97,7 +86,7 @@ variable "webapp_memory_max" {
 }
 
 variable "webapp_replicas" {
-  type = number
+  type    = number
   default = 1
 }
 
@@ -107,17 +96,17 @@ variable "worker_memory_max" {
 }
 
 variable "worker_replicas" {
-  type = number
+  type    = number
   default = 1
 }
 
 variable "postgres_server_version" {
-  type = string
+  type    = string
   default = "17"
 }
 
 variable "postgres_flexible_server_sku" {
-  type = string
+  type    = string
   default = "B_Standard_B1ms"
 }
 
@@ -131,7 +120,7 @@ variable "postgres_snapshot_server_version" {
 }
 
 variable "postgres_enable_high_availability" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -139,8 +128,8 @@ variable "enable_logit" { default = false }
 
 variable "enable_dfe_analytics_federated_auth" {
   description = "Create the resources in Google cloud for federated authentication and enable in application"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "dataset_name" {
@@ -150,13 +139,13 @@ variable "dataset_name" {
 locals {
   environment_variables = yamldecode(file("${path.module}/config/${var.config}.yml"))
 
-  azure_credentials = try(jsondecode(var.azure_credentials_json), null)
+  azure_credentials      = try(jsondecode(var.azure_credentials_json), null)
   access_domain          = "${var.service_name}-${var.environment}${var.pull_request_number}-web.${module.cluster_data.ingress_domain}"
   access_external_domain = try(local.environment_variables["ACCESS_EXTERNAL_DOMAIN"], local.access_domain)
 
   postgres_ssl_mode = var.enable_postgres_ssl ? "require" : "disable"
 
-  pr_number = var.environment == "review" ? replace(var.pull_request_number, "-", "") : ""
+  pr_number                    = var.environment == "review" ? replace(var.pull_request_number, "-", "") : ""
   uploads_storage_account_name = "${var.azure_resource_prefix}${var.service_short}${var.config_short}${local.pr_number}sa"
   # e.g. s189t01cpdnpqrv2044sa
   # name can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
@@ -176,3 +165,6 @@ variable "uploads_container_delete_retention_days" {
   default = 7
   type    = number
 }
+
+# pg_airbyte_enabled used in the postgres module
+variable "pg_airbyte_enabled" { default = false }

@@ -5,7 +5,9 @@ on:
   push:
     branches:
       - main
-  pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -17,11 +19,8 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4.10
+          ruby-version: 3.4.11
           bundler-cache: true
-
-      - name: Install yarn
-        run: npm install yarn -g --ignore-scripts
 
       - name: Install Graphviz
         run: sudo apt install graphviz

@@ -3,8 +3,6 @@ $govuk-images-path: "";
 $govuk-fonts-path: "";
 $govuk-global-styles: true;
 
-@forward "@ministryofjustice/frontend/moj/components/timeline/timeline";
-
 @import "govuk-frontend/dist/govuk/base";
 @import "govuk-frontend/dist/govuk/core/index";
 @import "govuk-frontend/dist/govuk/objects/index";
@@ -18,6 +16,7 @@ $govuk-global-styles: true;
 @import "admin";
 @import "api_guidance";
 @import "panel" ;
+@import "timeline";
 
 h1.govuk-fieldset__heading {
   margin-bottom: 10px;

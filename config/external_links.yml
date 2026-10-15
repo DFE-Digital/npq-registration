@@ -1,4 +1,6 @@
 ---
+access_your_teaching_qualifications:
+  url: "<%= ENV['AYTQ_URL'].presence || 'https://access-your-teaching-qualifications.education.gov.uk/' %>"
 check_if_your_workplace_is_registered_with_ofsted:
   url: "https://reports.ofsted.gov.uk/childcare"
 feedback_form:
@@ -22,3 +24,4 @@ learn_about_trns:
   url: "https://www.gov.uk/guidance/teacher-reference-number-trn"
 teaching_identity_cookies:
   url: "https://teaching-identity.education.gov.uk/cookies"
+  skip_check: true
