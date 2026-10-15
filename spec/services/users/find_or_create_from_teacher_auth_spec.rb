@@ -100,6 +100,42 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
 
     it_behaves_like "updating TRS attributes"
     it_behaves_like "destroying the refresh token"
+
+    context "when the TRN matches a verified TRN on one user with email_reused_at set" do
+      let(:user) { create(:user, trn:, trn_verified: true, email_reused_at: Time.zone.now) }
+
+      it "sets the UID and provider on the user" do
+        subject
+        expect(user.reload).to have_attributes(uid:, provider: "teacher_auth")
+      end
+
+      it "updates the user attributes" do
+        subject
+        expect(user.reload).to have_attributes(
+          email:,
+          full_name: verified_name.join(" "),
+          trn_auto_verified: true,
+          email_reused_at: nil,
+        )
+      end
+
+      it "returns the user" do
+        expect(subject).to eq(user)
+      end
+    end
+
+    context "when the TRN matches a verified TRN on one archived user" do
+      let(:user) { create(:user, :archived, trn:, trn_verified: true) }
+
+      it "does not use the archived user" do
+        expect(subject).not_to eq(user)
+      end
+
+      it "does not unarchive the archived user" do
+        subject
+        expect(user.reload).to be_archived
+      end
+    end
   end
 
   context "when the TRN matches an unverified TRN on one GAI user" do
@@ -140,7 +176,8 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         it "blanks the clashing user's email and creates the new user" do
           expect { subject }.not_to raise_error
           expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
-          expect(clashing_user.archived_at).to be_present
+          expect(clashing_user.email_reused_at).to be_present
+          expect(clashing_user.archived_at).to be_nil
           expect(User.find_by(provider: "teacher_auth", uid:)).to have_attributes(
             email:,
             trn:,
@@ -297,28 +334,14 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         it "blanks the clashing user's email" do
           subject
           expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
-          expect(clashing_user.archived_at).to be_present
+          expect(clashing_user.email_reused_at).to be_present
+          expect(clashing_user.archived_at).to be_nil
         end
 
         it "updates the matched user" do
           subject
           expect(existing_user.reload).to have_attributes(email:, archived_at: nil)
         end
-      end
-    end
-
-    context "when an archived user with a blank email exists with the same provider and UID" do
-      let(:existing_user) { create(:user, :with_teacher_auth, :archived, email: nil, uid:, trn: nil) }
-
-      before { existing_user }
-
-      it "returns the user" do
-        expect(subject).to eq existing_user
-      end
-
-      it "unarchives the user" do
-        subject
-        expect(existing_user.reload).not_to be_archived
       end
     end
 
@@ -344,7 +367,8 @@ RSpec.describe Users::FindOrCreateFromTeacherAuth do
         it "blanks the clashing user's email and creates the new user" do
           expect { subject }.not_to raise_error
           expect(clashing_user.reload).to have_attributes(email: nil, archived_email: email)
-          expect(clashing_user.archived_at).to be_present
+          expect(clashing_user.email_reused_at).to be_present
+          expect(clashing_user.archived_at).to be_nil
           expect(User.find_by(provider: "teacher_auth", uid:).email).to eq(email)
         end
 
