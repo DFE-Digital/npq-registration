@@ -70,7 +70,7 @@ private
   helper_method :current_admin
 
   def initialize_store
-    session["registration_store"] ||= {}
+    session[RegistrationWizard::STORE_SESSION_KEY] ||= {}
   end
 
   def set_cache_headers
@@ -78,8 +78,8 @@ private
   end
 
   def clear_null_user_sessions
-    if session.key?(:registration_store) &&
-        session[:registration_store][:current_user].is_a?(NullUser)
+    if session.key?(RegistrationWizard::STORE_SESSION_KEY) &&
+        session[RegistrationWizard::STORE_SESSION_KEY][:current_user].is_a?(NullUser)
       reset_session
       redirect_to root_path
     end

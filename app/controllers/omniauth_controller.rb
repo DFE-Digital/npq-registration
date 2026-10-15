@@ -2,10 +2,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
   OMNIAUTH_ERROR_STRATEGY_KEY = "omniauth.error.strategy".freeze
   OMNIAUTH_ERROR_TYPE = "omniauth.error.type".freeze
 
-  SESSION_RESET_RETAINED_KEYS = %w[
-    log_session_id
-    registration_store
-    feature_flag_id
+  SESSION_RESET_RETAINED_KEYS = [
+    "log_session_id",
+    RegistrationWizard::STORE_SESSION_KEY,
+    "feature_flag_id",
   ].freeze
 
   skip_before_action :verify_authenticity_token, only: [
@@ -186,7 +186,7 @@ private
   def continue_questionnaire_path(user)
     wizard = RegistrationWizard.new(
       current_step: continue_questionnaire_step,
-      store: session["registration_store"],
+      store: session[RegistrationWizard::STORE_SESSION_KEY],
       params: {},
       request:,
       current_user: user,
