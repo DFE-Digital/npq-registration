@@ -69,10 +69,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
     # Store id_token for OIDC logout (required as id_token_hint parameter)
     session[:id_token] = provider_data.credentials.id_token
 
-    @user = User.find_or_create_from_teacher_auth(
-      provider_data:,
-      feature_flag_id: session["feature_flag_id"],
-    )
+    @user = find_or_create_user_from_teacher_auth
     if @user
       session["user_id"] = @user.id
       @user.set_closed_registration_feature_flag
@@ -113,6 +110,24 @@ private
 
   def provider_data
     @provider_data ||= request.env["omniauth.auth"]
+  end
+
+  # A double click on TeacherAuth can send two callbacks almost simultaneously.
+  # The second one may fail to create a user the first one just created, so we
+  # retry once to find that user.
+  # If it fails again we raise the error.
+  def find_or_create_user_from_teacher_auth
+    attempts = 0
+
+    begin
+      attempts += 1
+      User.find_or_create_from_teacher_auth(
+        provider_data:,
+        feature_flag_id: session["feature_flag_id"],
+      )
+    rescue ActiveRecord::RecordInvalid
+      attempts == 1 ? retry : raise
+    end
   end
 
   def multibyte_email_characters(email)
