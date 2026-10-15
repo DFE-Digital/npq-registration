@@ -9,11 +9,17 @@ RSpec.describe ExternalLink, type: :model do
   before do
     described_class.reset_cache
 
-    allow(YAML).to receive(:load_file).with(ExternalLink::CONFIG_PATH).and_return({
-      "good" => { "url" => good_url },
-      "bad" => { "url" => bad_url },
-      "skip" => { "url" => bad_url, "skip_check" => true },
-    })
+    allow(File).to receive(:read).and_call_original
+    allow(File).to receive(:read).with(ExternalLink::CONFIG_PATH).and_return(<<~YAML)
+      ---
+      good:
+        url: "#{good_url}"
+      bad:
+        url: "#{bad_url}"
+      skip:
+        url: "#{bad_url}"
+        skip_check: true
+    YAML
     allow(Logger).to receive(:new).and_return(logger)
     stub_request(:get, good_url).to_return(status: 302, headers: { "Location" => "https://example.org/redirected/200" })
     stub_request(:get, "https://example.org/redirected/200").to_return(status: 200)
@@ -156,6 +162,29 @@ RSpec.describe ExternalLink, type: :model do
   describe "#url" do
     it "returns the URL" do
       expect(good_instance.url).to eq(good_url)
+    end
+  end
+
+  describe "the config file" do
+    subject { described_class.fetch(:access_your_teaching_qualifications).url }
+
+    before do
+      allow(File).to receive(:read).with(ExternalLink::CONFIG_PATH).and_call_original
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("AYTQ_URL").and_return(aytq_url)
+      described_class.reset_cache
+    end
+
+    context "when AYTQ_URL is set" do
+      let(:aytq_url) { "https://preprod.access-your-teaching-qualifications.education.gov.uk/" }
+
+      it { is_expected.to eq(aytq_url) }
+    end
+
+    context "when AYTQ_URL is not set" do
+      let(:aytq_url) { nil }
+
+      it { is_expected.to eq("https://access-your-teaching-qualifications.education.gov.uk/") }
     end
   end
 end

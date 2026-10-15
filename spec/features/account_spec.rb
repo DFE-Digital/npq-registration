@@ -86,8 +86,8 @@ RSpec.feature "Account", :no_js, type: :feature do
         expect(page).to have_text("Your provider will contact you with instructions on how to apply for the course.")
         expect(page).to have_text("You do not need to do anything until they contact you.")
 
-        expect(page).to have_summary_item("Your details", "Update your personal details on GOV.UK One Login")
-        expect(page).to have_link("GOV.UK One Login (opens in a new tab)", href: Rails.configuration.x.teacher_auth.onelogin_home_uri)
+        expect(page).to have_css("h2", text: "Personal details")
+        expect(page).to have_link("GOV.UK One Login account", href: Rails.configuration.x.teacher_auth.onelogin_home_uri)
 
         expect(page).to have_css("h2", text: "Next steps")
         expect(page).to have_text("Once you’ve applied with your provider, they’ll:")
@@ -186,6 +186,28 @@ RSpec.feature "Account", :no_js, type: :feature do
       visit(accounts_user_registration_path(application.id))
 
       expect(page).to have_current_path("/")
+    end
+
+    context "when logged in" do
+      before do
+        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+          page.click_button("Sign in")
+        end
+
+        visit(accounts_user_registration_path(application.id))
+      end
+
+      scenario "it shows the personal details section" do
+        expect(page).to have_css("h2", text: "Personal details")
+      end
+
+      scenario "it links to the teaching qualifications service" do
+        expect(page).to have_link("teaching qualifications service", href: ExternalLink.fetch(:access_your_teaching_qualifications).url)
+      end
+
+      scenario "it links to the GOV.UK One Login account" do
+        expect(page).to have_link("GOV.UK One Login account", href: Rails.configuration.x.teacher_auth.onelogin_home_uri)
+      end
     end
   end
 

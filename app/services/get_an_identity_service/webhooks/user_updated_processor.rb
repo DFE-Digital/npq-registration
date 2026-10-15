@@ -88,9 +88,7 @@ module GetAnIdentityService
         user.set_trn_from_provider_data(trn:, trn_lookup_status:)
 
         if user.changed? && user.changes.excluding("updated_from_tra_at").any?
-          PaperTrail.request(whodunnit: "UserUpdatedProcessor") do
-            user.save
-          end
+          user.save!
         else
           webhook_message.status_comment = "Skipped - no data changes"
           true

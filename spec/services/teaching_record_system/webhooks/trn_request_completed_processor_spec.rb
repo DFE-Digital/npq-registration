@@ -55,6 +55,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
           expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
           subject
         end
+
+        it_behaves_like "it locks whilst processing the webhook"
       end
     end
 
@@ -71,7 +73,34 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
         subject
         expect(other_user.reload).to be_archived
         expect(application.reload.user).to eq user
-        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: other_user.ecf_id, to_participant_id: user.ecf_id)
+        expect(user.participant_id_changes.find_by(from_participant_id: other_user.ecf_id)).to have_attributes(to_participant_id: user.ecf_id)
+      end
+
+      it_behaves_like "it locks whilst processing the webhook"
+    end
+
+    context "when there is an archived user with the same verified TRN and applications" do
+      let(:archived_user) { create(:user, :archived, :with_verified_trn, trn: new_trn, email: nil) }
+      let(:application) { create(:application, :accepted, user: archived_user) }
+
+      before { application }
+
+      it "moves the applications to this user" do
+        subject
+        expect(application.reload.user).to eq user
+      end
+
+      it "creates a participant ID change from the archived user to this user" do
+        subject
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: archived_user.ecf_id, to_participant_id: user.ecf_id)
+      end
+
+      it "keeps the archived user archived" do
+        expect { subject }.not_to(change { archived_user.reload.archived_at })
+      end
+
+      it "marks the webhook message as processed" do
+        expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
       end
     end
 
@@ -109,9 +138,21 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
 
     context "when the user UID is blank" do
       let(:webhook_message) { create(:trs_trn_request_completed_webhook_message, user_uid: nil, user_trn: new_trn) }
+      let(:user_without_uid) { create(:user, uid: nil, trn: nil) }
+
+      before { user_without_uid }
 
       it "marks the webhook message as processed" do
         expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+      end
+
+      it "does not update an existing user without UID" do
+        expect { subject }.not_to(change { user_without_uid.reload.attributes })
+      end
+
+      it "does not send a TRN allocated email" do
+        expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
+        subject
       end
     end
   end

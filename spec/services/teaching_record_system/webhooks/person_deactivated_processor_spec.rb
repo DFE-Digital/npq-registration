@@ -14,6 +14,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
 
       before { application_on_deactivated_user }
 
+      it_behaves_like "it locks whilst processing the webhook"
+
       context "and there are no users matching the merged with person" do
         it "updates the TRN on the matching deactivated person users" do
           subject
