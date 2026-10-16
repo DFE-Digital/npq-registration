@@ -335,12 +335,35 @@ RSpec.describe User do
     let(:provider_data) { :provider_data }
     let(:feature_flag_id) { "456" }
     let(:service) { instance_double(Users::FindOrCreateFromTeacherAuth) }
+    let(:user) { build(:user) }
 
     before { allow(Users::FindOrCreateFromTeacherAuth).to receive(:new).with(provider_data:, feature_flag_id: feature_flag_id) { service } }
 
     it "calls Users::FindOrCreateFromTrn service" do
       expect(service).to receive(:call)
       described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id: feature_flag_id)
+    end
+
+    [ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique].each do |error_class|
+      context "when the service raises #{error_class} the first time only" do
+        before do
+          allow(service).to receive(:call).and_invoke(-> { raise error_class }, -> { user })
+        end
+
+        it "retries and returns the user" do
+          expect(described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id:)).to eq(user)
+          expect(service).to have_received(:call).twice
+        end
+      end
+
+      context "when the service raises #{error_class} both times" do
+        before { allow(service).to receive(:call).and_raise(error_class) }
+
+        it "raises the error after one retry" do
+          expect { described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id:) }.to raise_error(error_class)
+          expect(service).to have_received(:call).twice
+        end
+      end
     end
   end
 
