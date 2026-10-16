@@ -61,6 +61,7 @@ RSpec.shared_context("with stubbed Teacher Auth OmniAuth responses") do
       "archived_email" => nil,
       "ecf_id" => latest_application_user.ecf_id,
       "email" => user_email,
+      "email_reused_at" => nil,
       "full_name" => user_full_name,
       "get_an_identity_id_synced_to_ecf" => false,
       "notify_user_for_future_reg" => false,

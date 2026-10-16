@@ -13,6 +13,7 @@ module Users
       user.archived_email = user.email
       user.archived_at = Time.zone.now
       user.email = blank_email ? nil : email_for_archived_user(user.email)
+      user.email_reused_at = Time.zone.now if blank_email
       user.uid = nil
       user.provider = nil
       user.save!
