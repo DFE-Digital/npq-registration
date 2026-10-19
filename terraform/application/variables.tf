@@ -149,6 +149,10 @@ locals {
   uploads_storage_account_name = "${var.azure_resource_prefix}${var.service_short}${var.config_short}${local.pr_number}sa"
   # e.g. s189t01cpdnpqrv2044sa
   # name can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
+
+  BIGQUERY_AIRBYTE_DATASET = var.airbyte_enabled ? local.gcp_dataset_name : null
+  AIRBYTE_SERVER_URL       = var.airbyte_enabled ? "https://airbyte-${var.namespace}.${module.cluster_data.ingress_domain}" : null
+  BIGQUERY_POLICY_TAGS     = var.airbyte_enabled ? "{\"hidden\":\"projects/ecf-bq/locations/europe-west2/taxonomies/6302091323314055162/policyTags/301313311867345339\"}" : null
 }
 
 variable "send_traffic_to_maintenance_page" {
