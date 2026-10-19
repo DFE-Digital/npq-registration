@@ -13,6 +13,10 @@ terraform {
       source  = "StatusCakeDev/statuscake"
       version = "2.2.2"
     }
+    airbyte = {
+      source  = "airbytehq/airbyte"
+      version = "0.10.0"
+    }
   }
   backend "azurerm" {
     container_name = "terraform-state"
@@ -24,10 +28,10 @@ provider "azurerm" {
 
   resource_provider_registrations = "none"
 
-  subscription_id            = try(local.azure_credentials.subscriptionId, null)
-  client_id                  = try(local.azure_credentials.clientId, null)
-  client_secret              = try(local.azure_credentials.clientSecret, null)
-  tenant_id                  = try(local.azure_credentials.tenantId, null)
+  subscription_id = try(local.azure_credentials.subscriptionId, null)
+  client_id       = try(local.azure_credentials.clientId, null)
+  client_secret   = try(local.azure_credentials.clientSecret, null)
+  tenant_id       = try(local.azure_credentials.tenantId, null)
 }
 
 provider "kubernetes" {
@@ -44,3 +48,11 @@ provider "kubernetes" {
 provider "statuscake" {
   api_token = module.infrastructure_secrets.map.STATUSCAKE-API-TOKEN
 }
+
+provider "airbyte" {
+  # Configuration options
+  server_url    = var.airbyte_enabled ? "https://airbyte-${var.namespace}.${module.cluster_data.ingress_domain}/api/public/v1" : ""
+  client_id     = var.airbyte_enabled ? module.infrastructure_secrets.map.AIRBYTE-CLIENT-ID : ""
+  client_secret = var.airbyte_enabled ? module.infrastructure_secrets.map.AIRBYTE-CLIENT-SECRET : ""
+}
+
