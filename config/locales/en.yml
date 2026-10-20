@@ -546,7 +546,10 @@ en:
               blank: Select the setting that you work in
         email_updates:
           attributes:
-            email_updates_status:
+            email:
+              blank: Enter an email address
+              invalid: This email is invalid
+            course:
               blank: 'You must choose an option to continue'
         questionnaires/senco_in_role:
           attributes:
@@ -996,6 +999,7 @@ en:
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
+        email: "What’s your email address?"
 
     legend:
       applications_change_training_status:
@@ -1028,7 +1032,7 @@ en:
         lead_provider_id: "Select your provider"
         chosen_provider: "Have you chosen an NPQ and provider?"
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
-        email_updates_status: "Are you interested in the special educational needs co-ordinator (SENCO) NPQ?"
+        course: "Are you interested in the special educational needs co-ordinator (SENCO) NPQ?"
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"

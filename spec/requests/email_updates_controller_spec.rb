@@ -1,53 +1,48 @@
 require "rails_helper"
 
 RSpec.describe EmailUpdatesController, type: :request do
-  let(:user) { create :user }
-
   describe "#new" do
     subject { get(new_email_update_path) && response }
 
-    context "when logged in" do
-      before { allow(User).to receive(:find_by).and_return user }
-
-      it { is_expected.to have_http_status :success }
-    end
-
-    context "when not logged in" do
-      it { is_expected.to redirect_to root_path }
-    end
+    it { is_expected.to have_http_status :success }
   end
 
   describe "#create" do
     subject(:do_request) { post(email_updates_path, params:) && response }
 
-    let(:params) { { email_updates: { email_updates_status: :senco } } }
+    let(:email) { "user@example.com" }
+    let(:params) { { email_updates: { email:, course: "npq-senco" } } }
 
-    context "when logged in" do
-      before { allow(User).to receive(:find_by).and_return user }
+    context "with valid request" do
+      it "creates a registration interest" do
+        do_request
+        expect(RegistrationInterest.find_by(email:)).to have_attributes(
+          email:,
+          course: "npq-senco",
+        )
 
-      context "with valid request" do
-        it "saves email update" do
-          expect {
-            do_request
-          }.to change(user, :email_updates_status).to("senco")
-
-          expect(do_request).to have_http_status(:success)
-        end
-      end
-
-      context "with invalid request" do
-        let(:params) { {} }
-
-        it "does not save email update" do
-          expect { do_request }.not_to change(user, :email_updates_status)
-
-          expect(do_request).to have_http_status(:success)
-        end
+        expect(do_request).to have_http_status(:success)
       end
     end
 
-    context "when not logged in" do
-      it { is_expected.to redirect_to root_path }
+    context "with missing email" do
+      let(:params) { { email_updates: { course: "npq-senco" } } }
+
+      it "does not save email update" do
+        expect { do_request }.not_to change(RegistrationInterest, :count)
+
+        expect(do_request).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context "with missing course" do
+      let(:params) { { email_updates: { email: } } }
+
+      it "does not save email update" do
+        expect { do_request }.not_to change(RegistrationInterest, :count)
+
+        expect(do_request).to have_http_status(:unprocessable_content)
+      end
     end
   end
 end

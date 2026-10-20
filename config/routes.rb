@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :registration_closed, only: [:show], controller: :registration_closed do
+  resource :registration_closed, only: [:show], controller: :registration_closed, path: "registration-closed" do
     collection do
       get "change"
     end
