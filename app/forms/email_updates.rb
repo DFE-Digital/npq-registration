@@ -1,14 +1,19 @@
 class EmailUpdates
   include ActiveModel::Model
 
-  attr_accessor :email_updates_status
+  attr_accessor :email, :course
 
-  validates :email_updates_status, presence: true, inclusion: { in: User::EMAIL_UPDATES_STATES.map(&:to_s) }
+  validates :email, presence: true, email: true
+  validates :course, presence: true, inclusion: { in: RegistrationInterest.courses.values }
 
   def questions
     [
+      QuestionTypes::TextField.new(
+        name: :email,
+        style_options: { width: "one-half", label: { size: "m", tag: "h2" } },
+      ),
       QuestionTypes::RadioButtonGroup.new(
-        name: :email_updates_status,
+        name: :course,
         options:,
         style_options: { legend: { size: "m", tag: "h2" } },
       ),
@@ -17,8 +22,8 @@ class EmailUpdates
 
   def options
     [
-      build_option_struct(value: :senco, label: "Yes", link_errors: true),
-      build_option_struct(value: :other_npq, label: "No, I want to do a different NPQ"),
+      build_option_struct(value: "npq-senco", label: "Yes", link_errors: true),
+      build_option_struct(value: "other", label: "No, I want to do a different NPQ"),
     ]
   end
 

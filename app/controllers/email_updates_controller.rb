@@ -1,22 +1,19 @@
 class EmailUpdatesController < PublicPagesController
-  before_action only: %i[new create] do
-    redirect_to root_path unless current_user&.persisted?
-  end
-
   def new
     session["request_email_updates"] = nil
 
-    @form = EmailUpdates.new
+    @form = EmailUpdates.new(email: current_user&.email)
   end
 
   # Save form
   def create
     @form = EmailUpdates.new(email_update_params)
+
     if @form.valid?
-      current_user.update_email_updates_status(@form)
-      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: current_user.email, service_link: service_url, unsubscribe_link:).deliver_now
+      RegistrationInterest.find_or_initialize_by(email: @form.email).update!(course: @form.course)
+      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: @form.email, service_link: service_url, unsubscribe_link:).deliver_now
     else
-      render :new
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -40,11 +37,13 @@ class EmailUpdatesController < PublicPagesController
 private
 
   def email_update_params
-    params[:email_updates] ? params.require(:email_updates).permit(:email_updates_status) : {}
+    params.require(:email_updates).permit(:email, :course)
   end
 
   def unsubscribe_link
-    "#{service_url}#{unsubscribe_email_updates_path(unsubscribe_key: current_user.email_updates_unsubscribe_key)}"
+    # "#{service_url}#{unsubscribe_email_updates_path(unsubscribe_key: current_user.email_updates_unsubscribe_key)}"
+    # TODO: make the unsubscribe link work for non-logged in users.
+    ""
   end
 
   def service_url

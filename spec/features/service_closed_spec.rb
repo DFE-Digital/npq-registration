@@ -6,40 +6,45 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
   include Helpers::JourneyStepHelper
 
   context "when registration is closed" do
-    include_context "Stub Get An Identity Omniauth Responses"
-
     before { close_registration! }
 
-    scenario "Service prompts to register for email updates using DfE Identity login" do
+    scenario "Service prompts to register for email updates" do
       visit "/"
       expect(page).to have_current_path(registration_closed_path)
-      expect(page).to have_content("Registration is temporarily closed")
+      expect(page).to have_content "Registration is temporarily closed"
+      expect(page).to have_content "You can still sign in to your One Login account"
+      expect(page).to have_button "Sign in to your One Login account"
       expect(page).to be_accessible
 
-      page.click_button("Sign up for email updates")
+      page.click_link("Sign up for email updates")
       expect(page).to have_current_path(new_email_update_path)
       expect(page).to have_content("Get email updates about registration opening")
       expect(page).to be_accessible
     end
 
-    context "when a user has a teacher auth account" do
+    context "when the user is logged in with One Login" do
       include_context "with stubbed Teacher Auth OmniAuth responses"
       include_context "with stubbed Teaching Record System person API"
 
       before do
         create(:user, :with_teacher_auth, :with_verified_trn, email: "user@example.com", trn: "1234567")
+        visit "/"
+        click_button "Sign in to your One Login account"
+        visit "/"
       end
 
-      scenario "Service prompts to log in with One Login" do
-        visit "/"
-        click_button("Sign in to your DfE Identity account")
-        expect(page).to have_content "Your account is now registered with One Login. Please sign in using your One Login account."
-        expect(page).to have_current_path "/registration_closed?one_login=true"
-        expect(page).not_to have_content "Sign up for email updates to find out when registration reopens."
-        expect(page).not_to have_button "Sign up for email updates"
+      scenario "Register email" do
+        click_link "Sign up for email updates"
+        expect(page).to have_field("What’s your email address?", with: "user@example.com")
+        page.choose("Yes", visible: :all)
+        click_button "Request email updates"
 
-        click_button("Sign in to your One Login account")
-        expect(page).to have_current_path account_path
+        expect(page).to have_content("Your email request has been set up")
+      end
+
+      scenario "Service links to registrations page" do
+        click_link "Your registrations"
+        expect(page).to have_current_path(account_path)
       end
     end
 
@@ -68,6 +73,8 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
     scenario "the registration closed step is shown" do
       expect(page).to have_current_path(registration_wizard_show_path(:closed))
       expect(page).to have_content("Registration has closed temporarily")
+      click_link "Request email updates"
+      expect(page).to have_field("What’s your email address?", with: "user@example.com")
     end
 
     context "when registration reopens" do
@@ -217,34 +224,50 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
 
       scenario "the late registration page redirects to the home page" do
         visit "/closed_registration_exception"
-        expect(page).to have_current_path("/registration_closed")
+        expect(page).to have_current_path(registration_closed_path)
       end
     end
   end
 
   context "when using email updates" do
-    include_context "Stub Get An Identity Omniauth Responses"
-
     before { close_registration! }
 
-    scenario "Register to email and unsubscribe" do
+    scenario "Register email" do
       visit "/"
-      click_button "Sign in to your DfE Identity account"
-      click_link "Request email updates"
+      click_link "Sign up for email updates"
+      fill_in("What’s your email address?", with: "user@example.com")
       page.choose("Yes", visible: :all)
       click_button "Request email updates"
 
       expect(page).to have_content("Your email request has been set up")
 
-      user = User.last
-      expect(user.email_updates_status).to eq("senco")
+      expect(RegistrationInterest.last).to have_attributes(
+        email: "user@example.com",
+        course: "npq-senco",
+      )
+    end
 
-      visit "/email_updates/unsubscribe?unsubscribe_key=#{user.email_updates_unsubscribe_key}"
-      expect(page).to have_content("Are you sure you want to unsubscribe?")
-      click_button "Unsubscribe"
+    scenario "Register an email that has already been registered updates existing entry" do
+      visit "/"
+      click_link "Sign up for email updates"
+      fill_in("What’s your email address?", with: "user@example.com")
+      page.choose("Yes", visible: :all)
+      click_button "Request email updates"
 
-      expect(page).to have_content("You have unsubscribed")
-      expect(user.reload.email_updates_status).to eq("empty")
+      expect(page).to have_content("Your email request has been set up")
+
+      visit "/"
+      click_link "Sign up for email updates"
+      fill_in("What’s your email address?", with: "user@example.com")
+      page.choose("No", visible: :all)
+      click_button "Request email updates"
+
+      expect(page).to have_content("Your email request has been set up")
+
+      expect(RegistrationInterest.last).to have_attributes(
+        email: "user@example.com",
+        course: "other",
+      )
     end
 
     scenario "Invalid unsubscribe link" do
