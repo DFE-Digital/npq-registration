@@ -64,6 +64,12 @@ FactoryBot.define do
       email { "archived-#{archived_email}" }
     end
 
+    trait :email_reused do
+      email { nil }
+      email_reused_at { 1.day.ago }
+      archived_email { Faker::Internet.email(name: full_name) }
+    end
+
     trait :with_refresh_token do
       transient do
         token { SecureRandom.hex(32) }

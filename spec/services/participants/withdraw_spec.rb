@@ -76,6 +76,21 @@ RSpec.describe Participants::Withdraw, type: :model do
         application.user.update_columns(
           email: nil,
           archived_email: "archived@example.com",
+          email_reused_at: Time.zone.now,
+        )
+      end
+
+      it "does not send a withdrawn notification email" do
+        expect(ApplicationWithdrawnMailer).not_to send_mail(:application_withdrawn_mail)
+        instance.withdraw
+      end
+    end
+
+    context "when the participant is archived" do
+      before do
+        application.user.update_columns(
+          email: "archived-user@example.com",
+          archived_email: "user@example.com",
           archived_at: Time.zone.now,
         )
       end

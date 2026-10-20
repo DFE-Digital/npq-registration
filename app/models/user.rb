@@ -27,7 +27,7 @@ class User < ApplicationRecord
 
   validates :full_name, presence: true
 
-  validates :email, presence: true, unless: :archived?
+  validates :email, presence: true, unless: :email_reused?
   validates :email,
             uniqueness: true,
             notify_email: true,
@@ -152,6 +152,10 @@ class User < ApplicationRecord
     update!(archived_at: nil, archived_email: nil)
   end
 
+  def email_reused?
+    email_reused_at.present?
+  end
+
   def set_closed_registration_feature_flag
     if Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED) && ClosedRegistrationUser.find_by(email:)
       Flipper.enable_actor(Feature::REGISTRATION_OPEN, self)
@@ -185,6 +189,23 @@ class User < ApplicationRecord
     trn if trn_verified?
   end
 
+  def blank_reused_email!(notify_sentry: true)
+    raise ArgumentError, "User email already blanked" if email.blank?
+
+    update!(
+      email: nil,
+      email_reused_at: Time.zone.now,
+      archived_email: email,
+      uid: nil, # should this be kept?
+      provider: nil, # should this be kept?
+    )
+
+    # If we're archiving a user who still has applications then we want to
+    # know about it otherwise it's a user account for expression of interest,
+    # or from a past incomplete registration
+    send_sentry_capture_message("Blanked email on the user due to reuse when used by a later participant") if notify_sentry && applications.any?
+  end
+
 private
 
   def touch_significantly_updated_at
@@ -203,5 +224,9 @@ private
   def significant_change?
     (saved_changes.keys - (INSIGNIFICANT_ATTRIBUTES + %w[updated_at])).any? ||
       (changes.keys - (INSIGNIFICANT_ATTRIBUTES + %w[updated_at])).any?
+  end
+
+  def send_sentry_capture_message(message)
+    Sentry.capture_message(message, level: :info, extra: { ecf_id: })
   end
 end

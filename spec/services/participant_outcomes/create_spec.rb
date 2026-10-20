@@ -361,7 +361,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
           completed_declaration.user.update_columns(
             email: nil,
             archived_email: "archived@example.com",
-            archived_at: Time.zone.now,
+            email_reused_at: Time.zone.now,
           )
         end
 

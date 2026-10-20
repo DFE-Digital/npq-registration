@@ -51,7 +51,7 @@ module Applications
     end
 
     def send_email
-      return if application.user.email.blank?
+      return if application.user.email.blank? || application.user.archived?
       return unless in_latest_cohort?
 
       ApplicationRejectedMailer.application_rejected_mail(
