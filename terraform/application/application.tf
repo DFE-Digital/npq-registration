@@ -30,7 +30,7 @@ module "application_configuration" {
 
     BIGQUERY_AIRBYTE_DATASET   = var.airbyte_enabled ? local.gcp_dataset_name : null
     AIRBYTE_SERVER_URL         = var.airbyte_enabled ? "https://airbyte-${var.namespace}.${module.cluster_data.ingress_domain}" : null
-    BIGQUERY_HIDDEN_POLICY_TAG = var.airbyte_enabled ? "{\"hidden\":\"projects/ecf-bq/locations/europe-west2/taxonomies/6302091323314055162/policyTags/301313311867345339\"}" : null
+    BIGQUERY_HIDDEN_POLICY_TAG = var.airbyte_enabled ? "projects/ecf-bq/locations/europe-west2/taxonomies/6302091323314055162/policyTags/301313311867345339" : null
 
 
     AZURE_STORAGE_ACCOUNT_NAME = azurerm_storage_account.uploads.name
