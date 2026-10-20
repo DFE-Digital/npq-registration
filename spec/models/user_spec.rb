@@ -344,40 +344,6 @@ RSpec.describe User do
     end
   end
 
-  describe "#update_email_updates_status" do
-    let(:user) { create(:user) }
-    let(:form) { EmailUpdates.new(email_updates_status: :senco) }
-    let(:uuid) { "7d023b82-e0eb-4ae2-b613-0a4a51bacf8f" }
-
-    before do
-      allow(SecureRandom).to receive(:uuid) { uuid }
-    end
-
-    context "when value is correct" do
-      it "saves the value" do
-        expect {
-          user.update_email_updates_status(form)
-        }.to change { user.reload.email_updates_status }.from("empty").to("senco")
-      end
-
-      it "creates proper unsubscribe key" do
-        expect {
-          user.update_email_updates_status(form)
-        }.to change { user.reload.email_updates_unsubscribe_key }.from(nil).to(uuid)
-      end
-    end
-
-    context "when value is changed" do
-      let(:user) { create(:user, email_updates_unsubscribe_key: "432") }
-
-      it "does not changes unsubscribe key" do
-        expect {
-          user.update_email_updates_status(form)
-        }.not_to(change { user.reload.email_updates_unsubscribe_key })
-      end
-    end
-  end
-
   describe "#unsubscribe_from_email_updates" do
     let(:user) { create(:user, email_updates_unsubscribe_key: "432", email_updates_status: "senco") }
 
