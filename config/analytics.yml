@@ -66,6 +66,7 @@ shared:
     - notified
     - created_at
     - updated_at
+    - course
   :private_childcare_providers:
     - id
     - provider_urn
