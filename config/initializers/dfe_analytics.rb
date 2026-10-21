@@ -57,6 +57,6 @@ DfE::Analytics.configure do |config|
 
   config.azure_federated_auth = ENV.include? "GOOGLE_CLOUD_CREDENTIALS"
 
-   # Perform airbyte checks on startup and allow airbyte config generation
+  # Perform airbyte checks on startup and allow airbyte config generation
   config.airbyte_enabled = Rails.env.in?(%w[review]) && ENV["BIGQUERY_AIRBYTE_DATASET"].present?
 end
