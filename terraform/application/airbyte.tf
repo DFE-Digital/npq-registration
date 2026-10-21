@@ -3,7 +3,7 @@ module "airbyte" {
 
   count = var.airbyte_enabled ? 1 : 0
 
-  environment           = var.environment
+  environment           = local.environment
   azure_resource_prefix = var.azure_resource_prefix
   service_short         = var.service_short
   service_name          = var.service_name
