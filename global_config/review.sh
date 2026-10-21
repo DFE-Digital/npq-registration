@@ -6,4 +6,4 @@ AZURE_RESOURCE_PREFIX=s189t01
 KV_PURGE_PROTECTION=false
 CONFIG_LONG=review
 NAMESPACE=cpd-development
-TERRAFORM_MODULES_TAG=3148-truncate-kubernetesjob-airbyte-module
+TERRAFORM_MODULES_TAG=main
