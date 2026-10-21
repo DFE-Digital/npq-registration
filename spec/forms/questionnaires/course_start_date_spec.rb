@@ -42,10 +42,10 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     end
   end
 
-  describe "#next_step" do
-    subject { instance.next_step }
+  describe "#requirements_met?" do
+    subject { instance.requirements_met? }
 
-    it { is_expected.to eq(:provider_check) }
+    it { is_expected.to be true }
   end
 
   describe "#previous_step" do
@@ -54,9 +54,25 @@ RSpec.describe Questionnaires::CourseStartDate, type: :model do
     it { is_expected.to eq(:start) }
   end
 
+  describe "#next_step" do
+    subject { instance.next_step }
+
+    context "when the cohort is unfunded" do
+      let(:course_start_cohort) { create(:cohort, :unfunded).identifier }
+
+      it { is_expected.to eq(:choose_your_npq) }
+    end
+
+    context "when the cohort is funded" do
+      let(:course_start_cohort) { create(:cohort, :capped).identifier }
+
+      it { is_expected.to eq(:check_funding) }
+    end
+  end
+
   describe "#return_to_regular_flow_on_change?" do
     subject { instance.return_to_regular_flow_on_change? }
 
-    it { is_expected.to be(true) }
+    it { is_expected.to be(false) }
   end
 end

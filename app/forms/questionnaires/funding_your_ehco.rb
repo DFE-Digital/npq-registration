@@ -12,12 +12,20 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      :choose_your_provider
+    def previous_step
+      if shown_ineligible_step_during_journey? || show_previously_funded_alert?
+        :work_setting
+      else
+        :ineligible_for_funding
+      end
     end
 
-    def previous_step
-      "ehco_funding_not_available"
+    def next_step
+      if show_previously_funded_alert?
+        :check_answers_and_submit
+      else
+        :choose_your_provider
+      end
     end
 
     def questions
@@ -30,6 +38,7 @@ module Questionnaires
     end
 
     def options
+      # compared to the funding_your_npq step - here the 'trust' option is always shown
       [
         build_option_struct(value: "school", link_errors: true),
         build_option_struct(value: "trust"),

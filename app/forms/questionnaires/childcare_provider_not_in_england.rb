@@ -1,9 +1,11 @@
 module Questionnaires
   class ChildcareProviderNotInEngland < Base
     def previous_step
-      :choose_childcare_provider
+      :work_setting
     end
 
-    def next_step; end
+    def next_step
+      # you cannot proceed any further from this step
+    end
   end
 end

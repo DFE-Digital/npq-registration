@@ -1,0 +1,27 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+
+  <h1 class="govuk-heading-l">Check your answers</h1>
+
+  <%= render "registration_wizard/shared/check_answers_list" %>
+
+  <h2 class="govuk-heading-m">Submit your registration</h2>
+  <p class="govuk-body">By submitting your registration to the DfE, you're confirming that all the information you entered is correct.</p>
+
+  <%=
+    form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f|
+      f.govuk_submit "Submit"
+    end
+  %>
+<% end %>
+
+<% if Rails.env.staging? || Rails.env.review? || Rails.env.local? %>
+  <code>
+  <%= Rails.env %> environment only - funding_eligiblity_status_code: "<%= @wizard.query_store.funding_eligiblity_status_code %>"
+  </code>
+<% end  %>

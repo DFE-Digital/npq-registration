@@ -20,7 +20,6 @@ class RegistrationWizardVisualiser
   }.freeze
 
   NODE_COLOR = COLORS[:purple]
-  HELPER_COLOR = COLORS[:blue]
   END_STATE_COLOR = COLORS[:red]
   CONFIRMATION_COLOR = COLORS[:green]
   NODE_COLOR_GRADIENT = COLORS[:light_purple]
@@ -69,7 +68,7 @@ class RegistrationWizardVisualiser
   }.freeze
 
   EDGE_STYLES = {
-    penwidth: "7",
+    penwidth: "3",
   }.freeze
 
   INFORMATION_CLUSTER_STYLES = {
@@ -138,7 +137,7 @@ private
 
   def generate_png_output
     Rails.logger.debug("Generating #{output_png_filename}")
-    generate_png_command_array = "dot", "-Tpng", output_dot_filename, "-o", output_png_filename
+    generate_png_command_array = "dot", "-Tpng", "-Gdpi=150", output_dot_filename, "-o", output_png_filename
 
     Rails.logger.debug(generate_png_command_array.join(" "))
     result = system(*generate_png_command_array)
@@ -166,8 +165,6 @@ private
 
         #{step_nodes.join("\n  ")}
 
-        #{flow_helper_nodes.join("\n  ")}
-
         #{end_nodes.join("\n  ")}
 
         #{edges.join("\n  ")}
@@ -180,7 +177,6 @@ private
   def information_nodes
     [
       { name: "questionnaire_step", color: NODE_COLOR },
-      { name: "step_redirection_helper_method", color: HELPER_COLOR },
       { name: "completion_end_step", color: CONFIRMATION_COLOR },
       { name: "end_state_preventing_completion", color: END_STATE_COLOR },
     ]
@@ -229,9 +225,22 @@ private
     end
   end
 
+  def helper_method_steps(next_step_source, f, method_name)
+    return [] unless next_step_source.scan(/#{method_name}/).any?
+
+    helper_method_source = f.new.method(method_name.to_sym).source
+    extract_steps_from_source(helper_method_source)
+  end
+
   def step_node_structs
     @step_node_structs ||= step_options.map do |f|
-      next_steps = extract_steps_from_source(f.new.method(:next_step).source)
+      next_step_source = f.new.method(:next_step).source
+      next_steps = extract_steps_from_source(next_step_source)
+
+      next_steps += helper_method_steps(next_step_source, f, "show_eligibility_step")
+      next_steps += helper_method_steps(next_step_source, f, "show_appropriate_course_step")
+      next_steps += helper_method_steps(next_step_source, f, "show_funding_step")
+      next_steps += helper_method_steps(next_step_source, f, "previous_funding_or_choose_npq_step")
 
       Node.new(
         name: f.to_s.underscore.split("/").last,
@@ -240,30 +249,8 @@ private
     end
   end
 
-  def flow_helper_nodes
-    flow_helper_method_node_structs.map do |node|
-      build_node_string(
-        name: node.name,
-        settings: node_settings(node.name, HELPER_COLOR, description: "Questionnaires::FlowHelper"),
-      )
-    end
-  end
-
-  def flow_helper_method_node_structs
-    flow_helper_methods.map do |method_name|
-      helper_method_source = flow_helper_method_source(method_name)
-      # Remove the method name from the source to avoid infinite loops
-      helper_method_source.slice!(method_name.to_s)
-
-      Node.new(
-        name: method_name,
-        next_steps: extract_steps_from_source(helper_method_source),
-      )
-    end
-  end
-
   def end_nodes
-    all_nodes = step_node_structs + flow_helper_method_node_structs
+    all_nodes = step_node_structs
     end_nodes = all_nodes.select { |n| n.next_steps.empty? }
 
     end_nodes.map do |node|
@@ -292,7 +279,6 @@ private
   def edges
     [
       step_node_structs.map { |node| edges_for(node, edge_settings(EDGE_COLOR)) },
-      flow_helper_method_node_structs.map { |node| edges_for(node, edge_settings(EDGE_COLOR)) },
     ].flatten.uniq
   end
 
@@ -307,20 +293,8 @@ private
          .select { |f| f < Questionnaires::Base }
   end
 
-  def flow_helper_methods
-    Questionnaires::FlowHelper.instance_methods
-  end
-
-  def flow_helper_method_source(method_name)
-    Questionnaires::FlowHelper.instance_method(method_name).source
-  end
-
   def extract_steps_from_source(method_source)
-    steps = method_source.scan(/^\s*:\w+/).map(&:strip).map { |s| s.delete_prefix(":") }
-
-    helper_step_methods = method_source.scan(/(#{flow_helper_methods.join("|")})/).flatten
-
-    steps + helper_step_methods
+    method_source.scan(/^\s*:\w+/).map(&:strip).map { |s| s.delete_prefix(":") }
   end
 
   ## Graph builder helpers

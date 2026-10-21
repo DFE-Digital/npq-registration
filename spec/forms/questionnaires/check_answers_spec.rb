@@ -1,31 +1,30 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::CheckAnswers do
-  let(:user_record_trn) { "7654321" }
-  let(:user) { create(:user, trn: user_record_trn) }
-  let(:load_provider) { LeadProvider.all.sample }
-  let(:course) { create(:course) }
-  let(:school) { create(:school) }
-  let(:verified_trn) { rand(1_000_000..9_999_999).to_s }
-  let(:store_trn) { "1234567" }
-  let(:store) do
-    {
-      lead_provider_id: load_provider.id,
-      institution_identifier: "School-#{school.urn}",
-      course_identifier: course.identifier,
-      trn_verified: true,
-      trn: store_trn,
-      verified_trn:,
-      confirmed_email: user.email,
-    }.stringify_keys
-  end
-  let(:session) { {} }
-  let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-  let(:wizard) { RegistrationWizard.new(current_step: :check_answers, store:, request:, current_user: user) }
+  subject(:instance) { described_class.new(wizard:) }
 
-  describe "#previous_step", skip: Rails.configuration.x.dfe_wizard do
-    it "goes to share_provider" do
-      expect(subject.previous_step).to be(:share_provider)
+  let(:wizard) { RegistrationWizard.new(current_step: :check_answers, store:, request: nil, current_user: nil) }
+  let(:store) { {} }
+
+  describe "#previous_step" do
+    subject { described_class.new(wizard:).previous_step }
+
+    it { is_expected.to be(:share_provider) }
+  end
+
+  describe "#next_step" do
+    subject { instance.next_step }
+
+    it { is_expected.to be(:continue_to_login) }
+  end
+
+  describe "#before_render" do
+    subject { instance.before_render }
+
+    let(:store) { { funding_eligiblity_status_code: :funded }.stringify_keys }
+
+    it "sets pre_login_funding_eligiblity_status_code in the store" do
+      expect { subject }.to change { wizard.store["pre_login_funding_eligiblity_status_code"] }.from(nil).to(:funded)
     end
   end
 end

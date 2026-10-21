@@ -1,0 +1,32 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l"><%= t("helpers.title.registration_wizard.check_funding") %></h1>
+
+    <p class="govuk-body">
+      We’ll ask a few questions to check if you can get funding for courses starting in
+      <%= Questionnaires::CourseStartDate::OPTIONS.dig(@wizard.store["course_start_cohort"], :cohort_description) %>.
+    </p>
+
+    <p class="govuk-body">
+      You can then continue to register.
+    </p>
+
+    <div class="govuk-button-group">
+      <% @form.options.each_with_index do |option, i| %>
+        <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+          <%= f.govuk_error_summary %>
+          <%= f.hidden_field @form.class::QUESTION_NAME, value: option.value %>
+          <%= f.govuk_submit option.label, secondary: (i > 0) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

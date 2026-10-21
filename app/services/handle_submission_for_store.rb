@@ -147,16 +147,11 @@ private
 
   def headteacher_status
     if course.ehco?
-      case store["ehco_headteacher"]
+      case store["ehco_new_headteacher"]
       when "yes"
-        case store["ehco_new_headteacher"]
-        when "yes"
-          "yes_in_first_five_years"
-        when "no"
-          "yes_over_five_years"
-        end
+        "yes_in_first_five_years"
       when "no"
-        "no"
+        "yes_over_five_years"
       end
     else
       store["headteacher_status"]
@@ -199,10 +194,6 @@ private
            :funding_eligiblity_status_code,
            :previously_received_targeted_funding_support?,
            to: :funding_eligibility_service
-
-  def new_headteacher?
-    %w[yes_in_first_two_years yes_in_first_five_years yes_when_course_starts].include?(headteacher_status)
-  end
 
   def course
     @course ||= query_store.course

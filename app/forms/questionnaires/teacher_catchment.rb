@@ -18,18 +18,16 @@ module Questionnaires
       wizard.store["teacher_catchment_country"] = nil
     end
 
-    def return_to_regular_flow_on_change?
-      true
+    def previous_step
+      :check_funding
     end
 
     def next_step
-      return :check_answers if changing_answer? && !answers_will_change?
-
-      :work_setting
-    end
-
-    def previous_step
-      :provider_check
+      if teacher_catchment == "england"
+        :choose_your_npq
+      else
+        :ineligible_for_funding_not_in_england
+      end
     end
 
     def questions

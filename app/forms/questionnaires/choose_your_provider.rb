@@ -22,26 +22,18 @@ module Questionnaires
       ]
     end
 
-    def next_step
-      :share_provider
+    def previous_step
+      if query_store.proceed_without_checking_funding?
+        :work_setting
+      elsif eligible_for_funding?
+        :possible_funding
+      else
+        show_funding_step
+      end
     end
 
-    def previous_step
-      if course&.npqs? && wizard.query_store.inside_catchment?
-        :funding_eligibility_senco
-      elsif !wizard.query_store.inside_catchment? || !wizard.query_store.works_in_school?
-        :funding_your_npq
-      elsif course.npqh? && eligible_for_funding?
-        :possible_funding
-      elsif course.ehco?
-        if eligible_for_funding?
-          :ehco_possible_funding
-        else
-          :funding_your_ehco
-        end
-      else
-        :choose_your_npq
-      end
+    def next_step
+      :share_provider
     end
 
     def options
@@ -62,10 +54,6 @@ module Questionnaires
 
   private
 
-    def eligible_for_funding?
-      @eligible_for_funding ||= funding_eligibility_calculator.funded?
-    end
-
     def funding_eligibility_calculator
       @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
         course:,
@@ -73,12 +61,12 @@ module Questionnaires
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         user_ecf_id: query_store.user_ecf_id,
-        query_store: wizard.query_store,
+        query_store:,
       )
     end
 
     def providers
-      LeadProvider.for(course:, cohort: Cohort.find_by(identifier: wizard.query_store.course_start_cohort)).alphabetical
+      LeadProvider.for(course:, cohort: Cohort.find_by(identifier: query_store.course_start_cohort)).alphabetical
     end
 
     def lead_provider

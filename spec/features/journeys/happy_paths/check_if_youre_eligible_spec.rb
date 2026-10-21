@@ -1,0 +1,105 @@
+require "rails_helper"
+
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_school, type: :feature do
+  include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
+  include ApplicationHelper
+
+  include_context "with stubbed Teacher Auth OmniAuth responses"
+  include_context "with stubbed Teaching Record System person API"
+
+  before do
+    navigate_to_page(path: "/", submit_form: false) do
+      page.click_button("Start now")
+    end
+  end
+
+  scenario "Autumn 2026 cohort with funding check - works in England" do
+    choose_course_start_date
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      expect(page).to have_text("Check if you’re eligible for DfE scholarship funding")
+      click_button("Check funding")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      expect(page).to have_text("Do you work in England?")
+      choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
+      expect(page).to have_text("Choose an NPQ")
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "Autumn 2026 cohort with funding check - does not work in England" do
+    choose_course_start_date
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Check funding")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+      choose("No", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding-not-in-england", submit_form: true, submit_button_text: "Continue to register") do
+      expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
+      expect(page).to have_text("Choose an NPQ")
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "Autumn 2026 cohort without funding check" do
+    choose_course_start_date
+
+    expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+      click_button("Continue without DfE funding")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+      expect(page).to have_text("Choose an NPQ")
+      page.choose("Headship", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
+      page.choose("Primary school (5 to 11)", visible: :all)
+    end
+
+    choose_a_school(js: false, name: "open")
+
+    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+      expect(page).to have_text("Select your provider")
+      page.choose("Teach First", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      expect(page).to have_text("Sharing your NPQ information")
+      page.check("Yes, I agree to share my information", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
+      expect(page).to have_summary_item("DfE scholarship funding", "Not eligible")
+      expect(page).to have_content 'funding_eligiblity_status_code: "requested_no_funding"'
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+
+  scenario "Spring 2026 cohort" do
+    choose_course_start_date(first_option: false)
+
+    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: false) do
+      expect(page).to have_text("Choose an NPQ")
+    end
+
+    check_back_journey_is_correct(exclude_current_page: true)
+  end
+end

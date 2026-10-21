@@ -7,7 +7,21 @@ class RegistrationWizard
   class InvalidStep < StandardError; end
   class RemovedStep < StandardError; end
 
-  Answer = Struct.new(:key, :value, :change_step)
+  Answer = Struct.new(:key, :value, :change_step, :changeable, :tag_colour) do
+    def changeable?
+      self[:changeable].nil? || self[:changeable]
+    end
+
+    def action_href
+      "/registration/#{change_step.to_s.dasherize}/change"
+    end
+  end
+
+  FUNDING_STATUS_TAG_COLOURS = {
+    eligible: "green",
+    in_review: "yellow",
+    not_eligible: "grey",
+  }.freeze
 
   VALID_REGISTRATION_STEPS = %i[
     start
@@ -15,17 +29,12 @@ class RegistrationWizard
     teacher_catchment
     referred_by_return_to_teaching_adviser
     work_setting
-    provider_check
-    change_your_course_or_provider
-    choose_an_npq_and_provider
+    check_funding
+    funding_history
     login_callback
     npqh_status
     ehco_unavailable
-    ehco_headteacher
     ehco_new_headteacher
-    ehco_funding_not_available
-    ehco_previously_funded
-    ehco_possible_funding
     funding_your_ehco
     itt_provider
     choose_your_npq
@@ -33,9 +42,7 @@ class RegistrationWizard
     maths_understanding_of_approach
     maths_cannot_register
     senco_in_role
-    funding_eligibility_senco
     senco_start_date
-    funding_eligibility_maths
     choose_your_provider
     choose_school
     choose_childcare_provider
@@ -49,22 +56,35 @@ class RegistrationWizard
     childcare_provider_not_in_england
     possible_funding
     ineligible_for_funding
+    ineligible_for_funding_not_in_england
+    ineligible_for_funding_previously_funded
     funding_your_npq
     share_provider
     check_answers
+    check_answers_and_submit
     course_start_date
     cannot_register_yet
+    continue_to_login
   ].freeze
 
   REMOVED_REGISTRATION_STEPS = %i[
     about_npq
+    change_your_course_or_provider
+    choose_an_npq_and_provider
     choosen_start_date
     confirmation
     dont_have_teacher_reference_number
     dqt_mismatch
-    find_school
+    ehco_funding_not_available
+    ehco_headteacher
+    ehco_possible_funding
+    ehco_previously_funded
     find_childcare_provider
+    find_school
+    funding_eligibility_maths
+    funding_eligibility_senco
     get_an_identity_callback
+    provider_check
     qualified_teacher_check
     teacher_reference_number
   ].freeze
@@ -117,6 +137,7 @@ class RegistrationWizard
   end
 
   def save!
+    form.before_save
     form.attributes.each { |k, v| store[k.to_s] = v }
     form.after_save
   end
@@ -132,8 +153,9 @@ class RegistrationWizard
   def answers
     array = []
 
-    array << Answer.new("Course start", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]][:cohort_description], :course_start_date)
-    array << Answer.new("Workplace in England", teacher_catchment_humanized, :teacher_catchment)
+    array << Answer.new("Cohort", Questionnaires::CourseStartDate::OPTIONS[store["course_start_cohort"]][:cohort_description], :course_start_date)
+    array << Answer.new("Working in England", teacher_catchment_humanized, :teacher_catchment) if store["teacher_catchment"].present?
+    array << Answer.new("Course", I18n.t(course.identifier, scope: "course.name"), :choose_your_npq)
 
     if store["referred_by_return_to_teaching_adviser"]
       array << Answer.new("Referred by return to teaching adviser", t("referred_by_return_to_teaching_adviser"), :referred_by_return_to_teaching_adviser)
@@ -157,12 +179,10 @@ class RegistrationWizard
       end
     end
 
-    if inside_catchment?
-      if works_in_school?
-        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_school)
-      elsif works_in_childcare? && kind_of_nursery_public?
-        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_childcare_provider)
-      end
+    if works_in_school?
+      array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_school)
+    elsif works_in_childcare? && kind_of_nursery_public?
+      array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :choose_childcare_provider)
     end
 
     if employment_type_matters?
@@ -172,23 +192,17 @@ class RegistrationWizard
       array << Answer.new("Employer", store["employer_name"], :your_employer) if employer_name_matters?
     end
 
-    array << Answer.new("Course", I18n.t(course.identifier, scope: "course.name"), :choose_your_npq)
-
     if course.ehco?
-      array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status)
-      array << Answer.new("Headteacher", t("ehco_headteacher"), :ehco_headteacher)
-
-      if store["ehco_headteacher"] == "yes"
-        array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher)
-      end
+      array << Answer.new("Headship NPQ stage", t("npqh_status"), :npqh_status) if store["npqh_status"]
+      array << Answer.new("First 5 years of headship", t("ehco_new_headteacher"), :ehco_new_headteacher) if store["ehco_new_headteacher"]
     end
 
-    if course.npqs?
+    if course.npqs? && store["senco_in_role_status"]
       value = store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].to_fs(:govuk_approx)}" : t("senco_in_role")
       array << Answer.new("Special educational needs co-ordinator (SENCO)", value, :senco_in_role)
     end
 
-    if course.npqlpm?
+    if course.npqlpm? && store["maths_eligibility_teaching_for_mastery"].present?
       value = if store["maths_eligibility_teaching_for_mastery"] == "yes"
                 store["maths_eligibility_teaching_for_mastery"].capitalize
               else
@@ -208,6 +222,14 @@ class RegistrationWizard
       end
     end
 
+    array << Answer.new(
+      "DfE scholarship funding",
+      funding_status.to_s.humanize,
+      :check_funding,
+      false,
+      FUNDING_STATUS_TAG_COLOURS.fetch(funding_status),
+    )
+
     array << Answer.new("Provider", lead_provider&.name, :choose_your_provider)
 
     array
@@ -224,8 +246,6 @@ private
            :employment_type_matters?,
            :employment_role_matters?,
            :employer_name_matters?,
-           :employment_type_hospital_school?,
-           :employment_type_other?,
            :has_ofsted_urn?,
            :inside_catchment?,
            :itt_provider,
@@ -233,14 +253,11 @@ private
            :kind_of_nursery_public?,
            :lead_mentor_for_accredited_itt_provider?,
            :lead_provider,
-           :new_headteacher?,
            :teacher_catchment_humanized,
-           :trn,
            :works_in_another_setting?,
            :works_in_childcare?,
            :works_in_other?,
            :works_in_school?,
-           :young_offender_institution?,
            to: :query_store
 
   def form_for_step(step)
@@ -250,7 +267,7 @@ private
   end
 
   def load_current_user_into_store
-    store["current_user_id"] = current_user&.id
+    store["current_user_id"] = current_user.id if current_user
   end
 
   def institution_from_store
@@ -258,7 +275,7 @@ private
   end
 
   def funding_eligibility_calculator
-    FundingEligibility.new_from_query_store(
+    @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
       course:,
       institution: institution_from_store,
       approved_itt_provider: approved_itt_provider?,
@@ -266,6 +283,16 @@ private
       user_ecf_id: query_store.user_ecf_id,
       query_store:,
     )
+  end
+
+  def funding_status
+    if funding_eligibility_calculator.funded?
+      :eligible
+    elsif funding_eligibility_calculator.subject_to_review?
+      :in_review
+    else
+      :not_eligible
+    end
   end
 
   def form_class

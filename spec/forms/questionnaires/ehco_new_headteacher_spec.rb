@@ -4,12 +4,14 @@ RSpec.describe Questionnaires::EhcoNewHeadteacher, type: :model do
   let(:instance) { described_class.new }
   let(:course) { create(:course, :senco) }
   let(:lead_provider) { create(:lead_provider) }
+  let(:teacher_catchment) { nil }
 
   let(:store) do
     {
       course_identifier: course.identifier,
       lead_provider_id: lead_provider.id,
       current_user: build_stubbed(:user),
+      teacher_catchment:,
     }.stringify_keys
   end
 
@@ -25,47 +27,9 @@ RSpec.describe Questionnaires::EhcoNewHeadteacher, type: :model do
 
   it { is_expected.to validate_inclusion_of(:ehco_new_headteacher).in_array(Questionnaires::EhcoNewHeadteacher::VALID_EHCO_NEW_HEADTEACHER_OPTIONS) }
 
-  describe "#next_step" do
-    subject { instance.next_step }
+  describe "#previous_step" do
+    subject { instance.previous_step }
 
-    context "when the funding eligibility status is eligible" do
-      before do
-        allow_any_instance_of(FundingEligibility).to receive(:funded?).and_return(true)
-      end
-
-      it { is_expected.to be :ehco_possible_funding }
-    end
-
-    context "when the funding eligibility status is subject to review" do
-      before do
-        allow_any_instance_of(FundingEligibility).to receive(:funded?).and_return(false)
-        allow_any_instance_of(FundingEligibility).to receive(:subject_to_review?).and_return(true)
-      end
-
-      it { is_expected.to be :possible_funding }
-    end
-
-    context "when the funding eligibility status is ineligible" do
-      before do
-        allow_any_instance_of(FundingEligibility).to receive(:funded?).and_return(false)
-        allow_any_instance_of(FundingEligibility).to receive(:subject_to_review?).and_return(false)
-      end
-
-      context "and the eligibility status is not previously funded" do
-        before do
-          allow_any_instance_of(FundingEligibility).to receive(:previously_funded?).and_return(false)
-        end
-
-        it { is_expected.to be :ehco_funding_not_available }
-      end
-
-      context "and the eligibility status is previously funded" do
-        before do
-          allow_any_instance_of(FundingEligibility).to receive(:previously_funded?).and_return(true)
-        end
-
-        it { is_expected.to be :ehco_previously_funded }
-      end
-    end
+    it { is_expected.to be :npqh_status }
   end
 end
