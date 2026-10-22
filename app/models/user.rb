@@ -104,8 +104,24 @@ class User < ApplicationRecord
     Users::FindOrCreateFromProviderData.new(provider_data: provider_data, feature_flag_id: feature_flag_id).call
   end
 
+  # A double click on TeacherAuth can send two callbacks almost simultaneously.
+  # The second one may fail to create a user or token the first one just created:
+  # - a duplicate user: the first request has already saved it, so the
+  #   uniqueness validations on email and uid fail with ActiveRecord::RecordInvalid.
+  # - a duplicate token: both requests look for the token at the same time and
+  #   find none, so both try to create it. The unique index on oauth_tokens
+  #   rejects the second one with ActiveRecord::RecordNotUnique.
+  # We retry once to find them.
+  # If it fails again we raise the error.
   def self.find_or_create_from_teacher_auth(provider_data:, feature_flag_id:)
-    Users::FindOrCreateFromTeacherAuth.new(provider_data:, feature_flag_id:).call
+    attempts = 0
+
+    begin
+      attempts += 1
+      Users::FindOrCreateFromTeacherAuth.new(provider_data:, feature_flag_id:).call
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
+      attempts == 1 ? retry : raise
+    end
   end
 
   def get_an_identity_provider?
