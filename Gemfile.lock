@@ -713,7 +713,7 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
-    webmock (3.29.0)
+    webmock (3.34.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -816,7 +816,7 @@ DEPENDENCIES
   strong_migrations
   tzinfo-data
   web-console (>= 3.3.0)
-  webmock (~> 3.29)
+  webmock (~> 3.34)
   with_advisory_lock
 
 RUBY VERSION
