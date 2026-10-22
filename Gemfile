@@ -88,7 +88,7 @@ end
 
 group :test do
   gem "axe-core-capybara", "~> 4.7"
-  gem "axe-core-rspec", "~> 4.13"
+  gem "axe-core-rspec", "~> 4.14"
   gem "cuprite"
   gem "rspec-default_http_header"
   gem "shoulda-matchers"
