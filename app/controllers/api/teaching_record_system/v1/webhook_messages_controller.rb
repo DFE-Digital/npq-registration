@@ -1,3 +1,5 @@
+require "linzer/rack"
+
 module API
   module TeachingRecordSystem
     module V1
