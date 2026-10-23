@@ -1,8 +1,9 @@
 <%=
   form.govuk_text_field(
     question.name,
-    width: "full",
-    label:  { text: question.question_text, size: "l", tag: "h1" }
+    **{width: "full",
+       label:  { text: question.question_text, size: "l", tag: "h1" }
+    }.deep_merge(question.style_options)
   )
 %>
 

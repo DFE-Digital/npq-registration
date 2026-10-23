@@ -12,12 +12,12 @@
     </div>
 
     <% if Feature.registration_closed?(current_user) %>
-      <p class="govuk-body">We’ll send updates to <strong><%= current_user.email %></strong> about when registration will open.</p>
+      <p class="govuk-body">We’ll send updates to <strong><%= @form.email %></strong> about when registration will open.</p>
     <% else %>
-      <p class="govuk-body">We’ll send updates to <strong><%= current_user.email %></strong> when registration opens for courses starting in autumn 2026.</p>
+      <p class="govuk-body">We’ll send updates to <strong><%= @form.email %></strong> when registration opens for courses starting in autumn 2026.</p>
     <% end %>
 
-    <% if current_user.applications.any? %>
+    <% if current_user&.applications&.any? %>
       <p class="govuk-body"><a class="govuk-link" href="<%= application_count_based_account_url %>">View your existing registrations</a>.</p>
     <% end %>
 
