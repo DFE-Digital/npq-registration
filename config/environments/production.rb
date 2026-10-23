@@ -106,8 +106,9 @@ Rails.application.configure do
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     $stdout.sync = true
-    config.rails_semantic_logger.add_file_appender = false
-    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
+    config.rails_semantic_logger.appenders do |appenders|
+      appenders.add(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
+    end
   end
 
   config.cache_store = :redis_cache_store,
