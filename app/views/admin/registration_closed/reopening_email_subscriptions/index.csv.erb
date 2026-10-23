@@ -1,4 +1,4 @@
-<%= CSV.generate_line(["Name", "Email"], encoding: "utf-8") -%>
-<% @all_users.each do |user| %>
-  <%= CSV.generate_line([user.full_name, user.email], encoding: "utf-8") -%>
+<%= CSV.generate_line(["Email", "Interested in SENCO?", "Notified", "Subscription Date"], encoding: "utf-8") -%>
+<% @all_registration_interests.each do |registration_interest| %>
+  <%= CSV.generate_line([registration_interest.email, registration_interest.npq_senco? ? "Yes" : "No", registration_interest.notified? ? "Yes" : "No", registration_interest.created_at.to_date.iso8601], encoding: "utf-8") -%>
 <% end %>

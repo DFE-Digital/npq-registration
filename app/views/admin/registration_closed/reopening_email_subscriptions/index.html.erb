@@ -1,7 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-    <h1 class="govuk-heading-l">Users who’ve requested emails about registration reopening (<%= @all_users.count %>)</h1>
+    <h1 class="govuk-heading-l">Users who’ve requested emails about registration reopening (<%= @all_registration_interests.count %>)</h1>
 
     <%= govuk_button_link_to("Export all with SENCO interest", admin_registration_closed_reopening_email_subscriptions_path(senco_only: true, format: :csv), secondary: true) %>
     <%= govuk_button_link_to("Export all", admin_registration_closed_reopening_email_subscriptions_path(format: :csv)) %>
@@ -11,23 +11,27 @@
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header">Email address</th>
         <th scope="col" class="govuk-table__header">Interested in SENCO?</th>
+        <th scope="col" class="govuk-table__header">Notified?</th>
         <th scope="col" class="govuk-table__header">Subscription Date</th>
         <th scope="col" class="govuk-table__header">Unsubscribe</th>
       </tr>
       </thead>
 
       <tbody class="govuk-table__body">
-      <% @users.each do |user| %>
+      <% @registration_interests.each do |registration_interest| %>
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell"><%= user.email %></td>
+          <td class="govuk-table__cell"><%= registration_interest.email %></td>
           <td class="govuk-table__cell">
-            <%= user.senco_email_updates_status? ? "Yes" : "No" %>
+            <%= registration_interest.npq_senco? ? "Yes" : "No" %>
           </td>
           <td class="govuk-table__cell">
-            <%= user.created_at.to_date.to_fs(:govuk_short) %>
+            <%= registration_interest.notified? ? "Yes" : "No" %>
           </td>
           <td class="govuk-table__cell">
-            <%= govuk_link_to "Unsubscribe", unsubscribe_admin_registration_closed_reopening_email_subscription_path(user.id) %>
+            <%= registration_interest.created_at.to_date.to_fs(:govuk_short) %>
+          </td>
+          <td class="govuk-table__cell">
+            <%= govuk_link_to "Unsubscribe", unsubscribe_admin_registration_closed_reopening_email_subscription_path(registration_interest.id) %>
           </td>
         </tr>
       <% end %>
