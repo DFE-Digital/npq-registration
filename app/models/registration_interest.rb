@@ -5,6 +5,11 @@ class RegistrationInterest < ApplicationRecord
             uniqueness: { case_sensitive: false },
             notify_email: true
 
+  enum :course, {
+    "npq-senco": "npq-senco",
+    other: "other",
+  }, validate: true
+
   scope :not_yet_notified, -> { where(notified: false) }
   scope :random_sample, ->(count) { order("RANDOM()").first(count) }
 
