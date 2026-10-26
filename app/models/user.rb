@@ -196,8 +196,6 @@ class User < ApplicationRecord
       email: nil,
       email_reused_at: Time.zone.now,
       archived_email: email,
-      uid: nil, # should this be kept?
-      provider: nil, # should this be kept?
     )
 
     # If we're archiving a user who still has applications then we want to

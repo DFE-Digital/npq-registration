@@ -903,9 +903,12 @@ RSpec.describe User do
       expect { subject }.to change { user.reload.archived_email }.from(nil).to(user.email)
     end
 
-    it "blanks the UID and auth provider" do
-      expect { subject }.to change { user.reload.uid }.to(nil)
-        .and change(user, :provider).to(nil)
+    it "does not blank the UID" do
+      expect { subject }.not_to(change { user.reload.uid })
+    end
+
+    it "does not blank the auth provider" do
+      expect { subject }.not_to(change { user.reload.provider })
     end
 
     it "does not change the user's TRN" do
