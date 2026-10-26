@@ -91,6 +91,8 @@ shared:
     - archived_email
     - raw_tra_provider_data
     - previous_names
+  :registration_interests:
+    - unsubscribe_key
   :oauth_tokens:
     - id
     - user_id
