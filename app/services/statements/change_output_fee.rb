@@ -81,7 +81,7 @@ module Statements
           .where(declaration_date: ..statement.deadline_date)
           .count
 
-        "This will move #{declaration_count} declarations and #{milestone_count} milestones from the next payment run statement, #{statement_name(next_output_statement)}, onto this statement"
+        "This will move #{declaration_count} declarations and #{milestone_count} milestones from the #{statement_name(next_output_statement)} statement onto this statement"
       else
         "There is no later payment run statement and no declarations or milestones will be moved"
       end

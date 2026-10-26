@@ -14,10 +14,10 @@
 
     <%= f.govuk_radio_button :output_fee, true,
           label: { text: "Payment run" },
-          hint: { text: @service.move_onto_hint } %>
+          hint: { text: @service.move_onto_hint }.compact.presence %>
     <%= f.govuk_radio_button :output_fee, false,
            label: { text: "Non-payment run" },
-           hint: { text: @service.move_off_hint } %>
+           hint: { text: @service.move_off_hint }.compact.presence %>
   <% end %>
 
   <% if f.object.requires_payable_override? %>

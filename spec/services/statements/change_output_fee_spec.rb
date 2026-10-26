@@ -427,7 +427,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
         it "includes only declarations declared before this statements deadline date" do
           expect(service.move_onto_hint)
-            .to eq("This will move 2 declarations and 0 milestones from the next payment run statement, #{later_name}, onto this statement")
+            .to eq("This will move 2 declarations and 0 milestones from the #{later_name} statement onto this statement")
         end
       end
 

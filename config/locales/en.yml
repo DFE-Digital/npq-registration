@@ -1086,7 +1086,8 @@ en:
 
       statements_change_output_fee:
         output_fee_html:
-          You can change whether a statement is an payment run statement, this will also move declarations to their earliest appropriate payment run statement
+          <p>You can change whether a statement this a payment run statement, also called an output statement.</p>
+          <p>When declarations are made they are attached to the earliest appropriate payment run statement. Changing whether this is a payment run statement will reconcile later declarations onto the appropriate statement.</p>
 
     label:
       applications_change_training_status:
