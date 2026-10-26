@@ -118,7 +118,7 @@ module Users
         User
           .not_archived
           .with_trn(trn)
-          .order(archived_at: :desc, updated_at: :desc)
+          .order(created_at: :desc)
           .to_a
     end
 
@@ -150,8 +150,7 @@ module Users
 
     def merge_and_archive_other_users(user_to_keep, users_to_merge)
       users_to_merge.each do |user_to_merge|
-        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:)
-          .call(dry_run: false, allow_archived_users: true) # TODO: should allow_archived_users still be a thing?
+        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
       end
     end
 

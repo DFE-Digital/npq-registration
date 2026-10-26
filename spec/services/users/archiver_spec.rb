@@ -48,14 +48,14 @@ RSpec.describe Users::Archiver do
       end
     end
 
-    context "when the user has email_resued_at set" do
+    context "when the user has email_reused_at set" do
       let(:user) { create(:user, :email_reused) }
 
       it "archives the user" do
         subject.archive!
 
         expect(user).to be_archived
-        expect(user.email).to eq("archived-#{user.archived_email}")
+        expect(user.email).to be_nil
         expect(user.uid).to be_nil
         expect(user.provider).to be_nil
         expect(user.archived_at).to be_present
