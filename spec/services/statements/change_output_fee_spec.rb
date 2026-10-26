@@ -8,7 +8,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
   let(:state) { :open }
 
   let :statement do
-    create(:statement, state:, output_fee: original_output_fee, for_date: 30.days.from_now)
+    create(:statement, state:, output_fee: original_output_fee, for_date: 60.days.from_now)
   end
 
   describe "validations" do
@@ -310,7 +310,10 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
 
     context "with payable statement" do
       context "when in past" do
-        let(:statement) { create(:statement, state: :payable, for_date: 2.months.ago, output_fee: true) }
+        let :statement do
+          for_date = Time.zone.today.day < 24 ? 2.months.ago : 1.month.ago
+          create(:statement, state: :payable, for_date:, output_fee: true)
+        end
 
         let :later_statement do
           last_month = create(:statement, :payable, extend_from: statement, output_fee: true)
@@ -614,7 +617,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
           end
 
           let :statement do
-            create(:statement, state:, output_fee: false, for_date: Time.zone.now)
+            create(:statement, state:, output_fee: false, for_date: 10.days.from_now)
           end
 
           it "updates output_fee" do
