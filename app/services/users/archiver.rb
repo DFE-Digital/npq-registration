@@ -10,12 +10,11 @@ module Users
     def archive!
       raise ArgumentError, "User already archived" if user.archived?
 
-      if user.email_reused?
-        user.email = email_for_archived_user(user.archived_email)
-      else
+      unless user.email_reused?
         user.archived_email = user.email
         user.email = email_for_archived_user(user.email)
       end
+
       user.archived_at = Time.zone.now
       user.uid = nil
       user.provider = nil
