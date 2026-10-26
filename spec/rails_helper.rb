@@ -26,6 +26,7 @@ require "paper_trail/frameworks/rspec"
 require "dfe/analytics/testing"
 require "dfe/analytics/rspec/matchers"
 require "capybara/cuprite"
+require "semantic_logger/test/rspec"
 
 Capybara.register_driver(:cuprite) do |app|
   Capybara::Cuprite::Driver.new(
@@ -148,6 +149,7 @@ RSpec.configure do |config|
   config.include Helpers::JourneyHelper, type: :feature
   config.include GovukComponentsHelper, type: :helper
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include SemanticLogger::Test::RSpec
 
   config.before(:each, type: :feature) do
     Capybara.current_session.driver.browser.try(:download_path=, Capybara.save_path)
