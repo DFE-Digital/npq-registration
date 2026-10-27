@@ -251,6 +251,7 @@ Rails.application.routes.draw do
           namespace :statements, path: nil do
             resource :change_deadline_date, controller: "change_deadline_date", only: %i[show create]
             resource :change_payment_date, controller: "change_payment_date", only: %i[show create]
+            resource :change_output_fee, controller: "change_output_fee", only: %i[show create]
           end
         end
       end
