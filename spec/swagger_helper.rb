@@ -39,7 +39,7 @@ RSpec.configure do |config|
       components: {
         securitySchemes: {
           api_key: {
-            description: "Bearer token",
+            description: "This is the bearer token authentication header - use the format: Bearer <api-token>",
             type: :apiKey,
             name: "Authorization",
             in: :header,
