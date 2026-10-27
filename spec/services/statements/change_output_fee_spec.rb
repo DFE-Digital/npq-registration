@@ -281,7 +281,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
       context "with later statement for another cohort" do
         let :later_statement do
           create(:statement, extend_from: statement,
-                             cohort: create(:cohort))
+                             cohort: create(:cohort, :previous))
         end
 
         it { is_expected.to be_nil }
