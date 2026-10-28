@@ -149,6 +149,7 @@ locals {
   uploads_storage_account_name = "${var.azure_resource_prefix}${var.service_short}${var.config_short}${local.pr_number}sa"
   # e.g. s189t01cpdnpqrv2044sa
   # name can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
+
 }
 
 variable "send_traffic_to_maintenance_page" {
