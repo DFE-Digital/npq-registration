@@ -210,9 +210,13 @@ Rails.application.routes.draw do
     end
 
     resources :courses, only: %i[index show]
+
     resources :users, only: %i[index show] do
       collection do
         resources :duplicates, controller: "users/duplicates", as: "duplicate_users", only: :index
+        get "legacy-passed-participant-outcome/:id",
+            to: "users#legacy_passed_participant_outcome",
+            as: "legacy_passed_participant_outcome_show"
       end
       member do
         namespace :users, path: nil do

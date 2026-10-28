@@ -24,6 +24,7 @@ class User < ApplicationRecord
   has_many :declarations, through: :applications
   has_many :participant_id_changes, -> { order("created_at desc") }
   has_many :declarations, through: :applications
+  has_many :legacy_passed_participant_outcomes, primary_key: :trn, foreign_key: :trn
 
   validates :full_name, presence: true
 
