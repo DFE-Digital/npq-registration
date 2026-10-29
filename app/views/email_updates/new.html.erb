@@ -11,24 +11,18 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column">
-    <%= form_with model: @form, url: email_updates_path do |f| %>
+    <%= form_for @registration_interest, url: email_updates_path do |f| %>
       <%= f.govuk_error_summary %>
 
-      <% @form.questions.each do |question| %>
+      <%= f.govuk_text_field :email,
+        width: "one-half",
+        label: { size: "m", tag: "h2" } %>
 
-        <% content_for :title do %>
-          <%= @form.errors.present? ? "Error: " : nil %>
-          <%= question.question_text %>
-        <% end %>
-
-        <%=
-          render(
-            "registration_wizard/shared/questions/#{question.type}",
-            form: f,
-            question: question,
-            )
-        %>
-      <% end %>
+      <%= f.govuk_collection_radio_buttons :course,
+          f.object.course_options,
+          :value,
+          :label
+      %>
 
       <p class="govuk-body">By requesting email updates, you agree to our <a class="govuk-link" href="/privacy-policy">privacy notice</a></p>
 

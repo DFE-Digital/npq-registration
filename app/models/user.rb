@@ -130,12 +130,6 @@ class User < ApplicationRecord
     feature_flag_id
   end
 
-  def update_email_updates_status(form)
-    self.email_updates_status = form.email_updates_status
-    self.email_updates_unsubscribe_key = SecureRandom.uuid if email_updates_unsubscribe_key.nil?
-    save!
-  end
-
   def unsubscribe_from_email_updates
     self.email_updates_status = "empty"
     self.email_updates_unsubscribe_key = nil
