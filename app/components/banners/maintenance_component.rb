@@ -2,7 +2,7 @@
 
 module Banners
   class MaintenanceComponent < BaseComponent
-    MAINTENANCE_TEXT = "This service will be unavailable from 8am to 10am on 25 August 2026."
+    MAINTENANCE_TEXT = "Due to a technical issue registrations are currently unavailable. Please try again later."
 
     def render?
       Feature.maintenance_banner_enabled?
