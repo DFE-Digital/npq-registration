@@ -130,12 +130,6 @@ class User < ApplicationRecord
     feature_flag_id
   end
 
-  def unsubscribe_from_email_updates
-    self.email_updates_status = "empty"
-    self.email_updates_unsubscribe_key = nil
-    save!
-  end
-
   def archived?
     archived_at.present?
   end

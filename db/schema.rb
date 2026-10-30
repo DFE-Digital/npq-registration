@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_103614) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -554,8 +554,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_103614) do
     t.datetime "created_at", null: false
     t.citext "email", null: false
     t.boolean "notified", default: false
+    t.uuid "unsubscribe_key", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_registration_interests_on_email", unique: true
+    t.index ["unsubscribe_key"], name: "index_registration_interests_on_unsubscribe_key", unique: true
   end
 
   create_table "reports", force: :cascade do |t|

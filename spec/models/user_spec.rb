@@ -344,22 +344,6 @@ RSpec.describe User do
     end
   end
 
-  describe "#unsubscribe_from_email_updates" do
-    let(:user) { create(:user, email_updates_unsubscribe_key: "432", email_updates_status: "senco") }
-
-    it "saves the value" do
-      expect {
-        user.unsubscribe_from_email_updates
-      }.to change { user.reload.email_updates_status }.from("senco").to("empty")
-    end
-
-    it "creates proper unsubscribe key" do
-      expect {
-        user.unsubscribe_from_email_updates
-      }.to change { user.reload.email_updates_unsubscribe_key }.from("432").to(nil)
-    end
-  end
-
   describe "#archived?" do
     context "when user is archived" do
       let(:user) { build(:user, :archived) }
