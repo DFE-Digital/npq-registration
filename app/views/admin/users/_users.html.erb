@@ -11,7 +11,11 @@
     table.with_body do |body|
       users.each do |user|
         body.with_row do |row|
-          row.with_cell(text: govuk_link_to(user.full_name, admin_user_path(user)))
+          if user.class.to_s == "User"
+            row.with_cell(text: govuk_link_to(user.full_name, admin_user_path(user)))
+          else
+            row.with_cell(text: govuk_link_to(user.full_name, legacy_passed_participant_outcome_show_admin_users_path(user)))
+          end
           row.with_cell(text: user.trn)
           row.with_cell(text: user.created_at.to_date.to_formatted_s(:govuk))
         end

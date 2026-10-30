@@ -19,10 +19,18 @@ class Admin::UsersController < AdminController
     @applications = @user.applications.includes(:course, :lead_provider, :school).order(:created_at, :id)
   end
 
+  def legacy_passed_participant_outcome
+    @legacy_passed_participant_outcome = LegacyPassedParticipantOutcome.find(params[:id])
+    @course = Course.find_by(short_code: @legacy_passed_participant_outcome.course_short_code)
+  end
+
 private
 
   def search_scope
-    AdminService::UsersSearch.new(q: params[:q]).call
+    result = AdminService::UsersSearch.new(q: params[:q]).call
+    return result if result.any?
+
+    AdminService::LegacyPassedParticipantOutcomesSearch.new(trn: params[:q]).call
   end
 
   def recent_users_scope

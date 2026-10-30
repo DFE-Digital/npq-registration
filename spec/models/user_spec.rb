@@ -8,6 +8,7 @@ RSpec.describe User do
     it { is_expected.to have_many(:participant_id_changes).order("created_at desc") }
     it { is_expected.to have_many(:declarations).through(:applications) }
     it { is_expected.to have_many(:oauth_tokens).dependent(:destroy) }
+    it { is_expected.to have_many(:legacy_passed_participant_outcomes).with_primary_key(:trn).with_foreign_key(:trn) }
   end
 
   describe "paper_trail" do

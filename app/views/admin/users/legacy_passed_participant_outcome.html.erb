@@ -1,0 +1,5 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<h1 class="govuk-heading-l">Historic outcome for TRN: <%= @legacy_passed_participant_outcome.trn %></h1>
+
+<%= render partial: "legacy_passed_participant_outcome", locals: { legacy_passed_participant_outcome: @legacy_passed_participant_outcome } %>
