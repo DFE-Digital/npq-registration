@@ -20,17 +20,13 @@ class EmailUpdatesController < PublicPagesController
     end
   end
 
-  # Requires `unsubscribe_key` as param, from a registration interest (or a user who signed up before)
+  # Requires `unsubscribe_key` as param
   def unsubscribe
     if request.post?
       registration_interest = RegistrationInterest.find_by(unsubscribe_key: params[:unsubscribe_key]) if params[:unsubscribe_key].present?
-      user = User.find_by(email_updates_unsubscribe_key: params[:unsubscribe_key]) if params[:unsubscribe_key].present?
 
       if registration_interest
         registration_interest.destroy!
-        redirect_to unsubscribed_email_updates_path
-      elsif user
-        user.unsubscribe_from_email_updates
         redirect_to unsubscribed_email_updates_path
       else
         flash[:error] = "Invalid unsubscribe link"

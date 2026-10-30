@@ -97,18 +97,6 @@ RSpec.describe EmailUpdatesController, type: :request do
         end
       end
 
-      context "with a user unsubscribe key" do
-        let(:user) { create(:user, email_updates_status: :senco, email_updates_unsubscribe_key: SecureRandom.uuid) }
-        let(:unsubscribe_key) { user.email_updates_unsubscribe_key }
-
-        it "unsubscribes the user" do
-          do_request
-          expect(user.reload).to have_attributes(email_updates_status: "empty", email_updates_unsubscribe_key: nil)
-        end
-
-        it { is_expected.to redirect_to(unsubscribed_email_updates_path) }
-      end
-
       context "with an unknown unsubscribe key" do
         let(:unsubscribe_key) { SecureRandom.uuid }
 
@@ -121,11 +109,9 @@ RSpec.describe EmailUpdatesController, type: :request do
 
       context "without an unsubscribe key" do
         let(:unsubscribe_key) { nil }
-        let!(:user) { create(:user, email_updates_status: :senco, email_updates_unsubscribe_key: nil) }
 
         it "does not unsubscribe" do
           expect { do_request }.not_to change(RegistrationInterest, :count)
-          expect(user.reload.email_updates_status).to eq("senco")
         end
 
         it { is_expected.to redirect_to(root_path) }
