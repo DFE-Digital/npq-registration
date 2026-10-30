@@ -270,6 +270,22 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
       )
     end
 
+    scenario "Unsubscribe from email updates" do
+      visit "/"
+      click_link "Sign up for email updates"
+      fill_in("What’s your email address?", with: "user@example.com")
+      page.choose("Yes", visible: :all)
+      click_button "Request email updates"
+
+      unsubscribe_link = ActionMailer::Base.deliveries.last.personalisation[:unsubscribe_link]
+      visit URI.parse(unsubscribe_link).request_uri
+      expect(page).to have_content("Are you sure you want to unsubscribe?")
+      click_button "Unsubscribe"
+
+      expect(page).to have_content("You have unsubscribed")
+      expect(RegistrationInterest.find_by(email: "user@example.com")).to be_nil
+    end
+
     scenario "Invalid unsubscribe link" do
       visit "/email_updates/unsubscribe?unsubscribe_key=user.email_updates_unsubscribe_key"
       expect(page).to have_content("Are you sure you want to unsubscribe?")
