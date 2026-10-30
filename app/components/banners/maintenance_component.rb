@@ -2,7 +2,7 @@
 
 module Banners
   class MaintenanceComponent < BaseComponent
-    MAINTENANCE_TEXT = "Due to a technical issue registrations are currently unavailable. Please try again later."
+    MAINTENANCE_TEXT = "A technical issue is affecting registration for this DfE service. Please come back after 2 November to use the service. We apologise for the inconvenience."
 
     def render?
       Feature.maintenance_banner_enabled?
