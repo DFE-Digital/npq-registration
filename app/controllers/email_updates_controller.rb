@@ -47,7 +47,7 @@ private
   end
 
   def unsubscribe_link(registration_interest)
-    "#{service_url}#{unsubscribe_email_updates_path(unsubscribe_key: registration_interest.unsubscribe_key)}"
+    URI.join(service_url, unsubscribe_email_updates_path(unsubscribe_key: registration_interest.unsubscribe_key)).to_s
   end
 
   def service_url

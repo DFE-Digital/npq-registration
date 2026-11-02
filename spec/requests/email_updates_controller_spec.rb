@@ -43,11 +43,14 @@ RSpec.describe EmailUpdatesController, type: :request do
       end
 
       it "sends the confirmation email with the unsubscribe link" do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with("DOMAIN").and_return("example.com/")
+
         do_request
         unsubscribe_key = RegistrationInterest.find_by(email:).unsubscribe_key
         email_sent = ActionMailer::Base.deliveries.last
 
-        expect(email_sent.personalisation[:unsubscribe_link]).to end_with("/email_updates/unsubscribe?unsubscribe_key=#{unsubscribe_key}")
+        expect(email_sent.personalisation[:unsubscribe_link]).to eq("https://example.com/email_updates/unsubscribe?unsubscribe_key=#{unsubscribe_key}")
         expect(email_sent.one_click_unsubscribe_url).to eq(email_sent.personalisation[:unsubscribe_link])
       end
     end
