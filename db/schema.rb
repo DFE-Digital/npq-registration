@@ -22,7 +22,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_103614) do
   # frequent changes to the terraform configs. Since our application doesn't
   # add the extension in the migrations, or require it, we'll leave the extension
   # excluded from the db/schema.rb file.
-  # TODO: Leave this comment in place.
+  # TODO: Leave this comment in place. (you can use `git add -p` to avoid staging changes)
   enable_extension "pg_trgm"
 
   # Custom types defined in this database.

@@ -17,51 +17,32 @@
         Sign up for email updates to find out when registration reopens.
       </p>
 
-      <% if current_user&.persisted? %>
-        <%=
-          render GovukComponent::ContinueButtonComponent.new(
-            text: "Sign up for email updates",
-            href: new_email_update_path,
-          )
-        %>
-      <% else %>
-        <%=
-          render GovukComponent::ContinueButtonComponent.new(
-            text: "Sign up for email updates",
-            href: user_tra_openid_connect_omniauth_authorize_path(request_email_updates: "true"),
-            as_button: true,
-            html_attributes: { data: { "prevent-double-click": true } }
-          )
-        %>
-      <% end %>
+      <%=
+        render GovukComponent::ContinueButtonComponent.new(
+          text: "Sign up for email updates",
+          href: new_email_update_path,
+        )
+      %>
     <% end %>
 
     <h3 class="govuk-heading-m">Check your existing registrations</h3>
 
-    <p class="govuk-body">
-      You can still sign in to your DfE Identity account to check your:
-    </p>
+    <% if current_user %>
+      <%= govuk_button_link_to("Your registrations", account_path, secondary: true) %>
+    <% else %>
+      <p class="govuk-body">
+        You can still sign in to your One Login account to check your:
+      </p>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>registration details, if you already registered</li>
-      <li>course outcome, if you have completed your course</li>
-    </ul>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>registration details, if you already registered</li>
+        <li>course outcome, if you have completed your course</li>
+      </ul>
 
-    <% if @one_login %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Sign in to your One Login account",
           href: user_teacher_auth_omniauth_authorize_path,
-          classes: "govuk-button--secondary",
-          as_button: true,
-          html_attributes: { data: { "prevent-double-click": true } }
-        )
-      %>
-    <% else %>
-      <%=
-        render GovukComponent::ContinueButtonComponent.new(
-          text: "Sign in to your DfE Identity account",
-          href: user_tra_openid_connect_omniauth_authorize_path,
           classes: "govuk-button--secondary",
           as_button: true,
           html_attributes: { data: { "prevent-double-click": true } }
