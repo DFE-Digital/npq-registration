@@ -53,22 +53,22 @@ RSpec.describe EmailUpdatesController, type: :request do
     end
 
     context "with missing email" do
-      let(:params) { { email_updates: { course: "npq-senco" } } }
+      let(:params) { { registration_interest: { course: "npq-senco" } } }
 
       it "does not save email update" do
         expect { do_request }.not_to change(RegistrationInterest, :count)
 
-        expect(do_request).to have_http_status(:bad_request)
+        expect(do_request).to have_http_status(:unprocessable_content)
       end
     end
 
     context "with missing course" do
-      let(:params) { { email_updates: { email: } } }
+      let(:params) { { registration_interest: { email:, course: "" } } }
 
       it "does not save email update" do
         expect { do_request }.not_to change(RegistrationInterest, :count)
 
-        expect(do_request).to have_http_status(:bad_request)
+        expect(do_request).to have_http_status(:unprocessable_content)
       end
     end
   end
