@@ -134,14 +134,10 @@ Rails.application.routes.draw do
     resources :glossary, only: %i[index]
 
     namespace :registration_closed, path: "registration-closed" do
-      resources :reopening_email_subscriptions, path: "reopening-email-subscriptions" do
+      resources :reopening_email_subscriptions, only: %i[index], path: "reopening-email-subscriptions" do
         member do
           get "unsubscribe"
           post "unsubscribe"
-        end
-        collection do
-          get "all_users"
-          get "senco"
         end
       end
       resources :closed_registration_users, path: "closed-registration-users" do
