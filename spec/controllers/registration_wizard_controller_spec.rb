@@ -21,7 +21,7 @@ RSpec.describe RegistrationWizardController do
   RSpec.shared_examples "it redirects on missing mandatory institution" do
     before do
       allow(RegistrationWizard).to receive(:new).and_return(missing_institution_wizard.new)
-      session["registration_store"] = registration_store
+      session[RegistrationWizard::STORE_SESSION_KEY] = registration_store
       make_request
     end
 
@@ -65,7 +65,7 @@ RSpec.describe RegistrationWizardController do
 
     it "persists data to session" do
       make_request
-      expect(session["registration_store"]["course_start_cohort"]).to eql("2026a")
+      expect(session[RegistrationWizard::STORE_SESSION_KEY]["course_start_cohort"]).to eql("2026a")
     end
 
     context "when step is being skipped" do
@@ -103,6 +103,51 @@ RSpec.describe RegistrationWizardController do
       it "redirects to home page" do
         expect(response).to redirect_to root_path
       end
+    end
+  end
+
+  describe "registrations started on an older journey" do
+    let(:saved_answers) { { "course_start_cohort" => "2026a", "course_identifier" => "npq-senior-leadership" } }
+
+    before do
+      create(:cohort, start_year: 2026)
+      session[store_key] = saved_answers
+    end
+
+    context "with the outdated store key" do
+      let(:store_key) { RegistrationWizard::OUTDATED_STORE_SESSION_KEY }
+
+      context "when visiting a step of the journey" do
+        before { get :show, params: { step: "choose-school" } }
+
+        it { expect(response).to redirect_to root_path }
+        it { expect(session.key?(store_key)).to be false }
+      end
+
+      context "when visiting the start page" do
+        before { get :show, params: { step: "start" } }
+
+        it { expect(response).to have_http_status :success }
+        it { expect(session.key?(store_key)).to be false }
+        it { expect(session[RegistrationWizard::STORE_SESSION_KEY]).not_to include("course_identifier") }
+      end
+
+      context "when submitting a step of the journey" do
+        before { patch :update, params: { step: "course-start-date", registration_wizard: { course_start_cohort: "2026a" } } }
+
+        it { expect(response).to redirect_to root_path }
+        it { expect(session.key?(store_key)).to be false }
+        it { expect(session[RegistrationWizard::STORE_SESSION_KEY]).to be_blank }
+      end
+    end
+
+    context "with the current store key" do
+      let(:store_key) { RegistrationWizard::STORE_SESSION_KEY }
+
+      before { get :show, params: { step: "course-start-date" } }
+
+      it { expect(response).to have_http_status :success }
+      it { expect(session[store_key]).to include(saved_answers) }
     end
   end
 end
