@@ -1,6 +1,10 @@
 class EmailUpdatesController < PublicPagesController
   skip_before_action :verify_authenticity_token, only: :unsubscribe
 
+  before_action only: %i[new create] do
+    redirect_to root_path unless Feature.registration_closed?(current_user)
+  end
+
   def new
     session["request_email_updates"] = nil
 

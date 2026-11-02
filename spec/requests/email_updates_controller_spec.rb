@@ -1,10 +1,18 @@
 require "rails_helper"
 
 RSpec.describe EmailUpdatesController, type: :request do
+  before { Flipper.disable(Feature::REGISTRATION_OPEN) }
+
   describe "#new" do
     subject { get(new_email_update_path) && response }
 
     it { is_expected.to have_http_status :success }
+
+    context "when registration is open" do
+      before { Flipper.enable(Feature::REGISTRATION_OPEN) }
+
+      it { is_expected.to redirect_to(root_path) }
+    end
   end
 
   describe "#create" do
@@ -12,6 +20,16 @@ RSpec.describe EmailUpdatesController, type: :request do
 
     let(:email) { "user@example.com" }
     let(:params) { { registration_interest: { email:, course: "npq-senco" } } }
+
+    context "when registration is open" do
+      before { Flipper.enable(Feature::REGISTRATION_OPEN) }
+
+      it "redirects to the home page without saving" do
+        expect { do_request }.not_to change(RegistrationInterest, :count)
+
+        expect(response).to redirect_to(root_path)
+      end
+    end
 
     context "with valid request" do
       it "creates a registration interest" do
