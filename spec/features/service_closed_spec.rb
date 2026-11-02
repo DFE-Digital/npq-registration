@@ -287,7 +287,7 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
     end
 
     scenario "Invalid unsubscribe link" do
-      visit "/email_updates/unsubscribe?unsubscribe_key=user.email_updates_unsubscribe_key"
+      visit "/email_updates/unsubscribe?unsubscribe_key=invalid-key"
       expect(page).to have_content("Are you sure you want to unsubscribe?")
       click_button "Unsubscribe"
 

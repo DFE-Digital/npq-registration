@@ -9,7 +9,7 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
     create(:cohort, :previous)
     create :registration_interest, email: "senco@example.org", course: "npq-senco", created_at: Time.zone.local(2026, 9, 1)
     create :registration_interest, email: "other@example.org", course: "other", notified: true, created_at: Time.zone.local(2026, 9, 2)
-    create :user, email_updates_status: :senco, email: "old-style@example.org"
+    create :user, email: "old-style@example.org"
     sign_in_as(super_admin)
   end
 
