@@ -1,4 +1,10 @@
 class EmailUpdatesController < PublicPagesController
+  skip_before_action :verify_authenticity_token, only: :unsubscribe
+
+  before_action only: %i[new create] do
+    redirect_to root_path unless Feature.registration_closed?(current_user)
+  end
+
   def new
     session["request_email_updates"] = nil
 
@@ -9,20 +15,21 @@ class EmailUpdatesController < PublicPagesController
     @registration_interest = RegistrationInterest.new(registration_interest_params)
 
     if @registration_interest.valid?
-      RegistrationInterest.find_or_initialize_by(email: @registration_interest.email).update!(course: @registration_interest.course)
-      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: @registration_interest.email, service_link: service_url, unsubscribe_link:).deliver_now
+      registration_interest = RegistrationInterest.find_or_initialize_by(email: @registration_interest.email)
+      registration_interest.update!(course: @registration_interest.course)
+      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: @registration_interest.email, service_link: service_url, unsubscribe_link: unsubscribe_link(registration_interest)).deliver_now
     else
       render :new, status: :unprocessable_content
     end
   end
 
-  # Reguires `email_updates_unsubscribe_key` as param
+  # Requires `unsubscribe_key` as param
   def unsubscribe
     if request.post?
-      user = User.find_by(email_updates_unsubscribe_key: params[:unsubscribe_key])
+      registration_interest = RegistrationInterest.find_by(unsubscribe_key: params[:unsubscribe_key]) if params[:unsubscribe_key].present?
 
-      if user
-        user.unsubscribe_from_email_updates
+      if registration_interest
+        registration_interest.destroy!
         redirect_to unsubscribed_email_updates_path
       else
         flash[:error] = "Invalid unsubscribe link"
@@ -39,10 +46,8 @@ private
     params.require(:registration_interest).permit(:email, :course)
   end
 
-  def unsubscribe_link
-    # "#{service_url}#{unsubscribe_email_updates_path(unsubscribe_key: current_user.email_updates_unsubscribe_key)}"
-    # TODO: make the unsubscribe link work for non-logged in users.
-    ""
+  def unsubscribe_link(registration_interest)
+    URI.join(service_url, unsubscribe_email_updates_path(unsubscribe_key: registration_interest.unsubscribe_key)).to_s
   end
 
   def service_url

@@ -197,16 +197,6 @@ RSpec.describe User do
     end
   end
 
-  describe "enums" do
-    it {
-      expect(subject).to define_enum_for(:email_updates_status).with_values(
-        empty: 0,
-        senco: 1,
-        other_npq: 2,
-      ).backed_by_column_of_type(:integer).with_suffix
-    }
-  end
-
   describe "previous_names" do
     it "defaults to an empty array" do
       user = create(:user)
@@ -364,22 +354,6 @@ RSpec.describe User do
           expect(service).to have_received(:call).twice
         end
       end
-    end
-  end
-
-  describe "#unsubscribe_from_email_updates" do
-    let(:user) { create(:user, email_updates_unsubscribe_key: "432", email_updates_status: "senco") }
-
-    it "saves the value" do
-      expect {
-        user.unsubscribe_from_email_updates
-      }.to change { user.reload.email_updates_status }.from("senco").to("empty")
-    end
-
-    it "creates proper unsubscribe key" do
-      expect {
-        user.unsubscribe_from_email_updates
-      }.to change { user.reload.email_updates_unsubscribe_key }.from("432").to(nil)
     end
   end
 

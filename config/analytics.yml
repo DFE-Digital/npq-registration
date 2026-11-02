@@ -268,8 +268,6 @@ shared:
     - updated_from_tra_at
     - trn_lookup_status
     - notify_user_for_future_reg
-    - email_updates_status
-    - email_updates_unsubscribe_key
     - archived_at
     - significantly_updated_at
     - preferred_name

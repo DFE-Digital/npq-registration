@@ -4,6 +4,7 @@ class EmailUpdatesConfirmationMailer < ApplicationMailer
   def email_updates_confirmation_mail(to:, service_link:, unsubscribe_link:)
     template_mail(TEMPLATE_ID,
                   to:,
+                  one_click_unsubscribe_url: unsubscribe_link,
                   personalisation: {
                     unsubscribe_link:,
                     service_link:,
