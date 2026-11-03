@@ -5,6 +5,8 @@ Sentry.init do |config|
   config.dsn = config.enabled_environments.include?(Rails.env) ? ENV["SENTRY_DSN"] : "disabled"
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
   config.release = ENV["GIT_COMMIT_SHA"]
+  config.rails.register_error_subscriber = false
+  config.rails.active_job_report_on_retry_error = true
 
   # filtering code taken from https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)

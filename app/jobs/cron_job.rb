@@ -11,6 +11,8 @@
 #
 # https://github.com/codez/delayed_cron_job#custom-cronjob-superclass
 class CronJob < ApplicationJob
+  retry_on StandardError, attempts: 1
+
   class_attribute :cron_expression
   class_attribute :production_only, default: false
 
@@ -51,6 +53,4 @@ class CronJob < ApplicationJob
       delayed_job.locked_at.present?
     end
   end
-
-  def perform; end
 end
