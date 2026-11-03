@@ -21,7 +21,7 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
     context "without existing statements" do
       let(:cohort) { create(:cohort, :current) }
 
-      it { is_expected.to have_error :extension_date, :no_existing_statements, "There are no existing statements to copy for this Cohort" }
+      it { is_expected.to have_error :extension_date, :no_existing_statements, "There are no existing statements to copy for this cohort" }
     end
 
     context "with a past date" do
@@ -33,7 +33,7 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
     context "with an extension date before the last statements date" do
       let(:extension_date) { cohort.statements.last.payment_date - 1.month }
 
-      it { is_expected.to have_error :extension_date, :before_last_statement, "The date to extend statements forward to must be after the Cohorts last statement" }
+      it { is_expected.to have_error :extension_date, :before_last_statement, "The date to extend statements forward to must be after the cohorts last statement" }
     end
 
     context "with extension date and cohort" do

@@ -9,14 +9,12 @@ module Admin::Cohorts
     end
 
     def create
-      if @service.invalid?
-        render :show, status: :unprocessable_content
-      elsif @service.schedule_change
+      if @service.schedule_change
         flash[:success] =
           "Cohort is being extended with additional statements, this may take a few minutes"
         redirect_to admin_cohort_path(@cohort)
       else
-        redirect_to admin_cohort_path(@cohort)
+        render :show, status: :unprocessable_content
       end
     end
 
