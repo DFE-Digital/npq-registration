@@ -42,6 +42,9 @@ production: production-cluster
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Missing CONFIRM_PRODUCTION=yes))
 	$(eval include global_config/production.sh)
 
+ithc:
+	$(eval include global_config/ithc.sh)
+
 domains:
 	$(eval include global_config/domains.sh)
 
