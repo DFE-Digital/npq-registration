@@ -83,6 +83,9 @@ module NpqRegistration
     config.skylight.environments += %w[review sandbox staging]
 
     config.active_storage.variant_processor = :disabled
+    config.active_storage.analyzers = []
+    config.active_storage.previewers = []
+    config.active_storage.draw_routes = false
 
     # TeacherAuth configuration
     config.x.teacher_auth.enabled = true
