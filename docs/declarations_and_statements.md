@@ -64,3 +64,13 @@ Currently statements which are not being Paid do not get marked paid and remain 
 
 These cannot be changed because they have already been marked as Paid, ie finalised.
 
+## Adding additional statements to an existing cohort
+
+A cohort can be extended and have additional statements added onto the end of the cohort. When a cohort is extended
+
+1. A new output statement is added for each lead provider who has a existing statements in the cohort.
+2. Intermediate non-output statements are created between the provider's last statement on the cohort and the provider's new output statement
+3. All statements gain contracts for the same courses as were present on the provider's last output statement in the cohort
+4. All contracts use the same contract templates as were used for the equivalent contract in the provider's existing last output statement
+5. Payment dates are set to the 25th of the statement's month
+6. Deadline dates are set to the 25th of the month prior to the statement's month

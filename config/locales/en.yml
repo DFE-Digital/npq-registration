@@ -698,6 +698,14 @@ en:
               <<: *application
             funded_place:
               <<: *funded_place
+        cohorts/extend_statements:
+          attributes:
+            extension_date:
+              blank: Enter a date to extend statements to
+              no_existing_statements: There are no existing output statements to copy for this cohort
+              in_past: The date to extend statements forward to must be in the future
+              before_last_statement: The date to extend statements forward to must be after the cohorts last statement
+              far_future: The date to extend statements forward cannot be more than 3 years after the cohorts last statements date
         contracts/change_per_participant:
           attributes:
             contract:
