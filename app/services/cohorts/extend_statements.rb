@@ -11,7 +11,7 @@ module Cohorts
     validates :cohort, presence: true
     validates :extension_date, presence: true
 
-    validate :existing_statements
+    validate :existing_output_statements
     validate :future_date
     validate :date_extends_existing_end
 
@@ -84,9 +84,15 @@ module Cohorts
       Date.new(*last_statement.values_at(:year, :month))
     end
 
-    def existing_statements
+    def existing_output_statements
       return if errors.any?
-      return if last_statement
+      return unless cohort
+
+      # Check there is an output statement for every lead provider
+      lp_scope = cohort.statements.order(:lead_provider_id).distinct
+      lp_ids = lp_scope.pluck(:lead_provider_id)
+      output_lp_ids = lp_scope.with_output_fee.pluck(:lead_provider_id)
+      return if last_statement && lp_ids == output_lp_ids
 
       errors.add :extension_date, :no_existing_statements
     end

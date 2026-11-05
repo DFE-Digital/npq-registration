@@ -12,7 +12,7 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
   end
 
   describe "validations" do
-    let(:cohort) { create(:cohort, :current, :with_statement) }
+    let(:cohort) { create(:cohort, :current, :with_output_statement) }
     let(:extension_date) { 2.years.from_now }
 
     it { is_expected.to validate_presence_of :cohort }
@@ -21,7 +21,13 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
     context "without existing statements" do
       let(:cohort) { create(:cohort, :current) }
 
-      it { is_expected.to have_error :extension_date, :no_existing_statements, "There are no existing statements to copy for this cohort" }
+      it { is_expected.to have_error :extension_date, :no_existing_statements, "There are no existing output statements to copy for this cohort" }
+    end
+
+    context "without existing output statements" do
+      before { create(:cohort, :current, :with_non_output_statement) }
+
+      it { is_expected.to have_error :extension_date, :no_existing_statements, "There are no existing output statements to copy for this cohort" }
     end
 
     context "with a past date" do
@@ -80,7 +86,7 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
     before { allow(Cohorts::ExtendStatementsJob).to receive(:perform_later) }
 
     context "with valid change" do
-      let(:cohort) { create(:cohort, :current, :with_statement) }
+      let(:cohort) { create(:cohort, :current, :with_output_statement) }
       let(:extension_date) { 3.months.from_now.to_date }
 
       it "schedules the job" do
