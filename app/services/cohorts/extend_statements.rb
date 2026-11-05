@@ -13,6 +13,7 @@ module Cohorts
 
     validate :existing_output_statements
     validate :future_date
+    validate :extension_date_within_three_years
     validate :date_extends_existing_end
 
     def ending_statements
@@ -78,6 +79,13 @@ module Cohorts
       return if extension_date > date_of_last_statement
 
       errors.add :extension_date, :before_last_statement
+    end
+
+    def extension_date_within_three_years
+      return if errors.any?
+      return if extension_date <= date_of_last_statement + 3.years
+
+      errors.add :extension_date, :far_future
     end
 
     def date_of_last_statement

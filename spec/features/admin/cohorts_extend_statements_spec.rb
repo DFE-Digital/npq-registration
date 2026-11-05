@@ -49,7 +49,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
     expect(Cohorts::ExtendStatementsJob).not_to have_received(:perform_later)
 
     fill_in "Month", with: "12"
-    fill_in "Year", with: 5.years.from_now.year
+    fill_in "Year", with: 2.years.from_now.year
     click_on "Add additional statements"
 
     expect(page).to have_current_path admin_cohort_path(cohort)
@@ -61,7 +61,7 @@ RSpec.feature "Cohort - add extra statements", :no_js, type: :feature do
     last_statement = Statement.order(:id).last
     visit admin_finance_statement_path(last_statement)
 
-    expect(page).to have_content "#{last_statement.lead_provider.name}, December #{5.years.from_now.year}"
+    expect(page).to have_content "#{last_statement.lead_provider.name}, December #{2.years.from_now.year}"
   end
 
   scenario "when attempting to change output as a regular admin" do

@@ -42,6 +42,12 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
       it { is_expected.to have_error :extension_date, :before_last_statement, "The date to extend statements forward to must be after the cohorts last statement" }
     end
 
+    context "with extension date more that 3 years after last statement date" do
+      let(:extension_date) { cohort.statements.last.payment_date + 37.months }
+
+      it { is_expected.to have_error :extension_date, :far_future, "The date to extend statements forward cannot be more than 3 years after the cohorts last statements date" }
+    end
+
     context "with extension date and cohort" do
       subject { described_class.new(cohort:, extension_date:) }
 
