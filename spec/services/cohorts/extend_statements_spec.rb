@@ -146,13 +146,13 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
       end
 
       it "adds a contract for each course to each new statement" do
-        contracts_per_statement = Contract
-          .joins(:statement)
-          .where(statements: { cohort: })
-          .group(:statement_id)
-          .count
+        contracts_per_statement = Statement
+          .includes(:contracts)
+          .where(cohort:)
+          .map { |s| s.contracts.map(&:course_id) }
 
-        expect(contracts_per_statement.values).to all eq(2)
+        expect(contracts_per_statement).to have_attributes length: 8
+        expect(contracts_per_statement).to all match_array(courses.map(&:id))
       end
 
       it "adds each course to each statement" do
@@ -217,6 +217,30 @@ RSpec.describe Cohorts::ExtendStatements, type: :model do
 
           expect(lp1).to contain_exactly([2, true], [3, false], [4, false], [5, true])
           expect(lp2).to contain_exactly([2, false], [3, true], [4, false], [5, true])
+        end
+      end
+
+      context "when extending by a single month" do
+        let(:extension_date) { existing_date + 1.month }
+
+        it "statements are added for all LPs" do
+          expect(cohort.statements.pluck(:lead_provider_id, :year, :month, :output_fee).sort)
+            .to contain_exactly(
+              [lead_providers[0].id, existing_date.year, 2, true],
+              [lead_providers[0].id, existing_date.year, 3, true],
+              [lead_providers[1].id, existing_date.year, 2, true],
+              [lead_providers[1].id, existing_date.year, 3, true],
+            )
+        end
+
+        it "adds a contract for each course to each new statement" do
+          contracts_per_statement = Statement
+            .includes(:contracts)
+            .where(cohort:)
+            .map { |s| s.contracts.map(&:course_id) }
+
+          expect(contracts_per_statement).to have_attributes length: 4
+          expect(contracts_per_statement).to all match_array(courses.map(&:id))
         end
       end
     end

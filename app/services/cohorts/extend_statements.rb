@@ -43,6 +43,8 @@ module Cohorts
         Statement.with_advisory_lock!("lock-cohort-#{cohort.identifier}") do
           validate!
 
+          load_last_output_statements_by_provider
+
           ending_statements.includes(:contracts).each do |existing_statement| # rubocop:disable Rails/FindEach - find_each doesn't work inside advisory lock
             existing_date = Date.new(existing_statement.year, existing_statement.month, 2)
             statement_months = (existing_date..extension_date).select { |d| d.day == 1 }
@@ -112,11 +114,11 @@ module Cohorts
     end
 
     def last_output_statement_for_provider(provider)
-      last_output_statements_by_provider[provider]
+      @last_output_statements_by_provider[provider]
     end
 
-    def last_output_statements_by_provider
-      @last_output_statements_by_provider ||= ending_statements
+    def load_last_output_statements_by_provider
+      @last_output_statements_by_provider = ending_statements
         .with_output_fee
         .preload(:contracts) # Cannot use includes() with DISTINCT ON
         .index_by(&:lead_provider)
