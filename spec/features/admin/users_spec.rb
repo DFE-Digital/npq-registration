@@ -99,6 +99,95 @@ RSpec.feature "User administration", :no_js, type: :feature do
     end
   end
 
+  feature "historic users" do
+    before do
+      create(:course, :headship, name: "Headship (NPQH)", short_code: "NPQH")
+      create(:legacy_passed_participant_outcome, trn: "1234567", course_short_code: "NPQH", completion_date: Date.new(2020, 7, 1))
+      create(:legacy_passed_participant_outcome, trn: "1234567", course_short_code: "NPQML", completion_date: Date.new(2019, 7, 1))
+    end
+
+    scenario "finding a historic user by TRN and viewing their legacy outcomes" do
+      visit(admin_users_path)
+
+      fill_in("Find a user", with: "1234567")
+      click_on("Search")
+
+      expect(page).to have_css("tbody tr", count: 1)
+      within("tbody tr") do
+        expect(page).to have_css("td", text: "1234567")
+        expect(page).to have_css("td", text: "1 July 2019")
+        click_on("Historic user")
+      end
+
+      expect(page).to have_css("h1", text: "Historic user - 1234567")
+      expect(page).not_to have_css(".govuk-summary-card", text: "Overview")
+      expect(page).to have_css("h2", text: "Legacy outcomes")
+      expect(page).to have_css("tbody tr:nth-of-type(1)", text: "Headship (NPQH)")
+      expect(page).to have_css("tbody tr:nth-of-type(1)", text: "1 July 2020")
+      expect(page).to have_css("tbody tr:nth-of-type(2)", text: "NPQML")
+      expect(page).to have_css("tbody tr:nth-of-type(2)", text: "1 July 2019")
+    end
+
+    scenario "showing a user instead of a historic user when the TRN belongs to a user" do
+      user.update!(trn: "1234567")
+
+      visit(admin_users_path)
+
+      fill_in("Find a user", with: "1234567")
+      click_on("Search")
+
+      expect(page).to have_css("tbody tr", count: 1)
+      expect(page).to have_link(user.full_name, href: admin_user_path(user))
+      expect(page).not_to have_link("Historic user")
+    end
+
+    scenario "showing historic users after users when paging through search results" do
+      users.each_with_index { |user, index| user.update!(trn: "123456#{index}") }
+      create(:legacy_passed_participant_outcome, trn: "1234599")
+
+      visit(admin_users_path)
+
+      fill_in("Find a user", with: "12345")
+      click_on("Search")
+
+      expect(page).to have_css("tbody tr", count: users_per_page)
+      expect(page).not_to have_link("Historic user")
+
+      click_on("Next")
+
+      expect(page).to have_css("tbody tr", count: 2)
+      expect(page).to have_link("Historic user", count: 2)
+      expect(page).to have_css("td", text: "1234567")
+      expect(page).to have_css("td", text: "1234599")
+    end
+
+    scenario "not showing historic users in the recently added list" do
+      visit(admin_users_path)
+
+      expect(page).not_to have_link("Historic user")
+    end
+
+    scenario "showing legacy outcomes below the applications" do
+      user.update!(trn: "1234567")
+      create(:application, user:)
+
+      visit admin_user_path(user)
+
+      expect(page).to have_css("h1", text: user.full_name)
+      expect(page).to have_css(".govuk-summary-card", text: "Overview")
+      expect(page).to have_css("h2", text: "Applications")
+      expect(page).to have_css(".admin-application-card ~ h2", text: "Legacy outcomes")
+      expect(page).to have_css("tbody tr", text: "Headship (NPQH)")
+      expect(page).to have_css("tbody tr", text: "NPQML")
+    end
+
+    scenario "not showing the legacy outcomes table for a user without legacy outcomes" do
+      visit admin_user_path(user)
+
+      expect(page).not_to have_css("h2", text: "Legacy outcomes")
+    end
+  end
+
   feature "viewing a user" do
     scenario "shows user details" do
       visit admin_user_path(user)
