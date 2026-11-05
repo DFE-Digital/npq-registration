@@ -75,3 +75,7 @@
 <% else %>
   <%= render partial: 'application', collection: @applications %>
 <% end %>
+
+<% if @legacy_outcomes.any? %>
+  <%= render "legacy_outcomes", legacy_outcomes: @legacy_outcomes %>
+<% end %>

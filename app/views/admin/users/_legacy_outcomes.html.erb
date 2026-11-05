@@ -1,0 +1,21 @@
+<h2 class="govuk-heading-m">Legacy outcomes</h2>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Course")
+        row.with_cell(text: "Completion date")
+      end
+    end
+
+    table.with_body do |body|
+      legacy_outcomes.each do |legacy_outcome|
+        body.with_row do |row|
+          row.with_cell(text: legacy_outcome.course_name)
+          row.with_cell(text: legacy_outcome.completion_date.to_formatted_s(:govuk))
+        end
+      end
+    end
+  end
+%>
