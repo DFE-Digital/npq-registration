@@ -8,7 +8,7 @@ class Admin::UsersController < AdminController
     @valid_search = search_term.present? && search_term.length >= MIN_SEARCH_LENGTH
 
     if @performing_search
-      @pagy, @users = pagy(search_scope) if @valid_search
+      paginate_search_results if @valid_search
     else
       @pagy, @users = pagy(recent_users_scope)
     end
@@ -17,12 +17,22 @@ class Admin::UsersController < AdminController
   def show
     @user = User.find(params[:id])
     @applications = @user.applications.includes(:course, :lead_provider, :school).order(:created_at, :id)
+    @legacy_outcomes = @user.legacy_passed_participant_outcomes.for_display
   end
 
 private
 
-  def search_scope
-    AdminService::UsersSearch.new(q: params[:q]).call
+  # A search shows users or, when it finds no users, historic users
+  def paginate_search_results
+    users = AdminService::UsersSearch.new(q: params[:q]).call
+
+    if users.exists?
+      @pagy, @users = pagy(users)
+      @historic_users = []
+    else
+      @pagy, @historic_users = pagy(AdminService::HistoricUsersSearch.new(q: params[:q]).call)
+      @users = []
+    end
   end
 
   def recent_users_scope
