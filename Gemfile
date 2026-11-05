@@ -3,15 +3,14 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read(".ruby-version").chomp
 
-gem "activerecord-session_store"
+gem "activerecord-session_store", "2.2.0" # Do not upgrade to 2.3.0, see https://github.com/rails/activerecord-session_store/issues/236
 gem "azure-blob"
 gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails", github: "commonlit/canonical-rails", ref: "bump-rails-8-1" # the gem has not bumped its rails version yet: https://github.com/jumph4x/canonical-rails/pull/96
-gem "connection_pool", "~> 3.0" # v3 swaps to kwargs, we'll upgrade as part of Rails 8.1
+gem "connection_pool", "~> 3.0"
 gem "countries"
 gem "cssbundling-rails", "~> 1.4"
-gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job", "~> 4.1"
 gem "delayed_job_active_record"
@@ -41,7 +40,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
 gem "puma"
 gem "rack-attack"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 gem "rails_semantic_logger"
 gem "redis"
 gem "rouge"
@@ -62,7 +61,6 @@ group :development, :test, :review do
 end
 
 group :development, :test do
-  gem "amazing_print"
   gem "capybara"
   gem "capybara-screenshot"
   gem "debug"
@@ -83,17 +81,17 @@ group :development do
   gem "i18n-debug"
   gem "listen", ">= 3.0.5"
   gem "rails-erd"
-  gem "web-console", ">= 3.3.0"
+  gem "web-console"
 end
 
 group :test do
-  gem "axe-core-capybara", "~> 4.7"
-  gem "axe-core-rspec", "~> 4.14"
+  gem "axe-core-capybara"
+  gem "axe-core-rspec"
   gem "cuprite"
   gem "rspec-default_http_header"
   gem "shoulda-matchers"
   gem "site_prism", "~> 6.0"
-  gem "webmock", "~> 3.34"
+  gem "webmock"
 end
 
 group :development, :test, :review, :staging, :sandbox do

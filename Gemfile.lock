@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: https://github.com/DFE-Digital/dfe-wizard.git
-  revision: b8fedfc72b7ed606001bcb1704f376b2f90e6b01
+  revision: 2985f068d8575ded6ff34237eacc9cc9e1702d70
   specs:
     dfe-wizard (1.0.0)
       activemodel (>= 7.1, < 9)
@@ -110,10 +110,9 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.9.0)
+    addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
-    amazing_print (3.0.0)
     ast (2.4.3)
     attr_required (1.0.2)
     axe-core-api (4.14.0)
@@ -129,7 +128,7 @@ GEM
     bcrypt (3.1.22)
     benchmark (0.5.0)
     bigdecimal (4.1.3)
-    bindata (2.5.1)
+    bindata (3.0.1)
     bindex (0.8.1)
     blueprinter (1.3.0)
     bootsnap (1.26.1)
@@ -166,11 +165,10 @@ GEM
     crass (1.0.8)
     cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
-    csv (3.3.6)
-    cuprite (0.19)
+    csv (3.3.7)
+    cuprite (0.20)
       capybara (~> 3.0)
-      ferrum (~> 0.19.1)
-    daemons (1.4.1)
+      ferrum (~> 0.20.1)
     date (3.6.0)
     debug (1.11.1)
       irb (~> 1.10)
@@ -202,9 +200,9 @@ GEM
       activemodel
     erb (6.0.7)
     erubi (1.13.1)
-    et-orbi (1.4.0)
+    et-orbi (1.4.2)
       tzinfo
-    factory_bot (6.5.6)
+    factory_bot (6.6.0)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
@@ -221,7 +219,7 @@ GEM
       net-http (~> 0.5)
     faraday-retry (2.4.0)
       faraday (~> 2.0)
-    ferrum (0.19.1)
+    ferrum (0.20.1)
       addressable (~> 2.5)
       base64 (~> 0.2)
       concurrent-ruby (~> 1.1)
@@ -238,8 +236,8 @@ GEM
     foreman (0.90.0)
       thor (~> 1.4)
     forwardable (1.4.0)
-    fugit (1.11.1)
-      et-orbi (~> 1, >= 1.2.11)
+    fugit (1.14.0)
+      et-orbi (~> 1.4)
       raabro (~> 1.4)
     globalid (1.4.0)
       activesupport (>= 6.1)
@@ -282,16 +280,16 @@ GEM
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 10)
       view_component (>= 4.9, < 4.16)
-    govuk_design_system_formbuilder (6.1.0)
-      actionview (>= 6.1)
-      activemodel (>= 6.1)
-      activesupport (>= 6.1)
+    govuk_design_system_formbuilder (6.6.0)
+      actionview (>= 7.2)
+      activemodel (>= 7.2)
+      activesupport (>= 7.2)
       html-attributes-utils (~> 1)
     govuk_markdown (2.0.4)
       activesupport
       redcarpet
     hashdiff (1.2.1)
-    hashie (5.1.0)
+    hashie (5.2.0)
       logger
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
@@ -313,14 +311,14 @@ GEM
     jsbundling-rails (1.3.1)
       railties (>= 6.0.0)
     json (2.21.2)
-    json-jwt (1.17.0)
+    json-jwt (1.17.2)
       activesupport (>= 4.2)
       aes_key_wrap
       base64
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
-    json-schema (6.1.0)
+    json-schema (6.2.1)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
     jwt (3.3.0)
@@ -367,7 +365,7 @@ GEM
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
-    msgpack (1.8.5)
+    msgpack (1.8.7)
     multi_json (1.21.2)
     multi_xml (0.6.0)
     net-http (0.9.1)
@@ -390,7 +388,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.7-x86_64-linux-musl)
       racc (~> 1.4)
-    notifications-ruby-client (6.3.0)
+    notifications-ruby-client (6.5.1)
       jwt (>= 1.5, < 4)
     oj (3.17.7)
       bigdecimal (>= 3.0)
@@ -406,10 +404,9 @@ GEM
     omniauth_openid_connect (0.8.0)
       omniauth (>= 1.9, < 3)
       openid_connect (~> 2.2)
-    openid_connect (2.3.1)
+    openid_connect (2.5.0)
       activemodel
       attr_required (>= 1.0.0)
-      email_validator
       faraday (~> 2.0)
       faraday-follow_redirects
       json-jwt (>= 1.16)
@@ -427,9 +424,9 @@ GEM
       activerecord (>= 7.1)
       request_store (~> 1.4)
     parallel (1.28.0)
-    parallel_tests (5.8.0)
+    parallel_tests (5.9.0)
       parallel
-    parser (3.3.12.0)
+    parser (3.3.13.0)
       ast (~> 2.4.1)
       racc
     pg (1.7.0-arm64-darwin)
@@ -447,7 +444,7 @@ GEM
     public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
-    raabro (1.4.0)
+    raabro (1.5.0)
     racc (1.8.1)
     rack (3.2.8)
     rack-attack (6.8.0)
@@ -538,7 +535,7 @@ GEM
       rack (>= 1.4)
     request_store_rails (2.0.0)
       concurrent-ruby (~> 1.0)
-    responders (3.2.0)
+    responders (3.2.1)
       actionpack (>= 7.0)
       railties (>= 7.0)
     retriable (4.2.0)
@@ -627,8 +624,9 @@ GEM
     secure_headers (7.3.0)
       cgi (>= 0.1)
     securerandom (0.4.1)
-    semantic_logger (5.1.0)
+    semantic_logger (5.2.0)
       concurrent-ruby (~> 1.0)
+      logger (~> 1.5)
     sentry-delayed_job (7.2.0)
       delayed_job (>= 4.0)
       sentry-ruby (~> 7.2.0)
@@ -689,9 +687,9 @@ GEM
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
     unaccent (0.4.0)
-    unicode-display_width (3.2.0)
-      unicode-emoji (~> 4.1)
-    unicode-emoji (4.2.0)
+    unicode-display_width (3.3.0)
+      unicode-emoji (~> 4.3)
+    unicode-emoji (4.3.0)
     uniform_notifier (1.18.1)
     uri (1.1.2)
     useragent (0.16.11)
@@ -734,10 +732,9 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  activerecord-session_store
-  amazing_print
-  axe-core-capybara (~> 4.7)
-  axe-core-rspec (~> 4.14)
+  activerecord-session_store (= 2.2.0)
+  axe-core-capybara
+  axe-core-rspec
   azure-blob
   blueprinter
   bootsnap (>= 1.1.0)
@@ -750,7 +747,6 @@ DEPENDENCIES
   countries
   cssbundling-rails (~> 1.4)
   cuprite
-  daemons
   debug
   delayed_cron_job
   delayed_job (~> 4.1)
@@ -789,7 +785,7 @@ DEPENDENCIES
   pg_search
   puma
   rack-attack
-  rails (~> 8.1.3)
+  rails (~> 8.1.4)
   rails-erd
   rails_semantic_logger
   redis
@@ -814,12 +810,12 @@ DEPENDENCIES
   state_machines-activerecord
   strong_migrations
   tzinfo-data
-  web-console (>= 3.3.0)
-  webmock (~> 3.34)
+  web-console
+  webmock
   with_advisory_lock
 
 RUBY VERSION
   ruby 3.4.12
 
 BUNDLED WITH
-  4.0.13
+  4.0.23
