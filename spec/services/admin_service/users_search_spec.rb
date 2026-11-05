@@ -82,7 +82,7 @@ RSpec.describe AdminService::UsersSearch do
       end
 
       it "returns one result" do
-        expect(subject.call.count).to eq(1)
+        expect(subject.call.size).to eq(1)
       end
     end
 

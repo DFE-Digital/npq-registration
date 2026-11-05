@@ -75,3 +75,11 @@
 <% else %>
   <%= render partial: 'application', collection: @applications %>
 <% end %>
+
+<% if @user.trn_verified? && @user.legacy_passed_participant_outcomes.any? %>
+  <h2 class="govuk-heading-m">Legacy outcomes</h2>
+
+  <% @user.legacy_passed_participant_outcomes.each do |outcome| %>
+    <%= render partial: 'legacy_passed_participant_outcome', locals: { legacy_passed_participant_outcome: outcome } %>
+  <% end %>
+<% end %>
