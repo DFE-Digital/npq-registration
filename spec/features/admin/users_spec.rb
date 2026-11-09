@@ -112,6 +112,8 @@ RSpec.feature "User administration", :no_js, type: :feature do
       fill_in("Find a user", with: "1234567")
       click_on("Search")
 
+      expect(page).to have_css("thead th", text: "Earliest completion date")
+      expect(page).not_to have_css("thead th", text: "Date added")
       expect(page).to have_css("tbody tr", count: 1)
       within("tbody tr") do
         expect(page).to have_css("td", text: "1234567")
@@ -152,6 +154,8 @@ RSpec.feature "User administration", :no_js, type: :feature do
       expect(page).to have_css("tbody tr", count: 1)
       expect(page).to have_link(user.full_name, href: admin_user_path(user))
       expect(page).not_to have_link("Historic user")
+      expect(page).to have_css("thead th", text: "Date added")
+      expect(page).not_to have_css("thead th", text: "Earliest completion date")
     end
 
     scenario "showing one row per TRN when the search finds no users" do
