@@ -75,6 +75,7 @@ module "web_application" {
   max_memory = var.webapp_memory_max
 
   enable_logit                     = var.enable_logit
+  enable_gcp_wif                   = var.airbyte_enabled
   send_traffic_to_maintenance_page = var.send_traffic_to_maintenance_page
   run_as_non_root                  = true
 }
