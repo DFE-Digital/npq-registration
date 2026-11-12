@@ -11,6 +11,7 @@ class AdminService::UsersSearch
     if q.present?
       users = User.arel_table
 
+      chain = chain.select(:id, :full_name, :trn, :created_at, "'User' as class")
       chain = chain.where(users[:email].matches("%#{q}%"))
       chain = chain.or(default_scope.where(users[:full_name].matches("%#{q}%")))
       chain = chain.or(default_scope.where(users[:preferred_name].matches("%#{q}%")))
