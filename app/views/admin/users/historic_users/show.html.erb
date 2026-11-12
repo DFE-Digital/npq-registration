@@ -1,0 +1,5 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<h1 class="govuk-heading-l">Historic user - <%= @trn %></h1>
+
+<%= render "admin/users/legacy_outcomes", legacy_outcomes: @legacy_outcomes %>
