@@ -51,8 +51,8 @@ provider "statuscake" {
 
 provider "airbyte" {
   # Configuration options
-  server_url    = var.airbyte_enabled ? "https://airbyte-${var.namespace}.${module.cluster_data.ingress_domain}/api/public/v1" : ""
-  client_id     = var.airbyte_enabled ? module.infrastructure_secrets.map.AIRBYTE-CLIENT-ID : ""
-  client_secret = var.airbyte_enabled ? module.infrastructure_secrets.map.AIRBYTE-CLIENT-SECRET : ""
+  server_url    = "https://airbyte-${var.namespace}.${module.cluster_data.ingress_domain}/api/public/v1"
+  client_id     = try(module.infrastructure_secrets.map.AIRBYTE-CLIENT-ID, "")
+  client_secret = try(module.infrastructure_secrets.map.AIRBYTE-CLIENT-SECRET, "")
 }
 

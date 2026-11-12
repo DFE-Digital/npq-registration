@@ -169,3 +169,6 @@ variable "uploads_container_delete_retention_days" {
 
 # pg_airbyte_enabled used in the postgres module
 variable "pg_airbyte_enabled" { default = false }
+
+# wal_threshold is read by the database-replication-monitor workflow, not by terraform
+variable "wal_threshold" { default = null }
