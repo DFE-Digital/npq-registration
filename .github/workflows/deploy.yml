@@ -212,7 +212,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        domain_environment: [staging, sandbox, production]
+        domain_environment: [staging, sandbox, production, ithc]
     environment:
       name: production
     permissions:
