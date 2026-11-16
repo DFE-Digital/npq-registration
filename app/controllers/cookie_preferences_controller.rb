@@ -18,12 +18,11 @@ class CookiePreferencesController < PublicPagesController
 
         format.html do
           flash[:success] = "You’ve set your cookie preferences."
-          redirect_to "/cookies"
+          redirect_to cookies_path
         end
       end
-
     else
-      render :new, status: :unprocessable_content
+      redirect_to cookies_path
     end
   end
 
