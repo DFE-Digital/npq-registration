@@ -1108,7 +1108,7 @@ detect-libc@^1.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
 
-dompurify@^3.4.16:
+dompurify@^3.4.17:
   version "3.4.17"
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.17.tgz#074bbb24eaa419535ac19ffe7f663104b0e1543d"
   integrity sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==
@@ -1896,10 +1896,10 @@ swagger-client@^3.38.4:
     "@swagger-api/apidom-parser-adapter-openapi-yaml-3-2" "^1.12.1"
     "@swagger-api/apidom-parser-adapter-yaml-1-2" "^1.12.1"
 
-swagger-ui@^5.34.0:
-  version "5.34.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.34.0.tgz#38dbf2bf1f79677b10d5f9e7655f845d610b23d2"
-  integrity sha512-2sJcLToxyE7xADhJD6QVwlTCuvirHq7buMfAEdc1oTxYwru/wBafAtkoRVnz2vld3DwZgEzoikKYzxoozZZFuQ==
+swagger-ui@^5.34.1:
+  version "5.34.1"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.34.1.tgz#12a3510aff78fc7cde283abb894f183e4eb53d72"
+  integrity sha512-09s+e8mNVqqSv12XzL1dzUX/Rdn+KY8Skto7fQ8kjZGp8owwKWkxWe4f/ES8pQPpbWw8HkmkBoHWOSg+OZz5Kg==
   dependencies:
     "@babel/runtime-corejs3" "^7.27.1"
     "@scarf/scarf" "=1.4.0"
@@ -1909,7 +1909,7 @@ swagger-ui@^5.34.0:
     classnames "^2.5.1"
     css.escape "1.5.1"
     deep-extend "0.6.0"
-    dompurify "^3.4.16"
+    dompurify "^3.4.17"
     ieee754 "^1.2.1"
     immutable "^5.1.9"
     js-file-download "^0.4.12"
