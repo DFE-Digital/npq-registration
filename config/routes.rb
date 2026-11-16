@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
-  resources :email_updates do
+  resources :email_updates, only: %i[new create] do
     collection do
       get "unsubscribe"
       post "unsubscribe"
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   get "/session/:step", to: "session_wizard#show", as: "session_wizard_show"
   patch "/session/:step", to: "session_wizard#update", as: "session_wizard_update"
 
-  resource :account
+  resource :account, only: %i[show]
 
   namespace :accounts do
     resources :user_registrations, only: [:show]
@@ -51,11 +51,7 @@ Rails.application.routes.draw do
   get "/choose-an-npq-and-provider", to: "pages#show", page: "choose_an_npq_and_provider"
   get "/closed_registration_exception", to: "pages#show", page: "closed_registration_exception"
 
-  resource :cookie_preferences do
-    member do
-      post "hide"
-    end
-  end
+  resource :cookie_preferences, only: %i[create]
 
   namespace :api do
     get :guidance, to: "guidance#index"
@@ -300,5 +296,5 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_content", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
-  get "/development_login", to: "registration_wizard#development_login"
+  get "/development_login", to: "registration_wizard#development_login" if Rails.env.development?
 end
