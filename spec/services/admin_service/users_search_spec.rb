@@ -58,6 +58,14 @@ RSpec.describe AdminService::UsersSearch do
       end
     end
 
+    context "when the search is part of user#trn" do
+      let(:q) { user.trn.first(5) }
+
+      it "does not return the user" do
+        expect(subject.call).not_to include(user)
+      end
+    end
+
     context "when application#school_urn match" do
       let(:q) { application.school_urn }
 

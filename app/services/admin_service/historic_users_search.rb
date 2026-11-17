@@ -5,13 +5,12 @@ class AdminService::HistoricUsersSearch
     @q = q
   end
 
-  # One row per TRN, taking the earliest completion date.
-  # Only use this when UsersSearch finds nothing: none of these TRNs belong to a user.
+  # Finds the full TRN only. One row for the TRN, with its earliest completion date.
+  # Only use this when UsersSearch finds nothing: then the TRN does not belong to a user.
   def call
     LegacyPassedParticipantOutcome
-      .where("trn ILIKE ?", "%#{q}%")
+      .where(trn: q)
       .group(:trn)
       .select(:trn, "MIN(completion_date) AS completion_date")
-      .order("MIN(completion_date) DESC", :trn)
   end
 end
