@@ -107,16 +107,18 @@ module Users
 
     def verified_teacher_auth_matching_users
       User
-        .where(trn:, trn_verified: true, archived_at: nil, provider: Omniauth::Strategies::TeacherAuth::NAME)
-        .where.not(trn: nil)
+        .not_archived
+        .with_teacher_auth
+        .with_trn(trn)
         .order(updated_at: :desc)
     end
 
     def verified_trn_matching_users
       @verified_trn_matching_users ||=
         User
+          .not_archived
           .with_trn(trn)
-          .order(archived_at: :desc, updated_at: :desc)
+          .order(created_at: :desc)
           .to_a
     end
 
@@ -133,22 +135,22 @@ module Users
         feature_flag_id:,
         full_name:,
         trn_auto_verified: true,
+        email_reused_at: nil,
       }
     end
 
     def blank_clashing_email_user(except: nil)
       scope = User.not_archived.where(email:)
       scope = scope.where.not(id: except.id) if except
-      clashing = scope.first
-      return unless clashing
+      clashing_user = scope.first
+      return unless clashing_user
 
-      Users::Archiver.new(user: clashing).archive!(blank_email: true)
+      clashing_user.blank_reused_email!
     end
 
     def merge_and_archive_other_users(user_to_keep, users_to_merge)
       users_to_merge.each do |user_to_merge|
-        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:)
-          .call(dry_run: false, allow_archived_users: true)
+        Users::MergeAndArchive.new(user_to_merge:, user_to_keep:).call(dry_run: false)
       end
     end
 

@@ -141,7 +141,7 @@ module Admin::NavigationStructures
           prefix: /\/admin\/users(?!\/duplicates)$/,
         ),
         Node.new(
-          name: "Archived duplicate users",
+          name: "Duplicate users",
           href: admin_duplicate_users_path,
           prefix: /\/admin\/users\/duplicates$/,
         ),

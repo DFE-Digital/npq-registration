@@ -50,7 +50,16 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
     end
 
     context "when the user has no email address" do
-      let(:user) { create(:user, :with_verified_trn, :archived, email: nil) }
+      let(:user) { create(:user, :with_verified_trn, :email_reused) }
+
+      it "does not send an email" do
+        expect(ApplicationAcceptedMailer).not_to send_mail(:application_accepted_mail)
+        service.accept
+      end
+    end
+
+    context "when the user is archived" do
+      let(:user) { create(:user, :with_verified_trn, :archived) }
 
       it "does not send an email" do
         expect(ApplicationAcceptedMailer).not_to send_mail(:application_accepted_mail)

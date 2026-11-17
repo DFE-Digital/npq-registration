@@ -704,7 +704,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
     t.index ["trn"], name: "index_users_on_trn"
     t.index ["uid"], name: "index_users_on_uid", unique: true
     t.check_constraint "NOT trn_verified OR trn IS NOT NULL AND trn <> ''::text", name: "users_trn_present_when_verified"
-    t.check_constraint "email IS NOT NULL OR archived_email IS NOT NULL AND archived_at IS NOT NULL", name: "users_email_null_only_when_archived"
+    t.check_constraint "email IS NOT NULL OR archived_email IS NOT NULL AND email_reused_at IS NOT NULL", name: "users_email_null_only_when_reused"
   end
 
   create_table "versions", force: :cascade do |t|

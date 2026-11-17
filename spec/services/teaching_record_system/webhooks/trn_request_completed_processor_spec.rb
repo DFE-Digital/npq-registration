@@ -48,8 +48,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
         subject
       end
 
-      context "when the user's email is nil" do
-        let(:user) { create(:user, :with_teacher_auth, :archived, trn: nil, email: nil) }
+      context "when the user is an email reused user" do
+        let(:user) { create(:user, :with_teacher_auth, :email_reused, trn: nil) }
 
         it "does not send a TRN allocated email" do
           expect(TrnAllocatedMailer).not_to send_mail(:trn_allocated_mail)
@@ -79,9 +79,9 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
       it_behaves_like "it locks whilst processing the webhook"
     end
 
-    context "when there is an archived user with the same verified TRN and applications" do
-      let(:archived_user) { create(:user, :archived, :with_verified_trn, trn: new_trn, email: nil) }
-      let(:application) { create(:application, :accepted, user: archived_user) }
+    context "when there is an email reused user with the same verified TRN and applications" do
+      let(:email_reused_user) { create(:user, :with_verified_trn, :email_reused, trn: new_trn) }
+      let(:application) { create(:application, :accepted, user: email_reused_user) }
 
       before { application }
 
@@ -90,9 +90,22 @@ RSpec.describe TeachingRecordSystem::Webhooks::TrnRequestCompletedProcessor do
         expect(application.reload.user).to eq user
       end
 
-      it "creates a participant ID change from the archived user to this user" do
+      it "creates a participant ID change from the email reused user to this user" do
         subject
-        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: archived_user.ecf_id, to_participant_id: user.ecf_id)
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: email_reused_user.ecf_id, to_participant_id: user.ecf_id)
+      end
+
+      it "marks the webhook message as processed" do
+        expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+      end
+    end
+
+    context "when there is an archived user with the same verified TRN" do
+      let(:archived_user) { create(:user, :archived, :with_verified_trn, trn: new_trn) }
+
+      it "does not create a participant ID change from the archived user to this user" do
+        subject
+        expect(user.participant_id_changes).to be_empty
       end
 
       it "keeps the archived user archived" do
