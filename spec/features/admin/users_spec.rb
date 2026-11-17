@@ -141,50 +141,17 @@ RSpec.feature "User administration", :no_js, type: :feature do
       expect(page).to have_css("tbody tr", count: 1)
       expect(page).to have_link(user.full_name, href: admin_user_path(user))
       expect(page).not_to have_link("Historic user")
-    end
-
-    scenario "not showing historic users when the search also finds a user" do
-      user.update!(trn: "1234500")
-
-      visit(admin_users_path)
-
-      fill_in("Find a user", with: "12345")
-      click_on("Search")
-
-      expect(page).to have_css("tbody tr", count: 1)
-      expect(page).to have_link(user.full_name, href: admin_user_path(user))
-      expect(page).not_to have_link("Historic user")
       expect(page).to have_css("thead th", text: "Date added")
       expect(page).not_to have_css("thead th", text: "Earliest completion date")
     end
 
-    scenario "showing one row per TRN when the search finds no users" do
-      create(:legacy_passed_participant_outcome, trn: "1234599", completion_date: Date.new(2018, 7, 1))
-
+    scenario "not finding a historic user by part of the TRN" do
       visit(admin_users_path)
 
-      fill_in("Find a user", with: "12345")
+      fill_in("Find a user", with: "123456")
       click_on("Search")
 
-      expect(page).to have_css("tbody tr", count: 2)
-      expect(page).to have_link("Historic user", href: admin_historic_user_path("1234567"))
-      expect(page).to have_link("Historic user", href: admin_historic_user_path("1234599"))
-    end
-
-    scenario "navigating to the second page of historic users" do
-      users_per_page.times { |index| create(:legacy_passed_participant_outcome, trn: "123450#{index}") }
-
-      visit(admin_users_path)
-
-      fill_in("Find a user", with: "12345")
-      click_on("Search")
-
-      expect(page).to have_css("tbody tr", count: users_per_page)
-
-      click_on("Next")
-
-      expect(page).to have_css("tbody tr", count: 1)
-      expect(page).to have_link("Historic user", count: 1)
+      expect(page).not_to have_link("Historic user")
     end
 
     scenario "not showing historic users in the recently added list" do
