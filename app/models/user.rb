@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  self.ignored_columns += %i[date_of_birth national_insurance_number raw_tra_provider_data]
+  self.ignored_columns += %i[date_of_birth national_insurance_number raw_tra_provider_data email_updates_status email_updates_unsubscribe_key]
 
   INSIGNIFICANT_ATTRIBUTES = %w[
     feature_flag_id
@@ -7,8 +7,6 @@ class User < ApplicationRecord
     updated_from_tra_at
     trn_lookup_status
     notify_user_for_future_reg
-    email_updates_status
-    email_updates_unsubscribe_key
   ].freeze
 
   OMNIAUTH_PROVIDERS = [Omniauth::Strategies::TraOpenidConnect::NAME].tap { |providers|
@@ -56,11 +54,6 @@ class User < ApplicationRecord
   scope :archived, -> { where.not(archived_at: nil) }
   scope :with_trn, ->(trn) { where(trn:, trn_verified: true).where.not(trn: nil) }
 
-  EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
-  EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
-
-  enum :email_updates_status, EMAIL_UPDATES_ALL_STATES, suffix: true
-
   attr_accessor :version_note, :skip_touch_significantly_updated_at
 
   def refresh_token
@@ -104,8 +97,24 @@ class User < ApplicationRecord
     Users::FindOrCreateFromProviderData.new(provider_data: provider_data, feature_flag_id: feature_flag_id).call
   end
 
+  # A double click on TeacherAuth can send two callbacks almost simultaneously.
+  # The second one may fail to create a user or token the first one just created:
+  # - a duplicate user: the first request has already saved it, so the
+  #   uniqueness validations on email and uid fail with ActiveRecord::RecordInvalid.
+  # - a duplicate token: both requests look for the token at the same time and
+  #   find none, so both try to create it. The unique index on oauth_tokens
+  #   rejects the second one with ActiveRecord::RecordNotUnique.
+  # We retry once to find them.
+  # If it fails again we raise the error.
   def self.find_or_create_from_teacher_auth(provider_data:, feature_flag_id:)
-    Users::FindOrCreateFromTeacherAuth.new(provider_data:, feature_flag_id:).call
+    attempts = 0
+
+    begin
+      attempts += 1
+      Users::FindOrCreateFromTeacherAuth.new(provider_data:, feature_flag_id:).call
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
+      attempts == 1 ? retry : raise
+    end
   end
 
   def get_an_identity_provider?
@@ -128,18 +137,6 @@ class User < ApplicationRecord
     self.feature_flag_id ||= SecureRandom.uuid
     save!(validate: false) if feature_flag_id_changed?
     feature_flag_id
-  end
-
-  def update_email_updates_status(form)
-    self.email_updates_status = form.email_updates_status
-    self.email_updates_unsubscribe_key = SecureRandom.uuid if email_updates_unsubscribe_key.nil?
-    save!
-  end
-
-  def unsubscribe_from_email_updates
-    self.email_updates_status = "empty"
-    self.email_updates_unsubscribe_key = nil
-    save!
   end
 
   def archived?

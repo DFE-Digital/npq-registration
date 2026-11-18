@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -22,7 +22,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
   # frequent changes to the terraform configs. Since our application doesn't
   # add the extension in the migrations, or require it, we'll leave the extension
   # excluded from the db/schema.rb file.
-  # TODO: Leave this comment in place.
+  # TODO: Leave this comment in place. (you can use `git add -p` to avoid staging changes)
   enable_extension "pg_trgm"
 
   # Custom types defined in this database.
@@ -41,6 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
   create_enum "oauth_token_types", ["refresh_token", "access_token"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
   create_enum "reasons_for_rejection", ["registration_expired", "rejected_by_provider", "other_application_in_this_cohort_accepted"]
+  create_enum "registration_interest_course", ["npq-senco", "other"]
   create_enum "review_statuses", ["needs_review", "awaiting_information", "reregister", "decision_made"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
@@ -549,11 +550,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_160317) do
   end
 
   create_table "registration_interests", force: :cascade do |t|
+    t.enum "course", default: "other", null: false, enum_type: "registration_interest_course"
     t.datetime "created_at", null: false
     t.citext "email", null: false
     t.boolean "notified", default: false
+    t.uuid "unsubscribe_key", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_registration_interests_on_email", unique: true
+    t.index ["unsubscribe_key"], name: "index_registration_interests_on_unsubscribe_key", unique: true
   end
 
   create_table "reports", force: :cascade do |t|

@@ -19,6 +19,7 @@ Rails.application.config.filter_parameters += [
   :certificate,
   :crypt,
   :full_name,
+  :mail,
   :national_insurance_number,
   :passw,
   :salt,

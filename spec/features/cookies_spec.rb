@@ -54,6 +54,6 @@ RSpec.feature "Cookies", type: :feature do
     expect(page).to have_current_path("/")
     expect(page).to have_content("Sorry, there is a problem with the service. Try again later.")
     expect(page).to have_button("Reject additional cookies")
-    expect(page.driver.cookies["consented-to-cookies"]).to be_nil
+    expect(page.driver.browser.cookies.all["consented-to-cookies"]).to be_nil
   end
 end

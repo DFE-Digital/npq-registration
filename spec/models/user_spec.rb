@@ -197,16 +197,6 @@ RSpec.describe User do
     end
   end
 
-  describe "enums" do
-    it {
-      expect(subject).to define_enum_for(:email_updates_status).with_values(
-        empty: 0,
-        senco: 1,
-        other_npq: 2,
-      ).backed_by_column_of_type(:integer).with_suffix
-    }
-  end
-
   describe "previous_names" do
     it "defaults to an empty array" do
       user = create(:user)
@@ -335,6 +325,7 @@ RSpec.describe User do
     let(:provider_data) { :provider_data }
     let(:feature_flag_id) { "456" }
     let(:service) { instance_double(Users::FindOrCreateFromTeacherAuth) }
+    let(:user) { build(:user) }
 
     before { allow(Users::FindOrCreateFromTeacherAuth).to receive(:new).with(provider_data:, feature_flag_id: feature_flag_id) { service } }
 
@@ -342,55 +333,27 @@ RSpec.describe User do
       expect(service).to receive(:call)
       described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id: feature_flag_id)
     end
-  end
 
-  describe "#update_email_updates_status" do
-    let(:user) { create(:user) }
-    let(:form) { EmailUpdates.new(email_updates_status: :senco) }
-    let(:uuid) { "7d023b82-e0eb-4ae2-b613-0a4a51bacf8f" }
+    [ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique].each do |error_class|
+      context "when the service raises #{error_class} the first time only" do
+        before do
+          allow(service).to receive(:call).and_invoke(-> { raise error_class }, -> { user })
+        end
 
-    before do
-      allow(SecureRandom).to receive(:uuid) { uuid }
-    end
-
-    context "when value is correct" do
-      it "saves the value" do
-        expect {
-          user.update_email_updates_status(form)
-        }.to change { user.reload.email_updates_status }.from("empty").to("senco")
+        it "retries and returns the user" do
+          expect(described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id:)).to eq(user)
+          expect(service).to have_received(:call).twice
+        end
       end
 
-      it "creates proper unsubscribe key" do
-        expect {
-          user.update_email_updates_status(form)
-        }.to change { user.reload.email_updates_unsubscribe_key }.from(nil).to(uuid)
+      context "when the service raises #{error_class} both times" do
+        before { allow(service).to receive(:call).and_raise(error_class) }
+
+        it "raises the error after one retry" do
+          expect { described_class.find_or_create_from_teacher_auth(provider_data:, feature_flag_id:) }.to raise_error(error_class)
+          expect(service).to have_received(:call).twice
+        end
       end
-    end
-
-    context "when value is changed" do
-      let(:user) { create(:user, email_updates_unsubscribe_key: "432") }
-
-      it "does not changes unsubscribe key" do
-        expect {
-          user.update_email_updates_status(form)
-        }.not_to(change { user.reload.email_updates_unsubscribe_key })
-      end
-    end
-  end
-
-  describe "#unsubscribe_from_email_updates" do
-    let(:user) { create(:user, email_updates_unsubscribe_key: "432", email_updates_status: "senco") }
-
-    it "saves the value" do
-      expect {
-        user.unsubscribe_from_email_updates
-      }.to change { user.reload.email_updates_status }.from("senco").to("empty")
-    end
-
-    it "creates proper unsubscribe key" do
-      expect {
-        user.unsubscribe_from_email_updates
-      }.to change { user.reload.email_updates_unsubscribe_key }.from("432").to(nil)
     end
   end
 

@@ -62,10 +62,10 @@ class RegistrationWizardController < PublicPagesController
   end
 
   def development_login
-    return unless Rails.env.development?
+    raise "Development only" unless Rails.env.development?
 
-    user_email = ENV["DEV_USER_EMAIL_FOR_LOGIN"]
-    user = User.find_by!(email: user_email)
+    user_email = ENV.fetch("DEV_USER_EMAIL_FOR_LOGIN")
+    user = User.where.not(email: nil).find_by!(email: user_email)
     session["user_id"] = user.id
     sign_in user
     wizard = RegistrationWizard.new(

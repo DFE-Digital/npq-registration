@@ -21,8 +21,7 @@
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Re-subscribe",
-          href: user_tra_openid_connect_omniauth_authorize_path(request_email_updates: "true"),
-          as_button: true,
+          href: new_email_update_path,
           html_attributes: { data: { "prevent-double-click": true } }
         )
       %>

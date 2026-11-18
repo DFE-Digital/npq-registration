@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
-  resources :email_updates do
+  resources :email_updates, only: %i[new create] do
     collection do
       get "unsubscribe"
       post "unsubscribe"
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :registration_closed, only: [:show], controller: :registration_closed do
+  resource :registration_closed, only: [:show], controller: :registration_closed, path: "registration-closed" do
     collection do
       get "change"
     end
@@ -32,10 +32,6 @@ Rails.application.routes.draw do
   patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
   patch "/registration/:step/change", to: "registration_wizard#update", as: "registration_wizard_update_change", changing_answer: "1"
 
-  get "/registration-interest/sign-up", to: "interest_notification_sign_up#new"
-  post "/registration-interest/sign-up", to: "interest_notification_sign_up#create"
-  get "/registration-interest/sign-up/confirm", to: "interest_notification_sign_up#confirm"
-
   get "/sign-in", to: "session_wizard#show", step: "sign_in"
   get "/sign-out", to: "sessions#confirm_sign_out", as: "sign_out_user"
   delete "/sign-out", to: "sessions#destroy"
@@ -43,7 +39,7 @@ Rails.application.routes.draw do
   get "/session/:step", to: "session_wizard#show", as: "session_wizard_show"
   patch "/session/:step", to: "session_wizard#update", as: "session_wizard_update"
 
-  resource :account
+  resource :account, only: %i[show]
 
   namespace :accounts do
     resources :user_registrations, only: [:show] do
@@ -57,11 +53,7 @@ Rails.application.routes.draw do
   get "/choose-an-npq-and-provider", to: "pages#show", page: "choose_an_npq_and_provider"
   get "/closed_registration_exception", to: "pages#show", page: "closed_registration_exception"
 
-  resource :cookie_preferences do
-    member do
-      post "hide"
-    end
-  end
+  resource :cookie_preferences, only: %i[create]
 
   namespace :api do
     get :guidance, to: "guidance#index"
@@ -140,14 +132,10 @@ Rails.application.routes.draw do
     resources :glossary, only: %i[index]
 
     namespace :registration_closed, path: "registration-closed" do
-      resources :reopening_email_subscriptions, path: "reopening-email-subscriptions" do
+      resources :reopening_email_subscriptions, only: %i[index], path: "reopening-email-subscriptions" do
         member do
           get "unsubscribe"
           post "unsubscribe"
-        end
-        collection do
-          get "all_users"
-          get "senco"
         end
       end
       resources :closed_registration_users, path: "closed-registration-users" do
@@ -192,6 +180,9 @@ Rails.application.routes.draw do
       end
       resources :statements, only: %i[new create show]
       member { get :download_contracts, path: "download-contracts" }
+      scope module: :cohorts do
+        resource :extend_statements, only: %i[show create]
+      end
     end
 
     resources :delivery_partners, path: "delivery-partners", except: %i[destroy] do
@@ -253,6 +244,7 @@ Rails.application.routes.draw do
           namespace :statements, path: nil do
             resource :change_deadline_date, controller: "change_deadline_date", only: %i[show create]
             resource :change_payment_date, controller: "change_payment_date", only: %i[show create]
+            resource :change_output_fee, controller: "change_output_fee", only: %i[show create]
           end
         end
       end
@@ -306,5 +298,5 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_content", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
-  get "/development_login", to: "registration_wizard#development_login"
+  get "/development_login", to: "registration_wizard#development_login" if Rails.env.development?
 end

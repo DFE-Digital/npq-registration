@@ -149,6 +149,7 @@ locals {
   uploads_storage_account_name = "${var.azure_resource_prefix}${var.service_short}${var.config_short}${local.pr_number}sa"
   # e.g. s189t01cpdnpqrv2044sa
   # name can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
+
 }
 
 variable "send_traffic_to_maintenance_page" {
@@ -168,3 +169,6 @@ variable "uploads_container_delete_retention_days" {
 
 # pg_airbyte_enabled used in the postgres module
 variable "pg_airbyte_enabled" { default = false }
+
+# wal_threshold is read by the database-replication-monitor workflow, not by terraform
+variable "wal_threshold" { default = null }

@@ -28,16 +28,28 @@ module "application_configuration" {
     BIGQUERY_TABLE_NAME = "events"
     SKYLIGHT_ENV        = local.environment
 
+    BIGQUERY_AIRBYTE_DATASET   = var.airbyte_enabled ? local.gcp_dataset_name : null
+    AIRBYTE_SERVER_URL         = var.airbyte_enabled ? "https://airbyte-${var.namespace}.${module.cluster_data.ingress_domain}" : null
+    BIGQUERY_POLICY_TAGS       = var.airbyte_enabled ? "{\"hidden\":\"projects/ecf-bq/locations/europe-west2/taxonomies/6302091323314055162/policyTags/301313311867345339\"}" : null
+
+
     AZURE_STORAGE_ACCOUNT_NAME = azurerm_storage_account.uploads.name
     AZURE_STORAGE_CONTAINER    = azurerm_storage_container.uploads.name
   }
-  secret_variables = {
+  secret_variables = merge({
     DATABASE_URL             = module.postgres.url
     REDIS_CACHE_URL          = module.redis-managed-cache.url
     GOOGLE_CLOUD_CREDENTIALS = var.enable_dfe_analytics_federated_auth ? module.dfe_analytics[0].google_cloud_credentials : null
 
     AZURE_STORAGE_ACCESS_KEY = azurerm_storage_account.uploads.primary_access_key
-  }
+    },
+    {
+      AIRBYTE_CONFIGURATION = var.airbyte_enabled ? jsonencode({
+        SOURCE_ID      = module.airbyte[0].airbyte_source_id
+        DESTINATION_ID = module.airbyte[0].airbyte_destination_id
+        CONNECTION_ID  = module.airbyte[0].airbyte_connection_id
+      }) : null
+  })
 }
 
 module "web_application" {

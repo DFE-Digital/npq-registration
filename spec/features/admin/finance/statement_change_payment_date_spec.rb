@@ -62,12 +62,12 @@ RSpec.feature "Statement - change payment date", :no_js, type: :feature do
     let(:statement) { create(:statement, :payable) }
 
     scenario "it shows an error" do
-      visit(admin_finance_statements_change_deadline_date_path(statement))
+      visit(admin_finance_statements_change_payment_date_path(statement))
 
-      new_deadline_date = statement.payment_date - 1.month
-      fill_in "statements_change_deadline_date[deadline_date(3i)]", with: new_deadline_date.day
-      fill_in "statements_change_deadline_date[deadline_date(2i)]", with: new_deadline_date.month
-      fill_in "statements_change_deadline_date[deadline_date(1i)]", with: new_deadline_date.year
+      new_payment_date = statement.payment_date + 1.day
+      fill_in "statements_change_payment_date[payment_date(3i)]", with: new_payment_date.day
+      fill_in "statements_change_payment_date[payment_date(2i)]", with: new_payment_date.month
+      fill_in "statements_change_payment_date[payment_date(1i)]", with: new_payment_date.year
 
       click_button "Change date"
 

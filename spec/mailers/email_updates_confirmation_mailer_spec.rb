@@ -25,6 +25,10 @@ RSpec.describe EmailUpdatesConfirmationMailer, type: :mailer do
       )
     end
 
+    it "sends the unsubscribe link as the one-click unsubscribe url" do
+      expect(mail.message.one_click_unsubscribe_url).to eq(unsubscribe_link)
+    end
+
     it { is_expected.to use_template(EmailUpdatesConfirmationMailer::TEMPLATE_ID) }
 
     it_behaves_like "a mailer with redacted logs"
