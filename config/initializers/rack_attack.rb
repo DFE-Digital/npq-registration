@@ -44,11 +44,6 @@ class Rack::Attack
     request.ip if protected_path?(request)
   end
 
-  # Throttle /api/v1/get_an_identity/webhook_messages requests by IP (100 requests per 5 minutes)
-  throttle("API get an identity webhook message requests by ip", limit: 100, period: 5.minutes) do |request|
-    request.ip if get_an_identity_webhook_path?(request)
-  end
-
   # Throttle /api/teaching-record-system/v1/webhook_messages requests by IP (100 requests per 5 minutes)
   throttle("API TeacherAuth webhook message requests by ip", limit: 100, period: 5.minutes) do |request|
     request.ip if teacher_auth_webhook_path?(request)

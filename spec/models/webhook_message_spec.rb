@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe GetAnIdentity::WebhookMessage, type: :model do
+RSpec.describe WebhookMessage, type: :model do
   describe "enums" do
     it {
       expect(subject).to define_enum_for(:status).with_values(
@@ -29,7 +29,7 @@ RSpec.describe GetAnIdentity::WebhookMessage, type: :model do
     subject { build(:trs_user_updated_webhook_message, message_type:) }
 
     before do
-      stub_const("GetAnIdentity::WebhookMessage::IGNORED_MESSAGE_TYPES", %w[ignore_me])
+      stub_const("WebhookMessage::IGNORED_MESSAGE_TYPES", %w[ignore_me])
     end
 
     context "when the message_type is on the ignore list" do

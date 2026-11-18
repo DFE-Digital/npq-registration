@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :get_an_identity_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+  factory :legacy_get_an_identity_webhook_message, class: "WebhookMessage" do
     transient do
       middle_name { nil }
       date_of_birth { "1995-01-01" }
@@ -36,7 +36,7 @@ FactoryBot.define do
     message { raw["message"] }
   end
 
-  factory :trs_user_updated_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+  factory :trs_user_updated_webhook_message, class: "WebhookMessage" do
     transient do
       user_uid { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
       user_email { "user@example.com" }
@@ -71,7 +71,7 @@ FactoryBot.define do
     end
   end
 
-  factory :trs_trn_request_completed_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+  factory :trs_trn_request_completed_webhook_message, class: "WebhookMessage" do
     transient do
       user_uid { "urn:fdc:gov.uk:2022:#{SecureRandom.alphanumeric(43)}" }
       user_trn { "1234567" }
@@ -93,7 +93,7 @@ FactoryBot.define do
     end
   end
 
-  factory :trs_person_deactivated_webhook_message, class: "GetAnIdentity::WebhookMessage" do
+  factory :trs_person_deactivated_webhook_message, class: "WebhookMessage" do
     transient do
       deactivated_trn { "1234567" }
       merged_with_trn { "3456789" }

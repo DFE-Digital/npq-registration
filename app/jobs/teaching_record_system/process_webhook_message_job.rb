@@ -1,4 +1,4 @@
-module GetAnIdentity
+module TeachingRecordSystem
   class ProcessWebhookMessageJob < ApplicationJob
     class UnknownMessageTypeError < StandardError; end
 

@@ -1,4 +1,6 @@
-class GetAnIdentity::WebhookMessage < ApplicationRecord
+class WebhookMessage < ApplicationRecord
+  self.table_name = "get_an_identity_webhook_messages"
+
   enum :status, {
     pending: "pending",
     processing: "processing",
@@ -15,8 +17,6 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
 
   def processor_klass
     case message_type
-    when "UserUpdated"
-      GetAnIdentityService::Webhooks::UserUpdatedProcessor
     when "one_login_user.updated"
       TeachingRecordSystem::Webhooks::UserUpdatedProcessor
     when "trn_request.completed"
@@ -26,15 +26,8 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
     end
   end
 
-  def decorated_message
-    case message_type
-    when "UserUpdated"
-      GetAnIdentity::WebhookMessages::UserUpdatedDecorator.new(self)
-    end
-  end
-
   def enqueue_processing_job
-    ::GetAnIdentity::ProcessWebhookMessageJob.perform_later(webhook_message: self)
+    ::TeachingRecordSystem::ProcessWebhookMessageJob.perform_later(webhook_message: self)
   end
 
   def retryable?

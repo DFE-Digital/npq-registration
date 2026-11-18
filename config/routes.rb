@@ -58,12 +58,6 @@ Rails.application.routes.draw do
     get "guidance/*page", to: "guidance#show", as: :guidance_page
     get "docs/:version", to: "documentation#index", as: :documentation
 
-    namespace :v1 do
-      namespace :get_an_identity do
-        resource :webhook_messages, only: %i[create]
-      end
-    end
-
     namespace :v3, defaults: { format: :json } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         member do
@@ -103,7 +97,6 @@ Rails.application.routes.draw do
     namespace :teacher_record_service, path: "teacher-record-service", defaults: { format: :json } do
       namespace :v1 do
         resources :qualifications, only: %i[show], param: :trn
-        resource :webhook_messages, only: %i[create]
       end
     end
     namespace :teaching_record_system, path: "teaching-record-system", defaults: { format: :json } do

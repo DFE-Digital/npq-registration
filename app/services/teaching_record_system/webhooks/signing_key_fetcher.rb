@@ -1,4 +1,4 @@
-module GetAnIdentityService::Webhooks
+module TeachingRecordSystem::Webhooks
   class SigningKeyFetcher
     CACHE_DURATION = 1.day
     RETRY_MAX = 1
