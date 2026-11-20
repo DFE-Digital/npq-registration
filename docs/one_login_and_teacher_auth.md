@@ -14,7 +14,7 @@ This supports multiple levels of identity checks, with the enhanced checks requi
 
 TeacherAuth is a DfE OIDC service to link a users teaching record with their OneLogin account. NPQ integrates directly with TeacherAuth, to handle authentication and provide an identity we either match to an existing NPQ user account, or use to create a new NPQ user account.
 
-The TeacherAuth service in turn wraps the OneLogin OIDC service, requiring enhanced verification checks to ensure the users identity is proven. A user signs in via OneLogin and TeacherAuth adds additional screens to the OIDC flow to allow a user to be matched to their teaching record.
+The TeacherAuth service in turn wraps the OneLogin OIDC service, requiring enhanced verification checks to ensure the user's identity is proven. A user signs in via OneLogin and TeacherAuth adds additional screens to the OIDC flow to allow a user to be matched to their teaching record.
 
 If a user has a teaching record then their TRN (teaching record number) will be included with the OIDC extra info provided to the NPQ service during sign in.
 
@@ -52,9 +52,9 @@ In theory, this can cause 'flip flopping' when a user has multiple TeacherAuth a
 
 ## TRN allocation for users without TRNs
 
-If a user does not already have an TRN, the TeacherAuth will have captured sufficient information to create a future teaching record - referred to as a 'dormant trn request'.
+If a user does not already have an TRN, the TeacherAuth will have captured sufficient information to create a future teaching record - referred to as a 'dormant TRN request'.
 
-When the user is accepted onto a course, then an API call is made to 'Activate' their TRN request (see [TeachingRecordSystem::AllocateTrnJob](../app/jobs/teaching_record_system/allocated_trn_job.rb)). In most cases this immediately returns a TRN and it is assigned to the user. For a minority though it may take up to a few days, in which case the NPQ service is notified by TRS of the new TRN via a webhook.
+When the user is accepted onto a course, then an API call is made to 'Activate' their TRN request (see [TeachingRecordSystem::AllocateTrnJob](../app/jobs/teaching_record_system/allocate_trn_job.rb)). In most cases this immediately returns a TRN and it is assigned to the user. For a minority though it may take up to a few days, in which case the NPQ service is notified by TRS of the new TRN via a webhook.
 
 ## Webhooks
 

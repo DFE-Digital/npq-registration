@@ -23,7 +23,7 @@ When the user submits the form, the corresponding Form object is loaded with the
 
 ### The Forms
 
-Form objects are found within [app/forms](app/forms). Each Form Object is responsible for validating the user's input and updating the user's store with the form's attributes.
+Form objects are found within [app/forms](../app/forms). Each Form Object is responsible for validating the user's input and updating the user's store with the form's attributes.
 
 It defines the question name, validations, and the next_step and previous_step.
 
@@ -53,7 +53,7 @@ Several tasks need to be completed when reopening registration. These tasks shou
 
 ### Complete eligibility related changes
 
-If there are any new eligibility requirements for the new Cohort then changes will need to be made to the `FundingEligility` service. If additional information is required to determine eligibility then additional questions and screens may need addition to the registration wizard.
+If there are any new eligibility requirements for the new Cohort then changes will need to be made to the `FundingEligibility` service. If additional information is required to determine eligibility then additional questions and screens may need addition to the registration wizard.
 
 Funding Eligibility occurs once the user has finished questions related to their application, selected their NPQ and their provider. This information is then fed into `FundingEligibility`. This service then determines the user's eligibility for government funding and will provide a boolean funded status along with a `funding_eligiblity_status_code` which encodes the reason why a user may not have been funded.
 
@@ -73,7 +73,7 @@ _Note: at this time there are 3 unused fields on schedules, 'Acceptance start', 
 
 ### Add Statements and Contracts to the Cohort
 
-Statements and contracts are required in order to receive [declarations](declarations_and_statements.md) but are not required for a Cohort to accept registrations. If a lead provider submits declarations before the statements and contracts have been set up, or after the final output statement has been paid then the declaration will be reject.
+Statements and contracts are required in order to receive [declarations](declarations_and_statements.md) but are not required for a Cohort to accept registrations. If a lead provider submits declarations before the statements and contracts have been set up, or after the final output statement has been paid then the declaration will be rejected.
 
 To add statements and contracts you click the 'Create statements from CSV' button when viewing the new Cohort in the Admin area (Admin -> Cohorts)
 
