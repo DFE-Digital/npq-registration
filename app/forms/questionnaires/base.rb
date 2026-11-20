@@ -2,7 +2,6 @@ module Questionnaires
   class Base
     include DfE::Wizard::Step
     include ActiveModel::Validations::Callbacks
-    include Questionnaires::FlowHelper
 
     def self.permitted_params
       []
@@ -19,17 +18,15 @@ module Questionnaires
       false
     end
 
-    # Previous steps should lead to `closed` when registration is closed.
-    def previous_step
-      return :closed if Feature.registration_closed?
+    def step_requires_login?
+      false
+    end
 
+    def previous_step
       raise NotImplementedError
     end
 
-    # Subsequent steps should lead to `closed` when registration is closed.
     def next_step
-      return :closed if Feature.registration_closed?
-
       raise NotImplementedError
     end
 
@@ -40,6 +37,8 @@ module Questionnaires
     def before_render
       reset_store! if wizard.store["submitted"]
     end
+
+    def before_save; end
 
     def after_save; end
 
@@ -87,25 +86,9 @@ module Questionnaires
       wizard.store.slice(*self.class.permitted_params.map(&:to_s)) == attributes.stringify_keys
     end
 
-    def return_to_new_registration_flow?
-      wizard.current_user.present? && wizard.current_step == :change_your_course_or_provider
-    end
-
     def requirements_met?
-      # Redirect to new registration flow if a user wants to change the course or provider details
-      return true if return_to_new_registration_flow?
-
-      # Ensures the user is:
-      # a) logged in
-      # b) has answered at least one question
-      # Before allowing them to proceed into any questions.
-      # Certain questions, such as start and provider_check, override this
-      # as they are the first questions in the flow.
-      # Some questions add additional requirements, such as the confirmation page which requires
-      # a lead provider and a course to have been selected.
-      wizard.store.present? &&
-        query_store.current_user.present? &&
-        wizard.store.keys != %w[current_user]
+      # basic check to determine if user has completed a registration and is attempting to go directly to a step in the journey
+      query_store.has_answers?
     end
 
     def reset_store!
@@ -116,7 +99,7 @@ module Questionnaires
       wizard.query_store
     end
 
-    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil)
+    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil, nested_options: nil)
       QuestionTypes::RadioOption.new(
         value:,
         label:,
@@ -124,6 +107,82 @@ module Questionnaires
         link_errors:,
         divider:,
         revealed_question:,
+        nested_options:,
+      )
+    end
+
+    def show_previously_funded_alert?
+      query_store.user_eligible_for_funding_before_login? && user_previously_funded?
+    end
+
+  private
+
+    def show_appropriate_course_step
+      if query_store.course.ehco?
+        :npqh_status
+      elsif query_store.course.npqlpm?
+        :maths_eligibility_teaching_for_mastery
+      elsif query_store.course.senco?
+        :senco_in_role
+      else
+        :work_setting
+      end
+    end
+
+    def show_funding_step
+      if query_store.course.ehco?
+        :funding_your_ehco
+      else
+        :funding_your_npq
+      end
+    end
+
+    def show_eligibility_step
+      if query_store.proceed_without_checking_funding?
+        :choose_your_provider
+      elsif !query_store.declared_not_working_in_england? && !query_store.declared_previous_funding?
+        if eligible_for_funding?
+          :possible_funding
+        else
+          :ineligible_for_funding
+        end
+      else
+        show_funding_step
+      end
+    end
+
+    def previous_funding_or_choose_npq_step
+      if !query_store.proceed_without_checking_funding? && !query_store.declared_not_working_in_england? && query_store.cohort_funded?
+        if query_store.declared_previous_funding?
+          :ineligible_for_funding_previously_funded
+        else
+          :funding_history
+        end
+      else
+        :choose_your_npq
+      end
+    end
+
+    def shown_ineligible_step_during_journey?
+      query_store.declared_not_working_in_england? || query_store.declared_previous_funding?
+    end
+
+    def eligible_for_funding?
+      funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
+    end
+
+    def user_previously_funded?
+      funding_eligibility_calculator.funding_eligiblity_status_code == :previously_funded
+    end
+
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= FundingEligibility.new_from_query_store(
+        course: query_store.course,
+        institution: query_store.institution,
+        approved_itt_provider: query_store.approved_itt_provider?,
+        inside_catchment: query_store.inside_catchment?,
+        user_ecf_id: query_store.user_ecf_id,
+        query_store:,
       )
     end
   end

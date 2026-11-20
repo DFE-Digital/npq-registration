@@ -20,16 +20,16 @@ module Questionnaires
       %i[kind_of_nursery]
     end
 
+    def previous_step
+      :work_setting
+    end
+
     def next_step
       if ofsted_route?
         :have_ofsted_urn
       else
         :choose_childcare_provider
       end
-    end
-
-    def previous_step
-      :work_setting
     end
 
     def questions

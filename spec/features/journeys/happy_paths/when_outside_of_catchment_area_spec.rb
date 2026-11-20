@@ -1,150 +1,83 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :with_cohorts, :with_default_schedules, type: :feature do
+RSpec.feature "Happy journeys", :no_js, :with_cohorts, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "retrieve latest application data"
   include_context "with stubbed Teacher Auth OmniAuth responses"
   include_context "with stubbed Teaching Record System person API"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey when outside of catchment area (with JS)") { run_scenario(js: true) }
-  end
+  work_settings = [
+    ["Early years or childcare"],
+    ["A school", "Primary school (5 to 11)"],
+    ["Another setting"],
+    ["Other"],
+  ]
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey when outside of catchment area (without JS)") { run_scenario(js: false) }
-  end
+  work_settings.each do |work_setting|
+    let(:work_setting) { work_setting }
 
-  def run_scenario(js:)
-    stub_participant_validation_request(nino: "")
+    scenario "registration journey when outside of catchment area working in #{work_setting.last}" do
+      navigate_to_page(path: "/", submit_form: false) do
+        page.click_button("Start now")
+      end
 
-    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Before you start")
-      page.click_button("Start now")
+      choose_course_start_date
+
+      expect_page_to_have(path: "/registration/check-funding", submit_form: true) do
+        click_button("Check funding")
+      end
+
+      expect_page_to_have(path: "/registration/teacher-catchment", submit_form: true) do
+        choose("No", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/ineligible-for-funding-not-in-england", submit_form: true, submit_button_text: "Continue to register") do
+        expect(page).to have_text("DfE scholarship funding")
+        expect(page).to have_text("You’re not eligible for DfE scholarship funding because you do not work in England.")
+      end
+
+      expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
+        page.choose("Senior leadership", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+        page.choose(work_setting.first, visible: :all)
+        page.choose(work_setting.second, visible: :all) if work_setting.second
+      end
+
+      expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+        expect(page).to have_text("How are you funding your course?")
+        page.choose "I am paying", visible: :all
+      end
+
+      expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+        expect(page).to have_text("Select your provider")
+        page.choose("Teach First", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+        expect(page).to have_text("Sharing your NPQ information")
+        page.check("Yes, I agree to share my information", visible: :all)
+      end
+
+      expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
+        expect_check_answers_page_to_have_answers(
+          {
+            "DfE scholarship funding" => "Not eligible",
+            "Cohort" => course_start_cohort_description,
+            "Course" => "Senior leadership",
+            "Course funding" => "I am paying",
+            "Work setting" => work_setting.last,
+            "Provider" => "Teach First",
+            "Working in England" => "No",
+          },
+        )
+        expect(page).to have_content 'funding_eligiblity_status_code: "not_in_england"'
+      end
+
+      check_back_journey_is_correct(exclude_current_page: true)
     end
-
-    expect(page).not_to have_content("Before you start")
-
-    choose_course_start_date
-
-    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
-      page.choose("Yes", visible: :all)
-    end
-
-    choose_teacher_catchment(js:, region: "No")
-
-    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding")
-      expect(page).to have_text("you do not work in England")
-      expect(page).to have_text("This means that you would need to pay for the course another way")
-
-      page.click_link("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How are you funding your course?")
-      page.choose "I am paying", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree to share my information", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
-      expect_check_answers_page_to_have_answers(
-        {
-          "Course start" => course_start_cohort_description,
-          "Course" => "Senior leadership",
-          "Course funding" => "I am paying",
-          "Work setting" => "A school",
-          "Provider" => "Teach First",
-          "Workplace in England" => "No",
-        },
-      )
-    end
-
-    expect(retrieve_latest_application_user_data).to match(user_attributes_from_stubbed_callback_response)
-
-    deep_compare_application_data(
-      "accepted_at" => nil,
-      "cohort_id" => Cohort.current.id,
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
-      "ecf_id" => latest_application.ecf_id,
-      "schedule_id" => nil,
-      "eligible_for_funding" => false,
-      "employer_name" => nil,
-      "employment_role" => nil,
-      "employment_type" => nil,
-      "funded_place" => nil,
-      "funding_choice" => "self",
-      "funding_eligiblity_status_code" => "not_in_england",
-      "headteacher_status" => nil,
-      "kind_of_nursery" => nil,
-      "itt_provider_id" => nil,
-      "lead_mentor" => false,
-      "lead_provider_approval_status" => "pending",
-      "participant_outcome_state" => nil,
-      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
-      "notes" => nil,
-      "referred_by_return_to_teaching_adviser" => nil,
-      "private_childcare_provider_id" => nil,
-      "school_id" => nil,
-      "targeted_delivery_funding_eligibility" => false,
-      "targeted_support_funding_eligibility" => false,
-      "teacher_catchment" => "another",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
-      "teacher_catchment_synced_to_ecf" => false,
-      "training_status" => nil,
-      "ukprn" => nil,
-      "primary_establishment" => false,
-      "number_of_pupils" => 0,
-      "tsf_primary_eligibility" => false,
-      "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => false,
-      "works_in_nursery" => nil,
-      "works_in_school" => true,
-      "work_setting" => "a_school",
-      "senco_in_role" => nil,
-      "senco_start_date" => nil,
-      "on_submission_trn" => nil,
-      "review_status" => nil,
-      "raw_application_data" => {
-        "can_share_choices" => "1",
-        "chosen_provider" => "yes",
-        "course_start_cohort" => course_start_cohort_value,
-        "course_identifier" => "npq-senior-leadership",
-        "email_template" => "not_england_wrong_catchment",
-        "funding" => "self",
-        "funding_eligiblity_status_code" => "not_in_england",
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "submitted" => true,
-        "teacher_catchment" => "another",
-        "teacher_catchment_country" => nil,
-        "work_setting" => "a_school",
-        "works_in_school" => "yes",
-        "works_in_childcare" => "no",
-      },
-    )
   end
 end

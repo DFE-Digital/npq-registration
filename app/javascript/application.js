@@ -6,6 +6,7 @@ import accessibleAutocomplete from 'accessible-autocomplete';
 import { initCrossServiceHeader } from '@govuk-one-login/service-header/dist/scripts/service-header';
 
 import institutionPicker from "./institution-picker";
+import "./nested-radios";
 // These modules run on import for their side effects and export nothing.
 import "./itt-provider-picker.js";
 import "./cookie-banner";

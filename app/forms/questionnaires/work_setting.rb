@@ -3,11 +3,19 @@ module Questionnaires
     A_SCHOOL = "a_school".freeze
     AN_ACADEMY_TRUST = "an_academy_trust".freeze
     A_16_TO_19_EDUCATIONAL_SETTING = "a_16_to_19_educational_setting".freeze
+    PRIMARY_SCHOOL = "primary_school".freeze
+    SECONDARY_SCHOOL = "secondary_school".freeze
+
+    NESTED_SCHOOL_SETTINGS = [
+      PRIMARY_SCHOOL,
+      SECONDARY_SCHOOL,
+      A_16_TO_19_EDUCATIONAL_SETTING,
+    ].freeze
 
     SCHOOL_SETTINGS = [
       A_SCHOOL,
       AN_ACADEMY_TRUST,
-      A_16_TO_19_EDUCATIONAL_SETTING,
+      *NESTED_SCHOOL_SETTINGS,
     ].freeze
 
     CHILDCARE_SETTINGS = %w[
@@ -26,10 +34,16 @@ module Questionnaires
 
     attribute :work_setting
 
-    validates :work_setting, presence: true, inclusion: { in: ALL_SETTINGS }
+    validates :work_setting, presence: true
+    validates :work_setting, inclusion: { in: ALL_SETTINGS }, allow_blank: true
+    validate :school_type_chosen
 
     def self.permitted_params
       %i[work_setting]
+    end
+
+    def before_save
+      query_store.clear_optional_work_setting_answers! if changing_answer? && answers_will_change?
     end
 
     def after_save
@@ -57,28 +71,38 @@ module Questionnaires
       end
     end
 
-    def requirements_met?
-      true
-    end
-
-    def return_to_regular_flow_on_change?
-      true
+    def previous_step
+      if query_store.course.npqlpm?
+        if query_store.maths_understanding?
+          :maths_eligibility_teaching_for_mastery
+        else
+          :maths_understanding_of_approach
+        end
+      elsif query_store.course.senco?
+        if query_store.senco_in_role_status?
+          :senco_start_date
+        else
+          :senco_in_role
+        end
+      elsif query_store.course.ehco?
+        :ehco_new_headteacher
+      else
+        previous_funding_or_choose_npq_step
+      end
     end
 
     def next_step
-      if wizard.query_store.inside_catchment?
-        return :choose_school if works_in_school?
-        return :kind_of_nursery if works_in_childcare?
-        return :referred_by_return_to_teaching_adviser if works_in_other?
-
-        return :your_employment
+      if query_store.declared_not_working_in_england?
+        show_eligibility_step
+      elsif works_in_school?
+        :choose_school
+      elsif works_in_childcare?
+        :kind_of_nursery
+      elsif query_store.works_in_another_setting?
+        :your_employment
+      elsif works_in_other?
+        :referred_by_return_to_teaching_adviser
       end
-
-      :choose_your_npq
-    end
-
-    def previous_step
-      :teacher_catchment
     end
 
     def questions
@@ -97,15 +121,26 @@ module Questionnaires
     def options
       [
         build_option_struct(value: "early_years_or_childcare", link_errors: true),
-        build_option_struct(value: "a_school"),
-        build_option_struct(value: "an_academy_trust"),
-        build_option_struct(value: "a_16_to_19_educational_setting"),
+        build_option_struct(value: A_SCHOOL, nested_options: school_type_options),
+        build_option_struct(value: AN_ACADEMY_TRUST),
         build_option_struct(value: "another_setting"),
         build_option_struct(value: "other", divider: true),
       ]
     end
 
   private
+
+    def school_type_options
+      NESTED_SCHOOL_SETTINGS.map { |value| build_option_struct(value:) }
+    end
+
+    def school_parent_selected?
+      work_setting == A_SCHOOL
+    end
+
+    def school_type_chosen
+      errors.add(:work_setting, :school_type_blank) if school_parent_selected?
+    end
 
     def build_option_struct(**kwargs)
       super(**kwargs.deep_merge(label: { size: "s" }))
@@ -117,10 +152,6 @@ module Questionnaires
 
     def works_in_childcare?
       CHILDCARE_SETTINGS.include?(work_setting)
-    end
-
-    def works_in_another_setting?
-      ANOTHER_SETTING_SETTINGS.include?(work_setting)
     end
 
     def works_in_other?

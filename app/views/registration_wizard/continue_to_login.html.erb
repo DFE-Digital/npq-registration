@@ -1,0 +1,30 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l"><%= t("helpers.title.registration_wizard.continue_to_login") %></h1>
+
+    <p class="govuk-body">
+      You need to create an account or sign in through GOV.UK One Login before you can submit your NPQ registration.
+    </p>
+
+    <p class="govuk-body">
+      This allows us to verify your identity before sending your registration to your NPQ provider.
+    </p>
+
+    <%=
+      render GovukComponent::ContinueButtonComponent.new(
+        text: "Continue",
+        href: user_teacher_auth_omniauth_authorize_path(start_now: true),
+        as_button: true,
+        html_attributes: { data: { "prevent-double-click": true } }
+      )
+    %>
+  </div>
+</div>
