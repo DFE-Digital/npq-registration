@@ -10,7 +10,7 @@ module TeachingRecordSystem
       end
 
       def call
-        webhook_message = ::GetAnIdentity::WebhookMessage
+        webhook_message = ::WebhookMessage
           .create_with(
             message_type: webhook_params[:message_type],
             message_source: webhook_params[:message_source],

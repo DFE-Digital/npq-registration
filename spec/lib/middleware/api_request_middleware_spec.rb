@@ -130,8 +130,14 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later)
       end
 
-      it "fires StreamAPIRequestsToBigQueryJob for /api/v1/get_an_identity" do
-        request.post "/api/v1/get_an_identity/webhook_messages"
+      it "fires StreamAPIRequestsToBigQueryJob for /api/teacher-record-service/v1/webhook_messages" do
+        request.post "/api/teacher-record-service/v1/webhook_messages"
+
+        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later)
+      end
+
+      it "fires StreamAPIRequestsToBigQueryJob for /api/teaching-record-system/v1/webhook_messages" do
+        request.post "/api/teaching-record-system/v1/webhook_messages"
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later)
       end

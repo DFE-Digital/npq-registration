@@ -51,7 +51,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       end
     end
 
-    before { allow(GetAnIdentityService::Webhooks::SigningKeyFetcher).to receive(:new).and_return(double(call: public_key)) }
+    before { allow(TeachingRecordSystem::Webhooks::SigningKeyFetcher).to receive(:new).and_return(double(call: public_key)) }
 
     context "when a valid signed request is made" do
       let(:headers) do
@@ -73,8 +73,8 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       end
 
       it "creates a webhook message record" do
-        expect { subject }.to change(GetAnIdentity::WebhookMessage, :count).by(1)
-        webhook_message = GetAnIdentity::WebhookMessage.last
+        expect { subject }.to change(WebhookMessage, :count).by(1)
+        webhook_message = WebhookMessage.last
         expect(webhook_message).to have_attributes(
           message_id: example_signed_request["ce-id"],
           message_type: example_signed_request["ce-type"],
@@ -90,7 +90,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
       end
 
       context "when the JWKS response does not contain the expected key" do
-        before { allow(GetAnIdentityService::Webhooks::SigningKeyFetcher).to receive(:new).and_return(double(call: nil)) }
+        before { allow(TeachingRecordSystem::Webhooks::SigningKeyFetcher).to receive(:new).and_return(double(call: nil)) }
 
         it "returns a 401 response" do
           subject
@@ -115,7 +115,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
 
       it "does not create a webhook message record" do
         subject
-        expect(GetAnIdentity::WebhookMessage.count).to eq 0
+        expect(WebhookMessage.count).to eq 0
       end
     end
 
@@ -134,7 +134,7 @@ RSpec.describe "Teaching Record System webhooks", type: :request do
 
       it "does not create a webhook message record" do
         subject
-        expect(GetAnIdentity::WebhookMessage.count).to eq 0
+        expect(WebhookMessage.count).to eq 0
       end
     end
   end
