@@ -2,7 +2,7 @@
 
 # Register for a national professional qualification (NPQ)
 
-1. [What is NPQ and how does it work](docs/how_does_npq_work.md)
+1. [Registration and Eligibility](docs/registration_and_eligibility.md)
 1. [Setting up the app for development](docs/setup.md)
 1. [Connecting to Azure](docs/connecting_to_azure.md)
 1. [Environments](docs/environments.md)
@@ -14,7 +14,7 @@
 1. [Importing Data](docs/importing_data.md)
     1. [Acquiring New Private Childcare Provider data](docs/acquiring_new_private_childcare_provider_data.md)
     1. [Eligibility Lists](docs/eligibility_lists.md)
-1. [Get an Identity](docs/get_an_identity.md)
+1. [One Login and TeacherAuth](docs/one_login_and_teacher_auth.md)
 1. [DfE Analytics](docs/dfe_analytics.md)
 1. [Sending emails](docs/sending_emails.md)
 1. [NPQ Contracts](docs/npq_contracts.md)
