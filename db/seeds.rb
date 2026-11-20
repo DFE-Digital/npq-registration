@@ -35,6 +35,13 @@ def load_csv(file, model_class)
   end
 end
 
+def load_using_seed_file(seed_file)
+  Rails.logger.info("seeding #{seed_file}")
+  ApplicationRecord.transaction do
+    load_base_file(seed_file)
+  end
+end
+
 def load_using_seed_class(description, file, seed_class_name)
   ApplicationRecord.transaction do
     Rails.logger.info("Seeding #{description}")
@@ -70,13 +77,12 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_eligibility_list_entries.rb",
   "add_course_cohort_providers.rb",
 ].each do |seed_file|
-  Rails.logger.info("seeding #{seed_file}")
-  ApplicationRecord.transaction do
-    load_base_file(seed_file)
-  end
+  load_using_seed_file(seed_file)
 end
 
 # add_applications.rb, add_declarations.rb and add_users.rb are dealt with separately
 load_using_seed_class("applications", "add_applications.rb", "SeedAddApplications")
 load_using_seed_class("declarations", "add_declarations.rb", "SeedAddDeclarations")
 load_using_seed_class("users", "add_users.rb", "SeedAddUsers")
+
+load_using_seed_file("add_legacy_passed_participant_outcomes.rb") # relies on having users seeded
