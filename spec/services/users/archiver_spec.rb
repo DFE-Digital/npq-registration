@@ -48,6 +48,7 @@ RSpec.describe Users::Archiver do
         expect(user.provider).to be_nil
         expect(user.archived_at.to_s).to eq(archive_time.to_s)
         expect(user).to be_archived
+        expect(user.email_reused_at.to_s).to eq(archive_time.to_s)
       end
 
       it "does not send Sentry a message" do

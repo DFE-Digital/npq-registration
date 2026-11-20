@@ -30,6 +30,7 @@ RSpec.describe HandleSubmissionForStore do
   let(:expected_user_attributes) do
     {
       "email" => user.email,
+      "email_reused_at" => nil,
       "ecf_id" => user.ecf_id,
       "trn" => "0012345",
       "full_name" => user.full_name,
