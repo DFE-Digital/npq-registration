@@ -17,13 +17,13 @@
 <% if @valid_search %>
   <h2 class="govuk-heading-m">Search results</h2>
 
-  <%= render "users", users: @users %>
+  <%= render "users", users: @users, historic_users: @historic_users %>
   <%= govuk_pagination(pagy: @pagy) %>
 <% elsif @performing_search %>
   <p class="govuk-inset-text">Please enter at least 2 characters to search and see results.</p>
 <% else %>
   <h2 class="govuk-heading-m">Recently added</h2>
 
-  <%= render "users", users: @users %>
+  <%= render "users", users: @users, historic_users: [] %>
   <%= govuk_pagination(pagy: @pagy) %>
 <% end %>

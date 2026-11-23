@@ -21,6 +21,8 @@ class User < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :declarations, through: :applications
   has_many :participant_id_changes, -> { order("created_at desc") }
+  # No dependent option on purpose: deleting a user must not delete the DQT data
+  has_many :legacy_passed_participant_outcomes, primary_key: :trn, foreign_key: :trn
   has_many :declarations, through: :applications
 
   validates :full_name, presence: true
