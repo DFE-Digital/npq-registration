@@ -617,7 +617,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
           end
 
           let :statement do
-            create(:statement, state:, output_fee: false, for_date: 10.days.from_now)
+            create(:statement, state:, output_fee: false, for_date: 10.days.from_now, deadline_date: 1.week.ago)
           end
 
           it "updates output_fee" do
