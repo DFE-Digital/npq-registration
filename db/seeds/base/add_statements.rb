@@ -1,5 +1,7 @@
 LeadProvider.find_each do |lead_provider|
   Cohort.find_each do |cohort|
+    next if cohort.zero_funding? # unfunded cohorts don't have statements
+
     date    = cohort.registration_start_date.to_date
     periods = ((date.beginning_of_month - 2.months)...(date + 2.years)).map { [_1.year, _1.month] }.uniq
 

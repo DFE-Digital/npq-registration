@@ -25,7 +25,7 @@ module Declarations
 
     validate :validate_schedule_exists, :validate_declaration_type_for_schedule # this needs to come before the cohort validation
 
-    validates :cohort, contract_for_cohort_and_course: true
+    validates :cohort, contract_for_cohort_and_course: true, if: :contract_required?
 
     validate :output_fee_statement_available
     validate :validate_has_passed_field, if: :validate_has_passed?
@@ -179,6 +179,12 @@ module Declarations
       return unless has_passed.blank? || !%w[true false].include?(has_passed)
 
       errors.add(:has_passed, :invalid)
+    end
+
+    def contract_required?
+      return if errors.any?
+
+      cohort.funded?
     end
 
     def validate_has_passed?
