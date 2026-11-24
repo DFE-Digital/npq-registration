@@ -7,9 +7,11 @@ class WebhookMessage < ApplicationRecord
     processed: "processed",
     failed: "failed",
     unhandled_message_type: "unhandled_message_type",
+    nomatch: "nomatch",
   }, suffix: true
 
-  IGNORED_MESSAGE_TYPES = %w[].freeze
+  # UserMerged and UserUpdated are legacy Get an Identity message types
+  IGNORED_MESSAGE_TYPES = %w[UserMerged UserUpdated].freeze
 
   def ignored_message_type?
     IGNORED_MESSAGE_TYPES.include?(message_type)
@@ -36,5 +38,9 @@ class WebhookMessage < ApplicationRecord
 
   def make_processed!
     update!(status: :processed, processed_at: Time.zone.now)
+  end
+
+  def make_nomatch!
+    update!(status: :nomatch, processed_at: Time.zone.now)
   end
 end

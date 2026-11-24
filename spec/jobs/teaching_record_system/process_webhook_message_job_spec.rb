@@ -15,13 +15,13 @@ RSpec.describe TeachingRecordSystem::ProcessWebhookMessageJob do
     let(:sent_at) { Time.zone.now }
 
     context "when the message type is unknown" do
-      let(:message_type) { "UserMerged" }
+      let(:message_type) { "SomeUnknownMessageType" }
       let(:message) { {} }
 
       it "raises an exception so the job retries and we are notified" do
         expect {
           described_class.perform_now(webhook_message:)
-        }.to raise_error(described_class::UnknownMessageTypeError, /No processor found for webhook message type: UserMerged/)
+        }.to raise_error(described_class::UnknownMessageTypeError, /No processor found for webhook message type: SomeUnknownMessageType/)
       end
     end
 

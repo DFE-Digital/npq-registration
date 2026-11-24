@@ -17,7 +17,11 @@ class TeachingRecordSystem::Webhooks::Base
         process! if user
       end
 
-      webhook_message.make_processed!
+      if user
+        webhook_message.make_processed!
+      else
+        webhook_message.make_nomatch!
+      end
     end
   end
 

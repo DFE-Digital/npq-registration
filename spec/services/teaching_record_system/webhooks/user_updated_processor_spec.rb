@@ -173,10 +173,10 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       let(:webhook_message) { create(:trs_user_updated_webhook_message, user_uid: user_uid, user_trn: user.trn) }
       let(:user_uid) { "nonexistent-uid" }
 
-      it "marks the webhook message as processed" do
+      it "marks the webhook message as nomatch" do
         subject
         expect(webhook_message.reload).to have_attributes(
-          status: "processed",
+          status: "nomatch",
         )
       end
     end
@@ -187,8 +187,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
 
       before { user_without_uid }
 
-      it "marks the webhook message as processed" do
-        expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+      it "marks the webhook message as nomatch" do
+        expect { subject }.to change(webhook_message, :status).from("pending").to("nomatch")
       end
 
       it "does not update an existing user without UID" do
