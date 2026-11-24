@@ -6,10 +6,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
   let(:output_fee) { true }
   let(:original_output_fee) { false }
   let(:state) { :open }
-
-  let :statement do
-    create(:statement, state:, output_fee: original_output_fee, for_date: 60.days.from_now)
-  end
+  let(:statement) { create(:statement, state:, output_fee: original_output_fee, for_date: 60.days.from_now) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:statement) }
@@ -311,7 +308,7 @@ RSpec.describe Statements::ChangeOutputFee, type: :model do
     context "with payable statement" do
       context "when in past" do
         let :statement do
-          for_date = Time.zone.today.day < 24 ? 2.months.ago : 1.month.ago
+          for_date = Time.zone.today.day < 25 ? 2.months.ago : 1.month.ago
           create(:statement, state: :payable, for_date:, output_fee: true)
         end
 
