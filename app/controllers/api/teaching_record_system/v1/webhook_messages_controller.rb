@@ -29,7 +29,7 @@ module API
 
         def verify_request
           Linzer.verify!(request.rack_request) do |key_id|
-            ::GetAnIdentityService::Webhooks::SigningKeyFetcher.new.call(key_id)
+            ::TeachingRecordSystem::Webhooks::SigningKeyFetcher.new.call(key_id)
           end
         rescue Linzer::Error => e
           Rails.logger.error("Failed to verify webhook message: #{e.message}")

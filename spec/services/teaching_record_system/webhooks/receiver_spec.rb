@@ -30,9 +30,9 @@ RSpec.describe TeachingRecordSystem::Webhooks::Receiver do
     end
 
     context "when the message has not been received before" do
-      it "creates a GetAnIdentity::WebhookMessage" do
-        expect { subject }.to change(GetAnIdentity::WebhookMessage, :count).by(1)
-        expect(GetAnIdentity::WebhookMessage.last).to have_attributes(
+      it "creates a WebhookMessage" do
+        expect { subject }.to change(WebhookMessage, :count).by(1)
+        expect(WebhookMessage.last).to have_attributes(
           message_id:,
           message_type: "trn_request.completed",
           message_source: "https://preprod.teacher-qualifications-api.education.gov.uk",
@@ -43,16 +43,16 @@ RSpec.describe TeachingRecordSystem::Webhooks::Receiver do
       end
 
       it "enqueues a job to process the message" do
-        expect { subject }.to have_enqueued_job(::GetAnIdentity::ProcessWebhookMessageJob)
+        expect { subject }.to have_enqueued_job(::TeachingRecordSystem::ProcessWebhookMessageJob)
       end
 
       it "returns true" do
         expect(subject).to be true
       end
 
-      context "when the GetAnIdentity::WebhookMessage fails to save" do
+      context "when the WebhookMessage fails to save" do
         before do
-          allow_any_instance_of(GetAnIdentity::WebhookMessage).to receive(:save).and_return(false)
+          allow_any_instance_of(WebhookMessage).to receive(:save).and_return(false)
         end
 
         it "returns false" do
@@ -64,12 +64,12 @@ RSpec.describe TeachingRecordSystem::Webhooks::Receiver do
     context "when the message has already been received" do
       before { create(:trs_trn_request_completed_webhook_message, message_id:, user_uid: user.uid, user_trn: user.trn) }
 
-      it "does not create a new GetAnIdentity::WebhookMessage" do
-        expect { subject }.not_to change(GetAnIdentity::WebhookMessage, :count)
+      it "does not create a new WebhookMessage" do
+        expect { subject }.not_to change(WebhookMessage, :count)
       end
 
       it "does not enqueue a job to process the message" do
-        expect { subject }.not_to have_enqueued_job(::GetAnIdentity::ProcessWebhookMessageJob)
+        expect { subject }.not_to have_enqueued_job(::TeachingRecordSystem::ProcessWebhookMessageJob)
       end
 
       it "returns true" do

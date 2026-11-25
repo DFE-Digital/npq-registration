@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.feature "Webhook messages", :no_js, type: :feature do
   include Helpers::AdminLogin
 
-  let!(:webhook_message) { create(:get_an_identity_webhook_message) }
+  let!(:webhook_message) { create(:legacy_get_an_identity_webhook_message) }
 
   before do
     sign_in_as(create(:admin))
@@ -58,6 +58,6 @@ RSpec.feature "Webhook messages", :no_js, type: :feature do
     click_link "View"
     expect {
       click_link "Queue retry"
-    }.to have_enqueued_job(::GetAnIdentity::ProcessWebhookMessageJob)
+    }.to have_enqueued_job(::TeachingRecordSystem::ProcessWebhookMessageJob)
   end
 end

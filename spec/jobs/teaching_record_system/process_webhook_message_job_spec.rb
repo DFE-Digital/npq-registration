@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.describe GetAnIdentity::ProcessWebhookMessageJob do
+RSpec.describe TeachingRecordSystem::ProcessWebhookMessageJob do
   describe "#perform" do
     let(:webhook_message) do
-      ::GetAnIdentity::WebhookMessage.create!(
+      ::WebhookMessage.create!(
         message:,
         message_id: SecureRandom.uuid,
         message_type:,
@@ -30,7 +30,7 @@ RSpec.describe GetAnIdentity::ProcessWebhookMessageJob do
       let(:message) { {} }
 
       before do
-        stub_const("GetAnIdentity::WebhookMessage::IGNORED_MESSAGE_TYPES", %w[UserMerged])
+        stub_const("WebhookMessage::IGNORED_MESSAGE_TYPES", %w[UserMerged])
       end
 
       it "silently ignores it by setting the status to unhandled_message_type" do

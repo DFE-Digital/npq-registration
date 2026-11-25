@@ -48,21 +48,6 @@ RSpec.describe "Rate limiting" do
     end
   end
 
-  it_behaves_like "a rate limited endpoint", "API get an identity webhook message requests by ip" do
-    before do
-      default_headers["X-Hub-Signature-256"] = "signature"
-      allow(GetAnIdentityService::Webhooks::SignatureVerifier).to receive(:call).with(anything).and_return(true)
-    end
-
-    def perform_request
-      post api_v1_get_an_identity_webhook_messages_path
-    end
-
-    def change_condition
-      set_request_ip(other_ip)
-    end
-  end
-
   it_behaves_like "a rate limited endpoint", "API TeacherAuth webhook message requests by ip" do
     before { allow(Linzer).to receive(:verify!).and_return(true) }
 
@@ -117,10 +102,6 @@ RSpec.describe "Rate limiting" do
   describe "throttle configuration" do
     it "limits protected routes to 10 requests per 5 minutes" do
       expect(Rack::Attack.throttles["protected routes (hitting external services)"]).to have_attributes(limit: 10, period: 5.minutes)
-    end
-
-    it "limits API get an identity webhook messages to 100 requests per 5 minutes" do
-      expect(Rack::Attack.throttles["API get an identity webhook message requests by ip"]).to have_attributes(limit: 100, period: 5.minutes)
     end
 
     it "limits API TeacherAuth webhook messages to 100 requests per 5 minutes" do

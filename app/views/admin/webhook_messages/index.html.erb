@@ -23,7 +23,7 @@
             <%=
               f.govuk_collection_select(
                 :status,
-                GetAnIdentity::WebhookMessage.statuses.keys,
+                WebhookMessage.statuses.keys,
                 :to_s,
                 :humanize,
                 options: { selected: params[:status], include_blank: "All" },

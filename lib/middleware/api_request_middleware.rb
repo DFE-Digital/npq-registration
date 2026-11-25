@@ -95,7 +95,7 @@ module Middleware
     end
 
     def vendor_api_path?
-      @request.path =~ /^\/api\/v\d+\/.*$/
+      @request.path =~ /^\/api\/(?:[\w-]+\/)?v\d+\/.*$/
     end
 
     def processable_content_type?
