@@ -1,6 +1,7 @@
 class Admin::WebhookMessagesController < AdminController
   def index
-    @pagy, @webhook_messages = pagy(scope)
+    @form = ::Admin::WebhookMessagesForm.new(filter_params)
+    @pagy, @webhook_messages = pagy(@form.search_scope.order(sent_at: :desc, id: :desc))
     @message_types = WebhookMessage.distinct.pluck(:message_type).compact.sort
   end
 
@@ -11,10 +12,6 @@ class Admin::WebhookMessagesController < AdminController
 private
 
   def filter_params
-    params.permit(%i[message_type status]).compact_blank
-  end
-
-  def scope
-    WebhookMessage.where(filter_params).order(created_at: :desc, id: :desc)
+    params.fetch(:webhook_messages, {}).permit(%i[q message_type status sent_at_start sent_at_end]).compact_blank
   end
 end

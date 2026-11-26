@@ -76,6 +76,7 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_delivery_partners.rb",
   "add_eligibility_list_entries.rb",
   "add_course_cohort_providers.rb",
+  "add_webhook_messages.rb",
 ].each do |seed_file|
   load_using_seed_file(seed_file)
 end
