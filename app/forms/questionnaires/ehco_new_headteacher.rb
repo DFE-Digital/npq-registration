@@ -12,22 +12,14 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      :npqh_status
+    end
+
     def next_step
       wizard.store["ehco_new_headteacher"] = ehco_new_headteacher
 
-      if funding_eligibility.funded?
-        :ehco_possible_funding
-      elsif funding_eligibility.subject_to_review?
-        :possible_funding
-      elsif funding_eligibility.previously_funded?
-        :ehco_previously_funded
-      else
-        :ehco_funding_not_available
-      end
-    end
-
-    def previous_step
-      :ehco_headteacher
+      :work_setting
     end
 
     def questions
@@ -60,9 +52,5 @@ module Questionnaires
              :course,
              :inside_catchment?,
              to: :query_store
-
-    def new_headteacher?
-      ehco_new_headteacher == "yes"
-    end
   end
 end

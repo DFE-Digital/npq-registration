@@ -1,40 +1,31 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
-  let(:cohort) { create(:cohort, :current) }
-  let(:request) { nil }
-  let(:valid_lead_provider) { LeadProvider.first }
-  let(:current_step) { "choose_your_provider" }
+  subject(:instance) { described_class.new(wizard:) }
 
-  let(:wizard) do
-    RegistrationWizard.new(
-      current_step:,
-      store:,
-      request:,
-      current_user: create(:user),
-    )
+  let(:wizard) { RegistrationWizard.new(current_step: :choose_your_provider, store:, request: nil, current_user: nil) }
+
+  let(:cohort) { create(:cohort, :current) }
+  let(:chosen_cohort) { cohort }
+  let(:valid_lead_provider) { LeadProvider.first }
+  let(:course) { Course.find_by(identifier: "npq-headship") }
+  let(:declared_previous_funding) { nil }
+
+  let(:store) do
+    {
+      course_identifier: course.identifier,
+      course_start_cohort: chosen_cohort.identifier,
+      declared_previous_funding:,
+    }.stringify_keys
   end
 
   describe "validations" do
-    let(:course) { Course.find_by(identifier: "npq-headship") }
     let(:school) { create(:school) }
     let(:works_in_school) { "yes" }
-    let(:chosen_cohort) { cohort }
-
-    let(:store) do
-      {
-        "teacher_catchment" => "england",
-        "course_identifier" => course.identifier,
-        "institution_identifier" => "School-#{school.urn}",
-        "works_in_school" => works_in_school,
-        "course_start_cohort" => chosen_cohort.identifier,
-      }
-    end
 
     before do
       course_cohort = create(:course_cohort, course:, cohort: chosen_cohort)
       create(:course_cohort_provider, course_cohort:, lead_provider: valid_lead_provider)
-      subject.wizard = wizard
     end
 
     it { is_expected.to validate_presence_of(:lead_provider_id) }
@@ -81,73 +72,15 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     end
   end
 
-  describe "#previous_step" do
-    let(:current_step) { "choose_your_provider" }
-    let(:request) { nil }
-    let(:course) { Course.find_by(identifier: "npq-headship") }
-    let(:school) { create(:school) }
-    let(:works_in_school) { "yes" }
-    let(:store) do
-      {
-        "teacher_catchment" => "england",
-        "course_identifier" => course.identifier,
-        "institution_identifier" => "School-#{school.urn}",
-        "works_in_school" => works_in_school,
-        "course_start_cohort" => cohort.identifier,
-      }
-    end
+  describe "#next_step" do
+    subject { instance.next_step }
 
-    let(:wizard) do
-      RegistrationWizard.new(
-        current_step:,
-        store:,
-        request:,
-        current_user: create(:user),
-      )
-    end
-
-    let(:mock_funding_service) { instance_double(FundingEligibility, "funded?": true) }
-
-    before do
-      subject.wizard = wizard
-    end
-
-    context "when npqh and eligible for funding" do
-      before do
-        allow(FundingEligibility).to receive(:new).and_return(mock_funding_service)
-      end
-
-      it "returns :possible_funding" do
-        expect(subject.previous_step).to be(:possible_funding)
-      end
-    end
-
-    context "international journey" do
-      let(:store) do
-        {
-          "teacher_catchment" => "another",
-          "course_start_cohort" => cohort.identifier,
-        }
-      end
-
-      it "returns :funding_your_npq" do
-        expect(subject.previous_step).to be(:funding_your_npq)
-      end
-    end
-
-    context "when not working in school" do
-      let(:works_in_school) { "no" }
-
-      it "returns :funding_your_npq" do
-        expect(subject.previous_step).to be(:funding_your_npq)
-      end
-    end
+    it { is_expected.to be(:share_provider) }
   end
 
   describe ".options" do
-    subject { form.options }
+    subject { instance.options }
 
-    let(:form) { described_class.new }
     let(:course) { Course.ehco }
     let(:course_identifier) { course.identifier }
 
@@ -161,7 +94,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     before do
       course_cohort = create(:course_cohort, course:, cohort:)
       create(:course_cohort_provider, course_cohort:, lead_provider: valid_lead_provider)
-      form.wizard = wizard
     end
 
     it "returns all providers that offer the course in the current cohort" do

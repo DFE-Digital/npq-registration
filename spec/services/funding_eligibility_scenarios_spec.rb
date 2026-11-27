@@ -16,6 +16,8 @@ RSpec.describe FundingEligibility, :eligibility_scenarios do
       preschool_class_as_part_of_school:,
       referred_by_return_to_teaching_adviser:,
       work_setting:,
+      declared_previous_funding: false,
+      proceed_without_checking_funding: false,
     )
   end
 

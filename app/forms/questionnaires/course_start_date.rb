@@ -37,19 +37,19 @@ module Questionnaires
     end
 
     def requirements_met?
-      query_store.current_user
-    end
-
-    def next_step
-      :provider_check
+      true
     end
 
     def previous_step
       :start
     end
 
-    def return_to_regular_flow_on_change?
-      true
+    def next_step
+      if Cohort.find_by(identifier: course_start_cohort).funded?
+        :check_funding
+      else
+        :choose_your_npq
+      end
     end
 
   private

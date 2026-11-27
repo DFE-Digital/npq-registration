@@ -59,30 +59,60 @@ RSpec.feature "Service is closed", :no_js, type: :feature do
   end
 
   context "when registration closes whilst in the middle of a registration journey" do
-    include_context "with stubbed Teacher Auth OmniAuth responses"
-    include_context "with stubbed Teaching Record System person API"
+    context "when the user is logged in with One Login" do
+      include_context "with stubbed Teacher Auth OmniAuth responses"
+      include_context "with stubbed Teaching Record System person API"
 
-    before do
-      visit "/"
-      page.click_button("Start now")
-      choose_course_start_date
-      close_registration!
-      page.click_button("Continue")
+      before do
+        navigate_to_page(path: "/", submit_form: false) do
+          page.click_button("Sign in")
+        end
+        page.click_link("Register for another NPQ")
+        choose_course_start_date
+        close_registration!
+        page.click_button("Continue")
+      end
+
+      scenario "the registration closed step is shown" do
+        expect(page).to have_current_path(registration_wizard_show_path(:closed))
+        expect(page).to have_content("Registration has closed temporarily")
+        click_link "Request email updates"
+        expect(page).to have_field("What’s your email address?", with: "user@example.com")
+      end
+
+      context "when registration reopens" do
+        before { open_registration! }
+
+        scenario "registration closed step redirects to home page" do
+          visit registration_wizard_show_path(:closed)
+          expect(page).to have_current_path("/")
+        end
+      end
     end
 
-    scenario "the registration closed step is shown" do
-      expect(page).to have_current_path(registration_wizard_show_path(:closed))
-      expect(page).to have_content("Registration has closed temporarily")
-      click_link "Request email updates"
-      expect(page).to have_field("What’s your email address?", with: "user@example.com")
-    end
+    context "when the user is not logged in" do
+      before do
+        visit "/"
+        page.click_button("Start now")
+        choose_course_start_date
+        close_registration!
+        page.click_button("Continue")
+      end
 
-    context "when registration reopens" do
-      before { open_registration! }
+      scenario "the registration closed step is shown" do
+        expect(page).to have_current_path(registration_wizard_show_path(:closed))
+        expect(page).to have_content("Registration has closed temporarily")
+        click_link "Request email updates"
+        expect(page).to have_field("What’s your email address?")
+      end
 
-      scenario "registration closed step redirects to home page" do
-        visit registration_wizard_show_path(:closed)
-        expect(page).to have_current_path("/")
+      context "when registration reopens" do
+        before { open_registration! }
+
+        scenario "registration closed step redirects to home page" do
+          visit registration_wizard_show_path(:closed)
+          expect(page).to have_current_path("/")
+        end
       end
     end
   end

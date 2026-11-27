@@ -7,10 +7,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 
-require "site_prism"
-Dir[Rails.root.join("spec/page_objects/**/*_section.rb")].sort.each { |f| require f }
-Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f }
-
 # TODO: reinstate axe-rspec
 # this needs one of the following:
 # - cuprite to support it

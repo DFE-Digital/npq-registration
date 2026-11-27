@@ -1,21 +1,22 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
-  subject :instance do
+  subject(:instance) do
     described_class.new(wizard:,
                         childcare_identifier: identifier,
                         childcare_name: name)
   end
 
   let(:current_step) { :choose_childcare_provider }
-  let(:store) { {} }
-  let(:request) { nil }
+  let(:store) { { course_identifier: course.identifier }.stringify_keys }
+  let(:course) { Course.first }
   let(:identifier) { "" }
   let(:name) { "" }
   let(:provider) { create :school, urn: "8329422" }
+  let(:course_start_cohort) { create(:cohort, :capped).identifier }
 
   let(:wizard) do
-    RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
+    RegistrationWizard.new(current_step:, store:, request: nil, current_user: nil)
   end
 
   describe "validations" do
@@ -134,20 +135,9 @@ RSpec.describe Questionnaires::ChooseChildcareProvider, type: :model do
     end
   end
 
-  describe "#next_step" do
-    subject { described_class.new(childcare_identifier: "School-#{provider.urn}", wizard:) }
+  describe "#previous_step" do
+    subject { instance.previous_step }
 
-    let(:course) { create(:course) }
-    let(:store) do
-      {
-        "course_identifier" => course.identifier.to_s,
-        "works_in_childcare" => "yes",
-      }
-    end
-    let(:provider) { create(:school) }
-
-    it "goes to choose_your_npq" do
-      expect(subject.next_step).to be(:choose_your_npq)
-    end
+    it { is_expected.to eq(:work_setting) }
   end
 end

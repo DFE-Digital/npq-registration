@@ -2,10 +2,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
   OMNIAUTH_ERROR_STRATEGY_KEY = "omniauth.error.strategy".freeze
   OMNIAUTH_ERROR_TYPE = "omniauth.error.type".freeze
 
-  SESSION_RESET_RETAINED_KEYS = %w[
-    log_session_id
-    registration_store
-    feature_flag_id
+  SESSION_RESET_RETAINED_KEYS = [
+    "log_session_id",
+    RegistrationWizard::STORE_SESSION_KEY,
+    "feature_flag_id",
   ].freeze
 
   skip_before_action :verify_authenticity_token, only: [
@@ -148,12 +148,12 @@ private
       return new_email_update_path
     end
 
-    return account_path unless user_starting_registration?
+    return account_path unless user_continuing_registration?
 
-    start_questionnaire_path(user)
+    continue_questionnaire_path(user)
   end
 
-  def user_starting_registration?
+  def user_continuing_registration?
     request.env["omniauth.params"]&.fetch("start_now", nil) == "true"
   end
 
@@ -174,10 +174,19 @@ private
     end
   end
 
-  def start_questionnaire_path(user)
+  def continue_questionnaire_step
+    if Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED) &&
+        !Flipper.enabled?(Feature::REGISTRATION_OPEN)
+      :start
+    else
+      :login_callback
+    end
+  end
+
+  def continue_questionnaire_path(user)
     wizard = RegistrationWizard.new(
-      current_step: :login_callback,
-      store: session["registration_store"],
+      current_step: continue_questionnaire_step,
+      store: session[RegistrationWizard::STORE_SESSION_KEY],
       params: {},
       request:,
       current_user: user,

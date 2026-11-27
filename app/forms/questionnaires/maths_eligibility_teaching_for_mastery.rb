@@ -27,25 +27,19 @@ module Questionnaires
       ]
     end
 
+    def previous_step
+      previous_funding_or_choose_npq_step
+    end
+
     def next_step
       if maths_eligibility_teaching_for_mastery == "yes"
         wizard.store["maths_understanding"] = true
 
-        if funding_eligibility_calculator.funded?
-          :funding_eligibility_maths
-        elsif funding_eligibility_calculator.subject_to_review?
-          :possible_funding
-        else
-          :ineligible_for_funding
-        end
+        :work_setting
       else
         wizard.store["maths_understanding"] = false
         :maths_understanding_of_approach
       end
-    end
-
-    def previous_step
-      :choose_your_npq
     end
 
   private

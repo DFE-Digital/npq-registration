@@ -16,10 +16,14 @@ module Questionnaires
     # no but having invalid data where they entered
     # one present.
     def after_save
-      return if wizard.query_store.has_ofsted_urn?
+      return if query_store.has_ofsted_urn?
 
       wizard.store["private_childcare_identifier"] = nil
       wizard.store["private_childcare_name"] = nil
+    end
+
+    def previous_step
+      :kind_of_nursery
     end
 
     def next_step
@@ -27,12 +31,8 @@ module Questionnaires
       when "yes"
         :choose_private_childcare_provider
       when "no"
-        :choose_your_npq
+        show_eligibility_step
       end
-    end
-
-    def previous_step
-      :kind_of_nursery
     end
 
     def questions

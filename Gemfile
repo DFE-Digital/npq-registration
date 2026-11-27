@@ -91,7 +91,6 @@ group :test do
   gem "cuprite"
   gem "rspec-default_http_header"
   gem "shoulda-matchers"
-  gem "site_prism", "~> 6.0"
   gem "webmock"
 end
 

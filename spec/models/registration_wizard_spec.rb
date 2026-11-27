@@ -12,6 +12,24 @@ RSpec.describe RegistrationWizard do
 
   before { create(:course, :additional_support_offer) }
 
+  context "when logged in" do
+    let(:user) { create(:user) }
+
+    it "stores the current user ID" do
+      subject
+      expect(store["current_user_id"]).to eq user.id
+    end
+  end
+
+  context "when not logged in" do
+    let(:user) { nil }
+
+    it "does not create a current_user_id entry" do
+      subject
+      expect(store.keys).not_to include("current_user_id")
+    end
+  end
+
   describe "#current_step" do
     subject { described_class.new(current_step:, store:, request:, current_user: user).current_step }
 
@@ -41,60 +59,64 @@ RSpec.describe RegistrationWizard do
   end
 
   describe "#answers" do
+    subject { registration_wizard.answers }
+
+    let(:kind_of_nursery) { nil }
     let(:school) { create(:school, establishment_type_code: "1") }
 
+    let(:store) do
+      {
+        "course_start_cohort" => cohort.identifier,
+        "teacher_catchment" => "england",
+        "course_identifier" => "npq-additional-support-offer",
+        "funding" => "self",
+      }
+    end
+
     context "when working in Local authority maintained nursery" do
-      let(:store) do
-        {
-          "course_start_cohort" => cohort.identifier,
-          "chosen_provider" => "yes",
-          "teacher_catchment" => "england",
-          "teacher_catchment_country" => "",
-          "works_in_school" => "no",
-          "trn_knowledge" => "yes",
-          "trn" => "123456",
-          "full_name" => "Maia Mack",
-          "trn_auto_verified" => nil,
-          "verified_trn" => nil,
-          "works_in_childcare" => "yes",
-          "kind_of_nursery" => "local_authority_maintained_nursery",
-          "childcare_name" => "",
-          "childcare_identifier" => "School-#{school.urn}",
-          "course_identifier" => "npq-additional-support-offer",
-          "lead_provider_id" => LeadProvider.all.sample.id,
-          "funding" => "self",
-          "referred_by_return_to_teaching_adviser" => "no",
-        }
+      before do
+        store["works_in_childcare"] = "yes"
+        store["childcare_name"] = ""
+        store["childcare_identifier"] = "School-#{school.urn}"
+        store["kind_of_nursery"] = "local_authority_maintained_nursery"
       end
 
       it "does not show Ofsted registration details" do
-        expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
+        expect(subject.map(&:key)).not_to include("Ofsted registration details")
+      end
+
+      describe "the check your answers layout" do
+        let(:keys) { subject.map(&:key) }
+
+        it "uses the Cohort and Working in England labels" do
+          expect(keys).to include("Cohort", "Working in England")
+          expect(keys).not_to include("Course start", "Workplace in England")
+        end
+
+        it "shows the Course row right after Working in England" do
+          expect(keys.index("Course")).to eq(keys.index("Working in England") + 1)
+        end
+
+        it "adds a DfE scholarship funding row with a View link and a status tag" do
+          row = subject.find { |answer| answer.key == "DfE scholarship funding" }
+
+          expect(row).to be_present
+          expect(row.changeable).to be false
+          expect(row.value).to eq "Not eligible"
+          expect(row.tag_colour).to eq "grey"
+        end
       end
     end
 
     context "when working in private nursery" do
       let(:private_childcare_provider) { create(:private_childcare_provider) }
-      let(:store) do
-        {
-          "course_start_cohort" => cohort.identifier,
-          "chosen_provider" => "yes",
-          "course_identifier" => "npq-additional-support-offer",
-          "full_name" => "Tatyana Christensen",
-          "has_ofsted_urn" => has_ofsted_urn,
-          "private_childcare_identifier" => private_childcare_identifier,
-          "private_childcare_name" => "",
-          "kind_of_nursery" => "private_nursery",
-          "lead_provider_id" => LeadProvider.all.sample.id,
-          "teacher_catchment" => "england",
-          "teacher_catchment_country" => "",
-          "trn" => "123456",
-          "trn_auto_verified" => nil,
-          "trn_knowledge" => "yes",
-          "verified_trn" => nil,
-          "works_in_childcare" => "yes",
-          "works_in_school" => "no",
-          "referred_by_return_to_teaching_adviser" => "no",
-        }
+
+      before do
+        store["works_in_childcare"] = "yes"
+        store["kind_of_nursery"] = "private_nursery"
+        store["has_ofsted_urn"] = has_ofsted_urn
+        store["private_childcare_identifier"] = private_childcare_provider.identifier
+        store["private_childcare_name"] = ""
       end
 
       context "without urn" do
@@ -102,15 +124,15 @@ RSpec.describe RegistrationWizard do
         let(:private_childcare_identifier) { "" }
 
         it "does not show Ofsted registration details" do
-          expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
+          expect(subject.map(&:key)).not_to include("Ofsted registration details")
         end
 
         it "shows Do you have a URN?" do
-          expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
+          expect(subject.map(&:key)).to include("Ofsted unique reference number (URN)")
         end
 
         it "does not show Nursery" do
-          expect(subject.answers.map(&:key)).not_to include("Nursery")
+          expect(subject.map(&:key)).not_to include("Nursery")
         end
       end
 
@@ -119,15 +141,71 @@ RSpec.describe RegistrationWizard do
         let(:private_childcare_identifier) { private_childcare_provider.identifier }
 
         it "shows Ofsted registration details" do
-          expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
+          expect(subject.map(&:key)).to include("Ofsted unique reference number (URN)")
         end
 
         it "does not show Do you have a URN?" do
-          expect(subject.answers.map(&:key)).not_to include("Do you have a URN?")
+          expect(subject.map(&:key)).not_to include("Do you have a URN?")
         end
 
         it "does not show Nursery" do
-          expect(subject.answers.map(&:key)).not_to include("Nursery")
+          expect(subject.map(&:key)).not_to include("Nursery")
+        end
+      end
+    end
+
+    describe "the DfE scholarship funding answer" do
+      subject(:answer) { registration_wizard.answers.find { |answer| answer.key == "DfE scholarship funding" } }
+
+      context "when the funding is subject to review because of a return to teaching adviser referral" do
+        before do
+          store["work_setting"] = "other"
+          store["referred_by_return_to_teaching_adviser"] = "yes"
+        end
+
+        it "shows In review" do
+          expect(answer.value).to eq("In review")
+          expect(answer.tag_colour).to eq("yellow")
+        end
+      end
+
+      context "when the funding is subject to review because of the work setting and employment type" do
+        before do
+          create(:course, :senior_leadership)
+
+          store["course_identifier"] = "npq-senior-leadership"
+          store["work_setting"] = "another_setting"
+          store["employment_type"] = "local_authority_virtual_school"
+        end
+
+        it "shows In review" do
+          expect(answer.value).to eq("In review")
+          expect(answer.tag_colour).to eq("yellow")
+        end
+      end
+
+      context "when the funding is not eligible" do
+        before do
+          store["work_setting"] = "other"
+          store["referred_by_return_to_teaching_adviser"] = "no"
+        end
+
+        it "shows Not eligible" do
+          expect(answer.value).to eq("Not eligible")
+          expect(answer.tag_colour).to eq("grey")
+        end
+      end
+
+      context "when the funding is eligible" do
+        before do
+          store["work_setting"] = "a_school"
+          store["works_in_school"] = "yes"
+          store["institution_identifier"] = "School-#{school.urn}"
+        end
+
+        it "shows Eligible" do
+          expect(answer.value).to eq("Eligible")
+          expect(answer.tag_colour).to eq("green")
         end
       end
     end
