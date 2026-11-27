@@ -96,9 +96,9 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
       end
     end
 
-    context "when there is an archived user with the same verified TRN and applications" do
-      let(:archived_user) { create(:user, :archived, :with_get_an_identity_id, :with_verified_trn, trn: new_trn, email: nil, created_at: 1.minute.from_now) }
-      let(:application) { create(:application, :accepted, user: archived_user) }
+    context "when there is a user with email_reused_at set and the same verified TRN and applications" do
+      let(:email_reused_user) { create(:user, :with_get_an_identity_id, :with_verified_trn, :email_reused, trn: new_trn, created_at: 1.minute.from_now) }
+      let(:application) { create(:application, :accepted, user: email_reused_user) }
 
       before { application }
 
@@ -107,18 +107,36 @@ RSpec.describe TeachingRecordSystem::Webhooks::UserUpdatedProcessor do
         expect(application.reload.user).to eq user
       end
 
-      it "creates a participant ID change from the archived user to this user" do
+      it "creates a participant ID change from the email-reused user to this user" do
         subject
-        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: archived_user.ecf_id, to_participant_id: user.ecf_id)
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: email_reused_user.ecf_id, to_participant_id: user.ecf_id)
       end
 
-      it "keeps the archived user archived" do
-        expect { subject }.not_to(change { archived_user.reload.archived_at })
+      it "archives the email-reused user" do
+        subject
+        expect(email_reused_user.reload).to be_archived
       end
 
       it "does not archive this user" do
         subject
         expect(user.reload).not_to be_archived
+      end
+    end
+
+    context "when there is an archived user with the same verified TRN and applications" do
+      let(:archived_user) { create(:user, :archived, :with_get_an_identity_id, :with_verified_trn, trn: new_trn, created_at: 1.minute.from_now) }
+      let(:application) { create(:application, :accepted, user: archived_user) }
+
+      before { application }
+
+      it "does not move the applications to this user" do
+        subject
+        expect(application.reload.user).to eq archived_user
+      end
+
+      it "does not create a participant ID change" do
+        subject
+        expect(user.participant_id_changes).to be_empty
       end
     end
 

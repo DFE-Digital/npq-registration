@@ -7,21 +7,18 @@ module Users
 
     attribute :user
 
-    def archive!(blank_email: false, notify_sentry: true)
+    def archive!
       raise ArgumentError, "User already archived" if user.archived?
 
-      user.archived_email = user.email
+      unless user.email_reused?
+        user.archived_email = user.email
+        user.email = email_for_archived_user(user.email)
+      end
+
       user.archived_at = Time.zone.now
-      user.email = blank_email ? nil : email_for_archived_user(user.email)
-      user.email_reused_at = Time.zone.now if blank_email
       user.uid = nil
       user.provider = nil
       user.save!
-
-      # If we're archiving a user who still has applications then we want to
-      # know about it otherwise its a user account for expression of interest,
-      # or from a past incomplete registration
-      send_sentry_capture_message if notify_sentry && blank_email && user.applications.any?
     end
 
     def set_uid_to_nil!
@@ -29,14 +26,6 @@ module Users
     end
 
   private
-
-    def send_sentry_capture_message
-      Sentry.capture_message(
-        "Blanked email on the user due to reuse when used by a later participant",
-        level: :info,
-        extra: { ecf_id: user.ecf_id },
-      )
-    end
 
     def email_for_archived_user(original_email)
       if User.find_by(email: "archived-#{original_email}")

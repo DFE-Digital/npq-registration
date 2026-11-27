@@ -32,6 +32,8 @@ This diagram represents our current understanding of the data models:
    `Application` captures various attributes related to a user's employment, funding eligibility, and application status.
 
 1. **User** - Represents individuals applying for courses. Each `User` has an ID, email, and other identifying details, including a teacher reference number.
+   - users can be archived - where `archived_at` is set, as well as `archived_email`. These users will have no `uid` or auth `provider`.
+   - users can have `email_reused_at` set, in which case the email will be blank, because the email has been reused for a new account. These users may still have applications, and they are still technically active accounts.
 
 1. **LeadProvider** - Provides a source for educational leads or courses. LeadProviders are linked to multiple entities:
    - `Application` to associate a lead provider with specific applications.
