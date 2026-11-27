@@ -39,7 +39,7 @@ FactoryBot.define do
 
       course_group { CourseGroup.find_by(name: "support") || create(:course_group, name: "support") }
 
-      applies_from { Date.new(cohort.start_year + 1, 6, 1) }
+      applies_from { Date.new(cohort.start_year, 6, 1) }
       applies_to { Date.new(cohort.start_year + 1, 6, 1) }
     end
 
@@ -49,7 +49,7 @@ FactoryBot.define do
 
       course_group { CourseGroup.find_by(name: "support") || create(:course_group, name: "support") }
 
-      applies_from { Date.new(cohort.start_year + 1, 3, 1) }
+      applies_from { cohort.registration_start_date }
       applies_to { Date.new(cohort.start_year + 1, 3, 1) }
     end
 
@@ -79,7 +79,7 @@ FactoryBot.define do
 
       course_group { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
 
-      applies_from { Date.new(cohort.start_year + 1, 6, 1) }
+      applies_from { Date.new(cohort.start_year, 6, 1) }
       applies_to { Date.new(cohort.start_year + 1, 10, 31) }
     end
 
@@ -89,7 +89,7 @@ FactoryBot.define do
 
       course_group { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
 
-      applies_from { Date.new(cohort.start_year + 1, 3, 1) }
+      applies_from { cohort.registration_start_date }
       applies_to { Date.new(cohort.start_year + 1, 5, 31) }
     end
 
@@ -119,7 +119,7 @@ FactoryBot.define do
 
       course_group { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
 
-      applies_from { Date.new(cohort.start_year + 1, 1, 1) }
+      applies_from { cohort.registration_start_date }
       applies_to { Date.new(cohort.start_year + 1, 3, 31) }
     end
 
@@ -141,7 +141,7 @@ FactoryBot.define do
 
       course_group { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
 
-      applies_from { Date.new(cohort.start_year + 1, 1, 1) }
+      applies_from { cohort.registration_start_date }
       applies_to { Date.new(cohort.start_year + 1, 3, 31) }
 
       allowed_declaration_types { %w[started retained-1 completed] }

@@ -9,6 +9,10 @@ LeadProvider.find_each do |lead_provider|
         next # senco starts from 2024
       end
 
+      if cohort.zero_funding?
+        next # unfunded cohorts don't have contracts or statements
+      end
+
       special_course = course.npqlpm? && cohort.start_year == 2023
       attr = FactoryBot.attributes_for(:contract_template, special_course:)
       contract_template = ContractTemplate.find_or_create_by!(attr)

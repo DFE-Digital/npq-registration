@@ -293,6 +293,8 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "when lead provider has no contract for the cohort and course" do
+      let(:application) { create(:application, :accepted, :eligible_for_funded_place, cohort:, course:, lead_provider:, schedule:) }
+
       before { contract.update!(course: create(:course, :leading_literacy)) }
 
       it { is_expected.to have_error(:cohort, :missing_contract_for_cohort_and_course, "You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.") }
@@ -353,6 +355,20 @@ RSpec.describe Declarations::Create, type: :model do
       let(:secondary_delivery_partner_id) { delivery_partner_id }
 
       it { is_expected.to have_error(:secondary_delivery_partner_id, :duplicate_delivery_partner, "The property '#/secondary_delivery_partner_id' cannot have the same value as the property '#/delivery_partner_id'") }
+    end
+
+    context "when there is no contract" do
+      before { contract.destroy! }
+
+      context "when the cohort is funded" do
+        it { is_expected.to have_error(:cohort, :missing_contract_for_cohort_and_course, "You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.") }
+      end
+
+      context "when the cohort is unfunded" do
+        let(:cohort) { create(:cohort, :unfunded, :current) }
+
+        it { is_expected.to be_valid }
+      end
     end
   end
 
