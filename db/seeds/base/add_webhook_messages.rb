@@ -1,0 +1,7 @@
+FactoryBot.create(:legacy_get_an_identity_webhook_message, sent_at: 5.days.ago)
+FactoryBot.create(:trs_user_updated_webhook_message, sent_at: 1.month.ago)
+FactoryBot.create(:trs_user_updated_webhook_message, sent_at: 1.day.ago)
+FactoryBot.create(:trs_trn_request_completed_webhook_message, sent_at: 1.month.ago)
+FactoryBot.create(:trs_trn_request_completed_webhook_message, sent_at: 2.days.ago)
+FactoryBot.create(:trs_person_deactivated_webhook_message, sent_at: 1.month.ago)
+FactoryBot.create(:trs_person_deactivated_webhook_message, sent_at: 3.days.ago)

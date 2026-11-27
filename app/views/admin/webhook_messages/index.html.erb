@@ -4,7 +4,13 @@
     <h1 class="govuk-heading-l">Webhook messages</h1>
 
     <div class="admin-search-box">
-      <%= form_with method: :get do |f| %>
+      <%= form_for @form, method: :get, url: admin_webhook_messages_path, as: :webhook_messages do |f| %>
+        <%= f.govuk_text_field(
+            :q,
+            label: { text: "Message contents", size: "s" },
+          )
+        %>
+
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-half">
             <%=
@@ -13,8 +19,15 @@
                 @message_types,
                 :to_s,
                 :to_s,
-                options: { selected: params[:message_type], include_blank: "All" },
+                options: { selected: @form.message_type, include_blank: "All" },
                 label: { text: "Message type", size: "s" },
+              )
+            %>
+
+            <%=
+              f.govuk_date_field(
+                :sent_at_start,
+                legend: { text: "Sent at (start of date range)", size: "s" },
               )
             %>
           </div>
@@ -26,8 +39,15 @@
                 WebhookMessage.statuses.keys,
                 :to_s,
                 :humanize,
-                options: { selected: params[:status], include_blank: "All" },
+                options: { selected: @form.status, include_blank: "All" },
                 label: { text: "Status", size: "s" },
+              )
+            %>
+
+            <%=
+              f.govuk_date_field(
+                :sent_at_end,
+                legend: { text: "Sent at (end of date range)", size: "s" },
               )
             %>
           </div>
