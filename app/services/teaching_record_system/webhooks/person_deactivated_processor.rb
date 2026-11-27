@@ -13,7 +13,7 @@ module TeachingRecordSystem
     private
 
       def user
-        true
+        all_matching_users.any?
       end
 
       def deactivated_trn

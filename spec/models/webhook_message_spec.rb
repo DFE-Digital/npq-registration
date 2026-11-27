@@ -4,10 +4,11 @@ RSpec.describe WebhookMessage, type: :model do
   describe "enums" do
     it {
       expect(subject).to define_enum_for(:status).with_values(
-        pending: "pending",
-        processing: "processing",
-        processed: "processed",
         failed: "failed",
+        nomatch: "nomatch",
+        pending: "pending",
+        processed: "processed",
+        processing: "processing",
         unhandled_message_type: "unhandled_message_type",
       ).backed_by_column_of_type(:string).with_suffix
     }
@@ -25,12 +26,22 @@ RSpec.describe WebhookMessage, type: :model do
     end
   end
 
+  describe "#make_nomatch!" do
+    it "sets status to nomatch and processed_at" do
+      expect(subject).not_to be_nomatch_status
+      expect(subject.processed_at).to be_nil
+
+      subject.make_nomatch!
+
+      expect(subject).to be_nomatch_status
+      expect(subject.processed_at).to be_within(1.second).of(Time.zone.now)
+    end
+  end
+
   describe "#ignored_message_type?" do
     subject { build(:trs_user_updated_webhook_message, message_type:) }
 
-    before do
-      stub_const("WebhookMessage::IGNORED_MESSAGE_TYPES", %w[ignore_me])
-    end
+    before { stub_const("WebhookMessage::IGNORED_MESSAGE_TYPES", %w[ignore_me]) }
 
     context "when the message_type is on the ignore list" do
       let(:message_type) { "ignore_me" }

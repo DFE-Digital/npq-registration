@@ -365,8 +365,8 @@ RSpec.describe TeachingRecordSystem::Webhooks::PersonDeactivatedProcessor do
     end
 
     context "when there is no user matching the deactivated person" do
-      it "marks the webhook message as processed" do
-        expect { subject }.to change(webhook_message, :status).from("pending").to("processed")
+      it "marks the webhook message as nomatch" do
+        expect { subject }.to change(webhook_message, :status).from("pending").to("nomatch")
       end
     end
 
